@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One Day</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="transition-overlay"></div>
+    <div class="main-wrapper">
+        <div class="info-panel">
+            <!-- 브랜딩 콘텐츠 -->
+            <h2>당신의 하루를
+                한 곳에 담다</h2>
+            <p>'One Day'와 함께라면 당신의 모든 순간이
+                더욱 특별해집니다.</p>
+        </div>
+        <div class="form-wrapper">
+            <div class="form-container" id="login-form">
+                <h1>One Day</h1>
+                <form>
+                    <input type="email" placeholder="이메일" required>
+                    <input type="password" placeholder="비밀번호" required>
+                    <div class="options">
+                        <label><input type="checkbox"> 자동 로그인</label>
+                    </div>
+                    <button type="submit">로그인</button>
+                </form>
+                <div class="social-login">
+                    <p>SNS로 로그인</p>
+                                    <div class="social-icons">
+                                        <a href="#" id="google-login"><img src="https://via.placeholder.com/40" alt="Google"></a>
+                                        <a href="#" id="naver-login"><img src="https://via.placeholder.com/40" alt="Naver"></a>
+                                        <a href="#" id="kakao-login"><img src="https://via.placeholder.com/40" alt="Kakao"></a>
+                                    </div>                </div>
+                <p class="toggle-form">계정이 없으신가요? <a href="#" id="show-signup">회원가입</a></p>
+            </div>
+
+            <div class="form-container" id="signup-form" style="display: none;">
+                <h1>One Day</h1>
+                <form action="profile_setup.html">
+                    <input type="email" placeholder="이메일" required>
+                    <input type="password" placeholder="비밀번호" required>
+                    <div class="terms">
+                        <label><input type="checkbox" required> 이용약관 동의 (필수)</label>
+                        <label><input type="checkbox" required> 개인정보 수집 및 이용 동의 (필수)</label>
+                    </div>
+                    <button type="submit">회원가입</button>
+                </form>
+                <p class="toggle-form">이미 계정이 있으신가요? <a href="#" id="show-login">로그인</a></p>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

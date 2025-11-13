@@ -1,0 +1,165 @@
+:root {
+    --primary-color: #FF7581;
+    --background-color: #fdfcfa;
+    --border-color: #eee;
+    --text-color: #333;
+    --light-text-color: #888;
+    --event-work: #87CEEB;
+    --event-personal: #F08080;
+    --event-health: #90EE90;
+}
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+.main-content-wrapper { display: flex; height: 100vh; }
+.left-column {
+    flex: 6;
+    padding: 20px 20px 20px 60px; /* Increased left padding */
+    display: flex;
+    flex-direction: column;
+}
+.calendar-container { width: 100%; flex-grow: 1; display: flex; flex-direction: column; }
+.calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.calendar-header h2 { color: var(--primary-color); font-size: 28px; }
+.calendar-header button { background: none; border: none; font-size: 24px; cursor: pointer; padding: 10px; }
+.calendar-grid, .calendar-body { display: grid; grid-template-columns: repeat(7, 1fr); }
+.calendar-grid { gap: 5px; }
+.calendar-body { flex-grow: 1; gap: 5px; }
+.day-name { text-align: center; font-weight: 700; padding-bottom: 10px; color: #555; }
+.date-cell { position: relative; border: 1px solid var(--border-color); border-radius: 8px; padding: 8px; cursor: pointer; transition: background-color 0.3s; display: flex; flex-direction: column; }
+.date-cell:hover { background-color: #fdf5f6; }
+.date-cell.selected { background-color: #ffe4e8; border-color: var(--primary-color); }
+.date-cell .date-number { font-weight: 700; margin-bottom: 5px; }
+.date-cell.other-month .date-number { color: #ccc; }
+.date-cell.today .date-number { color: var(--primary-color); }
+.event-preview { font-size: 12px; padding: 2px 5px; border-radius: 3px; color: white; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.event-work { background-color: var(--event-work); }
+.event-personal { background-color: var(--event-personal); }
+.event-health { background-color: var(--event-health); }
+
+.right-column { flex: 4; padding: 20px; background-color: #fff; border-left: 1px solid var(--border-color); overflow-y: auto; }
+.dashboard-tabs { display: flex; justify-content: center; border-bottom: 1px solid var(--border-color); margin-bottom: 20px; }
+.dash-tab-link { padding: 10px 20px; border: none; background: none; cursor: pointer; font-size: 16px; color: var(--light-text-color); }
+.dash-tab-link.active { border-bottom: 3px solid var(--primary-color); font-weight: 700; color: var(--text-color); }
+.dash-tab-content { display: none; }
+.dash-tab-content.active { display: block; }
+.dashboard-section { margin-bottom: 30px; }
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.section-header h3 { margin: 0; font-size: 18px; }
+.add-btn, .save-btn { background-color: var(--primary-color); color: white; border: none; border-radius: 5px; padding: 5px 10px; font-size: 14px; cursor: pointer; }
+.section-content p { color: var(--light-text-color); text-align: center; }
+#schedule-list li, #todolist-list li { position: relative; display: flex; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 5px; margin-bottom: 8px; }
+#todolist-list input[type="checkbox"] { margin-right: 10px; }
+.template-bar { margin-top: 10px; font-size: 13px; color: var(--light-text-color); }
+.template-btn { background: #eee; border: none; border-radius: 15px; padding: 5px 10px; font-size: 12px; margin-left: 5px; cursor: pointer; }
+.reminder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 15px; }
+.reminder-card { padding: 15px; border-radius: 8px; color: white; text-align: center; }
+.reminder-card .d-day { font-size: 24px; font-weight: 700; }
+.reminder-card .event-title { font-size: 14px; margin-top: 5px; }
+#todolist-list li.completed { background-color: #e0e0e0; }
+#todolist-list li.completed span { text-decoration: line-through; color: #888; }
+.delete-item-btn { position: absolute; top: 50%; right: 10px; transform: translateY(-50%); background: #ffcdd2; color: #c62828; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 14px; line-height: 22px; text-align: center; cursor: pointer; opacity: 0; transition: opacity 0.2s; }
+#schedule-list li:hover .delete-item-btn, #todolist-list li:hover .delete-item-btn { opacity: 1; }
+
+/* New Diary Styles */
+.diary-toolbar { display: flex; align-items: center; margin-bottom: 10px; padding: 5px; background: #f9f9f9; border-radius: 5px; }
+.mode-selectors { display: flex; gap: 5px; }
+.text-tools { display: flex; gap: 5px; margin-left: 15px; }
+.drawing-tools { display: flex; flex-grow: 1; justify-content: flex-end; align-items: center; gap: 10px; }
+.tool-buttons { display: flex; gap: 5px; }
+.tool-btn { background: none; border: 1px solid #ddd; border-radius: 4px; padding: 5px 10px; cursor: pointer; font-size: 16px; }
+.tool-btn.active { background-color: var(--primary-color); color: white; }
+.tool-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.color-palette { display: flex; gap: 5px; }
+.color-box { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+.color-box.active { border-color: #333; }
+.size-controls { display: flex; gap: 5px; border-left: 1px solid #ddd; margin-left: 10px; padding-left: 10px; }
+.size-btn { background: none; border: 1px solid #ddd; border-radius: 4px; padding: 5px 10px; cursor: pointer; }
+.size-btn.active { background-color: var(--primary-color); color: white; }
+#diary-title {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.emoji-container { position: relative; }
+.emoji-picker {
+    display: none;
+    position: absolute;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    bottom: 100%;
+    margin-bottom: 5px;
+    width: 280px;
+    z-index: 10;
+}
+.emoji-picker.open { display: block; }
+.emoji-tabs {
+    display: flex;
+    border-bottom: 1px solid #eee;
+}
+.emoji-tab-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+.emoji-tab-btn.active {
+    background-color: #f5f5f5;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+.emoji-content {
+    padding: 10px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+.emoji-grid {
+    display: none;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+}
+.emoji-grid.active {
+    display: grid;
+}
+.emoji-grid span {
+    cursor: pointer;
+    font-size: 20px;
+    text-align: center;
+}
+.emoji-grid span:hover {
+    transform: scale(1.2);
+}
+
+#diary-textarea { width: 100%; box-sizing: border-box; border: 1px solid #ddd; border-radius: 5px; padding: 10px; font-family: 'Noto Sans KR', sans-serif; resize: vertical; margin-bottom: 10px; }
+#diary-canvas { width: 100%; height: 300px; border: 1px solid #ddd; border-radius: 5px; }
+#diary-canvas.pen-tool { cursor: crosshair; }
+#diary-canvas.eraser-tool { cursor: cell; } /* Using 'cell' as a simple visual alternative for an eraser */
+
+
+/* Collection View Sidebar */
+#collection-trigger { position: fixed; left: 0; top: 20px; background: var(--primary-color); color: white; writing-mode: vertical-rl; text-orientation: mixed; padding: 15px 8px; border-radius: 0 10px 10px 0; cursor: pointer; z-index: 998; }
+#collection-sidebar { position: fixed; top: 0; left: 0; width: 350px; height: 100%; background: white; box-shadow: 2px 0 10px rgba(0,0,0,0.1); transform: translateX(-100%); transition: transform 0.3s ease-in-out; z-index: 999; display: flex; flex-direction: column; padding: 20px; }
+#collection-sidebar.open { transform: translateX(0); }
+#collection-sidebar h2 { margin-top: 0; }
+#collection-content { overflow-y: auto; flex-grow: 1; }
+.collection-item { border: 1px solid #eee; border-radius: 5px; padding: 10px; margin-bottom: 10px; }
+.collection-item .date { font-weight: bold; margin-bottom: 5px; }
+.collection-item .text { font-size: 14px; margin-bottom: 5px; }
+.collection-item img { max-width: 100%; border-radius: 4px; }
