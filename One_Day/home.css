@@ -81,6 +81,22 @@ body {
 .color-palette { display: flex; gap: 5px; }
 .color-box { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
 .color-box.active { border-color: #333; }
+.add-color-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 1px dashed #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ccc;
+    font-size: 16px;
+    font-weight: bold;
+}
+.add-color-btn:hover {
+    background-color: #f0f0f0;
+}
 .size-controls { display: flex; gap: 5px; border-left: 1px solid #ddd; margin-left: 10px; padding-left: 10px; }
 .size-btn { background: none; border: 1px solid #ddd; border-radius: 4px; padding: 5px 10px; cursor: pointer; }
 .size-btn.active { background-color: var(--primary-color); color: white; }

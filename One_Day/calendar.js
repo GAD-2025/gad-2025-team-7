@@ -217,19 +217,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function initCanvas() {
         const canvas = diaryCanvas;
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
-        ctx.lineJoin = 'round';
-        ctx.lineCap = 'round';
+        // canvas.width = canvas.offsetWidth; // Moved to setEditorMode
+        // canvas.height = canvas.offsetHeight; // Moved to setEditorMode
+        // ctx.lineJoin = 'round'; // Moved to setEditorMode
+        // ctx.lineCap = 'round'; // Moved to setEditorMode
         canvas.classList.add('pen-tool');
-        const startDrawing = (e) => { isDrawing = true; [lastX, lastY] = [e.offsetX, e.offsetY]; };
+        
+        const getMousePos = (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            return {
+                x: (e.clientX - rect.left) * scaleX,
+                y: (e.clientY - rect.top) * scaleY
+            };
+        };
+
+        const startDrawing = (e) => {
+            isDrawing = true;
+            const pos = getMousePos(e);
+            [lastX, lastY] = [pos.x, pos.y];
+        };
         const draw = (e) => {
             if (!isDrawing || currentEditorMode !== 'drawing') return;
+            const pos = getMousePos(e);
             ctx.strokeStyle = penColor;
             ctx.globalCompositeOperation = currentTool === 'pen' ? 'source-over' : 'destination-out';
             ctx.lineWidth = currentTool === 'eraser' ? penSize * 2 : penSize;
-            ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke();
-            [lastX, lastY] = [e.offsetX, e.offsetY];
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            [lastX, lastY] = [pos.x, pos.y];
         };
         const stopDrawing = () => {
             if (isDrawing) {
@@ -274,10 +293,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentTool = 'pen';
                 diaryCanvas.classList.remove('eraser-tool');
                 diaryCanvas.classList.add('pen-tool');
-                // The following lines are commented out to preserve the canvas state
-                // diaryCanvas.width = diaryCanvas.offsetWidth;
-                // diaryCanvas.height = diaryCanvas.offsetHeight;
-                // renderDiary(selectedDate);
+
+                // If canvas has no size, initialize it. This happens when it's first displayed.
+                if (diaryCanvas.width === 0 || diaryCanvas.height === 0) {
+                    diaryCanvas.width = diaryCanvas.offsetWidth;
+                    diaryCanvas.height = diaryCanvas.offsetHeight;
+                    ctx.lineJoin = 'round';
+                    ctx.lineCap = 'round';
+                    renderDiary(selectedDate); // Load saved drawing
+                }
             }
         }
 
@@ -337,13 +361,38 @@ document.addEventListener('DOMContentLoaded', () => {
             diaryCanvas.classList.remove('eraser-tool');
             diaryCanvas.classList.add('pen-tool');
         });
-        document.querySelectorAll('.color-box').forEach(box => {
-            box.addEventListener('click', () => {
+
+        const colorPalette = document.querySelector('.color-palette');
+        const colorPickerInput = document.getElementById('color-picker-input');
+
+        colorPalette.addEventListener('click', (e) => {
+            const target = e.target;
+            if (target.classList.contains('color-box')) {
                 document.querySelector('.color-box.active')?.classList.remove('active');
-                box.classList.add('active');
-                penColor = box.dataset.color;
-            });
+                target.classList.add('active');
+                penColor = target.dataset.color;
+            } else if (target.classList.contains('add-color-btn')) {
+                colorPickerInput.click();
+            }
         });
+
+        colorPickerInput.addEventListener('change', (e) => {
+            const newColor = e.target.value;
+            const newColorBox = document.createElement('div');
+            newColorBox.className = 'color-box';
+            newColorBox.style.backgroundColor = newColor;
+            newColorBox.dataset.color = newColor;
+            
+            // Insert before the 'add' button
+            colorPalette.insertBefore(newColorBox, document.querySelector('.add-color-btn'));
+
+            // Automatically select the new color
+            document.querySelector('.color-box.active')?.classList.remove('active');
+            newColorBox.classList.add('active');
+
+            penColor = newColor;
+        });
+
         document.querySelectorAll('.size-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelector('.size-btn.active')?.classList.remove('active');
