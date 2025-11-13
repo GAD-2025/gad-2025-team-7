@@ -376,6 +376,24 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        colorPalette.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            const target = e.target;
+            if (target.classList.contains('color-box')) {
+                if (confirm('이 색상을 팔레트에서 삭제하시겠습니까?')) {
+                    const wasActive = target.classList.contains('active');
+                    target.remove();
+                    if (wasActive) {
+                        const firstColor = colorPalette.querySelector('.color-box');
+                        if (firstColor) {
+                            firstColor.classList.add('active');
+                            penColor = firstColor.dataset.color;
+                        }
+                    }
+                }
+            }
+        });
+
         colorPickerInput.addEventListener('change', (e) => {
             const newColor = e.target.value;
             const newColorBox = document.createElement('div');
