@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         editBtn.className = 'edit-card-btn';
         editBtn.innerText = '수정';
         editBtn.addEventListener('click', () => {
-            window.location.href = `home.html?date=${diary.date}`;
+            window.location.href = `home.html?date=${diary.date}&tab=records`;
         });
 
         const deleteBtn = document.createElement('button');

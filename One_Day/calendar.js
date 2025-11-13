@@ -266,6 +266,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 3. INITIALIZATION & EVENT LISTENERS ---
     // =================================================================================
     function init() {
+        // Handle tab switching from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const tabParam = urlParams.get('tab');
+        if (tabParam) {
+            const targetTab = `${tabParam}-tab`; // e.g., 'records-tab'
+            document.querySelectorAll('.dash-tab-link').forEach(l => l.classList.remove('active'));
+            document.querySelector(`.dash-tab-link[data-tab="${targetTab}"]`)?.classList.add('active');
+            
+            document.querySelectorAll('.dash-tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(targetTab)?.classList.add('active');
+        }
+
         initCanvas();
         const addScheduleForm = document.getElementById('add-schedule-form');
         const addTodoForm = document.getElementById('add-todo-form');
@@ -475,6 +487,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('undo-btn').addEventListener('click', undo);
         document.getElementById('redo-btn').addEventListener('click', redo);
+
+        document.getElementById('clear-canvas-btn').addEventListener('click', () => {
+            if (confirm('캔버스를 모두 지우시겠습니까? 이 작업은 되돌릴 수 있습니다.')) {
+                ctx.clearRect(0, 0, diaryCanvas.width, diaryCanvas.height);
+                pushToHistory();
+            }
+        });
 
         document.getElementById('collection-trigger').addEventListener('click', () => { document.getElementById('collection-sidebar').classList.toggle('open'); });
         document.getElementById('collection-diary-btn').addEventListener('click', () => { window.location.href = 'diary_collection.html'; });

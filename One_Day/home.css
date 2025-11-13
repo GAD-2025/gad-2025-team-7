@@ -185,7 +185,22 @@ body {
 #collection-sidebar { position: fixed; top: 0; left: 0; width: 350px; height: 100%; background: white; box-shadow: 2px 0 10px rgba(0,0,0,0.1); transform: translateX(-100%); transition: transform 0.3s ease-in-out; z-index: 999; display: flex; flex-direction: column; padding: 20px; }
 #collection-sidebar.open { transform: translateX(0); }
 #collection-sidebar h2 { margin-top: 0; }
-#collection-content { overflow-y: auto; flex-grow: 1; }
+.collection-nav button {
+    width: 100%;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 8px;
+    background-color: #f0f0f0;
+    text-align: left;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex; /* Use flexbox for alignment */
+    align-items: center;
+    gap: 8px; /* Space between icon and text */
+}
+.collection-nav button:hover { background-color: #e0e0e0; }
 .collection-item { border: 1px solid #eee; border-radius: 5px; padding: 10px; margin-bottom: 10px; }
 .collection-item .date { font-weight: bold; margin-bottom: 5px; }
 .collection-item .text { font-size: 14px; margin-bottom: 5px; }
