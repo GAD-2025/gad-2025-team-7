@@ -158,8 +158,6 @@
                                     <label class="tool-btn" for="image-upload-input">🖼️
                                         <input type="file" id="image-upload-input" accept="image/*" style="display:none;">
                                     </label>
-                                    <button class="tool-btn" id="undo-btn" disabled>↩️</button>
-                                    <button class="tool-btn" id="redo-btn" disabled>↪️</button>
                                 </div>
                                 <div class="color-palette">
                                     <div class="color-box active" style="background-color: black;" data-color="black"></div>
@@ -176,6 +174,10 @@
                         </div>
                         <textarea id="diary-textarea" rows="5" placeholder="오늘의 하루를 기록해보세요..."></textarea>
                         <canvas id="diary-canvas" style="display: none;"></canvas>
+                        <div class="diary-actions">
+                            <button class="tool-btn" id="undo-btn" disabled>↩️</button>
+                            <button class="tool-btn" id="redo-btn" disabled>↪️</button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -101,7 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderDiary(date) {
         const diaryEntry = diaries.find(d => d.date === date);
-        ctx.clearRect(0, 0, diaryCanvas.width, diaryCanvas.height);
         if (diaryEntry) {
             diaryTitleInput.value = diaryEntry.title || '';
             diaryTextarea.value = diaryEntry.text || '';
@@ -168,6 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateDashboard(date) {
+        ctx.clearRect(0, 0, diaryCanvas.width, diaryCanvas.height);
         renderSchedule(date);
         renderTodos(date);
         renderReminders(date);
@@ -253,27 +253,31 @@ document.addEventListener('DOMContentLoaded', () => {
         const drawingTools = document.querySelector('.drawing-tools');
         const textTools = document.querySelector('.text-tools');
         const modeSelectorButtons = document.querySelectorAll('.mode-selectors .tool-btn');
+        const diaryEditor = document.getElementById('diary-editor');
 
         function setEditorMode(mode) {
             currentEditorMode = mode;
             modeSelectorButtons.forEach(btn => btn.classList.remove('active'));
             document.querySelector(`.mode-selectors .tool-btn[data-mode="${mode}"]`).classList.add('active');
             if (mode === 'text') {
+                diaryEditor.classList.remove('drawing-mode-active');
                 diaryTextarea.style.display = 'block';
                 textTools.style.display = 'flex';
                 diaryCanvas.style.display = 'none';
                 drawingTools.style.display = 'none';
             } else {
+                diaryEditor.classList.add('drawing-mode-active');
                 diaryTextarea.style.display = 'none';
                 textTools.style.display = 'none';
                 diaryCanvas.style.display = 'block';
                 drawingTools.style.display = 'flex';
                 currentTool = 'pen';
-                diaryCanvas.classList.remove('pen-tool', 'eraser-tool');
+                diaryCanvas.classList.remove('eraser-tool');
                 diaryCanvas.classList.add('pen-tool');
-                diaryCanvas.width = diaryCanvas.offsetWidth;
-                diaryCanvas.height = diaryCanvas.offsetHeight;
-                renderDiary(selectedDate);
+                // The following lines are commented out to preserve the canvas state
+                // diaryCanvas.width = diaryCanvas.offsetWidth;
+                // diaryCanvas.height = diaryCanvas.offsetHeight;
+                // renderDiary(selectedDate);
             }
         }
 

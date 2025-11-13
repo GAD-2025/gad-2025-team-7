@@ -152,6 +152,17 @@ body {
 #diary-canvas.pen-tool { cursor: crosshair; }
 #diary-canvas.eraser-tool { cursor: cell; } /* Using 'cell' as a simple visual alternative for an eraser */
 
+.diary-actions {
+    display: none; /* Hidden by default */
+}
+
+#diary-editor.drawing-mode-active .diary-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
 
 /* Collection View Sidebar */
 #collection-trigger { position: fixed; left: 0; top: 20px; background: var(--primary-color); color: white; writing-mode: vertical-rl; text-orientation: mixed; padding: 15px 8px; border-radius: 0 10px 10px 0; cursor: pointer; z-index: 998; }
