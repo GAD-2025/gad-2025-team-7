@@ -2,6 +2,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const cardContainer = document.getElementById('diary-card-container');
     let diaries = localStorage.getItem('diaries') ? JSON.parse(localStorage.getItem('diaries')) : [];
 
+    const backBtn = document.getElementById('back-btn');
+    if (backBtn) {
+        backBtn.addEventListener('click', (e) => {
+            e.preventDefault(); // prevent default anchor behavior
+            history.back();
+        });
+    }
+
     function deleteDiary(diaryId) {
         diaries = diaries.filter(diary => diary.id !== diaryId);
         localStorage.setItem('diaries', JSON.stringify(diaries));

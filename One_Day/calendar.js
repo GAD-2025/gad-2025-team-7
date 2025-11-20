@@ -18,489 +18,622 @@ document.addEventListener('DOMContentLoaded', () => {
     const diaryCanvas = document.getElementById('diary-canvas');
     const diaryTextarea = document.getElementById('diary-textarea');
     const diaryTitleInput = document.getElementById('diary-title');
-    const ctx = diaryCanvas.getContext('2d');
+        const ctx = diaryCanvas.getContext('2d');
+        
+        let isDrawing = false, lastX = 0, lastY = 0;
+        let penColor = 'black', penSize = 8, currentTool = 'pen';
+        let currentEditorMode = 'text';
     
-    let isDrawing = false, lastX = 0, lastY = 0;
-    let penColor = 'black', penSize = 8, currentTool = 'pen';
-    let currentEditorMode = 'text';
-
-    // Undo/Redo History
-    let canvasHistory = [];
-    let historyStep = -1;
-    const undoBtn = document.getElementById('undo-btn');
-    const redoBtn = document.getElementById('redo-btn');
-
-    // =================================================================================
-    // --- 2. CORE FUNCTIONS (DATA, RENDERING, CANVAS) ---
-    // =================================================================================
-    function saveData() {
-        localStorage.setItem('events', JSON.stringify(events));
-        localStorage.setItem('todos', JSON.stringify(todos));
-        localStorage.setItem('diaries', JSON.stringify(diaries));
-    }
-
-    function deleteEvent(eventId) { events = events.filter(e => e.id !== eventId); saveData(); load(); updateDashboard(selectedDate); }
-    function deleteTodo(todoId) { todos = todos.filter(t => t.id !== todoId); saveData(); updateDashboard(selectedDate); }
-
-    function renderSchedule(date) {
-        const scheduleList = document.getElementById('schedule-list');
-        scheduleList.innerHTML = '';
-        const eventsForDay = events.filter(e => e.date === date);
-        if (eventsForDay.length === 0) { scheduleList.innerHTML = '<p>등록된 일정이 없습니다.</p>'; return; }
-        eventsForDay.forEach(event => {
-            const li = document.createElement('li');
-            li.innerHTML = `<span>${event.isImportant ? '[중요] ' : ''}${event.title}</span>`;
-            const deleteBtn = document.createElement('button');
-            deleteBtn.className = 'delete-item-btn';
-            deleteBtn.innerText = '×';
-            deleteBtn.addEventListener('click', () => deleteEvent(event.id));
-            li.appendChild(deleteBtn);
-            scheduleList.appendChild(li);
-        });
-    }
-
-    function renderTodos(date) {
-        const todoList = document.getElementById('todolist-list');
-        todoList.innerHTML = '';
-        const todosForDay = todos.filter(t => t.date === date);
-        if (todosForDay.length === 0) { todoList.innerHTML = '<p>등록된 투두리스트가 없습니다.</p>'; return; }
-        todosForDay.forEach(todo => {
-            const li = document.createElement('li');
-            li.classList.toggle('completed', todo.completed);
-            li.innerHTML = `<input type="checkbox" ${todo.completed ? 'checked' : ''}><span>${todo.title}</span>`;
-            li.querySelector('input').addEventListener('change', () => {
-                todo.completed = !todo.completed;
-                li.classList.toggle('completed', todo.completed);
-                saveData();
+        // Template Modal State
+        let currentTemplateType = null; // 'schedule' or 'todo'
+    
+        // Undo/Redo History
+        let canvasHistory = [];
+        let historyStep = -1;
+        const undoBtn = document.getElementById('undo-btn');
+        const redoBtn = document.getElementById('redo-btn');
+    
+        // =================================================================================
+        // --- 2. CORE FUNCTIONS (DATA, RENDERING, CANVAS) ---
+        // =================================================================================
+        function saveData() {
+            localStorage.setItem('events', JSON.stringify(events));
+            localStorage.setItem('todos', JSON.stringify(todos));
+            localStorage.setItem('diaries', JSON.stringify(diaries));
+            // Note: Custom templates are saved in their own function
+        }
+    
+        function deleteEvent(eventId) { events = events.filter(e => e.id !== eventId); saveData(); load(); updateDashboard(selectedDate); }
+        function deleteTodo(todoId) { todos = todos.filter(t => t.id !== todoId); saveData(); updateDashboard(selectedDate); }
+    
+        function renderSchedule(date) {
+            const scheduleList = document.getElementById('schedule-list');
+            scheduleList.innerHTML = '';
+            const eventsForDay = events.filter(e => e.date === date);
+            if (eventsForDay.length === 0) { scheduleList.innerHTML = '<p>등록된 일정이 없습니다.</p>'; return; }
+            eventsForDay.forEach(event => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span>${event.isImportant ? '[중요] ' : ''}${event.title}</span>`;
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-item-btn';
+                deleteBtn.innerText = '×';
+                deleteBtn.addEventListener('click', () => deleteEvent(event.id));
+                li.appendChild(deleteBtn);
+                scheduleList.appendChild(li);
             });
-            const deleteBtn = document.createElement('button');
-            deleteBtn.className = 'delete-item-btn';
-            deleteBtn.innerText = '×';
-            deleteBtn.addEventListener('click', () => deleteTodo(todo.id));
-            li.appendChild(deleteBtn);
-            todoList.appendChild(li);
-        });
-    }
-
-    function renderReminders(date) {
-        const reminderList = document.getElementById('reminder-list');
-        reminderList.innerHTML = '';
-        const today = new Date(date);
-        const upcomingEvents = events.filter(e => new Date(e.date) >= today).sort((a, b) => new Date(a.date) - new Date(b.date)).slice(0, 6);
-        if (upcomingEvents.length === 0) { reminderList.innerHTML = '<p>남은 일정이 없습니다.</p>'; return; }
-        upcomingEvents.forEach(event => {
-            const eventDate = new Date(event.date);
-            const diffDays = Math.ceil((eventDate - today) / (1000 * 60 * 60 * 24));
-            const card = document.createElement('div');
-            card.className = 'reminder-card';
-            card.innerHTML = `<div class="d-day">D-${diffDays}</div><div class="event-title">${event.title}</div>`;
-            card.style.backgroundColor = `rgba(255, 117, 129, ${Math.max(0.2, 1 - (diffDays / 30))})`;
-            reminderList.appendChild(card);
-        });
-    }
-
-    function renderDiary(date) {
-        const diaryEntry = diaries.find(d => d.date === date);
-        if (diaryEntry) {
-            diaryTitleInput.value = diaryEntry.title || '';
-            diaryTextarea.value = diaryEntry.text || '';
-            if (diaryEntry.canvasData) {
-                const img = new Image();
-                img.onload = () => {
-                    ctx.drawImage(img, 0, 0);
-                    if (canvasHistory.length === 0) { // Only push initial state if history is empty
+        }
+    
+        function renderTodos(date) {
+            const todoList = document.getElementById('todolist-list');
+            todoList.innerHTML = '';
+            const todosForDay = todos.filter(t => t.date === date);
+            if (todosForDay.length === 0) { todoList.innerHTML = '<p>등록된 투두리스트가 없습니다.</p>'; return; }
+            todosForDay.forEach(todo => {
+                const li = document.createElement('li');
+                li.classList.toggle('completed', todo.completed);
+                li.innerHTML = `<input type="checkbox" ${todo.completed ? 'checked' : ''}><span>${todo.title}</span>`;
+                li.querySelector('input').addEventListener('change', () => {
+                    todo.completed = !todo.completed;
+                    li.classList.toggle('completed', todo.completed);
+                    saveData();
+                });
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-item-btn';
+                deleteBtn.innerText = '×';
+                deleteBtn.addEventListener('click', () => deleteTodo(todo.id));
+                li.appendChild(deleteBtn);
+                todoList.appendChild(li);
+            });
+        }
+    
+        function renderReminders(date) {
+            const reminderList = document.getElementById('reminder-list');
+            reminderList.innerHTML = '';
+            const today = new Date(date);
+            const upcomingEvents = events.filter(e => new Date(e.date) >= today).sort((a, b) => new Date(a.date) - new Date(b.date)).slice(0, 6);
+            if (upcomingEvents.length === 0) { reminderList.innerHTML = '<p>남은 일정이 없습니다.</p>'; return; }
+            upcomingEvents.forEach(event => {
+                const eventDate = new Date(event.date);
+                const diffDays = Math.ceil((eventDate - today) / (1000 * 60 * 60 * 24));
+                const card = document.createElement('div');
+                card.className = 'reminder-card';
+                card.innerHTML = `<div class="d-day">D-${diffDays}</div><div class="event-title">${event.title}</div>`;
+                card.style.backgroundColor = `rgba(255, 117, 129, ${Math.max(0.2, 1 - (diffDays / 30))})`;
+                reminderList.appendChild(card);
+            });
+        }
+    
+        function renderDiary(date) {
+            const diaryEntry = diaries.find(d => d.date === date);
+            if (diaryEntry) {
+                diaryTitleInput.value = diaryEntry.title || '';
+                diaryTextarea.value = diaryEntry.text || '';
+                if (diaryEntry.canvasData) {
+                    const img = new Image();
+                    img.onload = () => {
+                        ctx.drawImage(img, 0, 0);
+                        if (canvasHistory.length === 0) { // Only push initial state if history is empty
+                            pushToHistory();
+                        }
+                    };
+                    img.src = diaryEntry.canvasData;
+                } else {
+                     if (canvasHistory.length === 0) {
                         pushToHistory();
                     }
-                };
-                img.src = diaryEntry.canvasData;
+                }
             } else {
-                 if (canvasHistory.length === 0) {
+                diaryTitleInput.value = '';
+                diaryTextarea.value = '';
+                if (canvasHistory.length === 0) {
                     pushToHistory();
                 }
             }
-        } else {
-            diaryTitleInput.value = '';
-            diaryTextarea.value = '';
-            if (canvasHistory.length === 0) {
-                pushToHistory();
-            }
         }
-    }
-    
-    function updateUndoRedoButtons() {
-        undoBtn.disabled = historyStep <= 0;
-        redoBtn.disabled = historyStep >= canvasHistory.length - 1;
-    }
-
-    function pushToHistory() {
-        historyStep++;
-        if (historyStep < canvasHistory.length) {
-            canvasHistory.length = historyStep;
-        }
-        canvasHistory.push(diaryCanvas.toDataURL());
-        updateUndoRedoButtons();
-    }
-
-    function undo() {
-        if (historyStep > 0) {
-            historyStep--;
-            redrawFromHistory();
-            updateUndoRedoButtons();
-        }
-    }
-
-    function redo() {
-        if (historyStep < canvasHistory.length - 1) {
-            historyStep++;
-            redrawFromHistory();
-            updateUndoRedoButtons();
-        }
-    }
-
-    function redrawFromHistory() {
-        const img = new Image();
-        img.onload = () => {
-            ctx.clearRect(0, 0, diaryCanvas.width, diaryCanvas.height);
-            ctx.drawImage(img, 0, 0);
-        };
-        img.src = canvasHistory[historyStep];
-    }
-
-    function updateDashboard(date) {
-        ctx.clearRect(0, 0, diaryCanvas.width, diaryCanvas.height);
-        renderSchedule(date);
-        renderTodos(date);
-        renderReminders(date);
-        canvasHistory = [];
-        historyStep = -1;
-        renderDiary(date);
-        updateUndoRedoButtons();
-    }
-
-    function selectDate(dateString, daySquare) {
-        selectedDate = dateString;
-        document.querySelectorAll('.date-cell.selected').forEach(cell => cell.classList.remove('selected'));
-        if (daySquare) daySquare.classList.add('selected');
-        updateDashboard(selectedDate);
-    }
-
-    function load() {
-        const dt = new Date();
-        if (nav !== 0) dt.setMonth(new Date().getMonth() + nav);
-        const day = dt.getDate(), month = dt.getMonth(), year = dt.getFullYear();
-        const firstDayOfMonth = new Date(year, month, 1);
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        const dateString = firstDayOfMonth.toLocaleDateString('ko-kr', { weekday: 'long' });
-        const paddingDays = weekdays.indexOf(dateString.charAt(0));
-        document.getElementById('current-month-year').innerText = `${year}년 ${month + 1}월`;
-        calendar.innerHTML = '';
-        for (let i = 1; i <= paddingDays + daysInMonth; i++) {
-            const daySquare = document.createElement('div');
-            daySquare.classList.add('date-cell');
-            const dayString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i - paddingDays).padStart(2, '0')}`;
-            if (i > paddingDays) {
-                daySquare.innerHTML = `<div class="date-number">${i - paddingDays}</div>`;
-                if (i - paddingDays === day && nav === 0) daySquare.classList.add('today');
-                if (dayString === selectedDate) daySquare.classList.add('selected');
-                const eventsForDay = events.filter(e => e.date === dayString);
-                eventsForDay.forEach(event => {
-                    const eventDiv = document.createElement('div');
-                    eventDiv.className = `event-preview event-${event.category}`;
-                    eventDiv.innerText = event.title;
-                    daySquare.appendChild(eventDiv);
-                });
-                daySquare.addEventListener('click', () => selectDate(dayString, daySquare));
-            } else { daySquare.classList.add('other-month'); }
-            calendar.appendChild(daySquare);
-        }
-    }
-
-    function initCanvas() {
-        const canvas = diaryCanvas;
-        // canvas.width = canvas.offsetWidth; // Moved to setEditorMode
-        // canvas.height = canvas.offsetHeight; // Moved to setEditorMode
-        // ctx.lineJoin = 'round'; // Moved to setEditorMode
-        // ctx.lineCap = 'round'; // Moved to setEditorMode
-        canvas.classList.add('pen-tool');
         
-        const getMousePos = (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            return {
-                x: (e.clientX - rect.left) * scaleX,
-                y: (e.clientY - rect.top) * scaleY
+        function updateUndoRedoButtons() {
+            undoBtn.disabled = historyStep <= 0;
+            redoBtn.disabled = historyStep >= canvasHistory.length - 1;
+        }
+    
+        function pushToHistory() {
+            historyStep++;
+            if (historyStep < canvasHistory.length) {
+                canvasHistory.length = historyStep;
+            }
+            canvasHistory.push(diaryCanvas.toDataURL());
+            updateUndoRedoButtons();
+        }
+    
+        function undo() {
+            if (historyStep > 0) {
+                historyStep--;
+                redrawFromHistory();
+                updateUndoRedoButtons();
+            }
+        }
+    
+        function redo() {
+            if (historyStep < canvasHistory.length - 1) {
+                historyStep++;
+                redrawFromHistory();
+                updateUndoRedoButtons();
+            }
+        }
+    
+        function redrawFromHistory() {
+            const img = new Image();
+            img.onload = () => {
+                ctx.clearRect(0, 0, diaryCanvas.width, diaryCanvas.height);
+                ctx.drawImage(img, 0, 0);
             };
-        };
-
-        const startDrawing = (e) => {
-            isDrawing = true;
-            const pos = getMousePos(e);
-            [lastX, lastY] = [pos.x, pos.y];
-        };
-        const draw = (e) => {
-            if (!isDrawing || currentEditorMode !== 'drawing') return;
-            const pos = getMousePos(e);
-            ctx.strokeStyle = penColor;
-            ctx.globalCompositeOperation = currentTool === 'pen' ? 'source-over' : 'destination-out';
-            ctx.lineWidth = currentTool === 'eraser' ? penSize * 2 : penSize;
-            ctx.beginPath();
-            ctx.moveTo(lastX, lastY);
-            ctx.lineTo(pos.x, pos.y);
-            ctx.stroke();
-            [lastX, lastY] = [pos.x, pos.y];
-        };
-        const stopDrawing = () => {
-            if (isDrawing) {
-                pushToHistory();
+            img.src = canvasHistory[historyStep];
+        }
+    
+        function updateDashboard(date) {
+            ctx.clearRect(0, 0, diaryCanvas.width, diaryCanvas.height);
+            renderSchedule(date);
+            renderTodos(date);
+            renderReminders(date);
+            canvasHistory = [];
+            historyStep = -1;
+            renderDiary(date);
+            updateUndoRedoButtons();
+        }
+    
+        function selectDate(dateString, daySquare) {
+            selectedDate = dateString;
+            document.querySelectorAll('.date-cell.selected').forEach(cell => cell.classList.remove('selected'));
+            if (daySquare) daySquare.classList.add('selected');
+            updateDashboard(selectedDate);
+        }
+    
+        function load() {
+            const dt = new Date();
+            if (nav !== 0) dt.setMonth(new Date().getMonth() + nav);
+            const day = dt.getDate(), month = dt.getMonth(), year = dt.getFullYear();
+            const firstDayOfMonth = new Date(year, month, 1);
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const dateString = firstDayOfMonth.toLocaleDateString('ko-kr', { weekday: 'long' });
+            const paddingDays = weekdays.indexOf(dateString.charAt(0));
+            document.getElementById('current-month-year').innerText = `${year}년 ${month + 1}월`;
+            calendar.innerHTML = '';
+            for (let i = 1; i <= paddingDays + daysInMonth; i++) {
+                const daySquare = document.createElement('div');
+                daySquare.classList.add('date-cell');
+                const dayString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i - paddingDays).padStart(2, '0')}`;
+                if (i > paddingDays) {
+                    daySquare.innerHTML = `<div class="date-number">${i - paddingDays}</div>`;
+                    if (i - paddingDays === day && nav === 0) daySquare.classList.add('today');
+                    if (dayString === selectedDate) daySquare.classList.add('selected');
+                    const eventsForDay = events.filter(e => e.date === dayString);
+                    eventsForDay.forEach(event => {
+                        const eventDiv = document.createElement('div');
+                        eventDiv.className = `event-preview event-${event.category}`;
+                        eventDiv.innerText = event.title;
+                        daySquare.appendChild(eventDiv);
+                    });
+                    daySquare.addEventListener('click', () => selectDate(dayString, daySquare));
+                } else { daySquare.classList.add('other-month'); }
+                calendar.appendChild(daySquare);
             }
-            isDrawing = false;
-        };
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('mouseout', stopDrawing);
-    }
-
-    // =================================================================================
-    // --- 3. INITIALIZATION & EVENT LISTENERS ---
-    // =================================================================================
-    function init() {
-        // Handle tab switching from URL parameter
-        const urlParams = new URLSearchParams(window.location.search);
-        const tabParam = urlParams.get('tab');
-        if (tabParam) {
-            const targetTab = `${tabParam}-tab`; // e.g., 'records-tab'
-            document.querySelectorAll('.dash-tab-link').forEach(l => l.classList.remove('active'));
-            document.querySelector(`.dash-tab-link[data-tab="${targetTab}"]`)?.classList.add('active');
+        }
+    
+        function initCanvas() {
+            const canvas = diaryCanvas;
+            // canvas.width = canvas.offsetWidth; // Moved to setEditorMode
+            // canvas.height = canvas.offsetHeight; // Moved to setEditorMode
+            // ctx.lineJoin = 'round'; // Moved to setEditorMode
+            // ctx.lineCap = 'round'; // Moved to setEditorMode
+            canvas.classList.add('pen-tool');
             
-            document.querySelectorAll('.dash-tab-content').forEach(c => c.classList.remove('active'));
-            document.getElementById(targetTab)?.classList.add('active');
-        }
-
-        initCanvas();
-        const addScheduleForm = document.getElementById('add-schedule-form');
-        const addTodoForm = document.getElementById('add-todo-form');
-        const drawingTools = document.querySelector('.drawing-tools');
-        const textTools = document.querySelector('.text-tools');
-        const modeSelectorButtons = document.querySelectorAll('.mode-selectors .tool-btn');
-        const diaryEditor = document.getElementById('diary-editor');
-
-        function setEditorMode(mode) {
-            currentEditorMode = mode;
-            modeSelectorButtons.forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`.mode-selectors .tool-btn[data-mode="${mode}"]`).classList.add('active');
-            if (mode === 'text') {
-                diaryEditor.classList.remove('drawing-mode-active');
-                diaryTextarea.style.display = 'block';
-                textTools.style.display = 'flex';
-                diaryCanvas.style.display = 'none';
-                drawingTools.style.display = 'none';
-            } else {
-                diaryEditor.classList.add('drawing-mode-active');
-                diaryTextarea.style.display = 'none';
-                textTools.style.display = 'none';
-                diaryCanvas.style.display = 'block';
-                drawingTools.style.display = 'flex';
-                currentTool = 'pen';
-                diaryCanvas.classList.remove('eraser-tool');
-                diaryCanvas.classList.add('pen-tool');
-
-                // If canvas has no size, initialize it. This happens when it's first displayed.
-                if (diaryCanvas.width === 0 || diaryCanvas.height === 0) {
-                    diaryCanvas.width = diaryCanvas.offsetWidth;
-                    diaryCanvas.height = diaryCanvas.offsetHeight;
-                    ctx.lineJoin = 'round';
-                    ctx.lineCap = 'round';
-                    renderDiary(selectedDate); // Load saved drawing
+            const getMousePos = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                return {
+                    x: (e.clientX - rect.left) * scaleX,
+                    y: (e.clientY - rect.top) * scaleY
+                };
+            };
+    
+            const startDrawing = (e) => {
+                isDrawing = true;
+                const pos = getMousePos(e);
+                [lastX, lastY] = [pos.x, pos.y];
+            };
+            const draw = (e) => {
+                if (!isDrawing || currentEditorMode !== 'drawing') return;
+                const pos = getMousePos(e);
+                ctx.strokeStyle = penColor;
+                ctx.globalCompositeOperation = currentTool === 'pen' ? 'source-over' : 'destination-out';
+                ctx.lineWidth = currentTool === 'eraser' ? penSize * 2 : penSize;
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+                [lastX, lastY] = [pos.x, pos.y];
+            };
+            const stopDrawing = () => {
+                if (isDrawing) {
+                    pushToHistory();
                 }
-            }
+                isDrawing = false;
+            };
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
         }
-
-        modeSelectorButtons.forEach(btn => {
-            btn.addEventListener('click', () => setEditorMode(btn.dataset.mode));
-        });
-        setEditorMode('text');
-
-        document.getElementById('prev-month').addEventListener('click', () => { nav--; load(); });
-        document.getElementById('next-month').addEventListener('click', () => { nav++; load(); });
-        document.querySelectorAll('.dash-tab-link').forEach(link => {
-            link.addEventListener('click', () => {
-                const tab = link.getAttribute('data-tab');
+    
+        // =================================================================================
+        // --- 3. INITIALIZATION & EVENT LISTENERS ---
+        // =================================================================================
+        function init() {
+            // Handle tab switching from URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const tabParam = urlParams.get('tab');
+            if (tabParam) {
+                const targetTab = `${tabParam}-tab`; // e.g., 'records-tab'
                 document.querySelectorAll('.dash-tab-link').forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
+                document.querySelector(`.dash-tab-link[data-tab="${targetTab}"]`)?.classList.add('active');
+                
                 document.querySelectorAll('.dash-tab-content').forEach(c => c.classList.remove('active'));
-                document.getElementById(tab).classList.add('active');
-            });
-        });
-
-        document.getElementById('add-schedule-btn').addEventListener('click', () => addScheduleForm.style.display = addScheduleForm.style.display === 'block' ? 'none' : 'block');
-        document.getElementById('add-todo-btn').addEventListener('click', () => addTodoForm.style.display = addTodoForm.style.display === 'block' ? 'none' : 'block');
-        document.getElementById('new-schedule-allday').addEventListener('change', (e) => { document.getElementById('new-schedule-time').style.display = e.target.checked ? 'none' : 'block'; });
-        document.getElementById('save-schedule-btn').addEventListener('click', () => {
-            const title = document.getElementById('new-schedule-title').value;
-            if (title) {
-                events.push({ id: Date.now(), date: selectedDate, title: title, isImportant: document.getElementById('new-schedule-important').checked, isAllDay: document.getElementById('new-schedule-allday').checked, time: document.getElementById('new-schedule-time').value, category: 'personal' });
-                saveData(); load(); updateDashboard(selectedDate); addScheduleForm.style.display = 'none';
+                document.getElementById(targetTab)?.classList.add('active');
             }
-        });
-        document.querySelectorAll('#home-tab .template-btn[data-category]').forEach(btn => {
-            btn.addEventListener('click', () => { events.push({ id: Date.now(), date: selectedDate, title: btn.dataset.title, category: btn.dataset.category }); saveData(); load(); updateDashboard(selectedDate); });
-        });
-        document.getElementById('new-todo-repeat').addEventListener('change', (e) => { document.getElementById('repeat-end-date-container').style.display = e.target.checked ? 'block' : 'none'; });
-        document.getElementById('save-todo-btn').addEventListener('click', () => {
-            const title = document.getElementById('new-todo-title').value;
-            if (!title) return;
-            const isRepeat = document.getElementById('new-todo-repeat').checked;
-            if (isRepeat) {
-                const endDate = new Date(document.getElementById('new-todo-end-date').value);
-                let currentDate = new Date(selectedDate);
-                while (currentDate <= endDate) {
-                    todos.push({ id: Date.now() + Math.random(), date: currentDate.toISOString().split('T')[0], title: title, completed: false });
-                    currentDate.setDate(currentDate.getDate() + 7);
-                }
-            } else { todos.push({ id: Date.now(), date: selectedDate, title: title, completed: false }); }
-            saveData(); updateDashboard(selectedDate); addTodoForm.style.display = 'none';
-        });
-
-        document.querySelector('.drawing-tools .tool-btn[data-tool="eraser"]').addEventListener('click', () => {
-            currentTool = 'eraser';
-            diaryCanvas.classList.remove('pen-tool');
-            diaryCanvas.classList.add('eraser-tool');
-        });
-        document.querySelector('.mode-selectors .tool-btn[data-mode="drawing"]').addEventListener('click', () => {
-            currentTool = 'pen'; // Default to pen when switching to drawing mode
-            diaryCanvas.classList.remove('eraser-tool');
-            diaryCanvas.classList.add('pen-tool');
-        });
-
-        const colorPalette = document.querySelector('.color-palette');
-        const colorPickerInput = document.getElementById('color-picker-input');
-
-        colorPalette.addEventListener('click', (e) => {
-            const target = e.target;
-            if (target.classList.contains('color-box')) {
-                document.querySelector('.color-box.active')?.classList.remove('active');
-                target.classList.add('active');
-                penColor = target.dataset.color;
-            } else if (target.classList.contains('add-color-btn')) {
-                colorPickerInput.click();
-            }
-        });
-
-        colorPalette.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            const target = e.target;
-            if (target.classList.contains('color-box')) {
-                if (confirm('이 색상을 팔레트에서 삭제하시겠습니까?')) {
-                    const wasActive = target.classList.contains('active');
-                    target.remove();
-                    if (wasActive) {
-                        const firstColor = colorPalette.querySelector('.color-box');
-                        if (firstColor) {
-                            firstColor.classList.add('active');
-                            penColor = firstColor.dataset.color;
+    
+            initCanvas();
+            const addScheduleForm = document.getElementById('add-schedule-form');
+            const addTodoForm = document.getElementById('add-todo-form');
+            const drawingTools = document.querySelector('.drawing-tools');
+            const textTools = document.querySelector('.text-tools');
+            const modeSelectorButtons = document.querySelectorAll('.mode-selectors .tool-btn');
+            const diaryEditor = document.getElementById('diary-editor');
+    
+            // Template Modal Elements
+                    const templateModal = document.getElementById('add-template-modal');
+                    const templateModalTitle = document.getElementById('template-modal-title');
+                    const cancelTemplateBtn = document.getElementById('cancel-template-btn');
+                    const saveTemplateBtn = document.getElementById('save-template-btn');
+                    const templateColorPalette = document.getElementById('template-color-palette');
+                    const newTemplateNameInput = document.getElementById('new-template-name');
+            
+                    function openTemplateModal(type) {
+                        currentTemplateType = type;
+                        templateModalTitle.innerText = type === 'schedule' ? '새 일정 템플릿' : '새 투두 템플릿';
+                        templateModal.style.display = 'flex';
+                    }
+            
+                    function closeTemplateModal() {
+                        templateModal.style.display = 'none';
+                        newTemplateNameInput.value = '';
+                    }
+            
+                    function renderCustomTemplates(type) {
+                        const key = `${type}Templates`; // e.g., 'scheduleTemplates'
+                        const templates = localStorage.getItem(key) ? JSON.parse(localStorage.getItem(key)) : [];
+                        const templateBar = document.getElementById(`${type}-template-bar`);
+            
+                        // Remove only custom templates
+                        templateBar.querySelectorAll('.custom-template').forEach(btn => btn.remove());
+            
+                        templates.forEach(template => {
+                            const btn = document.createElement('button');
+                            btn.className = 'template-btn custom-template';
+                            btn.innerText = template.name;
+                            btn.style.backgroundColor = template.color;
+                            btn.dataset.title = template.name;
+            
+                            btn.addEventListener('click', () => {
+                                if (type === 'schedule') {
+                                    events.push({ id: Date.now(), date: selectedDate, title: template.name, category: 'custom' });
+                                    saveData();
+                                    load();
+                                    updateDashboard(selectedDate);
+                                } else { // todo
+                                    todos.push({ id: Date.now(), date: selectedDate, title: template.name, completed: false });
+                                    saveData();
+                                    updateDashboard(selectedDate);
+                                }
+                            });
+            
+                            btn.addEventListener('contextmenu', (e) => {
+                                e.preventDefault();
+                                if (confirm(`'${template.name}' 템플릿을 삭제하시겠습니까?`)) {
+                                    const updatedTemplates = templates.filter(t => t.name !== template.name);
+                                    localStorage.setItem(key, JSON.stringify(updatedTemplates));
+                                    renderCustomTemplates(type);
+                                }
+                            });
+            
+                            templateBar.appendChild(btn);
+                        });
+                    }
+            
+                    function saveCustomTemplate() {
+                        const name = newTemplateNameInput.value.trim();
+                        if (!name) {
+                            alert('템플릿 이름을 입력하세요.');
+                            return;
+                        }
+            
+                        const color = templateColorPalette.querySelector('.color-box.active').dataset.color;
+                        const key = `${currentTemplateType}Templates`;
+                        const templates = localStorage.getItem(key) ? JSON.parse(localStorage.getItem(key)) : [];
+                        
+                        if (templates.some(t => t.name === name)) {
+                            alert('이미 존재하는 템플릿 이름입니다.');
+                            return;
+                        }
+            
+                        templates.push({ name, color });
+                        localStorage.setItem(key, JSON.stringify(templates));
+                        
+                        renderCustomTemplates(currentTemplateType);
+                        closeTemplateModal();
+                    }
+            
+                    document.querySelectorAll('.add-template-btn').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            const type = btn.dataset.type;
+                            openTemplateModal(type);
+                        });
+                    });
+            
+                    cancelTemplateBtn.addEventListener('click', closeTemplateModal);
+                    saveTemplateBtn.addEventListener('click', saveCustomTemplate);
+                    templateModal.addEventListener('click', (e) => {
+                        if (e.target === templateModal) {
+                            closeTemplateModal();
+                        }
+                    });
+            
+                    templateColorPalette.addEventListener('click', (e) => {
+                        if (e.target.classList.contains('color-box')) {
+                            templateColorPalette.querySelector('.active')?.classList.remove('active');
+                            e.target.classList.add('active');
+                        }
+                    });
+            
+            
+                    function setEditorMode(mode) {
+                        currentEditorMode = mode;
+                        modeSelectorButtons.forEach(btn => btn.classList.remove('active'));
+                        document.querySelector(`.mode-selectors .tool-btn[data-mode="${mode}"]`).classList.add('active');
+                        if (mode === 'text') {
+                            diaryEditor.classList.remove('drawing-mode-active');
+                            diaryTextarea.style.display = 'block';
+                            textTools.style.display = 'flex';
+                            diaryCanvas.style.display = 'none';
+                            drawingTools.style.display = 'none';
+                        } else {
+                            diaryEditor.classList.add('drawing-mode-active');
+                            diaryTextarea.style.display = 'none';
+                            textTools.style.display = 'none';
+                            diaryCanvas.style.display = 'block';
+                            drawingTools.style.display = 'flex';
+                            currentTool = 'pen';
+                            diaryCanvas.classList.remove('eraser-tool');
+                            diaryCanvas.classList.add('pen-tool');
+            
+                            // If canvas has no size, initialize it. This happens when it's first displayed.
+                            if (diaryCanvas.width === 0 || diaryCanvas.height === 0) {
+                                diaryCanvas.width = diaryCanvas.offsetWidth;
+                                diaryCanvas.height = diaryCanvas.offsetHeight;
+                                ctx.lineJoin = 'round';
+                                ctx.lineCap = 'round';
+                                renderDiary(selectedDate); // Load saved drawing
+                            }
                         }
                     }
-                }
-            }
-        });
-
-        colorPickerInput.addEventListener('change', (e) => {
-            const newColor = e.target.value;
-            const newColorBox = document.createElement('div');
-            newColorBox.className = 'color-box';
-            newColorBox.style.backgroundColor = newColor;
-            newColorBox.dataset.color = newColor;
             
-            // Insert before the 'add' button
-            colorPalette.insertBefore(newColorBox, document.querySelector('.add-color-btn'));
-
-            // Automatically select the new color
-            document.querySelector('.color-box.active')?.classList.remove('active');
-            newColorBox.classList.add('active');
-
-            penColor = newColor;
-        });
-
-        document.querySelectorAll('.size-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelector('.size-btn.active')?.classList.remove('active');
-                btn.classList.add('active');
-                penSize = parseInt(btn.dataset.size, 10);
-            });
-        });
-        document.getElementById('image-upload-input').addEventListener('change', (e) => {
-            const reader = new FileReader();
-            reader.onload = (event) => { 
-                const img = new Image(); 
-                img.onload = () => {
-                    ctx.drawImage(img, 0, 0, diaryCanvas.width, diaryCanvas.height);
-                    pushToHistory();
-                };
-                img.src = event.target.result; 
-            };
-            reader.readAsDataURL(e.target.files[0]);
-        });
-        
-        const emojiContainer = document.querySelector('.emoji-container');
-        const emojiPicker = document.querySelector('.emoji-picker');
-        emojiContainer.querySelector('.tool-btn').addEventListener('click', (e) => { e.stopPropagation(); emojiPicker.classList.toggle('open'); });
-        document.querySelectorAll('.emoji-tab-btn').forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const category = e.target.dataset.category;
-                document.querySelectorAll('.emoji-tab-btn').forEach(t => t.classList.remove('active'));
-                e.target.classList.add('active');
-                document.querySelectorAll('.emoji-grid').forEach(grid => {
-                    grid.classList.remove('active');
-                    if (grid.id === category) grid.classList.add('active');
-                });
-            });
-        });
-        document.querySelectorAll('.emoji-grid span').forEach(emoji => {
-            emoji.addEventListener('click', (e) => { e.stopPropagation(); diaryTextarea.value += emoji.innerText; });
-        });
-        document.addEventListener('click', (e) => { if (!emojiContainer.contains(e.target)) { emojiPicker.classList.remove('open'); } });
-
-        document.getElementById('save-diary-btn').addEventListener('click', () => {
-            let title = diaryTitleInput.value.trim();
-            if (!title) {
-                const defaultTitle = "이름 없는 다이어리";
-                const untitledDiaries = diaries.filter(d => d.title && d.title.startsWith(defaultTitle));
-                title = `${defaultTitle} ${untitledDiaries.length + 1}`;
-            }
-            const newText = diaryTextarea.value;
-            const canvasData = diaryCanvas.toDataURL();
-            let diaryEntry = diaries.find(d => d.date === selectedDate);
-            if (diaryEntry) {
-                diaryEntry.title = title;
-                diaryEntry.text = newText;
-                diaryEntry.canvasData = canvasData;
-                if (!diaryEntry.id) { diaryEntry.id = Date.now(); }
-            } else {
-                diaries.push({ id: Date.now(), date: selectedDate, title: title, text: newText, canvasData: canvasData });
-            }
-            saveData();
-            alert('다이어리가 저장되었습니다.');
-        });
-
-        document.getElementById('undo-btn').addEventListener('click', undo);
-        document.getElementById('redo-btn').addEventListener('click', redo);
-
-        document.getElementById('clear-canvas-btn').addEventListener('click', () => {
-            if (confirm('캔버스를 모두 지우시겠습니까? 이 작업은 되돌릴 수 있습니다.')) {
-                ctx.clearRect(0, 0, diaryCanvas.width, diaryCanvas.height);
-                pushToHistory();
-            }
-        });
-
-        document.getElementById('collection-trigger').addEventListener('click', () => { document.getElementById('collection-sidebar').classList.toggle('open'); });
-        document.getElementById('collection-diary-btn').addEventListener('click', () => { window.location.href = 'diary_collection.html'; });
-
-        load();
-        updateDashboard(selectedDate);
-    }
-
-    init();
-});
+                    modeSelectorButtons.forEach(btn => {
+                        btn.addEventListener('click', () => setEditorMode(btn.dataset.mode));
+                    });
+                    setEditorMode('text');
+            
+                    document.getElementById('prev-month').addEventListener('click', () => { nav--; load(); });
+                    document.getElementById('next-month').addEventListener('click', () => { nav++; load(); });
+                    document.querySelectorAll('.dash-tab-link').forEach(link => {
+                        link.addEventListener('click', () => {
+                            const tab = link.getAttribute('data-tab');
+                            document.querySelectorAll('.dash-tab-link').forEach(l => l.classList.remove('active'));
+                            link.classList.add('active');
+                            document.querySelectorAll('.dash-tab-content').forEach(c => c.classList.remove('active'));
+                            document.getElementById(tab).classList.add('active');
+                        });
+                    });
+            
+                            document.getElementById('add-schedule-btn').addEventListener('click', () => addScheduleForm.style.display = addScheduleForm.style.display === 'block' ? 'none' : 'block');
+                            document.getElementById('add-todo-btn').addEventListener('click', () => addTodoForm.style.display = addTodoForm.style.display === 'block' ? 'none' : 'block');
+                            document.getElementById('new-schedule-allday').addEventListener('change', (e) => { document.getElementById('new-schedule-time').style.display = e.target.checked ? 'none' : 'block'; });
+                            document.getElementById('save-schedule-btn').addEventListener('click', () => {
+                                const title = document.getElementById('new-schedule-title').value;
+                                if (title) {
+                                    events.push({ id: Date.now(), date: selectedDate, title: title, isImportant: document.getElementById('new-schedule-important').checked, isAllDay: document.getElementById('new-schedule-allday').checked, time: document.getElementById('new-schedule-time').value, category: 'personal' });
+                                    saveData(); load(); updateDashboard(selectedDate); addScheduleForm.style.display = 'none';
+                                }
+                            });
+                    
+                            // Event delegation for all template buttons
+                            document.getElementById('schedule-template-bar').addEventListener('click', (e) => {
+                                if (e.target.classList.contains('template-btn')) {
+                                    const btn = e.target;
+                                    const title = btn.dataset.title || btn.innerText;
+                                    const category = btn.dataset.category || 'custom';
+                                    events.push({ id: Date.now(), date: selectedDate, title: title, category: category });
+                                    saveData();
+                                    load();
+                                    updateDashboard(selectedDate);
+                                }
+                            });
+                    
+                            document.getElementById('todo-template-bar').addEventListener('click', (e) => {
+                                if (e.target.classList.contains('template-btn')) {
+                                    const btn = e.target;
+                                    const title = btn.dataset.title || btn.innerText;
+                                    todos.push({ id: Date.now(), date: selectedDate, title: title, completed: false });
+                                    saveData();
+                                    updateDashboard(selectedDate);
+                                }
+                            });
+                    
+                            document.getElementById('new-todo-repeat').addEventListener('change', (e) => { document.getElementById('repeat-end-date-container').style.display = e.target.checked ? 'block' : 'none'; });
+                            document.getElementById('save-todo-btn').addEventListener('click', () => {
+                                const title = document.getElementById('new-todo-title').value;
+                                if (!title) return;                        const isRepeat = document.getElementById('new-todo-repeat').checked;
+                        if (isRepeat) {
+                            const endDate = new Date(document.getElementById('new-todo-end-date').value);
+                            let currentDate = new Date(selectedDate);
+                            while (currentDate <= endDate) {
+                                todos.push({ id: Date.now() + Math.random(), date: currentDate.toISOString().split('T')[0], title: title, completed: false });
+                                currentDate.setDate(currentDate.getDate() + 7);
+                            }
+                        } else { todos.push({ id: Date.now(), date: selectedDate, title: title, completed: false }); }
+                        saveData(); updateDashboard(selectedDate); addTodoForm.style.display = 'none';
+                    });
+            
+                    document.querySelector('.drawing-tools .tool-btn[data-tool="eraser"]').addEventListener('click', () => {
+                        currentTool = 'eraser';
+                        diaryCanvas.classList.remove('pen-tool');
+                        diaryCanvas.classList.add('eraser-tool');
+                    });
+                    document.querySelector('.mode-selectors .tool-btn[data-mode="drawing"]').addEventListener('click', () => {
+                        currentTool = 'pen'; // Default to pen when switching to drawing mode
+                        diaryCanvas.classList.remove('eraser-tool');
+                        diaryCanvas.classList.add('pen-tool');
+                    });
+            
+                    const colorPalette = document.querySelector('.color-palette');
+                    const colorPickerInput = document.getElementById('color-picker-input');
+            
+                    colorPalette.addEventListener('click', (e) => {
+                        const target = e.target;
+                        if (target.classList.contains('color-box')) {
+                            document.querySelector('.color-box.active')?.classList.remove('active');
+                            target.classList.add('active');
+                            penColor = target.dataset.color;
+                        } else if (target.classList.contains('add-color-btn')) {
+                            colorPickerInput.click();
+                        }
+                    });
+            
+                    colorPalette.addEventListener('contextmenu', (e) => {
+                        e.preventDefault();
+                        const target = e.target;
+                        if (target.classList.contains('color-box')) {
+                            if (confirm('이 색상을 팔레트에서 삭제하시겠습니까?')) {
+                                const wasActive = target.classList.contains('active');
+                                target.remove();
+                                if (wasActive) {
+                                    const firstColor = colorPalette.querySelector('.color-box');
+                                    if (firstColor) {
+                                        firstColor.classList.add('active');
+                                        penColor = firstColor.dataset.color;
+                                    }
+                                }
+                            }
+                        }
+                    });
+            
+                    colorPickerInput.addEventListener('change', (e) => {
+                        const newColor = e.target.value;
+                        const newColorBox = document.createElement('div');
+                        newColorBox.className = 'color-box';
+                        newColorBox.style.backgroundColor = newColor;
+                        newColorBox.dataset.color = newColor;
+                        
+                        // Insert before the 'add' button
+                        colorPalette.insertBefore(newColorBox, document.querySelector('.add-color-btn'));
+            
+                        // Automatically select the new color
+                        document.querySelector('.color-box.active')?.classList.remove('active');
+                        newColorBox.classList.add('active');
+            
+                        penColor = newColor;
+                    });
+            
+                    document.querySelectorAll('.size-btn').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            document.querySelector('.size-btn.active')?.classList.remove('active');
+                            btn.classList.add('active');
+                            penSize = parseInt(btn.dataset.size, 10);
+                        });
+                    });
+                    document.getElementById('image-upload-input').addEventListener('change', (e) => {
+                        const reader = new FileReader();
+                        reader.onload = (event) => { 
+                            const img = new Image(); 
+                            img.onload = () => {
+                                ctx.drawImage(img, 0, 0, diaryCanvas.width, diaryCanvas.height);
+                                pushToHistory();
+                            };
+                            img.src = event.target.result; 
+                        };
+                        reader.readAsDataURL(e.target.files[0]);
+                    });
+                    
+                    const emojiContainer = document.querySelector('.emoji-container');
+                    const emojiPicker = document.querySelector('.emoji-picker');
+                    emojiContainer.querySelector('.tool-btn').addEventListener('click', (e) => { e.stopPropagation(); emojiPicker.classList.toggle('open'); });
+                    document.querySelectorAll('.emoji-tab-btn').forEach(tab => {
+                        tab.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            const category = e.target.dataset.category;
+                            document.querySelectorAll('.emoji-tab-btn').forEach(t => t.classList.remove('active'));
+                            e.target.classList.add('active');
+                            document.querySelectorAll('.emoji-grid').forEach(grid => {
+                                grid.classList.remove('active');
+                                if (grid.id === category) grid.classList.add('active');
+                            });
+                        });
+                    });
+                    document.querySelectorAll('.emoji-grid span').forEach(emoji => {
+                        emoji.addEventListener('click', (e) => { e.stopPropagation(); diaryTextarea.value += emoji.innerText; });
+                    });
+                    document.addEventListener('click', (e) => { if (!emojiContainer.contains(e.target)) { emojiPicker.classList.remove('open'); } });
+            
+                    document.getElementById('save-diary-btn').addEventListener('click', () => {
+                        let title = diaryTitleInput.value.trim();
+                        if (!title) {
+                            const defaultTitle = "이름 없는 다이어리";
+                            const untitledDiaries = diaries.filter(d => d.title && d.title.startsWith(defaultTitle));
+                            title = `${defaultTitle} ${untitledDiaries.length + 1}`;
+                        }
+                        const newText = diaryTextarea.value;
+                        const canvasData = diaryCanvas.toDataURL();
+                        let diaryEntry = diaries.find(d => d.date === selectedDate);
+                        if (diaryEntry) {
+                            diaryEntry.title = title;
+                            diaryEntry.text = newText;
+                            diaryEntry.canvasData = canvasData;
+                            if (!diaryEntry.id) { diaryEntry.id = Date.now(); }
+                        } else {
+                            diaries.push({ id: Date.now(), date: selectedDate, title: title, text: newText, canvasData: canvasData });
+                        }
+                        saveData();
+                        alert('다이어리가 저장되었습니다.');
+                    });
+            
+                    document.getElementById('undo-btn').addEventListener('click', undo);
+                    document.getElementById('redo-btn').addEventListener('click', redo);
+            
+                    document.getElementById('clear-canvas-btn').addEventListener('click', () => {
+                        if (confirm('캔버스를 모두 지우시겠습니까? 이 작업은 되돌릴 수 있습니다.')) {
+                            ctx.clearRect(0, 0, diaryCanvas.width, diaryCanvas.height);
+                            pushToHistory();
+                        }
+                    });
+            
+                    document.getElementById('collection-trigger').addEventListener('click', () => { document.getElementById('collection-sidebar').classList.add('open'); });
+                    document.getElementById('close-collection-btn').addEventListener('click', () => { document.getElementById('collection-sidebar').classList.remove('open'); });
+                    document.getElementById('collection-diary-btn').addEventListener('click', () => { window.location.href = 'diary_collection.html'; });
+            
+                    load();
+                    updateDashboard(selectedDate);
+                    renderCustomTemplates('schedule');
+                    renderCustomTemplates('todo');
+                }
+            
+                init();
+            });    

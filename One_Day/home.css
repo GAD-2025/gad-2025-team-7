@@ -55,16 +55,111 @@ body {
 .section-content p { color: var(--light-text-color); text-align: center; }
 #schedule-list li, #todolist-list li { position: relative; display: flex; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 5px; margin-bottom: 8px; }
 #todolist-list input[type="checkbox"] { margin-right: 10px; }
-.template-bar { margin-top: 10px; font-size: 13px; color: var(--light-text-color); }
-.template-btn { background: #eee; border: none; border-radius: 15px; padding: 5px 10px; font-size: 12px; margin-left: 5px; cursor: pointer; }
-.reminder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 15px; }
-.reminder-card { padding: 15px; border-radius: 8px; color: white; text-align: center; }
-.reminder-card .d-day { font-size: 24px; font-weight: 700; }
-.reminder-card .event-title { font-size: 14px; margin-top: 5px; }
+.template-bar { margin-top: 10px; font-size: 13px; color: var(--light-text-color); display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
+.template-btn { background: #eee; border: none; border-radius: 15px; padding: 5px 10px; font-size: 12px; cursor: pointer; }
+.add-template-btn {
+    background: #ddd;
+    color: #555;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    cursor: pointer;
+    margin-left: 5px;
+}
+#reminder-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.reminder-card {
+    width: 90px;
+    height: 90px;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    color: white;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.reminder-card .d-day {
+    font-size: 20px;
+    font-weight: 700;
+}
+.reminder-card .event-title {
+    font-size: 12px;
+    margin-top: 5px;
+    word-break: keep-all; /* Prevent awkward word breaks */
+}
 #todolist-list li.completed { background-color: #e0e0e0; }
 #todolist-list li.completed span { text-decoration: line-through; color: #888; }
 .delete-item-btn { position: absolute; top: 50%; right: 10px; transform: translateY(-50%); background: #ffcdd2; color: #c62828; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 14px; line-height: 22px; text-align: center; cursor: pointer; opacity: 0; transition: opacity 0.2s; }
 #schedule-list li:hover .delete-item-btn, #todolist-list li:hover .delete-item-btn { opacity: 1; }
+
+/* Add Template Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    width: 350px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+.modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+.modal-content input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+.modal-content p {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+.modal-content .color-palette {
+    margin-bottom: 20px;
+}
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+.modal-actions button {
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+#save-template-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+#cancel-template-btn {
+    background-color: #f0f0f0;
+}
 
 /* New Diary Styles */
 .diary-toolbar { display: flex; align-items: center; margin-bottom: 10px; padding: 5px; background: #f9f9f9; border-radius: 5px; }
@@ -179,12 +274,25 @@ body {
     margin-top: 10px;
 }
 
-
 /* Collection View Sidebar */
 #collection-trigger { position: fixed; left: 0; top: 20px; background: var(--primary-color); color: white; writing-mode: vertical-rl; text-orientation: mixed; padding: 15px 8px; border-radius: 0 10px 10px 0; cursor: pointer; z-index: 998; }
 #collection-sidebar { position: fixed; top: 0; left: 0; width: 350px; height: 100%; background: white; box-shadow: 2px 0 10px rgba(0,0,0,0.1); transform: translateX(-100%); transition: transform 0.3s ease-in-out; z-index: 999; display: flex; flex-direction: column; padding: 20px; }
 #collection-sidebar.open { transform: translateX(0); }
-#collection-sidebar h2 { margin-top: 0; }
+#collection-sidebar .sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+#collection-sidebar h2 { margin: 0; }
+#collection-sidebar .close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
 .collection-nav button {
     width: 100%;
     padding: 10px 15px;

@@ -62,8 +62,9 @@
                         <!-- Schedule items will be dynamically added here -->
                         <p>날짜를 선택하여 일정을 확인하세요.</p>
                     </div>
-                    <div class="template-bar">
+                    <div class="template-bar" id="schedule-template-bar">
                         <span>템플릿:</span>
+                        <button class="add-template-btn" data-type="schedule">+</button>
                         <button class="template-btn" data-title="회의" data-category="work">회의</button>
                         <button class="template-btn" data-title="점심 약속" data-category="personal">점심 약속</button>
                     </div>
@@ -91,8 +92,9 @@
                     <div id="todolist-list" class="section-content">
                         <!-- Todo items will be dynamically added here -->
                     </div>
-                     <div class="template-bar">
+                     <div class="template-bar" id="todo-template-bar">
                         <span>템플릿:</span>
+                        <button class="add-template-btn" data-type="todo">+</button>
                         <button class="template-btn">장보기</button>
                         <button class="template-btn">과제</button>
                     </div>
@@ -102,7 +104,7 @@
                     <div class="section-header">
                         <h3>리마인더</h3>
                     </div>
-                    <div id="reminder-list" class="section-content reminder-grid">
+                    <div id="reminder-list" class.section-content reminder-grid">
                         <!-- Reminder D-day items will be added here -->
                     </div>
                 </div>
@@ -158,6 +160,9 @@
                                     <label class="tool-btn" for="image-upload-input">🖼️
                                         <input type="file" id="image-upload-input" accept="image/*" style="display:none;">
                                     </label>
+                                    <button class="tool-btn" id="undo-btn" disabled>↩️</button>
+                                    <button class="tool-btn" id="redo-btn" disabled>↪️</button>
+                         
                                 </div>
                                 <div class="color-palette">
                                     <div class="color-box active" style="background-color: black;" data-color="black"></div>
@@ -196,11 +201,35 @@
 
     <!-- Collection View Sidebar -->
     <div id="collection-trigger">🔖</div>
-                <div id="collection-sidebar">
-                    <h2>모아보기</h2>
-                    <div class="collection-nav">
-                        <button id="collection-diary-btn">📔 다이어리</button>
-                        <!-- Other collection buttons can go here -->
-                    </div>
-                </div></body>
+    <div id="collection-sidebar">
+        <div class="sidebar-header">
+            <h2>모아보기</h2>
+            <button id="close-collection-btn" class="close-btn">X</button>
+        </div>
+        <div class="collection-nav">
+            <button id="collection-diary-btn">📔 다이어리</button>
+            <!-- Other collection buttons can go here -->
+        </div>
+    </div>
+
+    <!-- Add Template Modal -->
+    <div id="add-template-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h3 id="template-modal-title">새 템플릿 추가</h3>
+            <input type="text" id="new-template-name" placeholder="템플릿 이름">
+            <p>템플릿 색상:</p>
+            <div id="template-color-palette" class="color-palette">
+                <div class="color-box active" style="background-color: #eee;" data-color="#eee"></div>
+                <div class="color-box" style="background-color: #87CEEB;" data-color="#87CEEB"></div>
+                <div class="color-box" style="background-color: #F08080;" data-color="#F08080"></div>
+                <div class="color-box" style="background-color: #90EE90;" data-color="#90EE90"></div>
+                <div class="color-box" style="background-color: #DDA0DD;" data-color="#DDA0DD"></div>
+            </div>
+            <div class="modal-actions">
+                <button id="save-template-btn">저장</button>
+                <button id="cancel-template-btn">취소</button>
+            </div>
+        </div>
+    </div>
+</body>
 </html>
