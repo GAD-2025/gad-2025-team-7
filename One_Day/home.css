@@ -344,6 +344,7 @@ body {
 .record-content.active {
     display: block;
 }
+<<<<<<< HEAD
 
 /* Healthcare Tab Styles */
 .healthcare-row {
@@ -712,3 +713,5 @@ body {
     color: var(--light-text-color);
     text-align: right;
 }
+=======
+>>>>>>> 769570e3beec0aa0a72e4a0b17a8c59102c6ea83

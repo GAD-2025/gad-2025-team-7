@@ -17,13 +17,18 @@ document.addEventListener('DOMContentLoaded', () => {
         loginFormContainer.style.display = 'block';
     });
 
+    
     // 회원가입 처리
     signupForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const email = signupForm.querySelector('input[type="email"]').value;
         const password = signupForm.querySelector('input[type="password"]').value;
 
+<<<<<<< HEAD
         fetch('http://localhost:3000/api/auth/register', {
+=======
+        fetch('http://localhost:3000/signup', {
+>>>>>>> 769570e3beec0aa0a72e4a0b17a8c59102c6ea83
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -34,9 +39,13 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             alert(data.message);
             if (data.userId) {
+<<<<<<< HEAD
                 // 회원가입 성공 시 userId를 localStorage에 저장
                 localStorage.setItem('userId', data.userId);
                 // 프로필 설정 페이지로 이동
+=======
+                // 회원가입 성공 시 프로필 설정 페이지로 이동
+>>>>>>> 769570e3beec0aa0a72e4a0b17a8c59102c6ea83
                 window.location.href = 'profile_setup.html';
             }
         })
@@ -46,7 +55,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+<<<<<<< HEAD
     // 이메일 로그인 (임시로 홈으로 바로 이동)
+=======
+    // 이메일 로그인
+>>>>>>> 769570e3beec0aa0a72e4a0b17a8c59102c6ea83
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
         window.location.href = 'home.html';
