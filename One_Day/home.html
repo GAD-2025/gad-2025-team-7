@@ -6,6 +6,7 @@
     <title>One Day - 홈</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="stopwatch.css">
 </head>
 <body>
     <div class="main-content-wrapper">
@@ -197,19 +198,46 @@
                 </div>
 
                 <div id="stopwatch-content" class="record-content">
-                    <div class="dashboard-section">
-                        <div class="section-header">
-                            <h3>스톱워치</h3>
-                        </div>
-                        <div class="stopwatch-container">
-                            <div id="stopwatch-display">00:00:00</div>
-                            <div class="stopwatch-controls">
-                                <button id="start-stop-btn">Start</button>
-                                <button id="reset-btn">Reset</button>
-                                <button id="lap-btn">Lap</button>
+                    <div class="record-container">
+                        <aside class="category-sidebar">
+                            <h2>카테고리</h2>
+                            <ul id="category-list">
+                                <li data-category="공부">공부</li>
+                                <li data-category="운동">운동</li>
+                                <li data-category="취미">취미</li>
+                                <li data-category="알바">알바</li>
+                            </ul>
+                            <div class="add-category">
+                                <input type="text" id="new-category-input" placeholder="새 카테고리 추가">
+                                <button id="add-category-btn">+</button>
                             </div>
-                            <ul id="laps-list"></ul>
-                        </div>
+                        </aside>
+                
+                        <main class="stopwatch-main">
+                            <div class="stopwatch-display-area">
+                                <h3 id="current-category-display">카테고리를 선택하세요</h3>
+                                <div id="stopwatch-timer">00:00:00</div>
+                                <div class="stopwatch-controls">
+                                    <button id="start-pause-btn" disabled>시작</button>
+                                    <button id="reset-btn" disabled>초기화</button>
+                                </div>
+                            </div>
+                
+                            <div class="task-lists">
+                                <section class="task-list-section">
+                                    <h3>진행중인 기록</h3>
+                                    <ul id="in-progress-list">
+                                        <!-- 진행중인 태스크가 여기에 추가됩니다. -->
+                                    </ul>
+                                </section>
+                                <section class="task-list-section">
+                                    <h3>기록 완료</h3>
+                                    <ul id="completed-list">
+                                        <!-- 완료된 태스크가 여기에 추가됩니다. -->
+                                    </ul>
+                                </section>
+                            </div>
+                        </main>
                     </div>
                 </div>
             </div>
@@ -223,6 +251,7 @@
 
     <script src="calendar.js"></script>
     <script src="record.js"></script>
+    <script src="stopwatch.js"></script>
 
     <!-- Collection View Sidebar -->
     <div id="collection-trigger">🔖</div>

@@ -121,7 +121,7 @@ body {
 }
 
 #stopwatch-timer {
-    font-size: 4.5em;
+    font-size: 3em;
     font-weight: 700;
     font-family: 'Roboto Mono', monospace;
     color: var(--text-color);
@@ -162,6 +162,7 @@ body {
 /* Task Lists */
 .task-lists {
     display: flex;
+    flex-direction: column;
     gap: 30px;
     flex-grow: 1;
 }
