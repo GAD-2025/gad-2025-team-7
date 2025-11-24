@@ -1,0 +1,35 @@
+.stopwatch-card {
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.stopwatch-card .date {
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.stopwatch-card .record-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.stopwatch-card .record-item:last-child {
+    border-bottom: none;
+}
+
+.stopwatch-card .record-item .label {
+    font-size: 15px;
+}
+
+.stopwatch-card .record-item .time {
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+}
