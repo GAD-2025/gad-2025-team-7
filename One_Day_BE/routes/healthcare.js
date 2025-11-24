@@ -1,0 +1,92 @@
+const express = require('express');
+const router = express.Router();
+const pool = require('../config/db'); // Corrected to use pool
+
+// @route   GET /api/healthcare/cycles/:userId
+// @desc    Get all menstrual cycles for a user and predict the next one
+// @access  Private
+router.get('/cycles/:userId', async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const [cycles] = await pool.query(
+            'SELECT start_date, end_date FROM menstrual_cycles WHERE user_id = ? ORDER BY start_date DESC',
+            [userId]
+        );
+
+        if (cycles.length < 2) {
+            return res.json({
+                prediction: null,
+                history: cycles,
+                message: '예측을 위해 최소 2번의 주기 기록이 필요합니다.'
+            });
+        }
+
+        // --- Prediction Logic ---
+        let cycleLengths = [];
+        for (let i = 0; i < cycles.length - 1; i++) {
+            const startDate1 = new Date(cycles[i].start_date);
+            const startDate2 = new Date(cycles[i+1].start_date);
+            const diffTime = Math.abs(startDate1 - startDate2);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            cycleLengths.push(diffDays);
+        }
+        const avgCycleLength = cycleLengths.reduce((a, b) => a + b, 0) / cycleLengths.length;
+
+        let durations = [];
+        for (let cycle of cycles) {
+            const startDate = new Date(cycle.start_date);
+            const endDate = new Date(cycle.end_date);
+            const diffTime = Math.abs(endDate - startDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // Inclusive
+            durations.push(diffDays);
+        }
+        const avgDuration = durations.reduce((a, b) => a + b, 0) / durations.length;
+
+        const lastStartDate = new Date(cycles[0].start_date);
+        const predictedStartDate = new Date(new Date(lastStartDate).setDate(lastStartDate.getDate() + Math.round(avgCycleLength)));
+        const predictedEndDate = new Date(new Date(predictedStartDate).setDate(predictedStartDate.getDate() + Math.round(avgDuration - 1)));
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const dDay = Math.ceil((predictedStartDate - today) / (1000 * 60 * 60 * 24));
+
+        res.json({
+            prediction: {
+                startDate: predictedStartDate.toISOString().split('T')[0],
+                endDate: predictedEndDate.toISOString().split('T')[0],
+                dDay: dDay
+            },
+            history: cycles
+        });
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route   POST /api/healthcare/cycles
+// @desc    Add a menstrual cycle record
+// @access  Private
+router.post('/cycles', async (req, res) => {
+    const { startDate, endDate, userId } = req.body;
+
+    if (!startDate || !endDate || !userId) {
+        return res.status(400).json({ msg: '사용자 ID, 시작일, 종료일을 모두 입력해주세요.' });
+    }
+
+    try {
+        const [result] = await pool.query(
+            'INSERT INTO menstrual_cycles (user_id, start_date, end_date) VALUES (?, ?, ?)',
+            [userId, startDate, endDate]
+        );
+        res.status(201).json({ msg: '주기 기록이 저장되었습니다.', insertId: result.insertId });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+
+module.exports = router;

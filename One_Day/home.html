@@ -6,6 +6,7 @@
     <title>One Day - 홈</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="stopwatch.css">
 </head>
 <body>
     <div class="main-content-wrapper">
@@ -112,92 +113,281 @@
 
             <!-- Records Tab Content -->
             <div id="records-tab" class="dash-tab-content">
-                <div class="dashboard-section">
-                    <div class="section-header">
-                        <h3>다이어리</h3>
-                        <div class="header-actions">
-                            <button class="save-btn" id="save-diary-btn">저장</button>
-                        </div>
-                    </div>
-                    
-                    <div id="diary-editor">
-                        <input type="text" id="diary-title" placeholder="제목을 입력하세요">
-                        <div class="diary-toolbar">
-                            <div class="mode-selectors">
-                                <button class="tool-btn active" data-mode="text">📝</button>
-                                <button class="tool-btn" data-mode="drawing">✏️</button>
+                <div class="record-menu">
+                    <button class="record-menu-btn active" data-target="diary-content">다이어리</button>
+                    <button class="record-menu-btn" data-target="stopwatch-content">스톱워치</button>
+                </div>
+
+                <div id="diary-content" class="record-content active">
+                    <div class="dashboard-section">
+                        <div class="section-header">
+                            <h3>다이어리</h3>
+                            <div class="header-actions">
+                                <button class="save-btn" id="save-diary-btn">저장</button>
                             </div>
-                            <div class="text-tools">
-                                <label class="tool-btn" for="image-upload-input">🖼️
-                                    <input type="file" id="image-upload-input" accept="image/*" style="display:none;">
-                                </label>
-                                <div class="emoji-container">
-                                    <button class="tool-btn">😊</button>
-                                    <div class="emoji-picker">
-                                        <div class="emoji-tabs">
-                                            <button class="emoji-tab-btn active" data-category="faces">표정</button>
-                                            <button class="emoji-tab-btn" data-category="food">음식</button>
-                                            <button class="emoji-tab-btn" data-category="activities">활동</button>
-                                        </div>
-                                        <div class="emoji-content">
-                                            <div id="faces" class="emoji-grid active">
-                                                <span>😊</span><span>😂</span><span>😍</span><span>🤔</span><span>😴</span><span>😠</span><span>😢</span><span>😮</span><span>😎</span><span>🥳</span>
+                        </div>
+                        
+                        <div id="diary-editor">
+                            <input type="text" id="diary-title" placeholder="제목을 입력하세요">
+                            <div class="diary-toolbar">
+                                <div class="mode-selectors">
+                                    <button class="tool-btn active" data-mode="text">📝</button>
+                                    <button class="tool-btn" data-mode="drawing">✏️</button>
+                                </div>
+                                <div class="text-tools">
+                                    <label class="tool-btn" for="image-upload-input">🖼️
+                                        <input type="file" id="image-upload-input" accept="image/*" style="display:none;">
+                                    </label>
+                                    <div class="emoji-container">
+                                        <button class="tool-btn">😊</button>
+                                        <div class="emoji-picker">
+                                            <div class="emoji-tabs">
+                                                <button class="emoji-tab-btn active" data-category="faces">표정</button>
+                                                <button class="emoji-tab-btn" data-category="food">음식</button>
+                                                <button class="emoji-tab-btn" data-category="activities">활동</button>
                                             </div>
-                                            <div id="food" class="emoji-grid">
-                                                <span>🍎</span><span>🍔</span><span>🍕</span><span>🍰</span><span>☕</span><span>🍜</span><span>🍣</span><span>🍦</span><span>🍉</span><span>🍓</span>
-                                            </div>
-                                            <div id="activities" class="emoji-grid">
-                                                <span>⚽</span><span>🏀</span><span>🎸</span><span>🎮</span><span>✈️</span><span>📚</span><span>🎉</span><span>🎁</span><span>🎤</span><span>🎨</span>
+                                            <div class="emoji-content">
+                                                <div id="faces" class="emoji-grid active">
+                                                    <span>😊</span><span>😂</span><span>😍</span><span>🤔</span><span>😴</span><span>😠</span><span>😢</span><span>😮</span><span>😎</span><span>🥳</span>
+                                                </div>
+                                                <div id="food" class="emoji-grid">
+                                                    <span>🍎</span><span>🍔</span><span>🍕</span><span>🍰</span><span>☕</span><span>🍜</span><span>🍣</span><span>🍦</span><span>🍉</span><span>🍓</span>
+                                                </div>
+                                                <div id="activities" class="emoji-grid">
+                                                    <span>⚽</span><span>🏀</span><span>🎸</span><span>🎮</span><span>✈️</span><span>📚</span><span>🎉</span><span>🎁</span><span>🎤</span><span>🎨</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="drawing-tools" style="display: none;">
+                                    <div class="tool-buttons">
+                                        <button class="tool-btn active" data-tool="pen">✏️</button>
+                                        <button class="tool-btn" data-tool="eraser">🧼</button>
+                                        <label class="tool-btn" for="image-upload-input">🖼️
+                                            <input type="file" id="image-upload-input" accept="image/*" style="display:none;">
+                                        </label>
+                                        <button class="tool-btn" id="undo-btn" disabled>↩️</button>
+                                        <button class="tool-btn" id="redo-btn" disabled>↪️</button>
+                             
+                                    </div>
+                                    <div class="color-palette">
+                                        <div class="color-box active" style="background-color: black;" data-color="black"></div>
+                                        <div class="color-box" style="background-color: red;" data-color="red"></div>
+                                        <div class="color-box" style="background-color: blue;" data-color="blue"></div>
+                                        <div class="color-box" style="background-color: green;" data-color="green"></div>
+                                        <div class="add-color-btn">+</div>
+                                        <input type="color" id="color-picker-input" style="display: none;">
+                                    </div>
+                                    <div class="size-controls">
+                                        <button class="size-btn" data-size="3">S</button>
+                                        <button class="size-btn active" data-size="8">M</button>
+                                        <button class="size-btn" data-size="15">L</button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="drawing-tools" style="display: none;">
-                                <div class="tool-buttons">
-                                    <button class="tool-btn active" data-tool="pen">✏️</button>
-                                    <button class="tool-btn" data-tool="eraser">🧼</button>
-                                    <label class="tool-btn" for="image-upload-input">🖼️
-                                        <input type="file" id="image-upload-input" accept="image/*" style="display:none;">
-                                    </label>
-                                    <button class="tool-btn" id="undo-btn" disabled>↩️</button>
-                                    <button class="tool-btn" id="redo-btn" disabled>↪️</button>
-                         
-                                </div>
-                                <div class="color-palette">
-                                    <div class="color-box active" style="background-color: black;" data-color="black"></div>
-                                    <div class="color-box" style="background-color: red;" data-color="red"></div>
-                                    <div class="color-box" style="background-color: blue;" data-color="blue"></div>
-                                    <div class="color-box" style="background-color: green;" data-color="green"></div>
-                                    <div class="add-color-btn">+</div>
-                                    <input type="color" id="color-picker-input" style="display: none;">
-                                </div>
-                                <div class="size-controls">
-                                    <button class="size-btn" data-size="3">S</button>
-                                    <button class="size-btn active" data-size="8">M</button>
-                                    <button class="size-btn" data-size="15">L</button>
-                                </div>
+                            <textarea id="diary-textarea" rows="5" placeholder="오늘의 하루를 기록해보세요..."></textarea>
+                            <canvas id="diary-canvas" style="display: none;"></canvas>
+                            <div class="diary-actions">
+                                <button class="tool-btn" id="undo-btn" disabled>↩️</button>
+                                <button class="tool-btn" id="redo-btn" disabled>↪️</button>
+                                <button class="tool-btn" id="clear-canvas-btn">🗑️</button>
                             </div>
                         </div>
-                        <textarea id="diary-textarea" rows="5" placeholder="오늘의 하루를 기록해보세요..."></textarea>
-                        <canvas id="diary-canvas" style="display: none;"></canvas>
-                        <div class="diary-actions">
-                            <button class="tool-btn" id="undo-btn" disabled>↩️</button>
-                            <button class="tool-btn" id="redo-btn" disabled>↪️</button>
-                            <button class="tool-btn" id="clear-canvas-btn">🗑️</button>
-                        </div>
+                    </div>
+                </div>
+
+                <div id="stopwatch-content" class="record-content">
+                    <div class="record-container">
+                        <aside class="category-sidebar">
+                            <h2>카테고리</h2>
+                            <ul id="category-list">
+                                <li data-category="공부">공부</li>
+                                <li data-category="운동">운동</li>
+                                <li data-category="취미">취미</li>
+                                <li data-category="알바">알바</li>
+                            </ul>
+                            <div class="add-category">
+                                <input type="text" id="new-category-input" placeholder="새 카테고리 추가">
+                                <button id="add-category-btn">+</button>
+                            </div>
+                        </aside>
+                
+                        <main class="stopwatch-main">
+                            <div class="stopwatch-display-area">
+                                <h3 id="current-category-display">카테고리를 선택하세요</h3>
+                                <div id="stopwatch-timer">00:00:00</div>
+                                <div class="stopwatch-controls">
+                                    <button id="start-pause-btn" disabled>시작</button>
+                                    <button id="reset-btn" disabled>초기화</button>
+                                </div>
+                            </div>
+                
+                            <div class="task-lists">
+                                <section class="task-list-section">
+                                    <h3>진행중인 기록</h3>
+                                    <ul id="in-progress-list">
+                                        <!-- 진행중인 태스크가 여기에 추가됩니다. -->
+                                    </ul>
+                                </section>
+                                <section class="task-list-section">
+                                    <h3>기록 완료</h3>
+                                    <ul id="completed-list">
+                                        <!-- 완료된 태스크가 여기에 추가됩니다. -->
+                                    </ul>
+                                </section>
+                            </div>
+                        </main>
                     </div>
                 </div>
             </div>
 
-            <!-- Healthcare Tab Content (Placeholder) -->
+            <!-- Healthcare Tab Content -->
             <div id="healthcare-tab" class="dash-tab-content">
-                <p>헬스케어 탭 콘텐츠가 여기에 표시됩니다.</p>
+                <div class="healthcare-row">
+                    <div class="dashboard-section healthcare-item">
+                        <div class="section-header">
+                            <h3>월경 예정일</h3>
+                            <div class="header-actions">
+                                <button class="edit-btn" id="edit-cycle-btn">수정</button>
+                            </div>
+                        </div>
+                        <div class="section-content" id="cycle-prediction-content">
+                            <div class="prediction-main-info">
+                                <p>다음 월경 시작일까지</p>
+                                <h2 class="d-day-display">D-?</h2>
+                            </div>
+                            <div class="predicted-dates-grid">
+                                <div class="predicted-date-item">
+                                    <p>예상 시작일</p>
+                                    <span id="predicted-start-date" class="large-date">----.--.--</span>
+                                </div>
+                                <div class="predicted-date-item">
+                                    <p>예상 종료일</p>
+                                    <span id="predicted-end-date" class="large-date">----.--.--</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-section healthcare-item">
+                        <div class="section-header">
+                            <h3>오늘의 건강</h3>
+                        </div>
+                        <div class="section-content health-content-grid">
+                            <div class="pedometer">
+                                <h4>만보기</h4>
+                                <div id="step-count" class="pedometer-display">0</div>
+                                <p>걸음</p>
+                                <div class="pedometer-controls" style="display: flex !important;">
+                                    <button id="add-steps-btn">+100</button>
+                                    <button id="reset-steps-btn">리셋</button>
+                                </div>
+                            </div>
+                            <div class="calorie-graph-container">
+                                <svg id="calorie-graph" viewBox="0 0 100 100">
+                                    <circle class="graph-bg" cx="50" cy="50" r="45"></circle>
+                                    <path id="graph-progress" class="graph-progress" d="M 50, 5 a 45,45 0 1,1 0,90 a 45,45 0 1,1 0,-90"></path>
+                                </svg>
+                                <div id="graph-text" class="graph-text">
+                                    오늘의 건강까지<br>
+                                    <span id="kcal-remaining">0</span>kcal
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h3>식단 칼로리</h3>
+                    </div>
+                    <div id="meal-cards-container" class="section-content horizontal-scroll">
+                        <!-- Default Meal Card -->
+                        <div class="meal-card">
+                            <div class="meal-card-header">
+                                <h4 class="meal-card-title" data-category="아침">아침</h4>
+                                <div class="meal-card-actions">
+                                    <button class="add-sibling-btn">+</button>
+                                    <button class="delete-meal-card-btn">X</button>
+                                </div>
+                            </div>
+                            <div class="meal-card-body">
+                                <ul class="food-list"></ul>
+                                <div class="food-search-wrapper">
+                                    <input type="text" class="food-search-input" placeholder="음식 검색...">
+                                    <div class="autocomplete-results"></div>
+                                </div>
+                            </div>
+                            <div class="meal-card-footer">
+                                <span>총 칼로리: <span class="meal-card-total-calories">0</span> kcal</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Template for a single meal card (hidden) -->
+                <template id="meal-card-template">
+                    <div class="meal-card">
+                        <div class="meal-card-header">
+                            <h4 class="meal-card-title" data-category="점심">점심</h4>
+                            <div class="meal-card-actions">
+                                <button class="add-sibling-btn">+</button>
+                                <button class="delete-meal-card-btn">X</button>
+                            </div>
+                        </div>
+                        <div class="meal-card-body">
+                            <ul class="food-list"></ul>
+                            <div class="food-search-wrapper">
+                                <input type="text" class="food-search-input" placeholder="음식 검색...">
+                                <div class="autocomplete-results"></div>
+                            </div>
+                        </div>
+                        <div class="meal-card-footer">
+                            <span>총 칼로리: <span class="meal-card-total-calories">0</span> kcal</span>
+                        </div>
+                    </div>
+                </template>
+
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h3>탄단지 계산</h3>
+                    </div>
+                    <div id="macros-content" class="section-content">
+                        <div class="total-calorie-display">
+                            오늘 먹은 총 칼로리: <span id="total-intake-display">0</span> kcal
+                        </div>
+                        <div class="macro-bars-container">
+                            <div class="macro-item">
+                                <label>탄수화물</label>
+                                <div class="macro-bar">
+                                    <div id="carb-bar" class="macro-bar-progress"></div>
+                                </div>
+                                <span id="carb-amount">0g</span>
+                            </div>
+                            <div class="macro-item">
+                                <label>단백질</label>
+                                <div class="macro-bar">
+                                    <div id="protein-bar" class="macro-bar-progress"></div>
+                                </div>
+                                <span id="protein-amount">0g</span>
+                            </div>
+                            <div class="macro-item">
+                                <label>지방</label>
+                                <div class="macro-bar">
+                                    <div id="fat-bar" class="macro-bar-progress"></div>
+                                </div>
+                                <span id="fat-amount">0g</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script src="calendar.js"></script>
+    <script src="record.js"></script>
+    <script src="stopwatch.js"></script>
+    <script src="healthcare.js"></script>
 
     <!-- Collection View Sidebar -->
     <div id="collection-trigger">🔖</div>
@@ -208,6 +398,7 @@
         </div>
         <div class="collection-nav">
             <button id="collection-diary-btn">📔 다이어리</button>
+            <button id="collection-stopwatch-btn">⏱️ 스톱워치</button>
             <!-- Other collection buttons can go here -->
         </div>
     </div>
@@ -230,6 +421,36 @@
                 <button id="cancel-template-btn">취소</button>
             </div>
         </div>
+    </div>
+
+    <!-- Menstrual Cycle Edit Modal -->
+    <div id="cycle-edit-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h3>월경 기록</h3>
+            <div class="cycle-input-form">
+                <label for="cycle-start-date">시작일:</label>
+                <input type="date" id="cycle-start-date">
+                <label for="cycle-end-date">종료일:</label>
+                <input type="date" id="cycle-end-date">
+                <button id="save-cycle-record-btn">기록 추가</button>
+            </div>
+            <hr>
+            <h4>과거 기록</h4>
+            <div id="past-cycles-list" class="section-content">
+                <!-- Past records will be listed here -->
+                <p>기록이 없습니다.</p>
+            </div>
+            <div class="modal-actions">
+                <button id="close-cycle-modal-btn">닫기</button>
+            </div>
+        </div>
+    </div>
+    <!-- Global Meal Category Menu (for dropdown) -->
+    <div id="global-meal-category-menu" class="meal-category-menu" style="display: none; position: fixed; z-index: 1100;">
+        <button data-category="아침">아침</button>
+        <button data-category="점심">점심</button>
+        <button data-category="저녁">저녁</button>
+        <button data-category="간식">간식</button>
     </div>
 </body>
 </html>

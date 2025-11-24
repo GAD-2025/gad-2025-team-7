@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const signupFormContainer = document.getElementById('signup-form');
     const showSignup = document.getElementById('show-signup');
     const showLogin = document.getElementById('show-login');
-    const loginForm = loginFormContainer.querySelector('form');
+    const signupForm = signupFormContainer.querySelector('form');
 
     showSignup.addEventListener('click', (e) => {
         e.preventDefault();
@@ -17,16 +17,39 @@ document.addEventListener('DOMContentLoaded', () => {
         loginFormContainer.style.display = 'block';
     });
 
-    // 이메일 로그인
+    // 회원가입 처리
+    signupForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = signupForm.querySelector('input[type="email"]').value;
+        const password = signupForm.querySelector('input[type="password"]').value;
+
+        fetch('http://localhost:3000/api/auth/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            if (data.userId) {
+                // 회원가입 성공 시 userId를 localStorage에 저장
+                localStorage.setItem('userId', data.userId);
+                // 프로필 설정 페이지로 이동
+                window.location.href = 'profile_setup.html';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('회원가입 중 오류가 발생했습니다.');
+        });
+    });
+
+    // 이메일 로그인 (임시로 홈으로 바로 이동)
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        
-        const overlay = document.getElementById('transition-overlay');
-        overlay.classList.add('active');
-
-        setTimeout(() => {
-            window.location.href = 'home.html';
-        }, 500);
+        window.location.href = 'home.html';
     });
 
     // 소셜 로그인 버튼 시뮬레이션

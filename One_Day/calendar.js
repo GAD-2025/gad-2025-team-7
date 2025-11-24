@@ -628,6 +628,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('collection-trigger').addEventListener('click', () => { document.getElementById('collection-sidebar').classList.add('open'); });
                     document.getElementById('close-collection-btn').addEventListener('click', () => { document.getElementById('collection-sidebar').classList.remove('open'); });
                     document.getElementById('collection-diary-btn').addEventListener('click', () => { window.location.href = 'diary_collection.html'; });
+                    document.getElementById('collection-stopwatch-btn').addEventListener('click', () => { window.location.href = 'stopwatch_collection.html'; });
             
                     load();
                     updateDashboard(selectedDate);

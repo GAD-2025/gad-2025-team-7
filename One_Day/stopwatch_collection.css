@@ -1,0 +1,81 @@
+.period-selection {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    gap: 10px;
+}
+
+.period-tab {
+    padding: 10px 20px;
+    border: 1px solid var(--primary-color);
+    border-radius: 20px;
+    background-color: white;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.period-tab:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.period-tab.active {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 700;
+}
+
+.stopwatch-collection-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.chart-container {
+    width: 80%; /* Adjust as needed */
+    max-width: 600px; /* Max width for the chart */
+    margin-bottom: 40px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    padding: 20px;
+}
+
+.stopwatch-card {
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.stopwatch-card .date {
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.stopwatch-card .record-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.stopwatch-card .record-item:last-child {
+    border-bottom: none;
+}
+
+.stopwatch-card .record-item .label {
+    font-size: 15px;
+}
+
+.stopwatch-card .record-item .time {
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+}
