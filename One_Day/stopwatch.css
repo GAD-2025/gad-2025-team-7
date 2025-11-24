@@ -1,0 +1,225 @@
+:root {
+    --primary-color: #FF7581;
+    --background-color: #fdfcfa;
+    --border-color: #eee;
+    --text-color: #333;
+    --light-text-color: #888;
+    --highlight-bg: #fffbe6;
+    --active-blue: #e0f7fa;
+    --paused-yellow: #fff9c4;
+    --completed-green: #e8f5e9;
+}
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    overflow: hidden;
+}
+
+.record-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Category Sidebar */
+.category-sidebar {
+    width: 250px;
+    background-color: #fff;
+    border-right: 1px solid var(--border-color);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.category-sidebar h2 {
+    margin: 0 0 20px 0;
+    font-size: 20px;
+    color: var(--primary-color);
+}
+
+#category-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+#category-list li {
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: 500;
+}
+
+#category-list li:hover {
+    background-color: #fdecef;
+}
+
+#category-list li.selected {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 700;
+}
+
+.add-category {
+    display: flex;
+    margin-top: 20px;
+}
+
+#new-category-input {
+    flex-grow: 1;
+    border: 1px solid #ddd;
+    border-radius: 5px 0 0 5px;
+    padding: 10px;
+    font-size: 14px;
+}
+
+#add-category-btn {
+    border: none;
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 0 15px;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+
+/* Main Content */
+.stopwatch-main {
+    flex-grow: 1;
+    padding: 20px 40px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.dashboard-tabs {
+    justify-content: flex-start;
+    margin-bottom: 30px;
+}
+
+/* Stopwatch Display */
+.stopwatch-display-area {
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+
+#current-category-display {
+    margin: 0 0 10px 0;
+    font-size: 22px;
+    color: var(--light-text-color);
+    font-weight: 500;
+}
+
+#stopwatch-timer {
+    font-size: 4.5em;
+    font-weight: 700;
+    font-family: 'Roboto Mono', monospace;
+    color: var(--text-color);
+    margin-bottom: 20px;
+}
+
+.stopwatch-controls button {
+    font-size: 16px;
+    padding: 12px 30px;
+    margin: 0 10px;
+    border: 1px solid var(--primary-color);
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+#start-pause-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+#start-pause-btn.paused {
+    background-color: #ffab00;
+    border-color: #ffab00;
+}
+
+#reset-btn {
+    background-color: transparent;
+    color: var(--light-text-color);
+    border-color: #ccc;
+}
+
+.stopwatch-controls button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Task Lists */
+.task-lists {
+    display: flex;
+    gap: 30px;
+    flex-grow: 1;
+}
+
+.task-list-section {
+    flex: 1;
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.task-list-section h3 {
+    margin: 0 0 15px 0;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.task-list-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    height: calc(100% - 50px);
+    overflow-y: auto;
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.task-item.active { background-color: var(--active-blue); }
+.task-item.paused { background-color: var(--paused-yellow); }
+.task-item.completed { background-color: var(--completed-green); text-decoration: line-through; color: var(--light-text-color); }
+
+.task-category { font-weight: 700; }
+.task-time { font-family: 'Roboto Mono', monospace; font-weight: 500; }
+
+.task-controls button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 8px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+    font-weight: bold;
+}
+
+.task-controls .finish-btn { color: #4caf50; }
+.task-controls .resume-btn { color: #2196f3; font-size: 18px; }
+.task-controls .pause-btn { color: #ff9800; font-size: 18px; }
+.task-controls .delete-btn { color: #f44336; }
+
+.task-controls button:hover { background-color: rgba(0,0,0,0.05); }
