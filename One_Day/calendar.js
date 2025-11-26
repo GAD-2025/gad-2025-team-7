@@ -53,7 +53,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (eventsForDay.length === 0) { scheduleList.innerHTML = '<p>등록된 일정이 없습니다.</p>'; return; }
             eventsForDay.forEach(event => {
                 const li = document.createElement('li');
-                li.innerHTML = `<span>${event.isImportant ? '[중요] ' : ''}${event.title}</span>`;
+                li.classList.toggle('completed', event.completed);
+                li.innerHTML = `<input type="checkbox" ${event.completed ? 'checked' : ''}><span>${event.isImportant ? '[중요] ' : ''}${event.title}</span>`;
+                li.querySelector('input').addEventListener('change', () => {
+                    event.completed = !event.completed;
+                    li.classList.toggle('completed', event.completed);
+                    saveData();
+                });
                 const deleteBtn = document.createElement('button');
                 deleteBtn.className = 'delete-item-btn';
                 deleteBtn.innerText = '×';
@@ -450,7 +456,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             document.getElementById('save-schedule-btn').addEventListener('click', () => {
                                 const title = document.getElementById('new-schedule-title').value;
                                 if (title) {
-                                    events.push({ id: Date.now(), date: selectedDate, title: title, isImportant: document.getElementById('new-schedule-important').checked, isAllDay: document.getElementById('new-schedule-allday').checked, time: document.getElementById('new-schedule-time').value, category: 'personal' });
+                                    events.push({ id: Date.now(), date: selectedDate, title: title, isImportant: document.getElementById('new-schedule-important').checked, isAllDay: document.getElementById('new-schedule-allday').checked, time: document.getElementById('new-schedule-time').value, category: 'personal', completed: false });
                                     saveData(); load(); updateDashboard(selectedDate); addScheduleForm.style.display = 'none';
                                 }
                             });

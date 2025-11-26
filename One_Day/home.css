@@ -54,7 +54,7 @@ body {
 .add-btn, .save-btn, .edit-btn { background-color: var(--primary-color); color: white; border: none; border-radius: 5px; padding: 5px 10px; font-size: 14px; cursor: pointer; }
 .section-content p { color: var(--light-text-color); text-align: center; }
 #schedule-list li, #todolist-list li { position: relative; display: flex; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 5px; margin-bottom: 8px; }
-#todolist-list input[type="checkbox"] { margin-right: 10px; }
+#schedule-list input[type="checkbox"], #todolist-list input[type="checkbox"] { margin-right: 10px; }
 .template-bar { margin-top: 10px; font-size: 13px; color: var(--light-text-color); display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
 .template-btn { background: #eee; border: none; border-radius: 15px; padding: 5px 10px; font-size: 12px; cursor: pointer; }
 .add-template-btn {
@@ -99,6 +99,8 @@ body {
 }
 #todolist-list li.completed { background-color: #e0e0e0; }
 #todolist-list li.completed span { text-decoration: line-through; color: #888; }
+#schedule-list li.completed { background-color: #e0e0e0; }
+#schedule-list li.completed span { text-decoration: line-through; color: #888; }
 .delete-item-btn { position: absolute; top: 50%; right: 10px; transform: translateY(-50%); background: #ffcdd2; color: #c62828; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 14px; line-height: 22px; text-align: center; cursor: pointer; opacity: 0; transition: opacity 0.2s; }
 #schedule-list li:hover .delete-item-btn, #todolist-list li:hover .delete-item-btn { opacity: 1; }
 
