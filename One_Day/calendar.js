@@ -104,7 +104,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 const card = document.createElement('div');
                 card.className = 'reminder-card';
                 card.innerHTML = `<div class="d-day">D-${diffDays}</div><div class="event-title">${event.title}</div>`;
-                card.style.backgroundColor = `rgba(255, 117, 129, ${Math.max(0.2, 1 - (diffDays / 30))})`;
+                let bgColor;
+                let textColor;
+                if (diffDays <= 3) {
+                    bgColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
+                    textColor = 'white'; // Assuming white text for primary color background
+                } else {
+                    bgColor = 'white';
+                    textColor = '#888'; // Gray text for white background
+                }
+                card.style.backgroundColor = bgColor;
+                card.style.color = textColor;
                 reminderList.appendChild(card);
             });
         }
