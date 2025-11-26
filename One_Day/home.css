@@ -730,6 +730,20 @@ body {
     flex: 1; /* Occupies 1/3 of the space */
 }
 
+.todo-container {
+    display: flex;
+    gap: 10px; /* Adjust gap as needed */
+    margin-bottom: 20px; /* To separate from next section */
+}
+
+.todo-main {
+    flex: 2; /* Occupies 2/3 of the space */
+}
+
+.todo-add {
+    flex: 1; /* Occupies 1/3 of the space */
+}
+
 .todo-add-text {
     font-size: 18px;
     margin: 0; /* To match h3 */
