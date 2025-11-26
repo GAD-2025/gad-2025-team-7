@@ -474,6 +474,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         isAllDay: document.getElementById('new-schedule-allday').checked,
                                         isRepeat: document.getElementById('new-schedule-repeat').checked, // Added new field
                                         time: document.getElementById('new-schedule-time').value,
+                                        dayOfWeek: document.getElementById('new-schedule-day-of-week').value, // Added new field
                                         category: 'personal',
                                         completed: false
                                     });
