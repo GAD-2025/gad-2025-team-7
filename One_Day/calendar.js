@@ -456,7 +456,17 @@ document.addEventListener('DOMContentLoaded', () => {
                             document.getElementById('save-schedule-btn').addEventListener('click', () => {
                                 const title = document.getElementById('new-schedule-title').value;
                                 if (title) {
-                                    events.push({ id: Date.now(), date: selectedDate, title: title, isImportant: document.getElementById('new-schedule-important').checked, isAllDay: document.getElementById('new-schedule-allday').checked, time: document.getElementById('new-schedule-time').value, category: 'personal', completed: false });
+                                    events.push({
+                                        id: Date.now(),
+                                        date: selectedDate,
+                                        title: title,
+                                        isImportant: document.getElementById('new-schedule-important').checked,
+                                        isAllDay: document.getElementById('new-schedule-allday').checked,
+                                        isRepeat: document.getElementById('new-schedule-repeat').checked, // Added new field
+                                        time: document.getElementById('new-schedule-time').value,
+                                        category: 'personal',
+                                        completed: false
+                                    });
                                     saveData(); load(); updateDashboard(selectedDate); addScheduleModal.style.display = 'none';
                                 }
                             });
