@@ -346,7 +346,6 @@ body {
 .record-content.active {
     display: block;
 }
-<<<<<<< HEAD
 
 /* Healthcare Tab Styles */
 .healthcare-row {
@@ -715,5 +714,18 @@ body {
     color: var(--light-text-color);
     text-align: right;
 }
-=======
->>>>>>> 769570e3beec0aa0a72e4a0b17a8c59102c6ea83
+
+/* New styles for schedule layout */
+.schedule-container {
+    display: flex;
+    gap: 10px; /* Adjust gap as needed */
+    margin-bottom: 20px; /* To separate from next section */
+}
+
+.schedule-main {
+    flex: 2; /* Occupies 2/3 of the space */
+}
+
+.schedule-add {
+    flex: 1; /* Occupies 1/3 of the space */
+}

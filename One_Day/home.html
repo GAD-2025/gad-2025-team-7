@@ -43,31 +43,44 @@
 
             <!-- Home Tab Content -->
             <div id="home-tab" class="dash-tab-content active">
-                <div class="dashboard-section">
-                    <div class="section-header">
-                        <h3>오늘의 일정</h3>
-                        <div class="header-actions">
-                            <button class="add-btn" id="add-schedule-btn">+</button>
+                <div class="schedule-container">
+                    <div class="dashboard-section schedule-main">
+                        <div class="section-header">
+                            <h3>오늘의 일정</h3>
+                            <div class="header-actions">
+                                <button class="add-btn" id="add-schedule-btn">+</button>
+                            </div>
+                        </div>
+                        <div id="add-schedule-form" class="inline-form" style="display: none;">
+                            <input type="text" id="new-schedule-title" placeholder="일정명">
+                            <div>
+                                <label><input type="checkbox" id="new-schedule-important"> 중요</label>
+                                <label><input type="checkbox" id="new-schedule-allday"> 하루 종일</label>
+                            </div>
+                            <input type="time" id="new-schedule-time">
+                            <button id="save-schedule-btn">저장</button>
+                        </div>
+                        <div id="schedule-list" class="section-content">
+                            <!-- Schedule items will be dynamically added here -->
+                            <p>날짜를 선택하여 일정을 확인하세요.</p>
                         </div>
                     </div>
-                    <div id="add-schedule-form" class="inline-form" style="display: none;">
-                        <input type="text" id="new-schedule-title" placeholder="일정명">
-                        <div>
-                            <label><input type="checkbox" id="new-schedule-important"> 중요</label>
-                            <label><input type="checkbox" id="new-schedule-allday"> 하루 종일</label>
+
+                    <div class="dashboard-section schedule-add">
+                        <div class="section-header">
+                            <h3>일정 추가</h3>
+                            
                         </div>
-                        <input type="time" id="new-schedule-time">
-                        <button id="save-schedule-btn">저장</button>
-                    </div>
-                    <div id="schedule-list" class="section-content">
-                        <!-- Schedule items will be dynamically added here -->
-                        <p>날짜를 선택하여 일정을 확인하세요.</p>
-                    </div>
-                    <div class="template-bar" id="schedule-template-bar">
-                        <span>템플릿:</span>
-                        <button class="add-template-btn" data-type="schedule">+</button>
-                        <button class="template-btn" data-title="회의" data-category="work">회의</button>
-                        <button class="template-btn" data-title="점심 약속" data-category="personal">점심 약속</button>
+                        <div class="section-content">
+                            <p>새로운 일정을 추가하려면 위 버튼을 클릭하세요.</p>
+                        </div>
+                        <div class="template-bar" id="schedule-template-bar">
+                            <span>템플릿:</span>
+                            <button class="add-template-btn" data-type="schedule">+</button>
+                            <button class="template-btn" data-title="회의" data-category="work">회의</button>
+                            <button class="template-btn" data-title="알바" data-category="work">알바</button>
+                            <button class="template-btn" data-title="동아리" data-category="personal">동아리</button>
+                        </div>
                     </div>
                 </div>
 
