@@ -51,15 +51,7 @@
                                 <button class="add-btn" id="add-schedule-btn">+</button>
                             </div>
                         </div>
-                        <div id="add-schedule-form" class="inline-form" style="display: none;">
-                            <input type="text" id="new-schedule-title" placeholder="일정명">
-                            <div>
-                                <label><input type="checkbox" id="new-schedule-important"> 중요</label>
-                                <label><input type="checkbox" id="new-schedule-allday"> 하루 종일</label>
-                            </div>
-                            <input type="time" id="new-schedule-time">
-                            <button id="save-schedule-btn">저장</button>
-                        </div>
+
                         <div id="schedule-list" class="section-content">
                             <!-- Schedule items will be dynamically added here -->
                             <p>날짜를 선택하여 일정을 확인하세요.</p>
@@ -124,9 +116,28 @@
                         </div>
                     </div>
                 </div>
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h3>리마인더</h3>
                     </div>
                     <div id="reminder-list" class.section-content reminder-grid">
                         <!-- Reminder D-day items will be added here -->
+                    </div>
+                </div>
+
+                <div id="add-schedule-modal" class="modal-overlay" style="display: none;">
+                    <div class="modal-content">
+                        <h3>새 일정 추가</h3>
+                        <input type="text" id="new-schedule-title" placeholder="일정명">
+                        <div>
+                            <label><input type="checkbox" id="new-schedule-important"> 중요</label>
+                            <label><input type="checkbox" id="new-schedule-allday"> 하루 종일</label>
+                        </div>
+                        <input type="time" id="new-schedule-time">
+                        <div class="modal-actions">
+                            <button id="save-schedule-btn">저장</button>
+                            <button id="cancel-schedule-btn">취소</button>
+                        </div>
                     </div>
                 </div>
             </div>

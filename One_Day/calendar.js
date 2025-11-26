@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
     
             initCanvas();
-            const addScheduleForm = document.getElementById('add-schedule-form');
+            const addScheduleModal = document.getElementById('add-schedule-modal');
             const addTodoForm = document.getElementById('add-todo-form');
             const drawingTools = document.querySelector('.drawing-tools');
             const textTools = document.querySelector('.text-tools');
@@ -450,15 +450,18 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                     });
             
-                            document.getElementById('add-schedule-btn').addEventListener('click', () => addScheduleForm.style.display = addScheduleForm.style.display === 'block' ? 'none' : 'block');
+                            document.getElementById('add-schedule-btn').addEventListener('click', () => addScheduleModal.style.display = 'flex');
                             document.getElementById('add-todo-btn').addEventListener('click', () => addTodoForm.style.display = addTodoForm.style.display === 'block' ? 'none' : 'block');
                             document.getElementById('new-schedule-allday').addEventListener('change', (e) => { document.getElementById('new-schedule-time').style.display = e.target.checked ? 'none' : 'block'; });
                             document.getElementById('save-schedule-btn').addEventListener('click', () => {
                                 const title = document.getElementById('new-schedule-title').value;
                                 if (title) {
                                     events.push({ id: Date.now(), date: selectedDate, title: title, isImportant: document.getElementById('new-schedule-important').checked, isAllDay: document.getElementById('new-schedule-allday').checked, time: document.getElementById('new-schedule-time').value, category: 'personal', completed: false });
-                                    saveData(); load(); updateDashboard(selectedDate); addScheduleForm.style.display = 'none';
+                                    saveData(); load(); updateDashboard(selectedDate); addScheduleModal.style.display = 'none';
                                 }
+                            });
+                            document.getElementById('cancel-schedule-btn').addEventListener('click', () => {
+                                addScheduleModal.style.display = 'none';
                             });
                     
                             // Event delegation for all template buttons
