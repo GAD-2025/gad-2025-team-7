@@ -185,6 +185,26 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             img.src = canvasHistory[historyStep];
         }
+
+        // Helper function to get all dates for a given day of the week in a month
+        function getDatesForDayOfWeekInMonth(year, month, dayOfWeekValue) {
+            const dates = [];
+            const dayMap = {
+                'sun': 0, 'mon': 1, 'tue': 2, 'wed': 3, 'thu': 4, 'fri': 5, 'sat': 6
+            };
+            const targetDay = dayMap[dayOfWeekValue];
+            if (targetDay === undefined) return dates; // Invalid day of week
+
+            let date = new Date(year, month, 1);
+            while (date.getMonth() === month) {
+                if (date.getDay() === targetDay) {
+                    dates.push(date.toISOString().split('T')[0]);
+                }
+                date.setDate(date.getDate() + 1);
+            }
+            return dates;
+        }
+
     
         function updateDashboard(date) {
             ctx.clearRect(0, 0, diaryCanvas.width, diaryCanvas.height);
@@ -465,19 +485,48 @@ document.addEventListener('DOMContentLoaded', () => {
                             document.getElementById('new-schedule-allday').addEventListener('change', (e) => { document.getElementById('new-schedule-time').style.display = e.target.checked ? 'none' : 'block'; });
                             document.getElementById('save-schedule-btn').addEventListener('click', () => {
                                 const title = document.getElementById('new-schedule-title').value;
+                                const isImportant = document.getElementById('new-schedule-important').checked;
+                                const isAllDay = document.getElementById('new-schedule-allday').checked;
+                                const isRepeat = document.getElementById('new-schedule-repeat').checked;
+                                const time = document.getElementById('new-schedule-time').value;
+                                const selectedDaysOfWeek = Array.from(document.getElementById('new-schedule-day-of-week').selectedOptions).map(option => option.value);
+
                                 if (title) {
-                                    events.push({
-                                        id: Date.now(),
-                                        date: selectedDate,
-                                        title: title,
-                                        isImportant: document.getElementById('new-schedule-important').checked,
-                                        isAllDay: document.getElementById('new-schedule-allday').checked,
-                                        isRepeat: document.getElementById('new-schedule-repeat').checked, // Added new field
-                                        time: document.getElementById('new-schedule-time').value,
-                                        dayOfWeek: document.getElementById('new-schedule-day-of-week').value, // Added new field
-                                        category: 'personal',
-                                        completed: false
-                                    });
+                                    if (isRepeat && selectedDaysOfWeek.length > 0) {
+                                        const currentMonth = new Date(selectedDate).getMonth();
+                                        const currentYear = new Date(selectedDate).getFullYear();
+
+                                        selectedDaysOfWeek.forEach(dayValue => {
+                                            const datesToRepeat = getDatesForDayOfWeekInMonth(currentYear, currentMonth, dayValue);
+                                            datesToRepeat.forEach(date => {
+                                                events.push({
+                                                    id: Date.now() + Math.random(), // Ensure unique ID for each repeated event
+                                                    date: date,
+                                                    title: title,
+                                                    isImportant: isImportant,
+                                                    isAllDay: isAllDay,
+                                                    isRepeat: isRepeat,
+                                                    repeatDays: selectedDaysOfWeek, // Store selected days for repeated events
+                                                    time: time,
+                                                    category: 'personal',
+                                                    completed: false
+                                                });
+                                            });
+                                        });
+                                    } else {
+                                        events.push({
+                                            id: Date.now(),
+                                            date: selectedDate,
+                                            title: title,
+                                            isImportant: isImportant,
+                                            isAllDay: isAllDay,
+                                            isRepeat: isRepeat,
+                                            time: time,
+                                            dayOfWeek: selectedDaysOfWeek, // Store even for non-repeated if selected
+                                            category: 'personal',
+                                            completed: false
+                                        });
+                                    }
                                     saveData(); load(); updateDashboard(selectedDate); addScheduleModal.style.display = 'none';
                                 }
                             });
