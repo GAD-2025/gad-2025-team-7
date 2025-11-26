@@ -44,16 +44,16 @@ body {
 
 .right-column { flex: 4; padding: 20px; background-color: #fff; border-left: 1px solid var(--border-color); overflow-y: auto; }
 .dashboard-tabs { display: flex; justify-content: center; border-bottom: 1px solid var(--border-color); margin-bottom: 20px; }
-.dash-tab-link { padding: 10px 20px; border: none; background: none; cursor: pointer; font-size: 16px; color: var(--light-text-color); }
+.dash-tab-link { padding: 10px 20px; border: none; background: none; cursor: pointer; font-size: 20px; color: var(--light-text-color); }
 .dash-tab-link.active { border-bottom: 3px solid var(--primary-color); font-weight: 700; color: var(--text-color); }
 .dash-tab-content { display: none; }
 .dash-tab-content.active { display: block; }
 .dashboard-section { margin-bottom: 30px; position: relative; }
 .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-.section-header h3 { margin: 0; font-size: 18px; }
+.section-header h3 { margin: 0; font-size: 17px; }
 .add-btn, .save-btn, .edit-btn { background-color: var(--primary-color); color: white; border: none; border-radius: 5px; padding: 5px 10px; font-size: 14px; cursor: pointer; }
 .section-content p { color: var(--light-text-color); text-align: center; }
-#schedule-list li, #todolist-list li { position: relative; display: flex; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 5px; margin-bottom: 8px; }
+#schedule-list li, #todolist-list li { position: relative; display: flex; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 5px; margin-bottom: 8px; font-size: 14px; }
 #schedule-list input[type="checkbox"], #todolist-list input[type="checkbox"] { margin-right: 10px; }
 .template-bar { margin-top: 10px; font-size: 13px; color: var(--light-text-color); display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
 .template-btn { background: #eee; border: none; border-radius: 15px; padding: 5px 10px; font-size: 12px; cursor: pointer; }
@@ -745,7 +745,7 @@ body {
 }
 
 .todo-add-text {
-    font-size: 18px;
+    font-size: 17px;
     margin: 0; /* To match h3 */
     padding-right: 100px; /* Add some spacing */
     vertical-align: middle; /* Align with the button */
