@@ -1,18 +1,4 @@
 const express = require('express');
-<<<<<<< HEAD
-const cors = require('cors');
-const bodyParser = require('body-parser');
-require('dotenv').config();
-
-// Import Routes
-const authRoutes = require('./routes/auth');
-const healthcareRoutes = require('./routes/healthcare');
-
-const app = express();
-const port = process.env.PORT || 3000;
-
-// Middleware
-=======
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
@@ -21,20 +7,10 @@ const db = require('./db');
 const app = express();
 const port = 3000;
 
->>>>>>> 769570e3beec0aa0a72e4a0b17a8c59102c6ea83
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-<<<<<<< HEAD
-// Use Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/healthcare', healthcareRoutes);
-
-// Basic route for checking if server is up
-app.get('/', (req, res) => {
-    res.send('One Day Backend Server is running.');
-=======
 app.post('/signup', async (req, res) => {
     const { email, password } = req.body;
 
@@ -60,13 +36,36 @@ app.post('/signup', async (req, res) => {
         console.error('Signup error:', error);
         res.status(500).json({ message: '서버 오류가 발생했습니다. 다시 시도해주세요.' });
     }
->>>>>>> 769570e3beec0aa0a72e4a0b17a8c59102c6ea83
+});
+
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: '이메일과 비밀번호를 모두 입력해주세요.' });
+    }
+
+    try {
+        const [users] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+
+        if (users.length === 0) {
+            return res.status(401).json({ message: '이메일 또는 비밀번호가 잘못되었습니다.' });
+        }
+
+        const user = users[0];
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: '이메일 또는 비밀번호가 잘못되었습니다.' });
+        }
+
+        res.status(200).json({ message: '로그인 성공', userId: user.id });
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ message: '서버 오류가 발생했습니다. 다시 시도해주세요.' });
+    }
 });
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> 769570e3beec0aa0a72e4a0b17a8c59102c6ea83

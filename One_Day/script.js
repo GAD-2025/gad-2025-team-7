@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const showSignup = document.getElementById('show-signup');
     const showLogin = document.getElementById('show-login');
     const signupForm = signupFormContainer.querySelector('form');
+    const loginForm = loginFormContainer.querySelector('form');
 
     showSignup.addEventListener('click', (e) => {
         e.preventDefault();
@@ -24,11 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = signupForm.querySelector('input[type="email"]').value;
         const password = signupForm.querySelector('input[type="password"]').value;
 
-<<<<<<< HEAD
-        fetch('http://localhost:3000/api/auth/register', {
-=======
         fetch('http://localhost:3000/signup', {
->>>>>>> 769570e3beec0aa0a72e4a0b17a8c59102c6ea83
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -39,13 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             alert(data.message);
             if (data.userId) {
-<<<<<<< HEAD
-                // 회원가입 성공 시 userId를 localStorage에 저장
-                localStorage.setItem('userId', data.userId);
-                // 프로필 설정 페이지로 이동
-=======
                 // 회원가입 성공 시 프로필 설정 페이지로 이동
->>>>>>> 769570e3beec0aa0a72e4a0b17a8c59102c6ea83
                 window.location.href = 'profile_setup.html';
             }
         })
@@ -55,14 +46,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-<<<<<<< HEAD
-    // 이메일 로그인 (임시로 홈으로 바로 이동)
-=======
     // 이메일 로그인
->>>>>>> 769570e3beec0aa0a72e4a0b17a8c59102c6ea83
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        window.location.href = 'home.html';
+        const email = loginForm.querySelector('input[type="email"]').value;
+        const password = loginForm.querySelector('input[type="password"]').value;
+
+        fetch('http://localhost:3000/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.userId) {
+                localStorage.setItem('userId', data.userId);
+                window.location.href = 'home.html';
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('로그인 중 오류가 발생했습니다.');
+        });
     });
 
     // 소셜 로그인 버튼 시뮬레이션

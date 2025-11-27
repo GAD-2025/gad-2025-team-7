@@ -9,6 +9,14 @@
     <link rel="stylesheet" href="stopwatch.css">
 </head>
 <body>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userId = localStorage.getItem('userId');
+            if (!userId) {
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
     <div class="main-content-wrapper">
         <!-- 60% Left Column: Calendar -->
         <div class="left-column">
@@ -429,10 +437,7 @@
     <script src="calendar.js"></script>
     <script src="record.js"></script>
     <script src="stopwatch.js"></script>
-<<<<<<< HEAD
     <script src="healthcare.js"></script>
-=======
->>>>>>> 769570e3beec0aa0a72e4a0b17a8c59102c6ea83
 
     <!-- Collection View Sidebar -->
     <div id="collection-trigger">🔖</div>
