@@ -34,5 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         alert(`프로필이 저장되었습니다!\n닉네임: ${nickname}`);
         // 여기서 서버로 프로필 정보를 전송하는 로직을 추가할 수 있습니다.
+        window.location.href = 'home.html';
     });
 });
