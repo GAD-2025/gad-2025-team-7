@@ -66,6 +66,12 @@ app.post('/login', async (req, res) => {
     }
 });
 
+const diaryRoutes = require('./routes/diary');
+const mealRoutes = require('./routes/meals');
+
+app.use('/api/diaries', diaryRoutes);
+app.use('/api/meals', mealRoutes);
+
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
