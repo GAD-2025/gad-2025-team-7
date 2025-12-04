@@ -124,7 +124,12 @@ const Diary = ({ selectedDate, userId }) => {
     const handleCanvasMouseDown = ({ nativeEvent }) => {
         const { offsetX, offsetY } = nativeEvent;
         if (drawingTool === 'text') {
-            setTextInput({ x: offsetX, y: offsetY, value: '' });
+            // Prevent creating a new text box if one is already active
+            if (textInput) return;
+            // Use setTimeout to allow the current event cycle to finish
+            setTimeout(() => {
+                setTextInput({ x: offsetX, y: offsetY, value: '' });
+            }, 0);
         } else { // pen or eraser
             const ctx = canvasRef.current.getContext('2d');
             ctx.beginPath();
@@ -223,6 +228,11 @@ const Diary = ({ selectedDate, userId }) => {
                             </div>
                         </div>
                     </div>
+                    {drawingTool === 'text' && !textInput && (
+                        <div style={{ padding: '10px', textAlign: 'center', backgroundColor: '#f0f0f0', borderRadius: '4px', margin: '8px 0' }}>
+                            텍스트를 추가할 캔버스의 위치를 클릭하세요.
+                        </div>
+                    )}
                     <div style={{ position: 'relative' }}>
                         <canvas 
                             id="diary-canvas" 
@@ -236,6 +246,7 @@ const Diary = ({ selectedDate, userId }) => {
                         ></canvas>
                         {textInput && (
                             <textarea
+                                placeholder="Enter text here..."
                                 style={{
                                     position: 'absolute',
                                     top: textInput.y,
