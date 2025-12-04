@@ -19,7 +19,25 @@ body {
     background-color: var(--background-color);
 }
 
-.main-content-wrapper { display: flex; height: 100vh; }
+.main-content-wrapper { display: flex; height: 100vh; position: relative; }
+
+.profile-settings-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 100;
+}
+
+.profile-settings-button:hover {
+    background-color: #e06b75;
+}
 .left-column {
     flex: 6;
     padding: 20px 20px 20px 60px; /* Increased left padding */
@@ -158,6 +176,8 @@ body {
     padding: 25px;
     border-radius: 10px;
     width: 400px; /* Increased width for cycle modal */
+    max-height: 50vh; /* Set max height to half of viewport height */
+    overflow-y: auto; /* Add scroll if content exceeds max height */
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 .modal-content h3 {
