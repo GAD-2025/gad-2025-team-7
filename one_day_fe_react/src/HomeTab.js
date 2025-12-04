@@ -15,6 +15,9 @@ const HomeTab = ({ selectedDate, events, setEvents, todos, setTodos }) => {
     const [newScheduleRepeat, setNewScheduleRepeat] = useState(false);
     const [newScheduleTime, setNewScheduleTime] = useState('');
     const [newScheduleDayOfWeek, setNewScheduleDayOfWeek] = useState([]);
+    const [newScheduleStartDate, setNewScheduleStartDate] = useState(selectedDate);
+    const [newScheduleEndDate, setNewScheduleEndDate] = useState('');
+
 
     // Todo Form State
     const [newTodoTitle, setNewTodoTitle] = useState('');
@@ -39,30 +42,66 @@ const HomeTab = ({ selectedDate, events, setEvents, todos, setTodos }) => {
         setReminders(reminderData);
     }, [selectedDate, events]);
 
+    useEffect(() => {
+        setNewScheduleStartDate(selectedDate);
+    }, [selectedDate]);
+
     const handleSaveSchedule = () => {
-        if (newScheduleTitle) {
-            const newEvent = {
-                id: Date.now(),
-                date: selectedDate,
-                title: newScheduleTitle,
-                isImportant: newScheduleImportant,
-                isAllDay: newScheduleAllday,
-                isRepeat: newScheduleRepeat,
-                time: newScheduleTime,
-                dayOfWeek: newScheduleDayOfWeek,
-                category: 'personal',
-                completed: false
-            };
-            setEvents([...events, newEvent]);
-            setShowScheduleModal(false);
-            // Reset form
+        if (!newScheduleTitle) return;
+
+        const resetForm = () => {
             setNewScheduleTitle('');
             setNewScheduleImportant(false);
             setNewScheduleAllday(false);
             setNewScheduleRepeat(false);
             setNewScheduleTime('');
             setNewScheduleDayOfWeek([]);
+            setNewScheduleStartDate(selectedDate);
+            setNewScheduleEndDate('');
+            setShowScheduleModal(false);
+        };
+
+        if (newScheduleRepeat) {
+            const dayMapping = { 0: 'sun', 1: 'mon', 2: 'tue', 3: 'wed', 4: 'thu', 5: 'fri', 6: 'sat' };
+            let recurringEvents = [];
+            let currentDate = new Date(newScheduleStartDate);
+            let endDate = new Date(newScheduleEndDate);
+
+            while (currentDate <= endDate) {
+                const dayOfWeek = dayMapping[currentDate.getDay()];
+                if (newScheduleDayOfWeek.includes(dayOfWeek)) {
+                    const newEvent = {
+                        id: Date.now() + recurringEvents.length, // Ensure unique ID
+                        date: currentDate.toISOString().split('T')[0],
+                        title: newScheduleTitle,
+                        isImportant: newScheduleImportant,
+                        isAllDay: newScheduleAllday,
+                        isRepeat: true,
+                        time: newScheduleTime,
+                        category: 'personal',
+                        completed: false
+                    };
+                    recurringEvents.push(newEvent);
+                }
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            setEvents([...events, ...recurringEvents]);
+        } else {
+            const newEvent = {
+                id: Date.now(),
+                date: selectedDate,
+                title: newScheduleTitle,
+                isImportant: newScheduleImportant,
+                isAllDay: newScheduleAllday,
+                isRepeat: false,
+                time: newScheduleTime,
+                category: 'personal',
+                completed: false
+            };
+            setEvents([...events, newEvent]);
         }
+        
+        resetForm();
     };
 
     const handleSaveTodo = () => {
@@ -201,17 +240,32 @@ const HomeTab = ({ selectedDate, events, setEvents, todos, setTodos }) => {
                     <label><input type="checkbox" checked={newScheduleAllday} onChange={() => setNewScheduleAllday(!newScheduleAllday)} /> 하루 종일</label>
                     <label><input type="checkbox" checked={newScheduleRepeat} onChange={() => setNewScheduleRepeat(!newScheduleRepeat)} /> 반복</label>
                 </div>
+                
                 {!newScheduleAllday && <input type="time" value={newScheduleTime} onChange={(e) => setNewScheduleTime(e.target.value)} />}
-                <select multiple value={newScheduleDayOfWeek} onChange={(e) => setNewScheduleDayOfWeek(Array.from(e.target.selectedOptions, option => option.value))}>
-                    <option value="">요일 선택</option>
-                    <option value="mon">월요일</option>
-                    <option value="tue">화요일</option>
-                    <option value="wed">수요일</option>
-                    <option value="thu">목요일</option>
-                    <option value="fri">금요일</option>
-                    <option value="sat">토요일</option>
-                    <option value="sun">일요일</option>
-                </select>
+                
+                {newScheduleRepeat && (
+                    <div className="repeat-options">
+                        <div>
+                            <label>시작일:</label>
+                            <input type="date" value={newScheduleStartDate} onChange={(e) => setNewScheduleStartDate(e.target.value)} />
+                        </div>
+                        <div>
+                            <label>종료일:</label>
+                            <input type="date" value={newScheduleEndDate} onChange={(e) => setNewScheduleEndDate(e.target.value)} />
+                        </div>
+                        <select multiple value={newScheduleDayOfWeek} onChange={(e) => setNewScheduleDayOfWeek(Array.from(e.target.selectedOptions, option => option.value))}>
+                            <option value="">요일 선택</option>
+                            <option value="sun">일요일</option>
+                            <option value="mon">월요일</option>
+                            <option value="tue">화요일</option>
+                            <option value="wed">수요일</option>
+                            <option value="thu">목요일</option>
+                            <option value="fri">금요일</option>
+                            <option value="sat">토요일</option>
+                        </select>
+                    </div>
+                )}
+
                 <div className="modal-actions">
                     <button onClick={handleSaveSchedule}>저장</button>
                     <button onClick={() => setShowScheduleModal(false)}>취소</button>
