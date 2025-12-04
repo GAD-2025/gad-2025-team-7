@@ -33,25 +33,12 @@ const Calendar = ({
     for (let i = 1; i <= paddingDays + daysInMonth; i++) {
         const dayString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i - paddingDays).padStart(2, '0')}`;
         if (i > paddingDays) {
-            const currentDayDate = new Date(dayString);
-            const dayEvents = events.filter(event => {
-                const eventStartDate = new Date(event.startDate || event.date); // Use startDate or date
-                const eventEndDate = new Date(event.endDate || event.startDate || event.date); // Use endDate or startDate/date
-
-                // Normalize dates to start of day for accurate comparison
-                eventStartDate.setHours(0, 0, 0, 0);
-                eventEndDate.setHours(0, 0, 0, 0);
-                currentDayDate.setHours(0, 0, 0, 0);
-
-                return currentDayDate >= eventStartDate && currentDayDate <= eventEndDate;
-            });
-
             days.push({
                 day: i - paddingDays,
                 dayString,
                 isToday: i - paddingDays === day && nav === 0,
                 isSelected: dayString === selectedDate,
-                events: dayEvents,
+                events: events.filter(e => e.date === dayString),
             });
         } else {
             days.push(null);
@@ -93,30 +80,10 @@ const Calendar = ({
                     {days.map((dayInfo, index) => {
                         if (dayInfo) {
                             const isInDraggedRange = isDateInDraggedRange(dayInfo.dayString);
-                            const eventClasses = dayInfo.events.map(event => {
-                                const eventStartDate = new Date(event.startDate || event.date);
-                                const eventEndDate = new Date(event.endDate || event.startDate || event.date);
-                                eventStartDate.setHours(0, 0, 0, 0);
-                                eventEndDate.setHours(0, 0, 0, 0);
-                                const currentDayDate = new Date(dayInfo.dayString);
-                                currentDayDate.setHours(0, 0, 0, 0);
-
-                                if (eventStartDate.getTime() === eventEndDate.getTime()) {
-                                    return 'event-single';
-                                } else if (currentDayDate.getTime() === eventStartDate.getTime()) {
-                                    return 'event-start';
-                                } else if (currentDayDate.getTime() === eventEndDate.getTime()) {
-                                    return 'event-end';
-                                } else if (currentDayDate > eventStartDate && currentDayDate < eventEndDate) {
-                                    return 'event-middle';
-                                }
-                                return '';
-                            }).join(' ');
-
                             return (
                                 <div
                                     key={index}
-                                    className={`date-cell ${dayInfo.isToday ? 'today' : ''} ${dayInfo.isSelected ? 'selected' : ''} ${isInDraggedRange ? 'drag-selected' : ''} ${eventClasses}`}
+                                    className={`date-cell ${dayInfo.isToday ? 'today' : ''} ${dayInfo.isSelected ? 'selected' : ''} ${isInDraggedRange ? 'drag-selected' : ''}`}
                                     onClick={() => setSelectedDate(dayInfo.dayString)}
                                     onMouseDown={() => onDragStart(dayInfo.dayString)}
                                     onMouseEnter={() => onDragMove(dayInfo.dayString)}

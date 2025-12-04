@@ -28,6 +28,7 @@ const HomeTab = ({
     const [newScheduleDayOfWeek, setNewScheduleDayOfWeek] = useState([]);
     const [newScheduleStartDate, setNewScheduleStartDate] = useState(selectedDate);
     const [newScheduleEndDate, setNewScheduleEndDate] = useState('');
+    const [newScheduleSetReminder, setNewScheduleSetReminder] = useState(false); // New state for reminder setting
 
 
     // Todo Form State
@@ -41,7 +42,7 @@ const HomeTab = ({
     useEffect(() => {
         const today = new Date(selectedDate);
         const upcomingEvents = events
-            .filter(e => new Date(e.date) >= today)
+            .filter(e => new Date(e.date) >= today && e.setReminder) // Filter by setReminder
             .sort((a, b) => new Date(a.date) - new Date(b.date))
             .slice(0, 6);
         
@@ -76,11 +77,11 @@ const HomeTab = ({
             setNewScheduleDayOfWeek([]);
             setNewScheduleStartDate(selectedDate);
             setNewScheduleEndDate('');
+            setNewScheduleSetReminder(false); // Reset new state
             setShowScheduleModal(false); // Use prop setter
         };
 
         if (newScheduleRepeat) {
-            // Existing recurring event logic (unchanged for now)
             const dayMapping = { 0: 'sun', 1: 'mon', 2: 'tue', 3: 'wed', 4: 'thu', 5: 'fri', 6: 'sat' };
             let recurringEvents = [];
             let currentDate = new Date(newScheduleStartDate);
@@ -91,14 +92,15 @@ const HomeTab = ({
                 if (newScheduleDayOfWeek.includes(dayOfWeek)) {
                     const newEvent = {
                         id: Date.now() + recurringEvents.length, // Ensure unique ID
-                        date: currentDate.toISOString().split('T')[0], // Still using 'date' for recurring events
+                        date: currentDate.toISOString().split('T')[0],
                         title: newScheduleTitle,
                         isImportant: newScheduleImportant,
                         isAllDay: newScheduleAllday,
                         isRepeat: true,
                         time: newScheduleTime,
                         category: 'personal',
-                        completed: false
+                        completed: false,
+                        setReminder: newScheduleSetReminder // Include new state
                     };
                     recurringEvents.push(newEvent);
                 }
@@ -106,21 +108,29 @@ const HomeTab = ({
             }
             setEvents([...events, ...recurringEvents]);
         } else {
-            // Handle single day or dragged range event as a single event object
-            const newEvent = {
-                id: Date.now(),
-                date: newScheduleStartDate, // Use startDate for single event
-                startDate: newScheduleStartDate, // New property
-                endDate: newScheduleEndDate || newScheduleStartDate, // New property
-                title: newScheduleTitle,
-                isImportant: newScheduleImportant,
-                isAllDay: newScheduleAllday,
-                isRepeat: false,
-                time: newScheduleTime,
-                category: 'personal',
-                completed: false
-            };
-            setEvents([...events, newEvent]);
+            // Handle single day or dragged range event
+            const start = new Date(newScheduleStartDate);
+            const end = new Date(newScheduleEndDate || newScheduleStartDate); // If no end date, it's a single day
+
+            let newEvents = [];
+            let currentDate = new Date(start);
+            while (currentDate <= end) {
+                const newEvent = {
+                    id: Date.now() + newEvents.length, // Ensure unique ID for each day's event
+                    date: currentDate.toISOString().split('T')[0],
+                    title: newScheduleTitle,
+                    isImportant: newScheduleImportant,
+                    isAllDay: newScheduleAllday,
+                    isRepeat: false,
+                    time: newScheduleTime,
+                    category: 'personal',
+                    completed: false,
+                    setReminder: newScheduleSetReminder // Include new state
+                };
+                newEvents.push(newEvent);
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            setEvents([...events, ...newEvents]);
         }
         
         resetForm();
@@ -150,6 +160,7 @@ const HomeTab = ({
             title: template.title,
             category: template.category || 'custom',
             completed: false,
+            setReminder: false, // Default for template events
         };
         setEvents([...events, newEvent]);
     };
@@ -171,7 +182,7 @@ const HomeTab = ({
                     <div className="section-header">
                         <h3>오늘의 일정</h3>
                         <div className="header-actions">
-                            {/* Removed the '+' button that directly opened the schedule modal */}
+                            <button className="add-btn" onClick={() => setShowScheduleModal(true)}>+</button>
                         </div>
                     </div>
                     <Schedule selectedDate={selectedDate} events={events} setEvents={setEvents} />
@@ -261,6 +272,7 @@ const HomeTab = ({
                     <label><input type="checkbox" checked={newScheduleImportant} onChange={() => setNewScheduleImportant(!newScheduleImportant)} /> 중요</label>
                     <label><input type="checkbox" checked={newScheduleAllday} onChange={() => setNewScheduleAllday(!newScheduleAllday)} /> 하루 종일</label>
                     <label><input type="checkbox" checked={newScheduleRepeat} onChange={() => setNewScheduleRepeat(!newScheduleRepeat)} /> 반복</label>
+                    <label><input type="checkbox" checked={newScheduleSetReminder} onChange={() => setNewScheduleSetReminder(!newScheduleSetReminder)} /> 리마인더 설정</label> {/* New checkbox */}
                 </div>
                 
                 {!newScheduleAllday && <input type="time" value={newScheduleTime} onChange={(e) => setNewScheduleTime(e.target.value)} />}
