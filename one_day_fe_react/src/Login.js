@@ -45,7 +45,12 @@ const Login = () => {
                 ) : (
                     <div className="form-container" id="signup-form">
                         <h1>One Day</h1>
-                        <form action="profile_setup.html">
+                        <form onSubmit={(e) => {
+                            e.preventDefault();
+                            // Simulate successful registration
+                            alert('회원가입이 완료되었습니다! 프로필을 설정해주세요.');
+                            window.location.href = '/profile-setup';
+                        }}>
                             <input type="email" placeholder="이메일" required />
                             <input type="password" placeholder="비밀번호" required />
                             <div className="terms">

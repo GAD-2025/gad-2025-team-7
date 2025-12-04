@@ -47,14 +47,14 @@ const Profile = ({ onClose }) => {
     }, [ddayList]);
 
     const handleSavePersonalInfo = () => {
-        if (profileName.trim()) {
+        if (profileName.trim() || profilePictureUrl.trim()) { // Check if either name or picture is present
             localStorage.setItem('userProfileName', profileName.trim());
             localStorage.setItem('userProfilePictureUrl', profilePictureUrl.trim());
             setIsProfileSaved(true);
             setIsEditingPersonalInfo(false);
             alert('개인 정보가 저장되었습니다!');
         } else {
-            alert('이름을 입력해주세요.');
+            alert('닉네임 또는 프로필 사진을 입력해주세요.'); // More specific alert
         }
     };
 
@@ -93,6 +93,11 @@ const Profile = ({ onClose }) => {
         setDdayDate('');
         setSelectedIcon('❤️');
         setShowAddDdayModal(false);
+    };
+
+    const handleLogout = () => {
+        localStorage.clear(); // Clear all local storage data
+        window.location.href = '/login'; // Redirect to /login page
     };
 
     return (
@@ -138,16 +143,23 @@ const Profile = ({ onClose }) => {
                             <button onClick={() => setShowAddDdayModal(true)} className="add-dday-button">+</button>
                         </div>
                     ) : (
-                        <div className="profile-form-group">
-                            <label htmlFor="profileName">닉네임:</label>
-                            <input
-                                type="text"
-                                id="profileName"
-                                value={profileName}
-                                onChange={(e) => setProfileName(e.target.value)}
-                                placeholder="닉네임을 입력하세요"
-                            />
-                        </div>
+                        <>
+                            <div className="profile-form-group">
+                                <label htmlFor="profileName">닉네임:</label>
+                                <input
+                                    type="text"
+                                    id="profileName"
+                                    value={profileName}
+                                    onChange={(e) => setProfileName(e.target.value)}
+                                    placeholder="닉네임을 입력하세요"
+                                />
+                            </div>
+                            <div className="profile-form-group">
+                                <label htmlFor="profilePictureUrl">프로필 사진:</label>
+                                <ImageUploader onImageUpload={setProfilePictureUrl} />
+                                {profilePictureUrl && <img src={profilePictureUrl} alt="Profile Preview" className="profile-picture-preview" />}
+                            </div>
+                        </>
                     )}
                     <div className="profile-actions">
                         {!isProfileSaved && <button onClick={handleSavePersonalInfo} className="save-button">저장</button>}
@@ -160,6 +172,8 @@ const Profile = ({ onClose }) => {
                 <button onClick={() => alert('아이디 변경 기능 준비 중입니다.')} className="settings-button">아이디 변경하기</button>
                 <button onClick={() => alert('비밀번호 변경 기능 준비 중입니다.')} className="settings-button">비밀번호 변경하기</button>
             </div>
+
+            <button onClick={handleLogout} className="logout-button">로그아웃</button>
 
             {/* D-day Add Modal */}
             {showAddDdayModal && (

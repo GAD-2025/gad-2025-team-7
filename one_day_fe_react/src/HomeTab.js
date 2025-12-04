@@ -4,8 +4,19 @@ import TodoList from './TodoList';
 import Modal from './Modal';
 import Template from './Template';
 
-const HomeTab = ({ selectedDate, events, setEvents, todos, setTodos }) => {
-    const [showScheduleModal, setShowScheduleModal] = useState(false);
+const HomeTab = ({
+    selectedDate,
+    events,
+    setEvents,
+    todos,
+    setTodos,
+    // New props for event modal from drag selection
+    showScheduleModal, // This is now a prop
+    setShowScheduleModal, // This is now a prop
+    initialScheduleStartDate,
+    initialScheduleEndDate,
+}) => {
+    // const [showScheduleModal, setShowScheduleModal] = useState(false); // Removed local state
     const [showTodoForm, setShowTodoForm] = useState(false);
 
     // Schedule Modal State
@@ -43,8 +54,15 @@ const HomeTab = ({ selectedDate, events, setEvents, todos, setTodos }) => {
     }, [selectedDate, events]);
 
     useEffect(() => {
-        setNewScheduleStartDate(selectedDate);
-    }, [selectedDate]);
+        // Initialize dates from drag selection if provided
+        if (showScheduleModal && initialScheduleStartDate) {
+            setNewScheduleStartDate(initialScheduleStartDate);
+            setNewScheduleEndDate(initialScheduleEndDate || initialScheduleStartDate); // If only start date, end date is same
+        } else {
+            setNewScheduleStartDate(selectedDate);
+            setNewScheduleEndDate(''); // Clear end date if not from drag
+        }
+    }, [selectedDate, showScheduleModal, initialScheduleStartDate, initialScheduleEndDate]);
 
     const handleSaveSchedule = () => {
         if (!newScheduleTitle) return;
@@ -58,10 +76,11 @@ const HomeTab = ({ selectedDate, events, setEvents, todos, setTodos }) => {
             setNewScheduleDayOfWeek([]);
             setNewScheduleStartDate(selectedDate);
             setNewScheduleEndDate('');
-            setShowScheduleModal(false);
+            setShowScheduleModal(false); // Use prop setter
         };
 
         if (newScheduleRepeat) {
+            // Existing recurring event logic (unchanged for now)
             const dayMapping = { 0: 'sun', 1: 'mon', 2: 'tue', 3: 'wed', 4: 'thu', 5: 'fri', 6: 'sat' };
             let recurringEvents = [];
             let currentDate = new Date(newScheduleStartDate);
@@ -72,7 +91,7 @@ const HomeTab = ({ selectedDate, events, setEvents, todos, setTodos }) => {
                 if (newScheduleDayOfWeek.includes(dayOfWeek)) {
                     const newEvent = {
                         id: Date.now() + recurringEvents.length, // Ensure unique ID
-                        date: currentDate.toISOString().split('T')[0],
+                        date: currentDate.toISOString().split('T')[0], // Still using 'date' for recurring events
                         title: newScheduleTitle,
                         isImportant: newScheduleImportant,
                         isAllDay: newScheduleAllday,
@@ -87,9 +106,12 @@ const HomeTab = ({ selectedDate, events, setEvents, todos, setTodos }) => {
             }
             setEvents([...events, ...recurringEvents]);
         } else {
+            // Handle single day or dragged range event as a single event object
             const newEvent = {
                 id: Date.now(),
-                date: selectedDate,
+                date: newScheduleStartDate, // Use startDate for single event
+                startDate: newScheduleStartDate, // New property
+                endDate: newScheduleEndDate || newScheduleStartDate, // New property
                 title: newScheduleTitle,
                 isImportant: newScheduleImportant,
                 isAllDay: newScheduleAllday,
@@ -149,7 +171,7 @@ const HomeTab = ({ selectedDate, events, setEvents, todos, setTodos }) => {
                     <div className="section-header">
                         <h3>오늘의 일정</h3>
                         <div className="header-actions">
-                            <button className="add-btn" onClick={() => setShowScheduleModal(true)}>+</button>
+                            {/* Removed the '+' button that directly opened the schedule modal */}
                         </div>
                     </div>
                     <Schedule selectedDate={selectedDate} events={events} setEvents={setEvents} />
@@ -176,11 +198,11 @@ const HomeTab = ({ selectedDate, events, setEvents, todos, setTodos }) => {
                     </div>
                     {showTodoForm && (
                         <div id="add-todo-form" className="inline-form">
-                            <input 
-                                type="text" 
-                                placeholder="새로운 할 일" 
-                                value={newTodoTitle} 
-                                onChange={(e) => setNewTodoTitle(e.target.value)} 
+                            <input
+                                type="text"
+                                placeholder="새로운 할 일"
+                                value={newTodoTitle}
+                                onChange={(e) => setNewTodoTitle(e.target.value)}
                             />
                             <div>
                                 <label><input type="checkbox" checked={newTodoRepeat} onChange={() => setNewTodoRepeat(!newTodoRepeat)} /> 매주 반복</label>
@@ -188,11 +210,11 @@ const HomeTab = ({ selectedDate, events, setEvents, todos, setTodos }) => {
                             {newTodoRepeat && (
                                 <div id="repeat-end-date-container">
                                     <label htmlFor="new-todo-end-date">언제까지:</label>
-                                    <input 
-                                        type="date" 
-                                        id="new-todo-end-date" 
-                                        value={newTodoEndDate} 
-                                        onChange={(e) => setNewTodoEndDate(e.target.value)} 
+                                    <input
+                                        type="date"
+                                        id="new-todo-end-date"
+                                        value={newTodoEndDate}
+                                        onChange={(e) => setNewTodoEndDate(e.target.value)}
                                     />
                                 </div>
                             )}
@@ -229,11 +251,11 @@ const HomeTab = ({ selectedDate, events, setEvents, todos, setTodos }) => {
 
             <Modal show={showScheduleModal} onClose={() => setShowScheduleModal(false)}>
                 <h3>새 일정 추가</h3>
-                <input 
-                    type="text" 
-                    placeholder="일정명" 
-                    value={newScheduleTitle} 
-                    onChange={(e) => setNewScheduleTitle(e.target.value)} 
+                <input
+                    type="text"
+                    placeholder="일정명"
+                    value={newScheduleTitle}
+                    onChange={(e) => setNewScheduleTitle(e.target.value)}
                 />
                 <div>
                     <label><input type="checkbox" checked={newScheduleImportant} onChange={() => setNewScheduleImportant(!newScheduleImportant)} /> 중요</label>
@@ -276,3 +298,4 @@ const HomeTab = ({ selectedDate, events, setEvents, todos, setTodos }) => {
 };
 
 export default HomeTab;
+

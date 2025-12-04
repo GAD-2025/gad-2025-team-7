@@ -269,3 +269,21 @@
     color: white;
     border-color: #FF7581;
 }
+
+.logout-button {
+    background-color: #f44336; /* Red color for logout */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 25px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 30px; /* Space from other options */
+    width: 100%;
+    max-width: 400px;
+    transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+    background-color: #d32f2f;
+}

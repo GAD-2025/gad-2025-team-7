@@ -118,11 +118,64 @@ body {
     border-radius: 50%;
     width: 20px;
     height: 20px;
-    font-size: 14px;
+    font-size: 16px; /* Adjusted font size for pencil icon */
     line-height: 20px;
     text-align: center;
     cursor: pointer;
     margin-left: 5px;
+}
+
+.existing-templates-list {
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.existing-templates-list h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: var(--text-color);
+    font-size: 1em;
+}
+
+.existing-template-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f9f9f9;
+    padding: 8px 12px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+.existing-template-color {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin-right: 8px;
+    border: 1px solid #ccc;
+}
+
+.delete-existing-template-btn {
+    background-color: #ffcdd2;
+    color: #c62828;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.7em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.delete-existing-template-btn:hover {
+    background-color: #ef9a9a;
 }
 #reminder-list {
     display: flex;

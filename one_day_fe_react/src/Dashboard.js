@@ -4,19 +4,58 @@ import HomeTab from './HomeTab';
 import RecordsTab from './RecordsTab';
 import HealthcareTab from './HealthcareTab';
 
-const Dashboard = ({ selectedDate, events, setEvents, todos, setTodos, diaries, setDiaries }) => {
+const Dashboard = ({
+    selectedDate,
+    events,
+    setEvents,
+    todos,
+    setTodos,
+    diaries,
+    setDiaries,
+    // New props for event modal from drag selection
+    showEventModal,
+    setShowEventModal,
+    initialEventStartDate,
+    initialEventEndDate,
+}) => {
     const [activeTab, setActiveTab] = useState('home-tab');
 
     const renderTabContent = () => {
         switch (activeTab) {
             case 'home-tab':
-                return <HomeTab selectedDate={selectedDate} events={events} setEvents={setEvents} todos={todos} setTodos={setTodos} />;
+                return (
+                    <HomeTab
+                        selectedDate={selectedDate}
+                        events={events}
+                        setEvents={setEvents}
+                        todos={todos}
+                        setTodos={setTodos}
+                        // Pass new props to HomeTab
+                        showScheduleModal={showEventModal} // Use showEventModal from Home.js
+                        setShowScheduleModal={setShowEventModal} // Use setShowEventModal from Home.js
+                        initialScheduleStartDate={initialEventStartDate}
+                        initialScheduleEndDate={initialEventEndDate}
+                    />
+                );
             case 'records-tab':
                 return <RecordsTab diaries={diaries} setDiaries={setDiaries} />;
             case 'healthcare-tab':
                 return <HealthcareTab />;
             default:
-                return <HomeTab selectedDate={selectedDate} events={events} setEvents={setEvents} todos={todos} setTodos={setTodos} />;
+                return (
+                    <HomeTab
+                        selectedDate={selectedDate}
+                        events={events}
+                        setEvents={setEvents}
+                        todos={todos}
+                        setTodos={setTodos}
+                        // Pass new props to HomeTab
+                        showScheduleModal={showEventModal} // Use showEventModal from Home.js
+                        setShowScheduleModal={setShowEventModal} // Use setShowEventModal from Home.js
+                        initialScheduleStartDate={initialEventStartDate}
+                        initialScheduleEndDate={initialEventEndDate}
+                    />
+                );
         }
     };
 
