@@ -72,5 +72,61 @@ router.post('/login', async (req, res) => {
     }
 });
 
+const multer = require('multer');
+const path = require('path');
+
+// Multer storage configuration
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, '../uploads'));
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname)); // Append extension
+    }
+});
+
+const uploadMiddleware = multer({ storage: storage }).single('profileImage');
+
+// @route   PUT /api/auth/profile/:userId
+// @desc    Update user profile
+// @access  Private
+router.put('/profile/:userId', (req, res) => {
+    uploadMiddleware(req, res, async function (err) {
+        if (err instanceof multer.MulterError) {
+            return res.status(500).json({ msg: `Multer-related error: ${err.message}` });
+        } else if (err) {
+            return res.status(500).json({ msg: `An unknown error occurred during file upload: ${err.message}` });
+        }
+
+        // If no error, proceed with the route handler logic
+        try {
+            const { userId } = req.params;
+            const { username } = req.body;
+
+            const [users] = await db.query('SELECT * FROM users WHERE id = ?', [userId]);
+            if (users.length === 0) {
+                return res.status(404).json({ msg: '사용자를 찾을 수 없습니다.' });
+            }
+
+            let profile_image_url = users[0].profile_image_url;
+            if (req.file) {
+                profile_image_url = `/uploads/${req.file.filename}`;
+            }
+
+            await db.query(
+                'UPDATE users SET username = ?, profile_image_url = ? WHERE id = ?',
+                [username, profile_image_url, userId]
+            );
+
+            const [updatedUsers] = await db.query('SELECT id, username, email, profile_image_url FROM users WHERE id = ?', [userId]);
+
+            res.json({ msg: '프로필이 성공적으로 업데이트되었습니다.', user: updatedUsers[0] });
+        } catch (error) {
+            console.error('Update profile error:', error);
+            res.status(500).json({ msg: `서버 오류: ${error.message}` });
+        }
+    });
+});
+
 
 module.exports = router;

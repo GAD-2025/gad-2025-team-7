@@ -43,7 +43,7 @@ const Diary = ({ selectedDate, userId }) => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
             try {
-                const res = await fetch(`http://localhost:3000/api/diaries/${userId}/${selectedDate}`);
+                const res = await fetch(`http://localhost:3001/api/diaries/${userId}/${selectedDate}`);
                 const data = await res.json();
                 
                 const loadedTexts = data?.texts || [];
@@ -105,7 +105,7 @@ const Diary = ({ selectedDate, userId }) => {
         };
 
         try {
-            const res = await fetch('http://localhost:3000/api/diaries', {
+            const res = await fetch('http://localhost:3001/api/diaries', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

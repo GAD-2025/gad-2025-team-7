@@ -9,8 +9,9 @@ const Home = () => {
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
     const [events, setEvents] = useState([]);
     const [todos, setTodos] = useState([]);
-    const [diaries, setDiaries] = useState(JSON.parse(localStorage.getItem('diaries')) || []);
     const [showProfileModal, setShowProfileModal] = useState(false); // State to control profile modal visibility
+    const [user, setUser] = useState(null); // Add user state
+    const [lastUpdated, setLastUpdated] = useState(Date.now()); // To trigger refetch
 
     // New states for drag selection
     const [isDragging, setIsDragging] = useState(false);
@@ -20,41 +21,39 @@ const Home = () => {
     const [initialEventStartDate, setInitialEventStartDate] = useState(null);
     const [initialEventEndDate, setInitialEventEndDate] = useState(null);
 
-    useEffect(() => {
-        // Diaries are still using localStorage for now.
-        localStorage.setItem('diaries', JSON.stringify(diaries));
-    }, [diaries]);
+    const userId = localStorage.getItem('userId');
 
-    const fetchData = useCallback(async () => {
-        const userId = localStorage.getItem('userId');
+    useEffect(() => {
         if (!userId) {
             window.location.href = '/login';
             return;
         }
 
+        // Fetch user profile
+        fetch(`http://localhost:3001/api/auth/profile/${userId}`, { cache: 'no-cache' })
+            .then(res => res.ok ? res.json() : Promise.reject('Failed to fetch user'))
+            .then(userData => setUser(userData))
+            .catch(error => console.error("Failed to fetch user:", error));
+
         if (!selectedDate) return;
 
-        try {
-            // Fetch Events
-            const eventRes = await fetch(`http://localhost:3001/api/events/${userId}/${selectedDate}`);
-            if (!eventRes.ok) throw new Error('Failed to fetch events');
-            const eventData = await eventRes.json();
-            setEvents(eventData);
+        // Fetch events for the selected date
+        fetch(`http://localhost:3001/api/events/${userId}/${selectedDate}`)
+            .then(res => res.ok ? res.json() : Promise.reject('Failed to fetch events'))
+            .then(eventData => setEvents(eventData))
+            .catch(error => console.error("Error fetching events:", error));
 
-            // Fetch Todos
-            const todoRes = await fetch(`http://localhost:3001/api/todos/${userId}/${selectedDate}`);
-            if (!todoRes.ok) throw new Error('Failed to fetch todos');
-            const todoData = await todoRes.json();
-            setTodos(todoData);
+        // Fetch todos for the selected date
+        fetch(`http://localhost:3001/api/todos/${userId}/${selectedDate}`)
+            .then(res => res.ok ? res.json() : Promise.reject('Failed to fetch todos'))
+            .then(todoData => setTodos(todoData))
+            .catch(error => console.error("Error fetching todos:", error));
 
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    }, [selectedDate]);
+    }, [userId, selectedDate, lastUpdated]);
 
-    useEffect(() => {
-        fetchData();
-    }, [fetchData]);
+    const onDataUpdate = () => {
+        setLastUpdated(Date.now());
+    };
 
     const handleOpenProfileModal = () => {
         setShowProfileModal(true);
@@ -63,6 +62,11 @@ const Home = () => {
 
     const handleCloseProfileModal = () => {
         setShowProfileModal(false);
+    };
+
+    const handleProfileUpdate = (updatedUser) => {
+        setUser(updatedUser);
+        setShowProfileModal(false); // Close modal on successful update
     };
 
     // Drag selection handlers
@@ -124,12 +128,11 @@ const Home = () => {
                 onDragEnd={handleDragEnd}
             />
             <Dashboard
+                userId={userId}
                 selectedDate={selectedDate}
                 events={events}
                 todos={todos}
-                diaries={diaries}
-                setDiaries={setDiaries}
-                onDataUpdate={fetchData} // Pass the refetch function
+                onDataUpdate={onDataUpdate} // Pass the refetch function
                 // Props for event modal from drag selection
                 showEventModal={showEventModal}
                 setShowEventModal={setShowEventModal}
@@ -140,7 +143,11 @@ const Home = () => {
             {showProfileModal && (
                 <div className="modal-overlay">
                     <div className="modal-content">
-                        <Profile onClose={handleCloseProfileModal} />
+                        <Profile
+                            user={user}
+                            onClose={handleCloseProfileModal}
+                            onProfileUpdate={handleProfileUpdate}
+                        />
                     </div>
                 </div>
             )}

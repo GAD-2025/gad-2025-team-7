@@ -7,7 +7,7 @@ const ImageUploader = ({ onImageUpload }) => {
             const reader = new FileReader();
             reader.onloadend = () => {
                 // reader.result contains the Data URL
-                onImageUpload(reader.result);
+                onImageUpload(file, reader.result);
             };
             reader.readAsDataURL(file);
         }

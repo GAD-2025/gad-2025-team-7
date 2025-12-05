@@ -5,11 +5,10 @@ import RecordsTab from './RecordsTab';
 import HealthcareTab from './HealthcareTab';
 
 const Dashboard = ({
+    userId,
     selectedDate,
     events,
     todos,
-    diaries,
-    setDiaries,
     onDataUpdate, // Receive the refetch function
     // New props for event modal from drag selection
     showEventModal,
@@ -36,7 +35,7 @@ const Dashboard = ({
                     />
                 );
             case 'records-tab':
-                return <RecordsTab diaries={diaries} setDiaries={setDiaries} />;
+                return <RecordsTab userId={userId} selectedDate={selectedDate} />;
             case 'healthcare-tab':
                 return <HealthcareTab />;
             default:

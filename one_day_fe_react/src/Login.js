@@ -82,14 +82,6 @@ const Login = () => {
                             </div>
                             <button type="submit">로그인</button>
                         </form>
-                        <div className="social-login">
-                            <p>SNS로 로그인</p>
-                            <div className="social-icons">
-                                <a href="#" id="google-login"><img src="https://via.placeholder.com/40" alt="Google" /></a>
-                                <a href="#" id="naver-login"><img src="https://via.placeholder.com/40" alt="Naver" /></a>
-                                <a href="#" id="kakao-login"><img src="https://via.placeholder.com/40" alt="Kakao" /></a>
-                            </div>
-                        </div>
                         <p className="toggle-form">계정이 없으신가요? <a href="#" id="show-signup" onClick={showSignup}>회원가입</a></p>
                     </div>
                 ) : (
