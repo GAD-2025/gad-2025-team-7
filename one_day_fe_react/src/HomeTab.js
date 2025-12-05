@@ -5,6 +5,7 @@ import Modal from './Modal';
 import Template from './Template';
 
 const HomeTab = ({
+    userId,
     selectedDate,
     events,
     todos,
@@ -134,10 +135,6 @@ const HomeTab = ({
 
     
 
-            const userId = 1; // Assuming user ID is 1 for now
-
-    
-
             const body = {
 
                 userId,
@@ -195,8 +192,6 @@ const HomeTab = ({
         const handleSaveTodo = async () => {
 
             if (newTodoTitle) {
-
-                const userId = 1; // Assuming user ID is 1 for now
 
     
 

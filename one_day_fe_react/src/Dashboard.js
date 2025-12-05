@@ -23,6 +23,7 @@ const Dashboard = ({
             case 'home-tab':
                 return (
                     <HomeTab
+                        userId={userId}
                         selectedDate={selectedDate}
                         events={events}
                         todos={todos}
@@ -41,6 +42,7 @@ const Dashboard = ({
             default:
                 return (
                     <HomeTab
+                        userId={userId}
                         selectedDate={selectedDate}
                         events={events}
                         todos={todos}
