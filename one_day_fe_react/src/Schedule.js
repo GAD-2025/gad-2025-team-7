@@ -20,13 +20,14 @@ const Schedule = ({ selectedDate, events, setEvents }) => {
             ) : (
                 <ul>
                     {eventsForDay.map(event => (
-                        <li key={event.id} className={event.completed ? 'completed' : ''}>
+                        <li key={event.id} className={`schedule-item ${event.completed ? 'completed' : ''}`}>
                             <input 
                                 type="checkbox" 
                                 checked={event.completed} 
                                 onChange={() => toggleEventCompletion(event.id)} 
                             />
-                            <span>{event.isImportant ? '[중요] ' : ''}{event.title}</span>
+                            <span className="schedule-title">{event.title}</span>
+                            {event.time && <span className="schedule-time">{event.time}</span>}
                             <button className="delete-item-btn" onClick={() => deleteEvent(event.id)}>×</button>
                         </li>
                     ))}

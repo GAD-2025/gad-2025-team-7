@@ -17,15 +17,11 @@ const HomeTab = ({
     initialScheduleEndDate,
 }) => {
     // const [showScheduleModal, setShowScheduleModal] = useState(false); // Removed local state
-    const [showTodoForm, setShowTodoForm] = useState(false);
+    const [showTodoModal, setShowTodoModal] = useState(false);
 
     // Schedule Modal State
     const [newScheduleTitle, setNewScheduleTitle] = useState('');
-    const [newScheduleImportant, setNewScheduleImportant] = useState(false);
-    const [newScheduleAllday, setNewScheduleAllday] = useState(false);
-    const [newScheduleRepeat, setNewScheduleRepeat] = useState(false);
     const [newScheduleTime, setNewScheduleTime] = useState('');
-    const [newScheduleDayOfWeek, setNewScheduleDayOfWeek] = useState([]);
     const [newScheduleStartDate, setNewScheduleStartDate] = useState(selectedDate);
     const [newScheduleEndDate, setNewScheduleEndDate] = useState('');
     const [newScheduleSetReminder, setNewScheduleSetReminder] = useState(false); // New state for reminder setting
@@ -33,9 +29,44 @@ const HomeTab = ({
 
     // Todo Form State
     const [newTodoTitle, setNewTodoTitle] = useState('');
-    const [newTodoRepeat, setNewTodoRepeat] = useState(false);
-    const [newTodoEndDate, setNewTodoEndDate] = useState('');
+    const [newTodoSelectedDays, setNewTodoSelectedDays] = useState([]);
+    const [newScheduleSelectedDays, setNewScheduleSelectedDays] = useState([]);
+    const [showTodoDayPicker, setShowTodoDayPicker] = useState(false);
+    const [showScheduleDayPicker, setShowScheduleDayPicker] = useState(false);
 
+    const handleShowTodoDayPickerChange = (e) => {
+        const isChecked = e.target.checked;
+        setShowTodoDayPicker(isChecked);
+        if (!isChecked) {
+            setNewTodoSelectedDays([]);
+        }
+    };
+
+    const handleShowScheduleDayPickerChange = (e) => {
+        const isChecked = e.target.checked;
+        setShowScheduleDayPicker(isChecked);
+        if (!isChecked) {
+            setNewScheduleSelectedDays([]);
+        }
+    };
+
+    const handleDayOfWeekChange = (e) => {
+        const dayIndex = parseInt(e.target.value, 10);
+        if (e.target.checked) {
+            setNewTodoSelectedDays([...newTodoSelectedDays, dayIndex]);
+        } else {
+            setNewTodoSelectedDays(newTodoSelectedDays.filter(d => d !== dayIndex));
+        }
+    };
+
+    const handleScheduleDayOfWeekChange = (e) => {
+        const dayIndex = parseInt(e.target.value, 10);
+        if (e.target.checked) {
+            setNewScheduleSelectedDays([...newScheduleSelectedDays, dayIndex]);
+        } else {
+            setNewScheduleSelectedDays(newScheduleSelectedDays.filter(d => d !== dayIndex));
+        }
+    };
     // Reminders
     const [reminders, setReminders] = useState([]);
 
@@ -70,86 +101,94 @@ const HomeTab = ({
 
         const resetForm = () => {
             setNewScheduleTitle('');
-            setNewScheduleImportant(false);
-            setNewScheduleAllday(false);
-            setNewScheduleRepeat(false);
             setNewScheduleTime('');
-            setNewScheduleDayOfWeek([]);
             setNewScheduleStartDate(selectedDate);
             setNewScheduleEndDate('');
-            setNewScheduleSetReminder(false); // Reset new state
-            setShowScheduleModal(false); // Use prop setter
+            setNewScheduleSetReminder(false);
+            setNewScheduleSelectedDays([]);
+            setShowScheduleDayPicker(false);
+            setShowScheduleModal(false);
         };
 
-        if (newScheduleRepeat) {
-            const dayMapping = { 0: 'sun', 1: 'mon', 2: 'tue', 3: 'wed', 4: 'thu', 5: 'fri', 6: 'sat' };
-            let recurringEvents = [];
-            let currentDate = new Date(newScheduleStartDate);
-            let endDate = new Date(newScheduleEndDate);
+        let newEvents = [];
+        if (newScheduleSelectedDays.length > 0) {
+            const startDate = new Date(newScheduleStartDate);
+            for (let i = 0; i < 365; i++) {
+                const day = new Date(startDate);
+                day.setDate(day.getDate() + i);
 
-            while (currentDate <= endDate) {
-                const dayOfWeek = dayMapping[currentDate.getDay()];
-                if (newScheduleDayOfWeek.includes(dayOfWeek)) {
+                if (newScheduleSelectedDays.includes(day.getDay())) {
                     const newEvent = {
-                        id: Date.now() + recurringEvents.length, // Ensure unique ID
-                        date: currentDate.toISOString().split('T')[0],
+                        id: Date.now() + i,
+                        date: day.toISOString().split('T')[0],
                         title: newScheduleTitle,
-                        isImportant: newScheduleImportant,
-                        isAllDay: newScheduleAllday,
-                        isRepeat: true,
                         time: newScheduleTime,
                         category: 'personal',
                         completed: false,
-                        setReminder: newScheduleSetReminder // Include new state
+                        setReminder: newScheduleSetReminder
                     };
-                    recurringEvents.push(newEvent);
+                    newEvents.push(newEvent);
                 }
-                currentDate.setDate(currentDate.getDate() + 1);
             }
-            setEvents([...events, ...recurringEvents]);
         } else {
             // Handle single day or dragged range event
             const start = new Date(newScheduleStartDate);
             const end = new Date(newScheduleEndDate || newScheduleStartDate); // If no end date, it's a single day
 
-            let newEvents = [];
             let currentDate = new Date(start);
             while (currentDate <= end) {
                 const newEvent = {
                     id: Date.now() + newEvents.length, // Ensure unique ID for each day's event
                     date: currentDate.toISOString().split('T')[0],
                     title: newScheduleTitle,
-                    isImportant: newScheduleImportant,
-                    isAllDay: newScheduleAllday,
-                    isRepeat: false,
                     time: newScheduleTime,
                     category: 'personal',
                     completed: false,
-                    setReminder: newScheduleSetReminder // Include new state
+                    setReminder: newScheduleSetReminder
                 };
                 newEvents.push(newEvent);
                 currentDate.setDate(currentDate.getDate() + 1);
             }
-            setEvents([...events, ...newEvents]);
         }
-        
+        setEvents([...events, ...newEvents]);
         resetForm();
     };
 
     const handleSaveTodo = () => {
         if (newTodoTitle) {
-            const newTodo = {
-                id: Date.now(),
-                date: selectedDate,
-                title: newTodoTitle,
-                completed: false,
-            };
-            setTodos([...todos, newTodo]);
-            setShowTodoForm(false);
+            let newTodos = [];
+            if (newTodoSelectedDays.length > 0) {
+                const startDate = new Date(selectedDate);
+                for (let i = 0; i < 365; i++) {
+                    const day = new Date(startDate);
+                    day.setDate(day.getDate() + i);
+
+                    if (newTodoSelectedDays.includes(day.getDay())) {
+                        const newTodo = {
+                            id: Date.now() + i,
+                            date: day.toISOString().split('T')[0],
+                            title: newTodoTitle,
+                            completed: false,
+                        };
+                        newTodos.push(newTodo);
+                    }
+                }
+            } else {
+                const newTodo = {
+                    id: Date.now(),
+                    date: selectedDate,
+                    title: newTodoTitle,
+                    completed: false,
+                };
+                newTodos.push(newTodo);
+            }
+
+            setTodos([...todos, ...newTodos]);
+            setShowTodoModal(false);
             // Reset form
             setNewTodoTitle('');
-            setNewTodoRepeat(false);
-            setNewTodoEndDate('');
+            setNewTodoSelectedDays([]);
+            setShowTodoDayPicker(false);
         }
     };
 
@@ -203,38 +242,44 @@ const HomeTab = ({
                 <div className="dashboard-section todo-main">
                     <div className="section-header">
                         <h3>투두리스트</h3>
-                        <div className="header-actions">
-                            <button className="add-btn" onClick={() => setShowTodoForm(!showTodoForm)}>+</button>
-                        </div>
-                    </div>
-                    {showTodoForm && (
-                        <div id="add-todo-form" className="inline-form">
-                            <input
-                                type="text"
-                                placeholder="새로운 할 일"
-                                value={newTodoTitle}
-                                onChange={(e) => setNewTodoTitle(e.target.value)}
-                            />
-                            <div>
-                                <label><input type="checkbox" checked={newTodoRepeat} onChange={() => setNewTodoRepeat(!newTodoRepeat)} /> 매주 반복</label>
-                            </div>
-                            {newTodoRepeat && (
-                                <div id="repeat-end-date-container">
-                                    <label htmlFor="new-todo-end-date">언제까지:</label>
-                                    <input
-                                        type="date"
-                                        id="new-todo-end-date"
-                                        value={newTodoEndDate}
-                                        onChange={(e) => setNewTodoEndDate(e.target.value)}
-                                    />
-                                </div>
-                            )}
-                            <button onClick={handleSaveTodo}>저장</button>
-                        </div>
-                    )}
-                    <TodoList selectedDate={selectedDate} todos={todos} setTodos={setTodos} />
-                </div>
-
+                                            <div className="header-actions">
+                                                <button className="add-btn" onClick={() => setShowTodoModal(true)}>+</button>
+                                            </div>
+                                        </div>
+                                        <Modal show={showTodoModal} onClose={() => setShowTodoModal(false)}>
+                                            <h3>새 투두리스트 추가</h3>
+                                                                                                        <input
+                                                                                                            type="text"
+                                                                                                            placeholder="새로운 할 일"
+                                                                                                            value={newTodoTitle}
+                                                                                                            onChange={(e) => setNewTodoTitle(e.target.value)}
+                                                                                                        />
+                                                                                                        <div>
+                                                                                                            <label>
+                                                                                                                <input type="checkbox" checked={showTodoDayPicker} onChange={handleShowTodoDayPickerChange} />
+                                                                                                                요일
+                                                                                                            </label>
+                                                                                                        </div>
+                                                                                                        {showTodoDayPicker && (
+                                                                                                            <div className="days-of-week">
+                                                                                                                {['일', '월', '화', '수', '목', '금', '토'].map((day, index) => (
+                                                                                                                    <label key={day}>
+                                                                                                                        <input
+                                                                                                                            type="checkbox"
+                                                                                                                            value={index}
+                                                                                                                            onChange={handleDayOfWeekChange}
+                                                                                                                            checked={newTodoSelectedDays.includes(index)}
+                                                                                                                        />
+                                                                                                                        {day}
+                                                                                                                    </label>
+                                                                                                                ))}
+                                                                                                            </div>
+                                                                                                        )}
+                                                                                                        <div className="modal-actions">
+                                                                                                            <button onClick={handleSaveTodo}>저장</button>
+                                                                                                            <button onClick={() => setShowTodoModal(false)}>취소</button>
+                                                                                                        </div>                                                            </Modal>                                        <TodoList selectedDate={selectedDate} todos={todos} setTodos={setTodos} />
+                                    </div>
                 <div className="dashboard-section todo-add">
                     <div className="section-header">
                         <h3>투두리스트 추가</h3>
@@ -268,37 +313,33 @@ const HomeTab = ({
                     value={newScheduleTitle}
                     onChange={(e) => setNewScheduleTitle(e.target.value)}
                 />
+                <input type="time" value={newScheduleTime} onChange={(e) => setNewScheduleTime(e.target.value)} />
+                
                 <div>
-                    <label><input type="checkbox" checked={newScheduleImportant} onChange={() => setNewScheduleImportant(!newScheduleImportant)} /> 중요</label>
-                    <label><input type="checkbox" checked={newScheduleAllday} onChange={() => setNewScheduleAllday(!newScheduleAllday)} /> 하루 종일</label>
-                    <label><input type="checkbox" checked={newScheduleRepeat} onChange={() => setNewScheduleRepeat(!newScheduleRepeat)} /> 반복</label>
-                    <label><input type="checkbox" checked={newScheduleSetReminder} onChange={() => setNewScheduleSetReminder(!newScheduleSetReminder)} /> 리마인더 설정</label> {/* New checkbox */}
+                    <label>
+                        <input type="checkbox" checked={showScheduleDayPicker} onChange={handleShowScheduleDayPickerChange} />
+                        요일
+                    </label>
                 </div>
-                
-                {!newScheduleAllday && <input type="time" value={newScheduleTime} onChange={(e) => setNewScheduleTime(e.target.value)} />}
-                
-                {newScheduleRepeat && (
-                    <div className="repeat-options">
-                        <div>
-                            <label>시작일:</label>
-                            <input type="date" value={newScheduleStartDate} onChange={(e) => setNewScheduleStartDate(e.target.value)} />
-                        </div>
-                        <div>
-                            <label>종료일:</label>
-                            <input type="date" value={newScheduleEndDate} onChange={(e) => setNewScheduleEndDate(e.target.value)} />
-                        </div>
-                        <select multiple value={newScheduleDayOfWeek} onChange={(e) => setNewScheduleDayOfWeek(Array.from(e.target.selectedOptions, option => option.value))}>
-                            <option value="">요일 선택</option>
-                            <option value="sun">일요일</option>
-                            <option value="mon">월요일</option>
-                            <option value="tue">화요일</option>
-                            <option value="wed">수요일</option>
-                            <option value="thu">목요일</option>
-                            <option value="fri">금요일</option>
-                            <option value="sat">토요일</option>
-                        </select>
+                {showScheduleDayPicker && (
+                    <div className="days-of-week">
+                        {['일', '월', '화', '수', '목', '금', '토'].map((day, index) => (
+                            <label key={day}>
+                                <input
+                                    type="checkbox"
+                                    value={index}
+                                    onChange={handleScheduleDayOfWeekChange}
+                                    checked={newScheduleSelectedDays.includes(index)}
+                                />
+                                {day}
+                            </label>
+                        ))}
                     </div>
                 )}
+
+                <div>
+                    <label><input type="checkbox" checked={newScheduleSetReminder} onChange={() => setNewScheduleSetReminder(!newScheduleSetReminder)} /> 리마인더 설정</label>
+                </div>
 
                 <div className="modal-actions">
                     <button onClick={handleSaveSchedule}>저장</button>

@@ -416,3 +416,23 @@ ul {
 li {
     list-style: none;
 }
+
+.schedule-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.schedule-title {
+    flex-grow: 1;
+    /* Truncate long text */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.schedule-time {
+    margin-left: 10px;
+    color: var(--light-text-color);
+    font-size: 13px;
+}
