@@ -128,5 +128,86 @@ router.put('/profile/:userId', (req, res) => {
     });
 });
 
+// @route   PUT /api/auth/change-password/:userId
+// @desc    Change user password
+// @access  Private
+router.put('/change-password/:userId', async (req, res) => {
+    const { userId } = req.params;
+    const { oldPassword, newPassword } = req.body;
+
+    if (!oldPassword || !newPassword) {
+        return res.status(400).json({ msg: '모든 필드를 입력해주세요.' });
+    }
+
+    try {
+        const [users] = await db.query('SELECT * FROM users WHERE id = ?', [userId]);
+        if (users.length === 0) {
+            return res.status(404).json({ msg: '사용자를 찾을 수 없습니다.' });
+        }
+
+        const user = users[0];
+
+        // Check if old password is correct
+        const isMatch = await bcrypt.compare(oldPassword, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ msg: '현재 비밀번호가 일치하지 않습니다.' });
+        }
+
+        // Hash new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // Update password in DB
+        await db.query('UPDATE users SET password = ? WHERE id = ?', [hashedPassword, userId]);
+
+        res.json({ msg: '비밀번호가 성공적으로 변경되었습니다.' });
+
+    } catch (error) {
+        console.error('Change password error:', error);
+        res.status(500).json({ msg: '서버 오류가 발생했습니다.' });
+    }
+});
+
+// @route   PUT /api/auth/change-email/:userId
+// @desc    Change user email (ID)
+// @access  Private
+router.put('/change-email/:userId', async (req, res) => {
+    const { userId } = req.params;
+    const { newEmail, password } = req.body;
+
+    if (!newEmail || !password) {
+        return res.status(400).json({ msg: '모든 필드를 입력해주세요.' });
+    }
+
+    try {
+        // Check if new email already exists
+        const [existingUser] = await db.query('SELECT email FROM users WHERE email = ?', [newEmail]);
+        if (existingUser.length > 0) {
+            return res.status(400).json({ msg: '이미 사용중인 이메일입니다.' });
+        }
+
+        const [users] = await db.query('SELECT * FROM users WHERE id = ?', [userId]);
+        if (users.length === 0) {
+            return res.status(404).json({ msg: '사용자를 찾을 수 없습니다.' });
+        }
+
+        const user = users[0];
+
+        // Check if password is correct
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ msg: '비밀번호가 일치하지 않습니다.' });
+        }
+
+        // Update email in DB
+        await db.query('UPDATE users SET email = ? WHERE id = ?', [newEmail, userId]);
+
+        res.json({ msg: '이메일(아이디)이 성공적으로 변경되었습니다.' });
+
+    } catch (error) {
+        console.error('Change email error:', error);
+        res.status(500).json({ msg: '서버 오류가 발생했습니다.' });
+    }
+});
+
 
 module.exports = router;

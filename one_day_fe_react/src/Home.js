@@ -66,6 +66,7 @@ const Home = () => {
 
     const handleProfileUpdate = (updatedUser) => {
         setUser(updatedUser);
+        onDataUpdate(); // Force a refetch of all data
         setShowProfileModal(false); // Close modal on successful update
     };
 
