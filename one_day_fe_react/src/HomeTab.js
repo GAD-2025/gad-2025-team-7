@@ -255,50 +255,51 @@ const HomeTab = ({
 
     
 
-        const handleScheduleTemplateClick = (template) => {
-
-            const newEvent = {
-
-                id: Date.now(),
-
-                date: selectedDate,
-
+        const handleScheduleTemplateClick = async (template) => {
+            const body = {
+                userId,
                 title: template.title,
-
+                startDate: selectedDate,
                 category: template.category || 'custom',
-
-                completed: false,
-
-                setReminder: false, // Default for template events
-
             };
 
-            // This part needs to be adapted for API calls as well, skipping for now.
+            try {
+                const res = await fetch('http://localhost:3001/api/events', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body),
+                });
 
-            // setEvents([...events, newEvent]);
+                if (!res.ok) throw new Error('Failed to save schedule from template');
 
+                onDataUpdate(); // Refetch data
+            } catch (error) {
+                console.error('Error saving schedule from template:', error);
+            }
         };
 
     
 
-        const handleTodoTemplateClick = (template) => {
-
-            const newTodo = {
-
-                id: Date.now(),
-
-                date: selectedDate,
-
+        const handleTodoTemplateClick = async (template) => {
+            const body = {
+                userId,
                 title: template.title,
-
-                completed: false,
-
+                date: selectedDate,
             };
 
-            // This part needs to be adapted for API calls as well, skipping for now.
+            try {
+                const res = await fetch('http://localhost:3001/api/todos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body),
+                });
 
-            // setTodos([...todos, newTodo]);
+                if (!res.ok) throw new Error('Failed to save todo from template');
 
+                onDataUpdate(); // Refetch data
+            } catch (error) {
+                console.error('Error saving todo from template:', error);
+            }
         };
 
     
