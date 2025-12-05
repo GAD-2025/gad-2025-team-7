@@ -7,46 +7,68 @@ const Diary = ({ selectedDate, userId }) => {
     const [drawingTool, setDrawingTool] = useState('pen');
     const [penColor, setPenColor] = useState('black');
     const [penSize, setPenSize] = useState(8);
-    const [textInput, setTextInput] = useState(null);
-    const [canvasHistory, setCanvasHistory] = useState([]);
+    const [texts, setTexts] = useState([]);
+    const textRefs = useRef({});
+    const [editingText, setEditingText] = useState(null);
+    const [draggingText, setDraggingText] = useState(null);
+    const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+    const [history, setHistory] = useState([]);
     const [historyStep, setHistoryStep] = useState(-1);
+
+    const pushToHistory = (currentState = { texts, canvasData: canvasRef.current.toDataURL() }) => {
+        const newHistory = history.slice(0, historyStep + 1);
+        newHistory.push(currentState);
+        setHistory(newHistory);
+        setHistoryStep(newHistory.length - 1);
+    };
+
+    const restoreState = (state) => {
+        const { canvasData, texts: newTexts } = state;
+        setTexts(newTexts);
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        img.onload = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+        };
+        img.src = canvasData;
+    };
 
     useEffect(() => {
         const fetchDiary = async () => {
             if (!userId || !selectedDate) return;
+            const canvas = canvasRef.current;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
             try {
                 const res = await fetch(`http://localhost:3000/api/diaries/${userId}/${selectedDate}`);
                 const data = await res.json();
-                if (data) {
-                    setTitle(data.title || '');
-                    const canvas = canvasRef.current;
-                    const ctx = canvas.getContext('2d');
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    if (data.canvasData) {
-                        const img = new Image();
-                        img.onload = () => {
-                            ctx.drawImage(img, 0, 0);
-                            const initialHistory = [canvas.toDataURL()];
-                            setCanvasHistory(initialHistory);
-                            setHistoryStep(0);
-                        };
-                        img.src = data.canvasData;
-                    } else {
-                        const initialHistory = [canvas.toDataURL()];
-                        setCanvasHistory(initialHistory);
+                
+                const loadedTexts = data?.texts || [];
+                setTexts(loadedTexts);
+                setTitle(data?.title || '');
+
+                if (data?.canvasData) {
+                    const img = new Image();
+                    img.onload = () => {
+                        ctx.drawImage(img, 0, 0);
+                        const initialState = { canvasData: canvas.toDataURL(), texts: loadedTexts };
+                        setHistory([initialState]);
                         setHistoryStep(0);
-                    }
+                    };
+                    img.src = data.canvasData;
                 } else {
-                    setTitle('');
-                    const canvas = canvasRef.current;
-                    const ctx = canvas.getContext('2d');
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    const initialHistory = [canvas.toDataURL()];
-                    setCanvasHistory(initialHistory);
+                    const initialState = { canvasData: canvas.toDataURL(), texts: loadedTexts };
+                    setHistory([initialState]);
                     setHistoryStep(0);
                 }
             } catch (error) {
                 console.error("Error fetching diary:", error);
+                const initialState = { canvasData: canvas.toDataURL(), texts: [] };
+                setHistory([initialState]);
+                setHistoryStep(0);
             }
         };
 
@@ -59,12 +81,27 @@ const Diary = ({ selectedDate, userId }) => {
             return;
         }
         const canvas = canvasRef.current;
-        const canvasData = canvas ? canvas.toDataURL() : '';
+        const ctx = canvas.getContext('2d');
+        
+        const finalCanvas = document.createElement('canvas');
+        finalCanvas.width = canvas.width;
+        finalCanvas.height = canvas.height;
+        const finalCtx = finalCanvas.getContext('2d');
+        finalCtx.drawImage(canvas, 0, 0);
+
+        texts.forEach(text => {
+            finalCtx.font = '16px sans-serif';
+            finalCtx.fillStyle = text.color || 'black';
+            finalCtx.fillText(text.value, text.x, text.y);
+        });
+
+        const canvasData = finalCanvas.toDataURL();
         const diaryData = {
             userId,
             date: selectedDate,
             title,
             canvasData,
+            texts,
         };
 
         try {
@@ -85,62 +122,78 @@ const Diary = ({ selectedDate, userId }) => {
             alert('저장 중 오류가 발생했습니다.');
         }
     };
-
-    const pushToHistory = () => {
-        const canvas = canvasRef.current;
-        const newHistory = canvasHistory.slice(0, historyStep + 1);
-        newHistory.push(canvas.toDataURL());
-        setCanvasHistory(newHistory);
-        setHistoryStep(newHistory.length - 1);
-    };
-
+    
     const undo = () => {
         if (historyStep > 0) {
             const newHistoryStep = historyStep - 1;
             setHistoryStep(newHistoryStep);
-            redrawFromHistory(newHistoryStep);
+            restoreState(history[newHistoryStep]);
         }
     };
 
     const redo = () => {
-        if (historyStep < canvasHistory.length - 1) {
+        if (historyStep < history.length - 1) {
             const newHistoryStep = historyStep + 1;
             setHistoryStep(newHistoryStep);
-            redrawFromHistory(newHistoryStep);
+            restoreState(history[newHistoryStep]);
         }
     };
 
-    const redrawFromHistory = (step) => {
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
-        const img = new Image();
-        img.onload = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(img, 0, 0);
-        };
-        img.src = canvasHistory[step];
+    const startEditing = (id) => {
+        setEditingText(id);
     };
 
     const handleCanvasMouseDown = ({ nativeEvent }) => {
-        const { offsetX, offsetY } = nativeEvent;
         if (drawingTool === 'text') {
-            // Prevent creating a new text box if one is already active
-            if (textInput) return;
-            // Use setTimeout to allow the current event cycle to finish
-            setTimeout(() => {
-                setTextInput({ x: offsetX, y: offsetY, value: '' });
-            }, 0);
-        } else { // pen or eraser
-            const ctx = canvasRef.current.getContext('2d');
-            ctx.beginPath();
-            ctx.moveTo(offsetX, offsetY);
-            setIsDrawing(true);
+            if(editingText) {
+                setEditingText(null);
+            }
+            return;
         }
+
+        const { offsetX, offsetY } = nativeEvent;
+        const ctx = canvasRef.current.getContext('2d');
+        ctx.beginPath();
+        ctx.moveTo(offsetX, offsetY);
+        setIsDrawing(true);
     };
 
+    const handleCanvasDoubleClick = ({ nativeEvent }) => {
+        if (drawingTool === 'text') {
+            const { offsetX, offsetY } = nativeEvent;
+            const newText = {
+                id: Date.now(),
+                x: offsetX,
+                y: offsetY,
+                value: 'New Text',
+                color: penColor,
+            };
+            const newTexts = [...texts, newText];
+            setTexts(newTexts);
+            startEditing(newText.id);
+            pushToHistory({ texts: newTexts, canvasData: canvasRef.current.toDataURL() });
+        }
+    };
+    
     const draw = ({ nativeEvent }) => {
-        if (!isDrawing || drawingTool === 'text') return;
+        if (!isDrawing) return;
         const { offsetX, offsetY } = nativeEvent;
+        
+        if (drawingTool === 'eraser') {
+            const newTexts = texts.filter(text => {
+                const ref = textRefs.current[text.id];
+                if (!ref) return true;
+                const rect = ref.getBoundingClientRect();
+                const canvasRect = canvasRef.current.getBoundingClientRect();
+                const x = rect.left - canvasRect.left;
+                const y = rect.top - canvasRect.top;
+                return !(offsetX >= x && offsetX <= x + rect.width && offsetY >= y && offsetY <= y + rect.height);
+            });
+            if (newTexts.length !== texts.length) {
+                setTexts(newTexts);
+            }
+        }
+        
         const ctx = canvasRef.current.getContext('2d');
         ctx.strokeStyle = penColor;
         ctx.lineWidth = drawingTool === 'eraser' ? penSize * 2 : penSize;
@@ -158,16 +211,53 @@ const Diary = ({ selectedDate, userId }) => {
         }
     };
 
+    const handleTextChange = (id, value) => {
+        const newTexts = texts.map(t => t.id === id ? { ...t, value } : t);
+        setTexts(newTexts);
+    };
+
     const handleTextBlur = () => {
-        if (!textInput) return;
-        const { x, y, value } = textInput;
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
-        ctx.font = '16px sans-serif';
-        ctx.fillStyle = penColor;
-        ctx.fillText(value, x, y);
-        setTextInput(null);
-        pushToHistory();
+        const textToEdit = texts.find(t => t.id === editingText);
+        if (textToEdit && textToEdit.value.trim() === '') {
+             const newTexts = texts.filter(t => t.id !== editingText);
+             setTexts(newTexts);
+             pushToHistory({ texts: newTexts, canvasData: canvasRef.current.toDataURL() });
+        } else {
+            pushToHistory();
+        }
+        setEditingText(null);
+    };
+    
+    const deleteText = (id) => {
+        const newTexts = texts.filter(t => t.id !== id);
+        setTexts(newTexts);
+        pushToHistory({ texts: newTexts, canvasData: canvasRef.current.toDataURL() });
+    };
+
+    const handleTextDragStart = (id, e) => {
+        e.stopPropagation();
+        setDraggingText(id);
+        setDragStart({ x: e.clientX, y: e.clientY });
+    };
+
+    const handleTextDrag = (e) => {
+        if (!draggingText) return;
+        const dx = e.clientX - dragStart.x;
+        const dy = e.clientY - dragStart.y;
+        const newTexts = texts.map(t =>
+            t.id === draggingText
+                ? { ...t, x: t.x + dx, y: t.y + dy }
+                : t
+        );
+        setTexts(newTexts);
+        setDragStart({ x: e.clientX, y: e.clientY });
+    };
+
+    const handleTextDragEnd = () => {
+        if(draggingText) {
+            pushToHistory();
+        }
+        setDraggingText(null);
     };
 
     const handleImageUpload = (e) => {
@@ -182,11 +272,13 @@ const Diary = ({ selectedDate, userId }) => {
             };
             img.src = event.target.result;
         };
-        reader.readAsDataURL(e.target.files[0]);
+        if (e.target.files[0]) {
+            reader.readAsDataURL(e.target.files[0]);
+        }
     };
 
     return (
-        <div id="diary-content" className="record-content active">
+        <div id="diary-content" className="record-content active" onMouseMove={handleTextDrag} onMouseUp={handleTextDragEnd}>
             <div className="dashboard-section">
                 <div className="section-header">
                     <h3>다이어리</h3>
@@ -213,7 +305,7 @@ const Diary = ({ selectedDate, userId }) => {
                                     <input type="file" id="image-upload-input" accept="image/*" style={{display:'none'}} onChange={handleImageUpload} />
                                 </label>
                                 <button className="tool-btn" onClick={undo} disabled={historyStep <= 0}>↩️</button>
-                                <button className="tool-btn" onClick={redo} disabled={historyStep >= canvasHistory.length - 1}>↪️</button>
+                                <button className="tool-btn" onClick={redo} disabled={historyStep >= history.length - 1}>↪️</button>
                             </div>
                             <div className="color-palette">
                                 <div className={`color-box ${penColor === 'black' ? 'active' : ''}`} style={{backgroundColor: 'black'}} data-color="black" onClick={() => setPenColor('black')}></div>
@@ -228,9 +320,9 @@ const Diary = ({ selectedDate, userId }) => {
                             </div>
                         </div>
                     </div>
-                    {drawingTool === 'text' && !textInput && (
+                    {drawingTool === 'text' && (
                         <div style={{ padding: '10px', textAlign: 'center', backgroundColor: '#f0f0f0', borderRadius: '4px', margin: '8px 0' }}>
-                            텍스트를 추가할 캔버스의 위치를 클릭하세요.
+                            Double-click on the canvas to add text.
                         </div>
                     )}
                     <div style={{ position: 'relative' }}>
@@ -240,26 +332,70 @@ const Diary = ({ selectedDate, userId }) => {
                             width="500"
                             height="300"
                             onMouseDown={handleCanvasMouseDown}
+                            onDoubleClick={handleCanvasDoubleClick}
                             onMouseMove={draw}
                             onMouseUp={stopDrawing}
                             onMouseLeave={stopDrawing}
                         ></canvas>
-                        {textInput && (
-                            <textarea
-                                placeholder="Enter text here..."
+                        {texts.map(text => (
+                            <div
+                                key={text.id}
+                                ref={el => textRefs.current[text.id] = el}
+                                className="diary-text-box"
                                 style={{
                                     position: 'absolute',
-                                    top: textInput.y,
-                                    left: textInput.x,
-                                    border: '2px solid #000',
-                                    zIndex: 10,
+                                    top: text.y,
+                                    left: text.x,
+                                    cursor: 'move',
+                                    border: editingText === text.id ? '2px solid #000' : 'none',
+                                    padding: '2px',
                                 }}
-                                value={textInput.value}
-                                onChange={(e) => setTextInput({ ...textInput, value: e.target.value })}
-                                onBlur={handleTextBlur}
-                                autoFocus
-                            />
-                        )}
+                                onMouseDown={(e) => handleTextDragStart(text.id, e)}
+                                onDoubleClick={(e) => { e.stopPropagation(); startEditing(text.id); }}
+                            >
+                                <button 
+                                    onClick={(e) => { e.stopPropagation(); deleteText(text.id); }}
+                                    style={{
+                                        position: 'absolute',
+                                        top: '-10px',
+                                        right: '-10px',
+                                        background: 'red',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '50%',
+                                        width: '20px',
+                                        height: '20px',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        lineHeight:'1',
+                                        padding: '0'
+                                    }}
+                                >
+                                    &times;
+                                </button>
+                                {editingText === text.id ? (
+                                    <textarea
+                                        value={text.value}
+                                        onChange={(e) => handleTextChange(text.id, e.target.value)}
+                                        onBlur={handleTextBlur}
+                                        autoFocus
+                                        style={{
+                                            font: '16px sans-serif',
+                                            border: 'none',
+                                            background: 'transparent',
+                                            width: 'auto',
+                                            height: 'auto',
+                                            resize: 'none',
+                                            outline: 'none',
+                                        }}
+                                    />
+                                 ) : (
+                                    <div style={{ whiteSpace: 'pre-wrap' }}>{text.value}</div>
+                                )}
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -268,3 +404,4 @@ const Diary = ({ selectedDate, userId }) => {
 };
 
 export default Diary;
+
