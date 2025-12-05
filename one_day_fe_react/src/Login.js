@@ -3,14 +3,63 @@ import './Login.css';
 
 const Login = () => {
     const [isLogin, setIsLogin] = useState(true);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+
+    const handleResponse = (data) => {
+        if (data.userId) {
+            localStorage.setItem('userId', data.userId);
+            window.location.href = '/'; // Redirect to main page
+        } else {
+            setError(data.msg || data.message || '오류가 발생했습니다.');
+        }
+    };
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setError('');
+        try {
+            const res = await fetch('http://localhost:3001/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.msg || '로그인 실패');
+            handleResponse(data);
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
+    const handleSignup = async (e) => {
+        e.preventDefault();
+        setError('');
+        try {
+            const res = await fetch('http://localhost:3001/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.msg || '회원가입 실패');
+            alert('회원가입이 완료되었습니다! 로그인 해주세요.');
+            setIsLogin(true); // Switch to login form
+        } catch (err) {
+            setError(err.message);
+        }
+    };
 
     const showSignup = (e) => {
         e.preventDefault();
+        setError('');
         setIsLogin(false);
     };
 
     const showLogin = (e) => {
         e.preventDefault();
+        setError('');
         setIsLogin(true);
     };
 
@@ -24,9 +73,10 @@ const Login = () => {
                 {isLogin ? (
                     <div className="form-container" id="login-form">
                         <h1>One Day</h1>
-                        <form>
-                            <input type="email" placeholder="이메일" required />
-                            <input type="password" placeholder="비밀번호" required />
+                        <form onSubmit={handleLogin}>
+                            <input type="email" placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                            <input type="password" placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                            {error && <p className="error-message">{error}</p>}
                             <div className="options">
                                 <label><input type="checkbox" /> 자동 로그인</label>
                             </div>
@@ -45,14 +95,10 @@ const Login = () => {
                 ) : (
                     <div className="form-container" id="signup-form">
                         <h1>One Day</h1>
-                        <form onSubmit={(e) => {
-                            e.preventDefault();
-                            // Simulate successful registration
-                            alert('회원가입이 완료되었습니다! 프로필을 설정해주세요.');
-                            window.location.href = '/profile-setup';
-                        }}>
-                            <input type="email" placeholder="이메일" required />
-                            <input type="password" placeholder="비밀번호" required />
+                        <form onSubmit={handleSignup}>
+                            <input type="email" placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                            <input type="password" placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                            {error && <p className="error-message">{error}</p>}
                             <div className="terms">
                                 <label><input type="checkbox" required /> 이용약관 동의 (필수)</label>
                                 <label><input type="checkbox" required /> 개인정보 수집 및 이용 동의 (필수)</label>

@@ -7,11 +7,10 @@ import HealthcareTab from './HealthcareTab';
 const Dashboard = ({
     selectedDate,
     events,
-    setEvents,
     todos,
-    setTodos,
     diaries,
     setDiaries,
+    onDataUpdate, // Receive the refetch function
     // New props for event modal from drag selection
     showEventModal,
     setShowEventModal,
@@ -27,9 +26,8 @@ const Dashboard = ({
                     <HomeTab
                         selectedDate={selectedDate}
                         events={events}
-                        setEvents={setEvents}
                         todos={todos}
-                        setTodos={setTodos}
+                        onDataUpdate={onDataUpdate} // Pass it down
                         // Pass new props to HomeTab
                         showScheduleModal={showEventModal} // Use showEventModal from Home.js
                         setShowScheduleModal={setShowEventModal} // Use setShowEventModal from Home.js
@@ -46,9 +44,8 @@ const Dashboard = ({
                     <HomeTab
                         selectedDate={selectedDate}
                         events={events}
-                        setEvents={setEvents}
                         todos={todos}
-                        setTodos={setTodos}
+                        onDataUpdate={onDataUpdate} // Pass it down
                         // Pass new props to HomeTab
                         showScheduleModal={showEventModal} // Use showEventModal from Home.js
                         setShowScheduleModal={setShowEventModal} // Use setShowEventModal from Home.js

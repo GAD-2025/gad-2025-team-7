@@ -1,76 +1,27 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const bcrypt = require('bcrypt');
 const db = require('./db');
 
 const app = express();
-const port = 3000;
+const port = 3001;
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post('/signup', async (req, res) => {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-        return res.status(400).json({ message: '이메일과 비밀번호를 모두 입력해주세요.' });
-    }
-
-    try {
-        // 비밀번호 암호화
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // 사용자 정보 저장
-        const [result] = await db.query(
-            'INSERT INTO users (email, password) VALUES (?, ?)',
-            [email, hashedPassword]
-        );
-
-        res.status(201).json({ message: '회원가입이 완료되었습니다.', userId: result.insertId });
-    } catch (error) {
-        if (error.code === 'ER_DUP_ENTRY') {
-            return res.status(409).json({ message: '이미 사용중인 이메일입니다.' });
-        }
-        console.error('Signup error:', error);
-        res.status(500).json({ message: '서버 오류가 발생했습니다. 다시 시도해주세요.' });
-    }
-});
-
-app.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-        return res.status(400).json({ message: '이메일과 비밀번호를 모두 입력해주세요.' });
-    }
-
-    try {
-        const [users] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
-
-        if (users.length === 0) {
-            return res.status(401).json({ message: '이메일 또는 비밀번호가 잘못되었습니다.' });
-        }
-
-        const user = users[0];
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-
-        if (!isPasswordValid) {
-            return res.status(401).json({ message: '이메일 또는 비밀번호가 잘못되었습니다.' });
-        }
-
-        res.status(200).json({ message: '로그인 성공', userId: user.id });
-    } catch (error) {
-        console.error('Login error:', error);
-        res.status(500).json({ message: '서버 오류가 발생했습니다. 다시 시도해주세요.' });
-    }
-});
-
+// Routes
+const authRoutes = require('./routes/auth');
 const diaryRoutes = require('./routes/diary');
 const mealRoutes = require('./routes/meals');
+const eventRoutes = require('./routes/events');
+const todoRoutes = require('./routes/todos');
 
+app.use('/api/auth', authRoutes);
 app.use('/api/diaries', diaryRoutes);
 app.use('/api/meals', mealRoutes);
+app.use('/api/events', eventRoutes);
+app.use('/api/todos', todoRoutes);
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);

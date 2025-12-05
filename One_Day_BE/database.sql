@@ -56,3 +56,28 @@ CREATE TABLE IF NOT EXISTS meal_foods (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (meal_id) REFERENCES meals(id) ON DELETE CASCADE
 );
+
+-- SQL script to create the events table
+CREATE TABLE IF NOT EXISTS events (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    `date` DATE NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    `time` TIME,
+    category VARCHAR(50),
+    completed BOOLEAN DEFAULT FALSE,
+    setReminder BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- SQL script to create the todos table
+CREATE TABLE IF NOT EXISTS todos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    `date` DATE NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    completed BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
