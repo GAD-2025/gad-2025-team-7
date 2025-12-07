@@ -1,29 +1,94 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Stopwatch.css';
 
-const Stopwatch = () => {
+import React, { useState, useEffect, useRef } from 'react';
+import './Stopwatch.css';
+
+const Stopwatch = ({ userId, selectedDate }) => {
     const [tasks, setTasks] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
-    const [categories, setCategories] = useState(['공부', '운동', '취미', '알바']);
+    const [categories, setCategories] = useState([]);
     const [newCategory, setNewCategory] = useState('');
     const intervalRef = useRef(null);
+    const saveTimeoutRef = useRef(null);
 
+    // Fetch data on load and date change
     useEffect(() => {
-        if (selectedCategory) {
-            const task = tasks.find(t => t.category === selectedCategory && !t.isComplete);
-            if (task && !task.isPaused) {
-                intervalRef.current = setInterval(() => {
-                    setTasks(prevTasks => prevTasks.map(t => {
-                        if (t.id === task.id) {
-                            return { ...t, elapsedTime: t.elapsedTime + 1000 };
-                        }
-                        return t;
-                    }));
-                }, 1000);
+        if (!userId || !selectedDate) return;
+
+        const fetchData = async () => {
+            try {
+                const res = await fetch(`http://localhost:3001/api/stopwatch/${userId}/${selectedDate}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data) {
+                        setTasks(data.tasks_data || []);
+                        setCategories(data.categories_data || ['공부', '운동', '취미', '알바']);
+                    } else {
+                        // No data for this date, set to default
+                        setTasks([]);
+                        setCategories(['공부', '운동', '취미', '알바']);
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching stopwatch data:", error);
             }
+        };
+
+        fetchData();
+    }, [userId, selectedDate]);
+    
+    // Debounced save
+    useEffect(() => {
+        // Don't save on initial load, wait for tasks/categories to be populated
+        if (tasks.length === 0 && categories.length === 0) return;
+
+        if (saveTimeoutRef.current) {
+            clearTimeout(saveTimeoutRef.current);
         }
+
+        saveTimeoutRef.current = setTimeout(async () => {
+            if (!userId || !selectedDate) return;
+            try {
+                await fetch('http://localhost:3001/api/stopwatch', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId,
+                        date: selectedDate,
+                        tasksData: tasks,
+                        categoriesData: categories,
+                    }),
+                });
+            } catch (error) {
+                console.error("Error saving stopwatch data:", error);
+            }
+        }, 2000); // Save 2 seconds after last change
+
+        return () => {
+            if (saveTimeoutRef.current) {
+                clearTimeout(saveTimeoutRef.current);
+            }
+        };
+    }, [tasks, categories, userId, selectedDate]);
+
+    // Timer interval
+    useEffect(() => {
+        intervalRef.current = setInterval(() => {
+            setTasks(prevTasks =>
+                prevTasks.map(task => {
+                    if (!task.isPaused && !task.isComplete) {
+                        return { ...task, elapsedTime: task.elapsedTime + 1000 };
+                    }
+                    return task;
+                })
+            );
+        }, 1000);
+
         return () => clearInterval(intervalRef.current);
-    }, [tasks, selectedCategory]);
+    }, []);
 
     const formatTime = (ms) => {
         const totalSeconds = Math.floor(ms / 1000);
@@ -40,7 +105,6 @@ const Stopwatch = () => {
             const newTask = {
                 id: Date.now(),
                 category: categoryName,
-                startTime: 0,
                 elapsedTime: 0,
                 isPaused: true,
                 isComplete: false,
@@ -52,15 +116,14 @@ const Stopwatch = () => {
     const startTask = (task) => {
         if (!task || !task.isPaused) return;
         setTasks(tasks.map(t => 
-            t.id === task.id ? { ...t, isPaused: false, startTime: Date.now() } : t
+            t.id === task.id ? { ...t, isPaused: false } : t
         ));
     };
 
     const pauseTask = (task) => {
         if (!task || task.isPaused) return;
-        const timePassed = Date.now() - task.startTime;
         setTasks(tasks.map(t => 
-            t.id === task.id ? { ...t, isPaused: true, elapsedTime: t.elapsedTime + timePassed } : t
+            t.id === task.id ? { ...t, isPaused: true } : t
         ));
     };
 
@@ -75,11 +138,8 @@ const Stopwatch = () => {
         const task = tasks.find(t => t.id === taskId);
         if (!task) return;
 
-        if (!task.isPaused) {
-            pauseTask(task);
-        }
         setTasks(tasks.map(t => 
-            t.id === taskId ? { ...t, isComplete: true } : t
+            t.id === taskId ? { ...t, isComplete: true, isPaused: true } : t
         ));
 
         if (selectedCategory === task.category) {
@@ -157,7 +217,7 @@ const Stopwatch = () => {
                         <ul id="in-progress-list">
                             {tasks.filter(t => !t.isComplete).map(task => (
                                 <li key={task.id} className={`task-item ${!task.isPaused ? 'active' : 'paused'}`}>
-                                    <span className="task-category">{task.category}</span>
+                                    <span className="task-category" onClick={() => selectCategory(task.category)}>{task.category}</span>
                                     <span className="task-time">{formatTime(task.elapsedTime)}</span>
                                     <div className="task-controls">
                                         {task.isPaused

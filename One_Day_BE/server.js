@@ -2,10 +2,18 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 const db = require('./db');
 
 const app = express();
 const port = 3001;
+
+// Ensure the uploads directory exists
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir);
+}
+
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -20,12 +28,14 @@ const diaryRoutes = require('./routes/diary');
 const mealRoutes = require('./routes/meals');
 const eventRoutes = require('./routes/events');
 const todoRoutes = require('./routes/todos');
+const stopwatchRoutes = require('./routes/stopwatch');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/diaries', diaryRoutes);
 app.use('/api/meals', mealRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/todos', todoRoutes);
+app.use('/api/stopwatch', stopwatchRoutes);
 
 // Global error handler
 app.use((err, req, res, next) => {

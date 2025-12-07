@@ -23,7 +23,7 @@ const RecordsTab = ({ userId, selectedDate }) => {
             </div>
 
             {activeRecordTab === 'diary-content' && <Diary userId={userId} selectedDate={selectedDate} />}
-            {activeRecordTab === 'stopwatch-content' && <Stopwatch />}
+            {activeRecordTab === 'stopwatch-content' && <Stopwatch userId={userId} selectedDate={selectedDate} />}
         </div>
     );
 };

@@ -59,15 +59,16 @@ const Diary = ({ selectedDate, userId }) => {
                 setImages(loadedImages);
                 setTitle(data?.title || '');
 
-                if (data?.canvasData) {
+                if (data?.canvasImagePath) {
                     const img = new Image();
+                    img.crossOrigin = 'anonymous'; // Handle potential CORS issues
                     img.onload = () => {
                         ctx.drawImage(img, 0, 0);
                         const initialState = { canvasData: canvas.toDataURL(), texts: loadedTexts, images: loadedImages };
                         setHistory([initialState]);
                         setHistoryStep(0);
                     };
-                    img.src = data.canvasData;
+                    img.src = `http://localhost:3001${data.canvasImagePath}`;
                 } else {
                     const initialState = { canvasData: canvas.toDataURL(), texts: loadedTexts, images: loadedImages };
                     setHistory([initialState]);
