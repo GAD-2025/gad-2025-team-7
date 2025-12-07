@@ -27,13 +27,15 @@ const Schedule = ({ selectedDate, events, onDataUpdate }) => {
         }
     };
 
+    const todaysEvents = events.filter(event => event.date === selectedDate);
+
     return (
         <div id="schedule-list" className="section-content">
-            {events.length === 0 ? (
+            {todaysEvents.length === 0 ? (
                 <p>등록된 일정이 없습니다.</p>
             ) : (
                 <ul>
-                    {events.map(event => (
+                    {todaysEvents.map(event => (
                         <li key={event.id} className={`schedule-item ${event.completed ? 'completed' : ''}`}>
                             <input 
                                 type="checkbox" 

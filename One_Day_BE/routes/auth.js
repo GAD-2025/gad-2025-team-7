@@ -37,7 +37,7 @@ router.post('/register', async (req, res) => {
 
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('서버 오류가 발생했습니다.');
+        res.status(500).json({ msg: `Server error: ${err.message}` });
     }
 });
 
@@ -87,6 +87,23 @@ const storage = multer.diskStorage({
 
 const uploadMiddleware = multer({ storage: storage }).single('profileImage');
 
+// @route   GET /api/auth/profile/:userId
+// @desc    Get user profile
+// @access  Private
+router.get('/profile/:userId', async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const [users] = await db.query('SELECT id, username, email, profile_image_url FROM users WHERE id = ?', [userId]);
+        if (users.length === 0) {
+            return res.status(404).json({ msg: '사용자를 찾을 수 없습니다.' });
+        }
+        res.json(users[0]);
+    } catch (error) {
+        console.error('Get profile error:', error);
+        res.status(500).json({ msg: `Database error: ${error.message}` });
+    }
+});
+
 // @route   PUT /api/auth/profile/:userId
 // @desc    Update user profile
 // @access  Private
@@ -98,7 +115,6 @@ router.put('/profile/:userId', (req, res) => {
             return res.status(500).json({ msg: `An unknown error occurred during file upload: ${err.message}` });
         }
 
-        // If no error, proceed with the route handler logic
         try {
             const { userId } = req.params;
             const { username } = req.body;
@@ -147,23 +163,20 @@ router.put('/change-password/:userId', async (req, res) => {
 
         const user = users[0];
 
-        // Check if old password is correct
         const isMatch = await bcrypt.compare(oldPassword, user.password);
         if (!isMatch) {
             return res.status(401).json({ msg: '현재 비밀번호가 일치하지 않습니다.' });
         }
 
-        // Hash new password
         const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-        // Update password in DB
         await db.query('UPDATE users SET password = ? WHERE id = ?', [hashedPassword, userId]);
 
         res.json({ msg: '비밀번호가 성공적으로 변경되었습니다.' });
 
     } catch (error) {
         console.error('Change password error:', error);
-        res.status(500).json({ msg: '서버 오류가 발생했습니다.' });
+        res.status(500).json({ msg: `Database error: ${error.message}` });
     }
 });
 
@@ -179,7 +192,6 @@ router.put('/change-email/:userId', async (req, res) => {
     }
 
     try {
-        // Check if new email already exists
         const [existingUser] = await db.query('SELECT email FROM users WHERE email = ?', [newEmail]);
         if (existingUser.length > 0) {
             return res.status(400).json({ msg: '이미 사용중인 이메일입니다.' });
@@ -192,20 +204,18 @@ router.put('/change-email/:userId', async (req, res) => {
 
         const user = users[0];
 
-        // Check if password is correct
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ msg: '비밀번호가 일치하지 않습니다.' });
         }
 
-        // Update email in DB
         await db.query('UPDATE users SET email = ? WHERE id = ?', [newEmail, userId]);
 
         res.json({ msg: '이메일(아이디)이 성공적으로 변경되었습니다.' });
 
     } catch (error) {
         console.error('Change email error:', error);
-        res.status(500).json({ msg: '서버 오류가 발생했습니다.' });
+        res.status(500).json({ msg: `Database error: ${error.message}` });
     }
 });
 

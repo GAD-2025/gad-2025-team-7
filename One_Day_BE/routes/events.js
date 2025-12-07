@@ -15,7 +15,30 @@ router.get('/:userId/:date', async (req, res) => {
         res.json(events);
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server Error');
+        res.status(500).json({ msg: `Database error: ${err.message}` });
+    }
+});
+
+// @route   GET /api/events/range/:userId
+// @desc    Get all events for a user within a date range
+// @access  Private
+router.get('/range/:userId', async (req, res) => {
+    const { userId } = req.params;
+    const { startDate, endDate } = req.query;
+
+    if (!startDate || !endDate) {
+        return res.status(400).json({ msg: 'Start date and end date are required.' });
+    }
+
+    try {
+        const [events] = await db.query(
+            'SELECT * FROM events WHERE user_id = ? AND `date` >= ? AND `date` <= ? ORDER BY `date`, `time`',
+            [userId, startDate, endDate]
+        );
+        res.json(events);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: `Database error: ${err.message}` });
     }
 });
 
@@ -90,7 +113,7 @@ router.post('/', async (req, res) => {
     } catch (err) {
         await connection.rollback();
         console.error(err.message);
-        res.status(500).send('Server Error');
+        res.status(500).json({ msg: `Database error: ${err.message}` });
     } finally {
         connection.release();
     }
@@ -119,7 +142,7 @@ router.put('/:eventId/complete', async (req, res) => {
         res.json({ msg: 'Event completion status updated.' });
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server Error');
+        res.status(500).json({ msg: `Database error: ${err.message}` });
     }
 });
 
@@ -136,7 +159,7 @@ router.delete('/:eventId', async (req, res) => {
         res.json({ msg: 'Event deleted.' });
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server Error');
+        res.status(500).json({ msg: `Database error: ${err.message}` });
     }
 });
 

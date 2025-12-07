@@ -182,6 +182,7 @@ const HomeTab = ({
             } catch (error) {
 
                 console.error('Error saving schedule:', error);
+                alert(`일정 저장에 실패했습니다: ${error.message}`);
 
             }
 
@@ -246,6 +247,7 @@ const HomeTab = ({
                 } catch (error) {
 
                     console.error('Error saving todo:', error);
+                    alert(`투두리스트 저장에 실패했습니다: ${error.message}`);
 
                 }
 
