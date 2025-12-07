@@ -1,0 +1,11 @@
+# Dependencies
+node_modules/
+/One_Day_BE/node_modules
+/one_day_fe_react/node_modules
+
+# Environment variables
+.env
+/One_Day_BE/.env
+
+# Miscellaneous
+.DS_Store
