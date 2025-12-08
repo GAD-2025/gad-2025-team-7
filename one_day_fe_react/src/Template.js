@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from './Modal';
 
 const Template = ({ type, onTemplateClick }) => {
@@ -7,29 +7,63 @@ const Template = ({ type, onTemplateClick }) => {
     const [newTemplateColor, setNewTemplateColor] = useState('#eee');
     const [customTemplates, setCustomTemplates] = useState(JSON.parse(localStorage.getItem(`${type}Templates`)) || []);
 
+    useEffect(() => {
+        // Update localStorage if customTemplates changes
+        localStorage.setItem(`${type}Templates`, JSON.stringify(customTemplates));
+    }, [customTemplates, type]);
+
     const saveCustomTemplate = () => {
-        if (newTemplateName) {
+        if (newTemplateName.trim()) {
             const newTemplate = {
-                name: newTemplateName,
+                name: newTemplateName.trim(),
                 color: newTemplateColor,
             };
             const updatedTemplates = [...customTemplates, newTemplate];
             setCustomTemplates(updatedTemplates);
-            localStorage.setItem(`${type}Templates`, JSON.stringify(updatedTemplates));
             setShowTemplateModal(false);
             setNewTemplateName('');
             setNewTemplateColor('#eee');
+        } else {
+            alert('템플릿 이름을 입력해주세요.');
         }
+    };
+
+    const handleDeleteCustomTemplateFromModal = (templateToDelete) => {
+        const updatedTemplates = customTemplates.filter(
+            (template) => template.name !== templateToDelete.name
+        );
+        setCustomTemplates(updatedTemplates);
     };
 
     return (
         <div className="template-bar">
-            <button className="add-template-btn" onClick={() => setShowTemplateModal(true)}>+</button>
+            <button className="add-template-btn" onClick={() => setShowTemplateModal(true)}>✏️</button>
             {type === 'schedule' && (
                 <>
-                    <button className="template-btn" data-title="회의" data-category="work" onClick={() => onTemplateClick({ title: '회의', category: 'work' })}>회의</button>
-                    <button className="template-btn" data-title="알바" data-category="work" onClick={() => onTemplateClick({ title: '알바', category: 'work' })}>알바</button>
-                    <button className="template-btn" data-title="동아리" data-category="personal" onClick={() => onTemplateClick({ title: '동아리', category: 'personal' })}>동아리</button>
+                    <button
+                        className="template-btn"
+                        data-title="회의"
+                        data-category="work"
+                        onClick={() => onTemplateClick({ title: '회의', category: 'work' })}
+                    >
+                        회의
+                    </button>
+                    <button
+                        className="template-btn"
+                        data-title="알바"
+                        data-category="work"
+                        onClick={() => onTemplateClick({ title: '알바', category: 'work' })}
+                    >
+                        알바
+                    </button>
+                    <button
+                        className="template-btn"
+                        data-title="동아리"
+                        data-category="personal"
+                        onClick={() => onTemplateClick({ title: '동아리', category: 'personal' })}
+                    >
+                        동아리
+                    </button>
                 </>
             )}
             {type === 'todo' && (
@@ -39,9 +73,9 @@ const Template = ({ type, onTemplateClick }) => {
                 </>
             )}
             {customTemplates.map(template => (
-                <button 
-                    key={template.name} 
-                    className="template-btn custom-template" 
+                <button
+                    key={template.name}
+                    className="template-btn custom-template"
                     style={{ backgroundColor: template.color }}
                     onClick={() => onTemplateClick({ title: template.name, category: 'custom' })}
                 >
@@ -51,19 +85,19 @@ const Template = ({ type, onTemplateClick }) => {
 
             <Modal show={showTemplateModal} onClose={() => setShowTemplateModal(false)}>
                 <h3>새 {type === 'schedule' ? '일정' : '투두'} 템플릿</h3>
-                <input 
-                    type="text" 
-                    placeholder="템플릿 이름" 
-                    value={newTemplateName} 
-                    onChange={(e) => setNewTemplateName(e.target.value)} 
+                <input
+                    type="text"
+                    placeholder="템플릿 이름"
+                    value={newTemplateName}
+                    onChange={(e) => setNewTemplateName(e.target.value)}
                 />
                 <p>템플릿 색상:</p>
                 <div className="color-palette">
                     {['#eee', '#87CEEB', '#F08080', '#90EE90', '#DDA0DD'].map(color => (
-                        <div 
+                        <div
                             key={color}
-                            className={`color-box ${newTemplateColor === color ? 'active' : ''}`} 
-                            style={{ backgroundColor: color }} 
+                            className={`color-box ${newTemplateColor === color ? 'active' : ''}`}
+                            style={{ backgroundColor: color }}
                             onClick={() => setNewTemplateColor(color)}
                         ></div>
                     ))}
@@ -72,6 +106,24 @@ const Template = ({ type, onTemplateClick }) => {
                     <button onClick={saveCustomTemplate}>저장</button>
                     <button onClick={() => setShowTemplateModal(false)}>취소</button>
                 </div>
+
+                {customTemplates.length > 0 && (
+                    <div className="existing-templates-list">
+                        <h4>기존 템플릿:</h4>
+                        {customTemplates.map(template => (
+                            <div key={template.name} className="existing-template-item">
+                                <span className="existing-template-color" style={{ backgroundColor: template.color }}></span>
+                                <span>{template.name}</span>
+                                <button
+                                    className="delete-existing-template-btn"
+                                    onClick={() => handleDeleteCustomTemplateFromModal(template)}
+                                >
+                                    x
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </Modal>
         </div>
     );

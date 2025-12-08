@@ -18,7 +18,47 @@
 .date-cell .date-number { font-weight: 700; margin-bottom: 5px; }
 .date-cell.other-month .date-number { color: #ccc; }
 .date-cell.today .date-number { color: var(--primary-color); }
-.event-preview { font-size: 12px; padding: 2px 5px; border-radius: 3px; color: white; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.date-cell.drag-selected {
+    background-color: #cceeff; /* Light blue to indicate selection */
+    border-color: #66ccff;
+}
+.event-preview { font-size: 12px; padding: 2px 5px; border-radius: 3px; color: white; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative; z-index: 1; }
 .event-work { background-color: var(--event-work); }
 .event-personal { background-color: var(--event-personal); }
 .event-health { background-color: var(--event-health); }
+
+/* Styles for multi-day events */
+.date-cell.event-single .event-preview {
+    background-color: var(--primary-color); /* Example color */
+    border-radius: 3px;
+}
+
+.date-cell.event-start .event-preview {
+    background-color: var(--primary-color);
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    margin-right: 0; /* Connects to next day */
+}
+
+.date-cell.event-middle .event-preview {
+    background-color: var(--primary-color);
+    border-radius: 0; /* Connects to previous and next day */
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.date-cell.event-end .event-preview {
+    background-color: var(--primary-color);
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    margin-left: 0; /* Connects to previous day */
+}
+
+/* Adjust event preview to fill the cell horizontally for multi-day events */
+.date-cell.event-start .event-preview,
+.date-cell.event-middle .event-preview,
+.date-cell.event-end .event-preview {
+    width: 100%;
+    padding: 2px 0; /* Adjust padding for full width */
+    text-align: center;
+}

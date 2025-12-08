@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Diary from './Diary';
 import Stopwatch from './Stopwatch';
 
-const RecordsTab = ({ selectedDate, diaries, setDiaries }) => {
+const RecordsTab = ({ userId, selectedDate }) => {
     const [activeRecordTab, setActiveRecordTab] = useState('diary-content');
 
     return (
@@ -22,8 +22,8 @@ const RecordsTab = ({ selectedDate, diaries, setDiaries }) => {
                 </button>
             </div>
 
-            {activeRecordTab === 'diary-content' && <Diary selectedDate={selectedDate} diaries={diaries} setDiaries={setDiaries} />}
-            {activeRecordTab === 'stopwatch-content' && <Stopwatch />}
+            {activeRecordTab === 'diary-content' && <Diary userId={userId} selectedDate={selectedDate} />}
+            {activeRecordTab === 'stopwatch-content' && <Stopwatch userId={userId} selectedDate={selectedDate} />}
         </div>
     );
 };

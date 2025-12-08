@@ -1,0 +1,289 @@
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Removed justify-content: center; */
+    /* Removed min-height: 100vh; */
+    background-color: #fdfcfa;
+    padding: 15px; /* Reduced padding */
+    box-sizing: border-box;
+    position: relative;
+}
+
+.close-profile-modal-button {
+    position: absolute;
+    top: 5px; /* Adjusted top */
+    right: 5px; /* Adjusted right */
+    background: none;
+    border: none;
+    font-size: 1.2em; /* Slightly smaller font size */
+    cursor: pointer;
+    color: #888;
+    z-index: 10;
+}
+
+.close-profile-modal-button:hover {
+    color: #333;
+}
+
+.profile-container h1 {
+    color: #FF7581;
+    margin-bottom: 15px; /* Reduced margin */
+    font-size: 1.8em; /* Slightly smaller font size */
+}
+
+.profile-form-group {
+    margin-bottom: 10px; /* Reduced margin */
+    width: 100%;
+    max-width: 400px;
+}
+
+.profile-form-group label {
+    display: block;
+    margin-bottom: 5px; /* Reduced margin */
+    font-weight: bold;
+    color: #333;
+}
+
+.profile-form-group input[type="text"] {
+    width: 100%;
+    padding: 10px; /* Reduced padding */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.9em; /* Slightly smaller font size */
+    box-sizing: border-box;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 10px; /* Reduced gap */
+    margin-top: 15px; /* Reduced margin */
+}
+
+.profile-actions button {
+    padding: 10px 20px; /* Reduced padding */
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9em; /* Slightly smaller font size */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.profile-actions .save-button {
+    background-color: #FF7581;
+    color: white;
+}
+
+.profile-actions .save-button:hover {
+    background-color: #e06b75;
+}
+
+.profile-actions .back-button {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.profile-actions .back-button:hover {
+    background-color: #cccccc;
+}
+
+.profile-display {
+    text-align: center;
+    margin-bottom: 15px; /* Reduced margin */
+}
+
+.saved-name {
+    font-size: 2em; /* Slightly smaller font size */
+    color: #FF7581;
+    margin-bottom: 10px; /* Reduced margin */
+    font-weight: bold;
+}
+
+/* Removed .edit-button styles */
+
+.profile-settings-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Reduced gap */
+    margin-top: 20px; /* Reduced margin */
+    width: 100%;
+    max-width: 400px;
+}
+
+.settings-button {
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 10px 15px; /* Reduced padding */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.9em; /* Slightly smaller font size */
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    text-align: left;
+}
+
+.settings-button:hover {
+    background-color: #e0e0e0;
+    border-color: #ccc;
+}
+
+.personal-info-edit-form {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 15px; /* Reduced margin */
+}
+
+.profile-picture-preview, .profile-picture {
+    width: 80px; /* Reduced size */
+    height: 80px; /* Reduced size */
+    border-radius: 50%;
+    object-fit: cover;
+    margin-top: 8px; /* Reduced margin */
+    border: 2px solid #FF7581;
+}
+
+.profile-picture-preview {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.add-dday-button {
+    background-color: #FF7581;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 1.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin: 10px auto 0 auto;
+    transition: background-color 0.3s ease;
+}
+
+.add-dday-button:hover {
+    background-color: #e06b75;
+}
+
+.dday-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001; /* Higher than main profile modal */
+}
+
+.dday-modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px; /* Smaller width */
+    max-height: 80vh; /* Allow some height, but keep it manageable */
+    overflow-y: auto;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative; /* For potential close button inside */
+}
+
+.dday-modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #FF7581;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.dday-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 8px 12px;
+    border-radius: 5px;
+    margin-top: 5px;
+    font-size: 0.9em;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+}
+
+.dday-item span {
+    flex-grow: 1;
+    text-align: left;
+}
+
+.delete-dday-button {
+    background-color: #ffcdd2;
+    color: #c62828;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 1em; /* Increased font size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.delete-dday-button:hover {
+    background-color: #ef9a9a;
+}
+
+.icon-selection {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.icon-button {
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.icon-button:hover {
+    background-color: #e0e0e0;
+}
+
+.icon-button.selected {
+    background-color: #FF7581;
+    color: white;
+    border-color: #FF7581;
+}
+
+.logout-button {
+    background-color: #f44336; /* Red color for logout */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 25px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 30px; /* Space from other options */
+    width: 100%;
+    max-width: 400px;
+    transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+    background-color: #d32f2f;
+}
