@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Stopwatch.css';
 
-import React, { useState, useEffect, useRef } from 'react';
-import './Stopwatch.css';
-
 const Stopwatch = ({ userId, selectedDate }) => {
     const [tasks, setTasks] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);

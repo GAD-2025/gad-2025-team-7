@@ -30,6 +30,7 @@ const healthcareRoutes = require('./routes/healthcare');
 const eventRoutes = require('./routes/events');
 const todoRoutes = require('./routes/todos');
 const stopwatchRoutes = require('./routes/stopwatch');
+const foodRoutes = require('./routes/foods');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/diaries', diaryRoutes);
@@ -38,6 +39,7 @@ app.use('/api/healthcare', healthcareRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/todos', todoRoutes);
 app.use('/api/stopwatch', stopwatchRoutes);
+app.use('/api/foods', foodRoutes);
 
 // Global error handler
 app.use((err, req, res, next) => {

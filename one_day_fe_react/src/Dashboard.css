@@ -506,7 +506,8 @@
     gap: 20px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    padding: 0 50px;
+    /* Add padding to allow first and last items to be centered */
+    padding: 0 7.5%;
     scrollbar-width: none; /* Firefox */
 }
 .horizontal-scroll::-webkit-scrollbar {
@@ -521,45 +522,37 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     display: flex;
     flex-direction: column;
+    transition: transform 0.2s ease-in-out;
+    cursor: pointer;
 }
+.meal-card:hover {
+    transform: translateY(-5px);
+}
+
 .meal-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: relative;
     padding: 10px 15px;
     border-bottom: 1px solid var(--border-color);
 }
 .meal-card-title {
     font-size: 16px;
     font-weight: bold;
-    cursor: pointer;
     margin: 0;
 }
-.meal-card-title::after {
-    content: ' ▾';
-    font-size: 12px;
-}
-.meal-card-actions {
-    display: flex;
-    gap: 8px;
-}
-.meal-card-actions button {
-    background: #f0f0f0;
-    border: 1px solid #ddd;
-    color: var(--text-color);
-    border-radius: 50%;
-    width: 28px;
-    height: 28px;
+
+.delete-meal-card-btn {
+    background: none;
+    border: none;
+    color: #aaa;
     font-size: 18px;
-    line-height: 26px;
-    text-align: center;
     cursor: pointer;
 }
-.meal-card-actions .delete-meal-card-btn {
+.delete-meal-card-btn:hover {
     color: var(--primary-color);
-    font-weight: bold;
 }
+
 
 #global-meal-category-menu {
     background: white;
@@ -572,84 +565,55 @@
     min-width: 120px;
 }
 
-#global-meal-category-menu button {
+.meal-card-title-input {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--text-color);
+    margin: 0;
+    padding: 2px 5px;
+    border: 1px solid transparent;
     background: none;
-    border: none;
-    padding: 10px 15px;
-    text-align: left;
+    outline: none;
     width: 100%;
-    cursor: pointer;
+    transition: background 0.2s;
 }
-#global-meal-category-menu button:hover {
-    background-color: #f0f0f0;
+.meal-card-title-input:hover, .meal-card-title-input:focus {
+    background: #f0f0f0;
+    border-color: #ddd;
+    border-radius: 4px;
 }
+.food-search-wrapper {
+    position: relative;
+}
+
 .meal-card-body {
     padding: 15px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
 }
-.food-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    flex-grow: 1;
+
+/* Styles for the Autocomplete Portal */
+.autocomplete-results {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    max-height: 200px;
+    overflow-y: auto;
 }
-.food-list li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
+
+.autocomplete-item {
+    padding: 10px 15px;
+    cursor: pointer;
     font-size: 14px;
 }
-.food-list li .food-name {
-    flex-grow: 1;
+
+.autocomplete-item:hover {
+    background-color: #f0f0f0;
 }
-.food-list li .food-qty {
-    width: 50px;
-    text-align: center;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin: 0 10px;
-}
-.food-list li .food-cal {
-    min-width: 60px;
-    text-align: right;
-    color: var(--light-text-color);
-}
-.food-list li .remove-food-btn {
-    background: none;
-    border: none;
-    color: var(--primary-color);
-    cursor: pointer;
-    margin-left: 10px;
-    font-size: 16px;
-}
-.food-search-wrapper {
-    position: relative;
-    margin-top: 10px;
-}
-.food-search-input {
-    width: 100%;
-    padding: 8px;
-    box-sizing: border-box;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-.autocomplete-results {
-    position: absolute;
-    bottom: 100%;
-    left: 0;
-    right: 0;
-    background: white;
-    border: 1px solid #ddd;
-    border-bottom: none;
-    border-radius: 4px 4px 0 0;
-    max-height: 150px;
-    overflow-y: auto;
-    z-index: 10;
-    display: none; /* Hidden by default */
-}
+
+
 .meal-card-footer {
     padding: 10px 15px;
     border-top: 1px solid var(--border-color);
@@ -738,4 +702,78 @@
     padding-right: 100px; /* Add some spacing */
     vertical-align: middle; /* Align with the button */
     font-weight: bold;
+}
+
+/* === New Styles for Diet Component === */
+
+.add-card-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    font-size: 20px;
+    line-height: 28px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+}
+
+.add-card-btn:hover {
+    transform: scale(1.1);
+}
+
+.category-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.category-buttons button {
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.category-buttons button:hover {
+    background-color: #e0e0e0;
+}
+
+.custom-category-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.custom-category-form input {
+    flex-grow: 1;
+    margin-bottom: 0; /* Override default */
+}
+
+.custom-category-form button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0 15px;
+    cursor: pointer;
+}
+
+.close-modal-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
 }

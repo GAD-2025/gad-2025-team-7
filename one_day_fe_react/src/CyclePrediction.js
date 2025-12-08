@@ -18,7 +18,7 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
     const fetchCycleHistory = async () => {
         if (!userId) return;
         try {
-            const res = await fetch(`http://localhost:3000/api/healthcare/cycles/${userId}`);
+            const res = await fetch(`http://localhost:3001/api/healthcare/cycles/${userId}`);
             const data = await res.json();
             if (res.ok && data.history) {
                 setCycleHistory(data.history);
@@ -89,7 +89,7 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
     const handleDeleteCycle = async (cycleId) => {
         if (!window.confirm('이 기록을 삭제하시겠습니까?')) return;
         try {
-            const res = await fetch(`http://localhost:3000/api/healthcare/cycles/${cycleId}`, {
+            const res = await fetch(`http://localhost:3001/api/healthcare/cycles/${cycleId}`, {
                 method: 'DELETE',
             });
             if (res.ok) {
