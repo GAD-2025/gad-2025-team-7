@@ -26,10 +26,6 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const authRoutes = require('./routes/auth');
 const diaryRoutes = require('./routes/diary');
 const mealRoutes = require('./routes/meals');
-// Routes
-const authRoutes = require('./routes/auth');
-const diaryRoutes = require('./routes/diary');
-const mealRoutes = require('./routes/meals');
 const healthcareRoutes = require('./routes/healthcare');
 const eventRoutes = require('./routes/events');
 const todoRoutes = require('./routes/todos');
