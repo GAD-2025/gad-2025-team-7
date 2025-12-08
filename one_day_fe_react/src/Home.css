@@ -370,7 +370,6 @@ body {
 .food-list li .remove-food-btn { background: none; border: none; color: var(--primary-color); cursor: pointer; margin-left: 10px; font-size: 16px; }
 .food-search-wrapper { position: relative; margin-top: 10px; }
 .food-search-input { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 4px; }
-.autocomplete-results { position: absolute; bottom: 100%; left: 0; right: 0; background: white; border: 1px solid #ddd; border-bottom: none; border-radius: 4px 4px 0 0; max-height: 150px; overflow-y: auto; z-index: 10; display: none; }
 .meal-card-footer { padding: 10px 15px; border-top: 1px solid var(--border-color); text-align: right; font-weight: bold; }
 .total-calorie-display { text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 20px; }
 .total-calorie-display span { color: var(--primary-color); font-size: 22px; }
