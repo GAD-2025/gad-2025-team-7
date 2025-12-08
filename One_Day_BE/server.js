@@ -26,7 +26,10 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const authRoutes = require('./routes/auth');
 const diaryRoutes = require('./routes/diary');
 const mealRoutes = require('./routes/meals');
-<<<<<<< HEAD
+// Routes
+const authRoutes = require('./routes/auth');
+const diaryRoutes = require('./routes/diary');
+const mealRoutes = require('./routes/meals');
 const healthcareRoutes = require('./routes/healthcare');
 const eventRoutes = require('./routes/events');
 const todoRoutes = require('./routes/todos');
@@ -48,7 +51,6 @@ app.use((err, req, res, next) => {
         error: err.message,
     });
 });
->>>>>>> 325b7c3aa064390a757bb02a3cbf6440b4296213
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
