@@ -45,19 +45,11 @@ router.post('/', async (req, res) => {
     }
 
     try {
-        const sql = `
-            INSERT INTO stopwatch_records (user_id, 
-`date`,
- tasks_data, categories_data)
-            VALUES (?, ?, ?, ?)
-            ON DUPLICATE KEY UPDATE
-            tasks_data = VALUES(tasks_data),
-            categories_data = VALUES(categories_data)
-        `;
+        const sql = 'INSERT INTO stopwatch_records (user_id, `date`, tasks_data, categories_data) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE tasks_data = VALUES(tasks_data), categories_data = VALUES(categories_data)';
         const params = [
-            userId, 
-            date, 
-            JSON.stringify(tasksData || []), 
+            userId,
+            date,
+            JSON.stringify(tasksData || []),
             JSON.stringify(categoriesData || [])
         ];
         const [result] = await db.query(sql, params);
