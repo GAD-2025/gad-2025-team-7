@@ -38,7 +38,7 @@ const Dashboard = ({
             case 'records-tab':
                 return <RecordsTab userId={userId} selectedDate={selectedDate} />;
             case 'healthcare-tab':
-                return <HealthcareTab />;
+                return <HealthcareTab userId={userId} />;
             default:
                 return (
                     <HomeTab

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const CyclePrediction = ({ userId }) => {
+const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
     const [cycleHistory, setCycleHistory] = useState([]);
     const [dDay, setDDay] = useState('?');
     const [predictedStartDate, setPredictedStartDate] = useState('----.--.--');
@@ -8,6 +8,12 @@ const CyclePrediction = ({ userId }) => {
     const [showCycleModal, setShowCycleModal] = useState(false);
     const [startDateInput, setStartDateInput] = useState('');
     const [endDateInput, setEndDateInput] = useState('');
+
+    useEffect(() => {
+        if (selectedCycleStartDate) {
+            setStartDateInput(selectedCycleStartDate);
+        }
+    }, [selectedCycleStartDate]);
 
     const fetchCycleHistory = async () => {
         if (!userId) return;

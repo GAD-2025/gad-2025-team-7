@@ -88,5 +88,28 @@ router.post('/cycles', async (req, res) => {
     }
 });
 
+// @route   DELETE /api/healthcare/cycles/:cycleId
+// @desc    Delete a menstrual cycle record
+// @access  Private
+router.delete('/cycles/:cycleId', async (req, res) => {
+    const { cycleId } = req.params;
+
+    try {
+        const [result] = await pool.query(
+            'DELETE FROM menstrual_cycles WHERE id = ?',
+            [cycleId]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ msg: '주기 기록을 찾을 수 없습니다.' });
+        }
+
+        res.status(200).json({ msg: '주기 기록이 삭제되었습니다.' });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
 
 module.exports = router;
