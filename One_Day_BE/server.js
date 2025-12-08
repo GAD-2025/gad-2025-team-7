@@ -68,9 +68,11 @@ app.post('/login', async (req, res) => {
 
 const diaryRoutes = require('./routes/diary');
 const mealRoutes = require('./routes/meals');
+const healthcareRoutes = require('./routes/healthcare');
 
 app.use('/api/diaries', diaryRoutes);
 app.use('/api/meals', mealRoutes);
+app.use('/api/healthcare', healthcareRoutes);
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
