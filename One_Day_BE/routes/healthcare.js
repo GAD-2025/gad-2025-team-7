@@ -111,5 +111,115 @@ router.delete('/cycles/:cycleId', async (req, res) => {
     }
 });
 
+// @route   GET /api/healthcare/steps/:userId/:date
+// @desc    Get steps for a specific user and date
+// @access  Private
+router.get('/steps/:userId/:date', async (req, res) => {
+    const { userId, date } = req.params;
+    try {
+        const [rows] = await pool.query(
+            'SELECT steps FROM daily_steps WHERE user_id = ? AND date = ?',
+            [userId, date]
+        );
+        if (rows.length > 0) {
+            res.json({ steps: rows[0].steps });
+        } else {
+            res.json({ steps: 0 }); // If no record, return 0 steps
+        }
+    } catch (err) {
+        console.error('Get steps error:', err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route   POST /api/healthcare/steps
+// @desc    Save/update steps for a user and date
+// @access  Private
+router.post('/steps', async (req, res) => {
+    const { userId, date, steps } = req.body;
+    if (userId === undefined || date === undefined || steps === undefined) {
+        return res.status(400).json({ msg: 'userId, date, and steps are required.' });
+    }
+
+    try {
+        const sql = `
+            INSERT INTO daily_steps (user_id, \`date\`, steps)
+            VALUES (?, ?, ?)
+            ON DUPLICATE KEY UPDATE steps = VALUES(steps);
+        `;
+        await pool.query(sql, [userId, date, steps]);
+        res.status(200).json({ msg: 'Steps saved successfully.' });
+    } catch (err) {
+        console.error('Save steps error:', err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route   GET /api/healthcare/weekly_summary/:userId/:endDate
+// @desc    Get weekly health summary (steps, calories) for a user
+// @access  Private
+router.get('/weekly_summary/:userId/:endDate', async (req, res) => {
+    const { userId, endDate } = req.params;
+    const end = new Date(endDate);
+    const start = new Date(endDate);
+    start.setDate(end.getDate() - 6); // 7 days including the end date
+
+    const startDate = start.toISOString().split('T')[0];
+    const queryEndDate = end.toISOString().split('T')[0];
+
+    try {
+        const sql = `
+            SELECT 
+                ds.date,
+                IFNULL(ds.steps, 0) as steps,
+                IFNULL(SUM(mf.calories * mf.quantity), 0) as totalConsumedCalories
+            FROM
+                (SELECT DISTINCT date FROM daily_steps WHERE user_id = ? AND date BETWEEN ? AND ?) ds_dates
+            LEFT JOIN daily_steps ds ON ds_dates.date = ds.date AND ds.user_id = ?
+            LEFT JOIN meals m ON ds_dates.date = m.date AND m.user_id = ?
+            LEFT JOIN meal_foods mf ON m.id = mf.meal_id
+            WHERE ds_dates.date BETWEEN ? AND ?
+            GROUP BY ds_dates.date
+            ORDER BY ds_dates.date;
+        `;
+        // Need to combine with dates that might not have steps but have meals
+        const combinedSql = `
+            SELECT
+                dates.date,
+                IFNULL(ds.steps, 0) as steps,
+                IFNULL(SUM(mf.calories * mf.quantity), 0) as totalConsumedCalories
+            FROM
+                (SELECT DISTINCT date AS date FROM daily_steps WHERE user_id = ? AND date BETWEEN ? AND ?
+                 UNION
+                 SELECT DISTINCT date AS date FROM meals WHERE user_id = ? AND date BETWEEN ? AND ?
+                ) AS dates
+            LEFT JOIN daily_steps ds ON dates.date = ds.date AND ds.user_id = ?
+            LEFT JOIN meals m ON dates.date = m.date AND m.user_id = ?
+            LEFT JOIN meal_foods mf ON m.id = mf.meal_id
+            GROUP BY dates.date
+            ORDER BY dates.date;
+        `;
+
+        const [rows] = await pool.query(combinedSql, [
+            userId, startDate, queryEndDate, // for daily_steps dates
+            userId, startDate, queryEndDate, // for meals dates
+            userId, userId
+        ]);
+
+        const weeklySummary = rows.map(row => ({
+            date: row.date.toISOString().split('T')[0],
+            steps: row.steps,
+            caloriesBurned: Math.round(row.steps * 0.04), // 1 step = 0.04 kcal
+            totalConsumedCalories: Math.round(row.totalConsumedCalories)
+        }));
+
+        res.json(weeklySummary);
+
+    } catch (err) {
+        console.error('Get weekly summary error:', err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
 
 module.exports = router;

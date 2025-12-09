@@ -5,22 +5,24 @@ import Diet from './Diet';
 
 const HealthcareTab = ({ userId }) => {
     const [dietTotals, setDietTotals] = useState({ calories: 0, carbs: 0, protein: 0, fat: 0 });
-    const [selectedCycleStartDate, setSelectedCycleStartDate] = useState(null); // New state for cycle start date
-
-    const recommendedCalories = 2000;
-    const recommendedCarbs = 275; // Based on 2000kcal, 55%
-    const recommendedProtein = 100;  // Based on 2000kcal, 20% (4kcal/g)
-    const recommendedFat = 65;    // Based on 2000kcal, 25% (9kcal/g)
+    const [selectedCycleStartDate, setSelectedCycleStartDate] = useState(null); 
 
     // Temporary dummy values for selectedDate for Diet component
     const dummySelectedDate = new Date().toISOString().split('T')[0]; // Current date
+
+    // Default recommended calories for macro calculations in this component
+    const defaultRecommendedCalories = 2000;
+    const recommendedCarbs = Math.round(defaultRecommendedCalories * 0.55 / 4); // 55% of calories, 4kcal/g
+    const recommendedProtein = Math.round(defaultRecommendedCalories * 0.20 / 4); // 20% of calories, 4kcal/g
+    const recommendedFat = Math.round(defaultRecommendedCalories * 0.25 / 9);    // 25% of calories, 9kcal/g
 
     return (
         <div id="healthcare-tab" className="dash-tab-content active">
             <div className="healthcare-row">
                 <CyclePrediction userId={userId} selectedCycleStartDate={selectedCycleStartDate} />
-                <Pedometer totalCalories={dietTotals.calories} recommendedCalories={recommendedCalories} />
+                <Pedometer userId={userId} dietTotals={dietTotals} /> {/* Pass userId and dietTotals to Pedometer */}
             </div>
+            
             <Diet setDietTotals={setDietTotals} userId={userId} selectedDate={dummySelectedDate} />
 
             <div className="dashboard-section">

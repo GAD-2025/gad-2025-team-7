@@ -1,46 +1,44 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './Home.css';
+import './SlideOutNav.css';
 import Calendar from './Calendar';
 import Dashboard from './Dashboard';
-import Profile from './Profile'; // Import the Profile component
+import Profile from './Profile';
+import SlideOutNav from './SlideOutNav';
 
 const Home = () => {
     const [nav, setNav] = useState(0);
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-    const [dashboardEvents, setDashboardEvents] = useState([]); // For "Today's Schedule"
-    const [calendarEvents, setCalendarEvents] = useState([]); // For Calendar month view
+    const [dashboardEvents, setDashboardEvents] = useState([]);
+    const [calendarEvents, setCalendarEvents] = useState([]);
     const [todos, setTodos] = useState([]);
     const [showProfileModal, setShowProfileModal] = useState(false);
     const [user, setUser] = useState(null);
     const [lastUpdated, setLastUpdated] = useState(Date.now());
+    const [isSlideOutNavOpen, setIsSlideOutNavOpen] = useState(false);
 
-    // New states for drag selection
     const [isDragging, setIsDragging] = useState(false);
     const [dragStartDayString, setDragStartDayString] = useState(null);
     const [dragEndDayString, setDragEndDayString] = useState(null);
     const [showEventModal, setShowEventModal] = useState(false);
-    const [initialEventStartDate, setInitialEventStartDate, ] = useState(null);
+    const [initialEventStartDate, setInitialEventStartDate] = useState(null);
     const [initialEventEndDate, setInitialEventEndDate] = useState(null);
 
     const userId = localStorage.getItem('userId');
 
-    // Effect for data dependent on the selected date (for Dashboard)
     useEffect(() => {
         if (!userId || !selectedDate) return;
 
-        // Fetch user profile
         fetch(`http://localhost:3001/api/auth/profile/${userId}`, { cache: 'no-cache' })
             .then(res => res.ok ? res.json() : Promise.reject(new Error('Failed to fetch user')))
             .then(setUser)
             .catch(console.error);
 
-        // Fetch events for the selected date for "Today's Schedule"
         fetch(`http://localhost:3001/api/events/${userId}/${selectedDate}`, { cache: 'no-cache' })
             .then(res => res.ok ? res.json() : Promise.reject(new Error('Failed to fetch day events')))
             .then(setDashboardEvents)
             .catch(console.error);
 
-        // Fetch todos for the selected date
         fetch(`http://localhost:3001/api/todos/${userId}/${selectedDate}`, { cache: 'no-cache' })
             .then(res => res.ok ? res.json() : Promise.reject(new Error('Failed to fetch todos')))
             .then(setTodos)
@@ -48,7 +46,6 @@ const Home = () => {
 
     }, [userId, selectedDate, lastUpdated]);
 
-    // Effect for data dependent on the month view (for Calendar)
     useEffect(() => {
         if (!userId) return;
 
@@ -94,7 +91,6 @@ const Home = () => {
         setShowProfileModal(false);
     };
 
-    // Drag selection handlers
     const handleDragStart = (dayString) => {
         setIsDragging(true);
         setDragStartDayString(dayString);
@@ -131,6 +127,9 @@ const Home = () => {
 
     return (
         <div className="main-content-wrapper" onMouseUp={handleDragEnd} onMouseLeave={handleDragEnd}>
+            <button className="bookmark-btn" onClick={() => setIsSlideOutNavOpen(true)}></button>
+            <SlideOutNav isOpen={isSlideOutNavOpen} onClose={() => setIsSlideOutNavOpen(false)} />
+            
             <button className="profile-settings-button" onClick={handleOpenProfileModal}>
                 프로필 설정
             </button>
@@ -139,7 +138,7 @@ const Home = () => {
                 setNav={setNav}
                 selectedDate={selectedDate}
                 setSelectedDate={setSelectedDate}
-                events={calendarEvents} // Pass calendar-specific events
+                events={calendarEvents}
                 isDragging={isDragging}
                 dragStartDayString={dragStartDayString}
                 dragEndDayString={dragEndDayString}
@@ -150,7 +149,7 @@ const Home = () => {
             <Dashboard
                 userId={userId}
                 selectedDate={selectedDate}
-                events={dashboardEvents} // Pass dashboard-specific events
+                events={dashboardEvents}
                 todos={todos}
                 onDataUpdate={onDataUpdate}
                 showEventModal={showEventModal}

@@ -147,4 +147,30 @@ router.post('/', async (req, res) => {
     }
 });
 
+// @route   GET /api/meals/today_calories/:userId/:date
+// @desc    Get total calories for a specific user and date
+// @access  Private
+router.get('/today_calories/:userId/:date', async (req, res) => {
+    const { userId, date } = req.params;
+
+    try {
+        const sql = `
+            SELECT SUM(mf.calories) as totalCalories
+            FROM meals m
+            JOIN meal_foods mf ON m.id = mf.meal_id
+            WHERE m.user_id = ? AND m.date = ?
+        `;
+        const [result] = await db.query(sql, [userId, date]);
+        
+        // If result[0].totalCalories is null (no meals), return 0
+        const totalCalories = result[0].totalCalories || 0;
+        
+        res.json({ totalCalories: parseFloat(totalCalories) });
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
 module.exports = router;

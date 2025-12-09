@@ -96,8 +96,9 @@ const Diet = ({ setDietTotals, userId, selectedDate }) => {
             try {
                 const res = await fetch(`http://localhost:3001/api/meals/${userId}/${selectedDate}`);
                 const data = await res.json();
-                if (data.mealCards && data.mealCards.length > 0) {
-                    setMealCards(data.mealCards.map(c => ({...c, searchQuery: ''}))); // Ensure searchQuery is initialized
+                // Fix: The API returns a direct array, not an object with a mealCards property.
+                if (data && data.length > 0) {
+                    setMealCards(data.map(c => ({...c, searchQuery: ''}))); // Ensure searchQuery is initialized
                 } else {
                     setMealCards([{ id: Date.now(), category: '아침', foods: [], searchQuery: '' }]);
                 }

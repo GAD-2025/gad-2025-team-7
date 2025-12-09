@@ -93,11 +93,11 @@ const uploadMiddleware = multer({ storage: storage }).single('profileImage');
 router.get('/profile/:userId', async (req, res) => {
     const { userId } = req.params;
     try {
-        const [users] = await db.query('SELECT id, username, email, profile_image_url FROM users WHERE id = ?', [userId]);
+        const [users] = await db.query('SELECT id, username, email, profile_image_url, weight FROM users WHERE id = ?', [userId]);
         if (users.length === 0) {
             return res.status(404).json({ msg: '사용자를 찾을 수 없습니다.' });
         }
-        res.json(users[0]);
+        res.json(users[0]); // Reverted to original response structure
     } catch (error) {
         console.error('Get profile error:', error);
         res.status(500).json({ msg: `Database error: ${error.message}` });
@@ -107,41 +107,41 @@ router.get('/profile/:userId', async (req, res) => {
 // @route   PUT /api/auth/profile/:userId
 // @desc    Update user profile
 // @access  Private
-router.put('/profile/:userId', (req, res) => {
-    uploadMiddleware(req, res, async function (err) {
-        if (err instanceof multer.MulterError) {
-            return res.status(500).json({ msg: `Multer-related error: ${err.message}` });
-        } else if (err) {
-            return res.status(500).json({ msg: `An unknown error occurred during file upload: ${err.message}` });
+router.put('/profile/:userId', async (req, res) => {
+    // Simplified handler for weight update
+    const { userId } = req.params;
+    const { weight } = req.body;
+
+    if (weight === undefined) {
+        // If other profile updates are intended, they should be handled here.
+        // For now, we are focusing only on the weight update.
+        return res.status(400).json({ msg: 'Weight data is required.' });
+    }
+
+    try {
+        // First, update the weight
+        await db.query(
+            'UPDATE users SET weight = ? WHERE id = ?',
+            [weight, userId]
+        );
+
+        // Then, fetch the complete updated user profile
+        const [updatedUsers] = await db.query(
+            'SELECT id, username, email, profile_image_url, weight FROM users WHERE id = ?',
+            [userId]
+        );
+
+        if (updatedUsers.length === 0) {
+            return res.status(404).json({ msg: '사용자를 찾을 수 없습니다.' });
         }
 
-        try {
-            const { userId } = req.params;
-            const { username } = req.body;
+        // Respond with the updated user object
+        res.json(updatedUsers[0]);
 
-            const [users] = await db.query('SELECT * FROM users WHERE id = ?', [userId]);
-            if (users.length === 0) {
-                return res.status(404).json({ msg: '사용자를 찾을 수 없습니다.' });
-            }
-
-            let profile_image_url = users[0].profile_image_url;
-            if (req.file) {
-                profile_image_url = `/uploads/${req.file.filename}`;
-            }
-
-            await db.query(
-                'UPDATE users SET username = ?, profile_image_url = ? WHERE id = ?',
-                [username, profile_image_url, userId]
-            );
-
-            const [updatedUsers] = await db.query('SELECT id, username, email, profile_image_url FROM users WHERE id = ?', [userId]);
-
-            res.json({ msg: '프로필이 성공적으로 업데이트되었습니다.', user: updatedUsers[0] });
-        } catch (error) {
-            console.error('Update profile error:', error);
-            res.status(500).json({ msg: `서버 오류: ${error.message}` });
-        }
-    });
+    } catch (error) {
+        console.error('Update profile (weight) error:', error);
+        res.status(500).json({ msg: `서버 오류: ${error.message}` });
+    }
 });
 
 // @route   PUT /api/auth/change-password/:userId

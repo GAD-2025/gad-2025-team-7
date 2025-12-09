@@ -65,7 +65,7 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
         }
 
         try {
-            const res = await fetch('http://localhost:3000/api/healthcare/cycles', {
+            const res = await fetch('http://localhost:3001/api/healthcare/cycles', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -142,6 +142,11 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
                 <div id="cycle-edit-modal" className="modal-overlay" style={{display: 'flex'}}>
                     <div className="modal-content">
                         <h3>월경 기록</h3>
+                        {cycleHistory.length < 2 && (
+                            <p style={{ color: 'red', marginBottom: '15px' }}>
+                                예측을 위해 최소 2번의 주기 기록이 필요합니다.
+                            </p>
+                        )}
                         <div className="cycle-input-form">
                             <label htmlFor="cycle-start-date">시작일:</label>
                             <input 
