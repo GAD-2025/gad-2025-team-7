@@ -186,6 +186,8 @@ router.get('/', (req, res) => {
         const matches = foodDatabase.filter(food => 
             food.name.toLowerCase().includes(search.toLowerCase())
         );
+        console.log(`Found ${matches.length} matches for "${search}".`);
+        console.log('Returning the first 15 matches.');
         res.json(matches.slice(0, 15)); // Return top 15 matches
     } catch (error) {
         console.error('Error searching foods:', error);

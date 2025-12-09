@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Login.css';
 
-const Login = () => {
+const Login = ({ onLogin }) => {
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -10,7 +10,7 @@ const Login = () => {
     const handleResponse = (data) => {
         if (data.userId) {
             localStorage.setItem('userId', data.userId);
-            window.location.href = '/'; // Redirect to main page
+            onLogin(); // Call onLogin to update isAuthenticated state in App.js
         } else {
             setError(data.msg || data.message || '오류가 발생했습니다.');
         }

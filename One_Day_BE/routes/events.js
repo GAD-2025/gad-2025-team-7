@@ -2,23 +2,6 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
-// @route   GET /api/events/:userId/:date
-// @desc    Get all events for a user on a specific date
-// @access  Private
-router.get('/:userId/:date', async (req, res) => {
-    const { userId, date } = req.params;
-    try {
-        const [events] = await db.query(
-            'SELECT * FROM events WHERE user_id = ? AND `date` = ? ORDER BY `time`',
-            [userId, date]
-        );
-        res.json(events);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ msg: `Database error: ${err.message}` });
-    }
-});
-
 // @route   GET /api/events/range/:userId
 // @desc    Get all events for a user within a date range
 // @access  Private
@@ -34,6 +17,23 @@ router.get('/range/:userId', async (req, res) => {
         const [events] = await db.query(
             'SELECT * FROM events WHERE user_id = ? AND `date` >= ? AND `date` <= ? ORDER BY `date`, `time`',
             [userId, startDate, endDate]
+        );
+        res.json(events);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: `Database error: ${err.message}` });
+    }
+});
+
+// @route   GET /api/events/:userId/:date
+// @desc    Get all events for a user on a specific date
+// @access  Private
+router.get('/:userId/:date', async (req, res) => {
+    const { userId, date } = req.params;
+    try {
+        const [events] = await db.query(
+            'SELECT * FROM events WHERE user_id = ? AND `date` = ? ORDER BY `time`',
+            [userId, date]
         );
         res.json(events);
     } catch (err) {

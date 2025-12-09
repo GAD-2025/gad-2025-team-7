@@ -69,6 +69,14 @@ const Diet = ({ setDietTotals, userId, selectedDate }) => {
     const containerRef = useRef(null);
     const cardRefs = useRef(new Map());
 
+    function debounce(func, delay) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
     const debouncedSave = useRef(debounce((cards) => saveMeals(cards), 2000)).current;
 
     async function saveMeals(currentMealCards) {
@@ -80,14 +88,6 @@ const Diet = ({ setDietTotals, userId, selectedDate }) => {
                 body: JSON.stringify({ userId, date: selectedDate, mealCards: currentMealCards }),
             });
         } catch (error) { console.error('Error saving meals:', error); }
-    }
-
-    function debounce(func, delay) {
-        let timeout;
-        return function(...args) {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(this, args), delay);
-        };
     }
 
     useEffect(() => {

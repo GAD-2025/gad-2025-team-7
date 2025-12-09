@@ -19,7 +19,7 @@ const Home = () => {
     const [dragStartDayString, setDragStartDayString] = useState(null);
     const [dragEndDayString, setDragEndDayString] = useState(null);
     const [showEventModal, setShowEventModal] = useState(false);
-    const [initialEventStartDate, setInitialEventStartDate] = useState(null);
+    const [initialEventStartDate, setInitialEventStartDate, ] = useState(null);
     const [initialEventEndDate, setInitialEventEndDate] = useState(null);
 
     const userId = localStorage.getItem('userId');
