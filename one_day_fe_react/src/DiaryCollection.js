@@ -2,17 +2,20 @@ import React, { useState, useEffect, useMemo } from 'react';
 import './DiaryCollection.css';
 import { useNavigate } from 'react-router-dom';
 import DateFilter from './DateFilter'; // Import the new component
+import { useProfile } from './ProfileContext'; // Import useProfile
 
 const DiaryCollection = () => {
     const [allDiaries, setAllDiaries] = useState([]);
     const [isFilterVisible, setIsFilterVisible] = useState(false);
     const [filterRange, setFilterRange] = useState({ startDate: '', endDate: '' });
     const navigate = useNavigate();
+    const { profile } = useProfile(); // Get profile from context
 
     useEffect(() => {
         const fetchDiaries = async () => {
+            if (!profile.userId) return; // Wait for userId to be available
             try {
-                const response = await fetch('http://localhost:3001/api/diaries/1'); // Temp userId 1
+                const response = await fetch(`http://localhost:3001/api/diaries/${profile.userId}`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -30,7 +33,7 @@ const DiaryCollection = () => {
         };
 
         fetchDiaries();
-    }, []);
+    }, [profile.userId]); // Re-run effect when userId changes
 
     const displayedDiaries = useMemo(() => {
         if (!filterRange.startDate || !filterRange.endDate) {
