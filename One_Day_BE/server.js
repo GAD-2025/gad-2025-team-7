@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
@@ -16,8 +15,9 @@ if (!fs.existsSync(uploadsDir)) {
 
 
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// Use built-in Express middleware instead of body-parser
+// app.use(express.json()); // Temporarily removed to debug multipart/form-data conflict
+app.use(express.urlencoded({ extended: true }));
 
 // Serve uploaded files statically
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

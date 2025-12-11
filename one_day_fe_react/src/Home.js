@@ -3,7 +3,7 @@ import './Home.css';
 import './SlideOutNav.css';
 import Calendar from './Calendar';
 import Dashboard from './Dashboard';
-import Profile from './Profile';
+// Profile component is no longer used directly here
 import SlideOutNav from './SlideOutNav';
 
 const Home = () => {
@@ -12,8 +12,6 @@ const Home = () => {
     const [dashboardEvents, setDashboardEvents] = useState([]);
     const [calendarEvents, setCalendarEvents] = useState([]);
     const [todos, setTodos] = useState([]);
-    const [showProfileModal, setShowProfileModal] = useState(false);
-    const [user, setUser] = useState(null);
     const [lastUpdated, setLastUpdated] = useState(Date.now());
     const [isSlideOutNavOpen, setIsSlideOutNavOpen] = useState(false);
 
@@ -28,11 +26,8 @@ const Home = () => {
 
     useEffect(() => {
         if (!userId || !selectedDate) return;
-
-        fetch(`http://localhost:3001/api/auth/profile/${userId}`, { cache: 'no-cache' })
-            .then(res => res.ok ? res.json() : Promise.reject(new Error('Failed to fetch user')))
-            .then(setUser)
-            .catch(console.error);
+        
+        // Removed user profile fetch, now handled by context
 
         fetch(`http://localhost:3001/api/events/${userId}/${selectedDate}`, { cache: 'no-cache' })
             .then(res => res.ok ? res.json() : Promise.reject(new Error('Failed to fetch day events')))
@@ -77,20 +72,6 @@ const Home = () => {
         setLastUpdated(Date.now());
     };
 
-    const handleOpenProfileModal = () => {
-        setShowProfileModal(true);
-    };
-
-    const handleCloseProfileModal = () => {
-        setShowProfileModal(false);
-    };
-
-    const handleProfileUpdate = (updatedUser) => {
-        setUser(updatedUser);
-        onDataUpdate();
-        setShowProfileModal(false);
-    };
-
     const handleDragStart = (dayString) => {
         setIsDragging(true);
         setDragStartDayString(dayString);
@@ -130,9 +111,7 @@ const Home = () => {
             <button className="bookmark-btn" onClick={() => setIsSlideOutNavOpen(true)}></button>
             <SlideOutNav isOpen={isSlideOutNavOpen} onClose={() => setIsSlideOutNavOpen(false)} />
             
-            <button className="profile-settings-button" onClick={handleOpenProfileModal}>
-                프로필 설정
-            </button>
+            {/* Removed the old profile settings button and modal */}
             <Calendar
                 nav={nav}
                 setNav={setNav}
@@ -158,17 +137,6 @@ const Home = () => {
                 initialEventEndDate={initialEventEndDate}
             />
 
-            {showProfileModal && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <Profile
-                            user={user}
-                            onClose={handleCloseProfileModal}
-                            onProfileUpdate={handleProfileUpdate}
-                        />
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

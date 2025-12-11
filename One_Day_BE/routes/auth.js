@@ -3,10 +3,13 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const db = require('../db'); // Use db.js for consistency
 
+// Create a JSON parsing middleware that will be used for specific routes
+const jsonParser = express.json();
+
 // @route   POST /api/auth/register
 // @desc    Register a new user
 // @access  Public
-router.post('/register', async (req, res) => {
+router.post('/register', jsonParser, async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -44,7 +47,7 @@ router.post('/register', async (req, res) => {
 // @route   POST /api/auth/login
 // @desc    Authenticate user & get token
 // @access  Public
-router.post('/login', async (req, res) => {
+router.post('/login', jsonParser, async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -87,6 +90,67 @@ const storage = multer.diskStorage({
 
 const uploadMiddleware = multer({ storage: storage }).single('profileImage');
 
+// @route   POST /api/auth/profile/:userId
+// @desc    Update user profile with nickname and/or image
+// @access  Private
+// IMPORTANT: This route uses multer for multipart/form-data, so it does NOT use the jsonParser.
+router.post('/profile/:userId', uploadMiddleware, async (req, res, next) => { // Added next for error handling
+    console.log('[PROFILE UPDATE] Route entered.');
+    try {
+        const { userId } = req.params;
+        const { username } = req.body;
+        let profileImageUrl = null;
+
+        console.log('[PROFILE UPDATE] UserID:', userId);
+        console.log('[PROFILE UPDATE] Request Body (username):', username);
+        console.log('[PROFILE UPDATE] Request File (image):', req.file);
+
+        if (req.file) {
+            profileImageUrl = `/uploads/${req.file.filename}`;
+            console.log('[PROFILE UPDATE] Image URL to be saved:', profileImageUrl);
+        }
+
+        const updates = [];
+        const params = [];
+
+        if (username) {
+            updates.push('username = ?');
+            params.push(username);
+        }
+        if (profileImageUrl) {
+            updates.push('profile_image_url = ?');
+            params.push(profileImageUrl);
+        }
+
+        if (updates.length === 0) {
+            console.log('[PROFILE UPDATE] No data provided. Sending 400.');
+            return res.status(400).json({ msg: 'No profile data provided to update.' });
+        }
+
+        params.push(userId); // for the WHERE clause
+
+        const sql = `UPDATE users SET ${updates.join(', ')} WHERE id = ?`;
+        console.log('[PROFILE UPDATE] Executing SQL:', sql);
+        console.log('[PROFILE UPDATE] With Params:', params);
+
+        await db.query(sql, params);
+        console.log('[PROFILE UPDATE] SQL update query successful.');
+
+        const [updatedUsers] = await db.query(
+            'SELECT id, username, email, profile_image_url, weight FROM users WHERE id = ?',
+            [userId]
+        );
+        console.log('[PROFILE UPDATE] Fetched updated user, sending response.');
+
+        res.json(updatedUsers[0]);
+
+    } catch (error) {
+        console.error('[PROFILE UPDATE] CRITICAL ERROR in route handler:', error);
+        // Pass to the global error handler
+        next(error);
+    }
+});
+
 // @route   GET /api/auth/profile/:userId
 // @desc    Get user profile
 // @access  Private
@@ -107,7 +171,7 @@ router.get('/profile/:userId', async (req, res) => {
 // @route   PUT /api/auth/profile/:userId
 // @desc    Update user profile
 // @access  Private
-router.put('/profile/:userId', async (req, res) => {
+router.put('/profile/:userId', jsonParser, async (req, res) => {
     // Simplified handler for weight update
     const { userId } = req.params;
     const { weight } = req.body;
@@ -147,7 +211,7 @@ router.put('/profile/:userId', async (req, res) => {
 // @route   PUT /api/auth/change-password/:userId
 // @desc    Change user password
 // @access  Private
-router.put('/change-password/:userId', async (req, res) => {
+router.put('/change-password/:userId', jsonParser, async (req, res) => {
     const { userId } = req.params;
     const { oldPassword, newPassword } = req.body;
 
@@ -183,7 +247,7 @@ router.put('/change-password/:userId', async (req, res) => {
 // @route   PUT /api/auth/change-email/:userId
 // @desc    Change user email (ID)
 // @access  Private
-router.put('/change-email/:userId', async (req, res) => {
+router.put('/change-email/:userId', jsonParser, async (req, res) => {
     const { userId } = req.params;
     const { newEmail, password } = req.body;
 

@@ -4,6 +4,41 @@ const db = require('../db');
 const fs = require('fs');
 const path = require('path');
 
+// @route   GET /api/diaries/:userId
+// @desc    Get all diary entries for a specific user
+// @access  Private
+router.get('/:userId', async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const [diaries] = await db.query(
+            'SELECT * FROM diaries WHERE user_id = ? ORDER BY date DESC',
+            [userId]
+        );
+
+        const processedDiaries = diaries.map(diary => {
+            try {
+                if (typeof diary.texts === 'string') {
+                    diary.texts = JSON.parse(diary.texts);
+                }
+                if (typeof diary.images === 'string') {
+                    diary.images = JSON.parse(diary.images);
+                }
+            } catch (e) {
+                console.error("Error parsing diary data from DB:", e);
+                diary.texts = diary.texts || [];
+                diary.images = diary.images || [];
+            }
+            return diary;
+        });
+
+        res.json(processedDiaries);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
 // @route   GET /api/diaries/:userId/:date
 // @desc    Get diary entry for a specific user and date
 // @access  Private

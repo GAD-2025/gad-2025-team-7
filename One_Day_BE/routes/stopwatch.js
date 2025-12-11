@@ -2,6 +2,37 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
+// @route   GET /api/stopwatch/:userId
+// @desc    Get all stopwatch records for a specific user
+// @access  Private
+router.get('/:userId', async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const [records] = await db.query(
+            'SELECT * FROM stopwatch_records WHERE user_id = ? ORDER BY date DESC',
+            [userId]
+        );
+
+        const processedRecords = records.map(record => {
+            try {
+                record.tasks_data = JSON.parse(record.tasks_data);
+                record.categories_data = JSON.parse(record.categories_data);
+            } catch (e) {
+                console.error("Error parsing stopwatch data from DB:", e);
+                record.tasks_data = [];
+                record.categories_data = [];
+            }
+            return record;
+        });
+
+        res.json(processedRecords);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
 // @route   GET /api/stopwatch/:userId/:date
 // @desc    Get stopwatch records for a specific user and date
 // @access  Private

@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Profile.css';
 import ImageUploader from './ImageUploader';
 import Modal from './Modal';
+import { useProfile } from './ProfileContext'; // Import the context hook
 
-const Profile = ({ user, onClose, onProfileUpdate }) => {
+const Profile = () => {
+    const { profile, updateProfileContext } = useProfile(); // Use the context
+    const navigate = useNavigate();
+
     const [username, setUsername] = useState('');
-    const [profileImage, setProfileImage] = useState(null);
+    const [profileImage, setProfileImage] = useState(null); // This is for the new file to be uploaded
     const [previewImage, setPreviewImage] = useState('');
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState(''); // Email is not part of the context, will handle separately if needed
 
     // State for Change Password Modal
     const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
@@ -25,16 +30,14 @@ const Profile = ({ user, onClose, onProfileUpdate }) => {
     const userId = localStorage.getItem('userId');
 
     useEffect(() => {
-        if (user) {
-            setUsername(user.username || '');
-            setEmail(user.email || '');
-            if (user.profile_image_url) {
-                setPreviewImage(`http://localhost:3001${user.profile_image_url}`);
-            } else {
-                setPreviewImage('');
-            }
+        // Populate form with data from context
+        if (profile) {
+            setUsername(profile.nickname || '');
+            setPreviewImage(profile.profileImage || '');
         }
-    }, [user]);
+        // You might need a separate fetch for the user's email if it's not in the profile context
+        // For now, let's assume it's not displayed or fetched from another source.
+    }, [profile]);
 
     const handleImageUpload = (file, dataUrl) => {
         setProfileImage(file);
@@ -52,14 +55,15 @@ const Profile = ({ user, onClose, onProfileUpdate }) => {
 
         try {
             const res = await fetch(`http://localhost:3001/api/auth/profile/${userId}`, {
-                method: 'PUT',
+                method: 'POST', // Changed from PUT to POST
                 body: formData,
             });
 
             if (res.ok) {
-                const data = await res.json();
+                const updatedProfileData = await res.json();
                 alert('프로필이 성공적으로 업데이트되었습니다.');
-                onProfileUpdate(data.user);
+                updateProfileContext(updatedProfileData); // Update the global context
+                navigate('/home'); // Navigate to home after save
             } else {
                 const errorData = await res.json();
                 alert(`프로필 업데이트 실패: ${errorData.msg}`);
@@ -70,6 +74,7 @@ const Profile = ({ user, onClose, onProfileUpdate }) => {
         }
     };
 
+    // ... (handleChangePassword, handleChangeEmail, handleLogout functions remain largely the same)
     const handleChangePassword = async () => {
         setPasswordError('');
         if (newPassword !== confirmPassword) {
@@ -126,8 +131,7 @@ const Profile = ({ user, onClose, onProfileUpdate }) => {
                 setShowChangeEmailModal(false);
                 setNewEmail('');
                 setPasswordForEmailChange('');
-                // Optionally force a re-fetch of user data or update context
-                onProfileUpdate({ ...user, email: newEmail });
+                // You might want to refresh user data here
             } else {
                 setEmailError(data.msg);
             }
@@ -142,10 +146,10 @@ const Profile = ({ user, onClose, onProfileUpdate }) => {
         window.location.href = '/login';
     };
 
+
     return (
         <>
             <div className="profile-container">
-                <button onClick={onClose} className="close-profile-modal-button">닫기</button>
                 <h1>프로필 설정</h1>
 
                 <div className="profile-form-group">
@@ -170,14 +174,15 @@ const Profile = ({ user, onClose, onProfileUpdate }) => {
                     <input
                         type="email"
                         id="email"
-                        value={email}
+                        value={email} // This might be empty now
                         disabled
+                        placeholder="이메일 정보는 수정할 수 없습니다"
                     />
                 </div>
 
                 <div className="profile-actions">
                     <button onClick={handleSave} className="save-button">저장</button>
-                    <button onClick={onClose} className="back-button">취소</button>
+                    <button onClick={() => navigate(-1)} className="back-button">뒤로</button>
                 </div>
 
                 <div className="profile-settings-options">
@@ -188,6 +193,7 @@ const Profile = ({ user, onClose, onProfileUpdate }) => {
                 <button onClick={handleLogout} className="logout-button">로그아웃</button>
             </div>
 
+            {/* Modals remain the same */}
             <Modal show={showChangePasswordModal} onClose={() => setShowChangePasswordModal(false)}>
                 <h3>비밀번호 변경</h3>
                 <div className="profile-form-group">

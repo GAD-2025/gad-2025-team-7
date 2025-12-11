@@ -18,7 +18,7 @@ const SlideOutNav = ({ isOpen, onClose }) => {
                                 <Link to="/diary-collection" onClick={onClose}>다이어리 모아보기</Link>
                             </li>
                             <li>
-                                <Link to="/records-collection" onClick={onClose}>기록 모아보기</Link>
+                                <Link to="/stopwatch-collection" onClick={onClose}>스톱워치 모아보기</Link>
                             </li>
                             <li>
                                 <Link to="/healthcare-collection" onClick={onClose}>헬스케어 모아보기</Link>

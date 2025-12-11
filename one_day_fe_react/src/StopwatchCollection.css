@@ -1,0 +1,135 @@
+/* StopwatchCollection.css */
+.stopwatch-collection-container {
+    padding: 20px;
+    background-color: #fff;
+}
+
+.sc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.sc-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sc-header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Adjust gap between filter options and calendar icon */
+}
+
+.sc-back-icon {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.sc-title {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.sc-filters .filter-toggle {
+    background-color: #f1f3f5;
+    border: 1px solid #dee2e6;
+    padding: 8px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+.sc-filters .filter-toggle button {
+    background: none;
+    border: none;
+    font-weight: 500;
+    color: #868e96;
+    padding: 0 8px;
+    cursor: pointer;
+}
+
+.sc-filters .filter-toggle button.active {
+    color: #212529;
+    font-weight: bold;
+}
+
+.sc-calendar-icon {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.sc-bar-chart-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.sc-category-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.sc-category-label {
+    flex-shrink: 0;
+    width: 60px; /* Fixed width for alignment */
+    padding: 5px 10px;
+    border-radius: 15px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 12px;
+    color: white;
+}
+
+.sc-bar-wrapper {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sc-bar {
+    height: 20px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.sc-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.5s ease-in-out;
+}
+
+.sc-time {
+    font-size: 14px;
+    font-weight: 500;
+    color: #495057;
+    min-width: 80px; /* To prevent layout shifts */
+    text-align: right;
+}
+
+.sc-empty-state {
+    text-align: center;
+    padding-top: 100px;
+    color: #868e96;
+}
+
+.sc-empty-state .icon {
+    font-size: 50px;
+    margin-bottom: 20px;
+}
