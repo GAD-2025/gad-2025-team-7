@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import './Login.css';
+import { useProfile } from './ProfileContext'; // Import the context hook
 
 const Login = ({ onLogin }) => {
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const { refreshProfile } = useProfile(); // Get the refresh function
 
     const handleResponse = (data) => {
         if (data.userId) {
             localStorage.setItem('userId', data.userId);
+            refreshProfile(); // Trigger profile refetch after setting userId
             onLogin(); // Call onLogin to update isAuthenticated state in App.js
         } else {
             setError(data.msg || data.message || '오류가 발생했습니다.');

@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
+// Create a JSON parsing middleware for the routes that need it.
+const jsonParser = express.json();
+
 // @route   GET /api/events/range/:userId
 // @desc    Get all events for a user within a date range
 // @access  Private
@@ -45,7 +48,7 @@ router.get('/:userId/:date', async (req, res) => {
 // @route   POST /api/events
 // @desc    Create a new event or multiple recurring events
 // @access  Private
-router.post('/', async (req, res) => {
+router.post('/', jsonParser, async (req, res) => {
     const {
         userId,
         title,
@@ -87,7 +90,7 @@ router.post('/', async (req, res) => {
         } else {
             // Create single or range event
             const start = new Date(startDate);
-            const end = endDate ? new Date(endDate) : new Date(startDate);
+            const end = (endDate && endDate.length > 0) ? new Date(endDate) : new Date(startDate);
             let currentDate = new Date(start);
             while (currentDate <= end) {
                 newEvents.push([
@@ -122,7 +125,7 @@ router.post('/', async (req, res) => {
 // @route   PUT /api/events/:eventId/complete
 // @desc    Toggle event completion status
 // @access  Private
-router.put('/:eventId/complete', async (req, res) => {
+router.put('/:eventId/complete', jsonParser, async (req, res) => {
     const { eventId } = req.params;
     const { completed } = req.body;
 

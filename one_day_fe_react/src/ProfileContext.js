@@ -10,9 +10,15 @@ export const ProfileProvider = ({ children }) => {
 
     const fetchProfile = async () => {
         setLoading(true);
+        const userId = localStorage.getItem('userId'); // Get dynamic userId
+
+        if (!userId) {
+            setLoading(false);
+            return; // Don't fetch if no user is logged in
+        }
+
         try {
-            // Assuming user ID 1 for now. This should be dynamic in a real app.
-            const response = await fetch('http://localhost:3001/api/auth/profile/1');
+            const response = await fetch(`http://localhost:3001/api/auth/profile/${userId}`); // Use dynamic userId
             if (response.ok) {
                 const data = await response.json();
                 setProfile({

@@ -94,20 +94,17 @@ const uploadMiddleware = multer({ storage: storage }).single('profileImage');
 // @desc    Update user profile with nickname and/or image
 // @access  Private
 // IMPORTANT: This route uses multer for multipart/form-data, so it does NOT use the jsonParser.
-router.post('/profile/:userId', uploadMiddleware, async (req, res, next) => { // Added next for error handling
-    console.log('[PROFILE UPDATE] Route entered.');
+router.post('/profile/:userId', uploadMiddleware, async (req, res, next) => {
+    const connection = await db.getConnection();
     try {
+        await connection.beginTransaction();
+
         const { userId } = req.params;
         const { username } = req.body;
         let profileImageUrl = null;
 
-        console.log('[PROFILE UPDATE] UserID:', userId);
-        console.log('[PROFILE UPDATE] Request Body (username):', username);
-        console.log('[PROFILE UPDATE] Request File (image):', req.file);
-
         if (req.file) {
             profileImageUrl = `/uploads/${req.file.filename}`;
-            console.log('[PROFILE UPDATE] Image URL to be saved:', profileImageUrl);
         }
 
         const updates = [];
@@ -123,31 +120,35 @@ router.post('/profile/:userId', uploadMiddleware, async (req, res, next) => { //
         }
 
         if (updates.length === 0) {
-            console.log('[PROFILE UPDATE] No data provided. Sending 400.');
             return res.status(400).json({ msg: 'No profile data provided to update.' });
         }
 
         params.push(userId); // for the WHERE clause
 
         const sql = `UPDATE users SET ${updates.join(', ')} WHERE id = ?`;
-        console.log('[PROFILE UPDATE] Executing SQL:', sql);
-        console.log('[PROFILE UPDATE] With Params:', params);
 
-        await db.query(sql, params);
-        console.log('[PROFILE UPDATE] SQL update query successful.');
+        const [result] = await connection.query(sql, params);
 
-        const [updatedUsers] = await db.query(
+        if (result.affectedRows === 0) {
+            await connection.rollback();
+            return res.status(404).json({ msg: 'User not found, update failed.' });
+        }
+
+        const [updatedUsers] = await connection.query(
             'SELECT id, username, email, profile_image_url, weight FROM users WHERE id = ?',
             [userId]
         );
-        console.log('[PROFILE UPDATE] Fetched updated user, sending response.');
+        
+        await connection.commit();
 
         res.json(updatedUsers[0]);
 
     } catch (error) {
-        console.error('[PROFILE UPDATE] CRITICAL ERROR in route handler:', error);
+        await connection.rollback();
         // Pass to the global error handler
         next(error);
+    } finally {
+        connection.release();
     }
 });
 

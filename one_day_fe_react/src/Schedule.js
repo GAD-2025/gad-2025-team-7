@@ -27,7 +27,14 @@ const Schedule = ({ selectedDate, events, onDataUpdate }) => {
         }
     };
 
-    const todaysEvents = events.filter(event => event.date === selectedDate);
+    const todaysEvents = events.filter(event => event.date === selectedDate).sort((a, b) => {
+        if (a.time && b.time) {
+            return a.time.localeCompare(b.time);
+        }
+        if (a.time) return -1; // Events with time come before events without
+        if (b.time) return 1;
+        return 0; // Both have no time, maintain original order
+    });
 
     return (
         <div id="schedule-list" className="section-content">
