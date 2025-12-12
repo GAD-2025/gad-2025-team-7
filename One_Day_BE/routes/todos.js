@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+router.use(express.json());
 const db = require('../db');
 
 // @route   GET /api/todos/:userId/:date

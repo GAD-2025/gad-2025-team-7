@@ -8,6 +8,7 @@ import HealthcareCollection from './HealthcareCollection';
 import MainLayout from './MainLayout';
 import Profile from './Profile';
 import Diary from './Diary'; // Import Diary component
+import DiaryView from './DiaryView'; // Import DiaryView component
 import { useProfile } from './ProfileContext'; // Import useProfile
 
 function App() {
@@ -34,6 +35,11 @@ function App() {
     return <Diary selectedDate={selectedDate} userId={profile.userId} />;
   };
 
+  const DiaryViewWrapper = () => {
+    const { id } = useParams();
+    return <DiaryView id={id} />;
+  };
+
   return (
     <Router>
       <div className="App">
@@ -45,6 +51,7 @@ function App() {
             <Route path="/diary-collection" element={<DiaryCollection />} />
             <Route path="/diary" element={<DiaryWrapper />} />
             <Route path="/diary/:date" element={<DiaryWrapper />} />
+            <Route path="/diary-view/id/:id" element={<DiaryViewWrapper />} />
             <Route path="/stopwatch-collection" element={<StopwatchCollection />} />
             <Route path="/healthcare-collection" element={<HealthcareCollection />} />
             <Route path="/profile" element={<Profile />} />

@@ -15,7 +15,9 @@ const DiaryCollection = () => {
         const fetchDiaries = async () => {
             if (!profile.userId) return; // Wait for userId to be available
             try {
-                const response = await fetch(`http://localhost:3001/api/diaries/${profile.userId}`);
+                const response = await fetch(`http://localhost:3001/api/diaries/${profile.userId}`, {
+                    cache: 'no-store' // Add this to prevent browser caching
+                });
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -48,8 +50,8 @@ const DiaryCollection = () => {
     }, [allDiaries, filterRange]);
 
 
-    const handleCardClick = (date) => {
-        navigate(`/diary/${date}`);
+    const handleCardClick = (id) => {
+        navigate(`/diary-view/id/${id}`);
     };
 
     const handleGoBack = () => {
@@ -67,10 +69,10 @@ const DiaryCollection = () => {
 
     const renderDiaryCard = (diary) => {
         const pastelColors = ['#ffd1dc', '#ffc3a0', '#fffdc4', '#c4eada', '#d7c4ff'];
-        const randomPastel = pastelColors[diary.id % pastelColors.length];
+        const randomPastel = diary.id ? pastelColors[diary.id % pastelColors.length] : pastelColors[0];
 
         return (
-            <div key={diary.id} className="diary-card" onClick={() => handleCardClick(diary.navDate)}>
+            <div key={diary.id} className="diary-card" onClick={() => handleCardClick(diary.id)}>
                 <div 
                     className="card-thumbnail" 
                     style={{ 

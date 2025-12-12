@@ -1,38 +1,65 @@
+/* 
+  Stopwatch Component Stylesheet
+  - Author: Gemini
+  - Date: 2025-12-12
+  - Description: A robust, mobile-first, responsive layout for the stopwatch component.
+    This version is designed to work within a parent scrolling container by removing
+    the root 'height: 100%' and letting the content flow naturally.
+*/
+
+/* General container for the entire stopwatch view */
 .record-container {
     display: flex;
-    height: 100vh;
+    flex-direction: column; /* Mobile-first: stack sidebar and main content vertically */
+    width: 100%;
+    /* 
+      REMOVED 'height: 100%' to prevent conflict with parent containers.
+      The height will be determined by its content, and the parent '.right-column' will handle scrolling.
+    */
+    background-color: #f9f9f9; /* A light background for the whole container */
+    gap: 20px; /* Gap between sidebar and main content in vertical (mobile) view */
 }
 
 /* Category Sidebar */
 .category-sidebar {
-    width: 250px;
     background-color: #fff;
-    border-right: 1px solid var(--border-color);
-    padding: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
 .category-sidebar h2 {
-    margin: 0 0 20px 0;
-    font-size: 20px;
+    margin: 0 0 15px 0;
+    font-size: 18px;
     color: var(--primary-color);
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
 }
 
 #category-list {
     list-style: none;
     padding: 0;
     margin: 0;
-    flex-grow: 1;
+    display: flex; /* Make list items horizontal for mobile */
+    overflow-x: auto; /* Allow horizontal scrolling if categories overflow */
+    gap: 10px; /* Space between category items */
 }
 
+/* Hide scrollbar for a cleaner look but keep functionality */
+#category-list::-webkit-scrollbar { display: none; }
+#category-list { -ms-overflow-style: none; scrollbar-width: none; }
+
 #category-list li {
-    padding: 12px 15px;
-    margin-bottom: 8px;
-    border-radius: 8px;
+    padding: 10px 20px;
+    border-radius: 20px; /* Pill-shaped categories */
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
     font-weight: 500;
+    white-space: nowrap; /* Prevent category names from wrapping */
+    border: 1px solid var(--border-color);
 }
 
 #category-list li:hover {
@@ -43,11 +70,12 @@
     background-color: var(--primary-color);
     color: white;
     font-weight: 700;
+    border-color: var(--primary-color);
 }
 
 .add-category {
     display: flex;
-    margin-top: 20px;
+    margin-top: 15px;
 }
 
 #new-category-input {
@@ -72,36 +100,32 @@
 /* Main Content */
 .stopwatch-main {
     flex-grow: 1;
-    padding: 20px 40px;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
-}
-
-.dashboard-tabs {
-    justify-content: flex-start;
-    margin-bottom: 30px;
+    gap: 20px; /* Consistent spacing between main sections */
 }
 
 /* Stopwatch Display */
 .stopwatch-display-area {
     background-color: #fff;
     border-radius: 15px;
-    padding: 30px;
+    padding: 25px;
     text-align: center;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    margin-bottom: 30px;
 }
 
 #current-category-display {
     margin: 0 0 10px 0;
-    font-size: 22px;
+    font-size: 20px;
     color: var(--light-text-color);
     font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #stopwatch-timer {
-    font-size: 3em;
+    font-size: 2.8em;
     font-weight: 700;
     font-family: 'Roboto Mono', monospace;
     color: var(--text-color);
@@ -111,39 +135,24 @@
 .stopwatch-controls button {
     font-size: 16px;
     padding: 12px 30px;
-    margin: 0 10px;
+    margin: 0 8px;
     border: 1px solid var(--primary-color);
     border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s;
+    white-space: nowrap; /* Prevent button text from wrapping */
 }
 
-#start-pause-btn {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-#start-pause-btn.paused {
-    background-color: #ffab00;
-    border-color: #ffab00;
-}
-
-#reset-btn {
-    background-color: transparent;
-    color: var(--light-text-color);
-    border-color: #ccc;
-}
-
-.stopwatch-controls button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
+#start-pause-btn { background-color: var(--primary-color); color: white; }
+#start-pause-btn.paused { background-color: #ffab00; border-color: #ffab00; }
+#reset-btn { background-color: transparent; color: var(--light-text-color); border-color: #ccc; }
+.stopwatch-controls button:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* Task Lists */
 .task-lists {
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 20px;
     flex-grow: 1;
 }
 
@@ -153,19 +162,21 @@
     border-radius: 15px;
     padding: 20px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
 }
 
 .task-list-section h3 {
     margin: 0 0 15px 0;
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 10px;
+    flex-shrink: 0;
 }
 
 .task-list-section ul {
     list-style: none;
     padding: 0;
     margin: 0;
-    height: calc(100% - 50px);
     overflow-y: auto;
 }
 
@@ -173,6 +184,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 10px; /* Gap between items */
     padding: 15px;
     border-radius: 10px;
     margin-bottom: 10px;
@@ -183,24 +195,66 @@
 .task-item.paused { background-color: var(--paused-yellow); }
 .task-item.completed { background-color: var(--completed-green); text-decoration: line-through; color: var(--light-text-color); }
 
-.task-category { font-weight: 700; }
-.task-time { font-family: 'Roboto Mono', monospace; font-weight: 500; }
+.task-category { 
+    font-weight: 700; 
+    cursor: pointer; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 1; /* Allow category to shrink if needed */
+}
+
+.task-time { 
+    font-family: 'Roboto Mono', monospace; 
+    font-weight: 500; 
+    margin-left: auto; /* Push time to the right */
+    padding-left: 10px; /* Space from category */
+}
 
 .task-controls button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    margin-left: 8px;
-    padding: 5px 10px;
-    border-radius: 5px;
-    transition: background-color 0.2s;
-    font-weight: bold;
+    background: none; border: none; cursor: pointer; font-size: 14px;
+    margin-left: 8px; padding: 5px; border-radius: 5px;
+    transition: background-color 0.2s; font-weight: bold;
+    white-space: nowrap;
 }
 
 .task-controls .finish-btn { color: #4caf50; }
 .task-controls .resume-btn { color: #2196f3; font-size: 18px; }
 .task-controls .pause-btn { color: #ff9800; font-size: 18px; }
 .task-controls .delete-btn { color: #f44336; }
-
 .task-controls button:hover { background-color: rgba(0,0,0,0.05); }
+
+/* --- Media Queries for responsiveness --- */
+@media (max-width: 480px) {
+    #stopwatch-timer { font-size: 2.2em; }
+    .stopwatch-controls button { font-size: 14px; padding: 10px 20px; }
+    .task-item { flex-wrap: wrap; } /* Allow wrapping on very small screens */
+}
+
+@media (min-width: 768px) {
+    .record-container {
+        flex-direction: row;
+        align-items: flex-start; /* Align items to the start */
+        gap: 20px;
+    }
+
+    .category-sidebar {
+        width: 250px;
+        flex-shrink: 0;
+        border-right: 1px solid var(--border-color);
+        border-bottom: none;
+    }
+
+    #category-list {
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    .stopwatch-main {
+        padding: 0; /* Remove padding as gap is handled by parent */
+    }
+
+    .task-lists {
+        flex-direction: row;
+    }
+}
