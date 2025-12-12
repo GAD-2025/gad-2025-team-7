@@ -18,17 +18,25 @@ const Stopwatch = ({ userId, selectedDate }) => {
                 const res = await fetch(`http://localhost:3001/api/stopwatch/${userId}/${selectedDate}`);
                 if (res.ok) {
                     const data = await res.json();
-                    if (data) {
+                    // Data exists and has non-empty categories
+                    if (data && data.categories_data && data.categories_data.length > 0) {
                         setTasks(data.tasks_data || []);
-                        setCategories(data.categories_data || ['공부', '운동', '취미', '알바']);
+                        setCategories(data.categories_data);
                     } else {
-                        // No data for this date, set to default
-                        setTasks([]);
+                        // Data is null, or categories are empty, set to default
+                        setTasks(data ? data.tasks_data || [] : []);
                         setCategories(['공부', '운동', '취미', '알바']);
                     }
+                } else {
+                    // Handle non-ok responses (e.g., 500 error)
+                    setTasks([]);
+                    setCategories(['공부', '운동', '취미', '알바']);
                 }
             } catch (error) {
                 console.error("Error fetching stopwatch data:", error);
+                // Handle fetch errors (e.g., network issue)
+                setTasks([]);
+                setCategories(['공부', '운동', '취미', '알바']);
             }
         };
 
