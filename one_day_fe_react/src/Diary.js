@@ -126,8 +126,6 @@ const Diary = ({ selectedDate, userId }) => {
             date: selectedDate,
             title,
             canvasData,
-            texts,
-            images,
         };
 
         try {
