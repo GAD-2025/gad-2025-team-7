@@ -7,7 +7,8 @@ const Stopwatch = ({ userId, selectedDate }) => {
     const [categories, setCategories] = useState([]);
     const [newCategory, setNewCategory] = useState('');
     const intervalRef = useRef(null);
-    const saveTimeoutRef = useRef(null);
+    // saveTimeoutRef removed as it's no longer needed for debounced saves
+
 
     // Fetch data on load and date change
     useEffect(() => {
@@ -43,41 +44,31 @@ const Stopwatch = ({ userId, selectedDate }) => {
         fetchData();
     }, [userId, selectedDate]);
     
-    // Debounced save
-    useEffect(() => {
-        // Don't save on initial load, wait for tasks/categories to be populated
-        if (tasks.length === 0 && categories.length === 0) return;
-
-        if (saveTimeoutRef.current) {
-            clearTimeout(saveTimeoutRef.current);
+    // Function to save stopwatch data explicitly
+    const saveStopwatchData = async (currentTasks, currentCategories) => {
+        if (!userId || !selectedDate) return;
+        try {
+            const res = await fetch('http://localhost:3001/api/stopwatch', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId,
+                    date: selectedDate,
+                    tasksData: currentTasks,
+                    categoriesData: currentCategories,
+                }),
+            });
+            if (!res.ok) {
+                const errorData = await res.json();
+                console.error("Backend error saving stopwatch data:", errorData);
+            }
+        } catch (error) {
+            console.error("Network error saving stopwatch data:", error);
         }
+    };
 
-        saveTimeoutRef.current = setTimeout(async () => {
-            if (!userId || !selectedDate) return;
-            try {
-                await fetch('http://localhost:3001/api/stopwatch', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        userId,
-                        date: selectedDate,
-                        tasksData: tasks,
-                        categoriesData: categories,
-                    }),
-                });
-            } catch (error) {
-                console.error("Error saving stopwatch data:", error);
-            }
-        }, 2000); // Save 2 seconds after last change
-
-        return () => {
-            if (saveTimeoutRef.current) {
-                clearTimeout(saveTimeoutRef.current);
-            }
-        };
-    }, [tasks, categories, userId, selectedDate]);
 
     // Timer interval
     useEffect(() => {
@@ -127,9 +118,13 @@ const Stopwatch = ({ userId, selectedDate }) => {
 
     const pauseTask = (task) => {
         if (!task || task.isPaused) return;
-        setTasks(tasks.map(t => 
-            t.id === task.id ? { ...t, isPaused: true } : t
-        ));
+        setTasks(prevTasks => {
+            const updatedTasks = prevTasks.map(t => 
+                t.id === task.id ? { ...t, isPaused: true } : t
+            );
+            saveStopwatchData(updatedTasks, categories); // Save immediately
+            return updatedTasks;
+        });
     };
 
     const resetTask = (task) => {
@@ -140,26 +135,35 @@ const Stopwatch = ({ userId, selectedDate }) => {
     };
 
     const finishTask = (taskId) => {
+        setTasks(prevTasks => {
+            const updatedTasks = prevTasks.map(t => 
+                t.id === taskId ? { ...t, isComplete: true, isPaused: true } : t
+            );
+            saveStopwatchData(updatedTasks, categories); // Save immediately
+            return updatedTasks;
+        });
+
+        // The selectedCategory logic can remain
         const task = tasks.find(t => t.id === taskId);
-        if (!task) return;
-
-        setTasks(tasks.map(t => 
-            t.id === taskId ? { ...t, isComplete: true, isPaused: true } : t
-        ));
-
-        if (selectedCategory === task.category) {
+        if (task && selectedCategory === task.category) {
             setSelectedCategory(null);
         }
     };
 
     const deleteTask = (taskId) => {
-        setTasks(tasks.filter(t => t.id !== taskId));
+        setTasks(prevTasks => {
+            const updatedTasks = prevTasks.filter(t => t.id !== taskId);
+            saveStopwatchData(updatedTasks, categories); // Save immediately
+            return updatedTasks;
+        });
     };
 
     const addNewCategory = () => {
         if (newCategory && !categories.includes(newCategory)) {
-            setCategories([...categories, newCategory]);
+            const updatedCategories = [...categories, newCategory];
+            setCategories(updatedCategories);
             setNewCategory('');
+            saveStopwatchData(tasks, updatedCategories); // Save immediately
         }
     };
 

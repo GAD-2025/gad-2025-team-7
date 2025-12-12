@@ -5,45 +5,56 @@ const ProfileContext = createContext();
 export const useProfile = () => useContext(ProfileContext);
 
 export const ProfileProvider = ({ children }) => {
-    const [profile, setProfile] = useState({ userId: 1, nickname: 'Guest', profileImage: null });
+    const [profile, setProfile] = useState({ nickname: 'Guest', profileImage: null });
     const [loading, setLoading] = useState(true);
 
     const fetchProfile = async () => {
         setLoading(true);
+        const userId = localStorage.getItem('userId');
+
+        if (!userId) {
+            setProfile({ nickname: 'Guest', profileImage: null });
+            setLoading(false);
+            return;
+        }
+
         try {
-            // Assuming user ID 1 for now. This should be dynamic in a real app.
-            const response = await fetch('http://localhost:3001/api/auth/profile/1');
+            const response = await fetch(`http://localhost:3001/api/auth/profile/${userId}`);
             if (response.ok) {
                 const data = await response.json();
                 setProfile({
-                    userId: 1, // Store the user ID
+                    userId: data.id, // Store the user ID from response
                     nickname: data.username,
-                    // Prepend backend URL to the image path
                     profileImage: data.profile_image_url ? `http://localhost:3001${data.profile_image_url}` : null
                 });
             } else {
                 console.error('Failed to fetch profile, using default.');
-                setProfile({ userId: 1, nickname: 'Guest', profileImage: null });
+                setProfile({ nickname: 'Guest', profileImage: null });
             }
         } catch (error) {
             console.error('Error fetching profile:', error);
-            setProfile({ userId: 1, nickname: 'Guest', profileImage: null });
+            setProfile({ nickname: 'Guest', profileImage: null });
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchProfile();
+        const userId = localStorage.getItem('userId');
+        if (userId) {
+            fetchProfile();
+        } else {
+            setLoading(false);
+        }
     }, []);
 
     // This function will be called from the profile page after a successful update
     const updateProfileContext = (newProfileData) => {
-        const { username, profile_image_url } = newProfileData;
+        const { id, username, profile_image_url } = newProfileData;
         const newImage = profile_image_url ? `http://localhost:3001${profile_image_url}` : profile.profileImage;
         
         setProfile({
-            ...profile,
+            userId: id,
             nickname: username || profile.nickname,
             profileImage: newImage
         });

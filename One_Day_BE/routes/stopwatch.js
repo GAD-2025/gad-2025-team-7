@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
+// Middleware to parse JSON bodies
+const jsonParser = express.json();
+
+
 // @route   GET /api/stopwatch/:userId
 // @desc    Get all stopwatch records for a specific user
 // @access  Private
@@ -16,13 +20,22 @@ router.get('/:userId', async (req, res) => {
 
         const processedRecords = records.map(record => {
             try {
-                record.tasks_data = JSON.parse(record.tasks_data);
-                record.categories_data = JSON.parse(record.categories_data);
+                // Defensively parse JSON, handling cases where it might already be an object
+                if (typeof record.tasks_data === 'string') {
+                    record.tasks_data = JSON.parse(record.tasks_data);
+                }
+                if (typeof record.categories_data === 'string') {
+                    record.categories_data = JSON.parse(record.categories_data);
+                }
             } catch (e) {
-                console.error("Error parsing stopwatch data from DB:", e);
+                console.error(`Error parsing corrupted stopwatch data from DB for user ${record.user_id}, date ${record.date}:`, e.message);
                 record.tasks_data = [];
                 record.categories_data = [];
             }
+            // Ensure we always return arrays
+            if (!Array.isArray(record.tasks_data)) record.tasks_data = [];
+            if (!Array.isArray(record.categories_data)) record.categories_data = [];
+            
             return record;
         });
 
@@ -48,13 +61,23 @@ router.get('/:userId/:date', async (req, res) => {
         if (records.length > 0) {
             const record = records[0];
             try {
-                record.tasks_data = JSON.parse(record.tasks_data);
-                record.categories_data = JSON.parse(record.categories_data);
+                // Defensively parse JSON, handling cases where it might already be an object
+                if (typeof record.tasks_data === 'string') {
+                    record.tasks_data = JSON.parse(record.tasks_data);
+                }
+                if (typeof record.categories_data === 'string') {
+                    record.categories_data = JSON.parse(record.categories_data);
+                }
             } catch (e) {
-                console.error("Error parsing stopwatch data from DB:", e);
+                console.error(`Error parsing corrupted stopwatch data from DB for user ${userId}, date ${date}:`, e.message);
+                // If parsing fails, default to empty arrays
                 record.tasks_data = [];
                 record.categories_data = [];
             }
+            // Ensure we always return arrays
+            if (!Array.isArray(record.tasks_data)) record.tasks_data = [];
+            if (!Array.isArray(record.categories_data)) record.categories_data = [];
+
             res.json(record);
         } else {
             res.json(null); // No record found for this date
@@ -68,7 +91,7 @@ router.get('/:userId/:date', async (req, res) => {
 // @route   POST /api/stopwatch
 // @desc    Create or update a stopwatch record (upsert)
 // @access  Private
-router.post('/', async (req, res) => {
+router.post('/', jsonParser, async (req, res) => {
     const { userId, date, tasksData, categoriesData } = req.body;
 
     if (!userId || !date) {
@@ -83,10 +106,13 @@ router.post('/', async (req, res) => {
             JSON.stringify(tasksData || []),
             JSON.stringify(categoriesData || [])
         ];
+        
         const [result] = await db.query(sql, params);
+
         res.status(201).json({ msg: 'Stopwatch data saved.', insertId: result.insertId });
+
     } catch (err) {
-        console.error(err.message);
+        console.error('[STOPWATCH SAVE] CRITICAL ERROR:', err.message);
         res.status(500).send('Server Error');
     }
 });

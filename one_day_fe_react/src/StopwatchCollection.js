@@ -61,20 +61,25 @@ const StopwatchCollection = () => {
 
         const dataByCategory = {};
 
+        // Iterate through records, then tasks within each record
         filteredRecords.forEach(record => {
-            if (record.categories_data) {
-                record.categories_data.forEach(cat => {
-                    if (!dataByCategory[cat.category]) {
-                        dataByCategory[cat.category] = 0;
+            if (record.tasks_data) {
+                record.tasks_data.forEach(task => {
+                    // Only include completed tasks
+                    if (task.isComplete && task.category) {
+                        if (!dataByCategory[task.category]) {
+                            dataByCategory[task.category] = 0;
+                        }
+                        // Add elapsed time (which is in ms)
+                        dataByCategory[task.category] += task.elapsedTime;
                     }
-                    dataByCategory[cat.category] += cat.time; // Assuming time is in seconds
                 });
             }
         });
 
-        return Object.entries(dataByCategory).map(([category, totalTime], index) => ({
+        return Object.entries(dataByCategory).map(([category, totalTimeMs], index) => ({
             category,
-            totalTime,
+            totalTime: Math.floor(totalTimeMs / 1000), // Convert ms to seconds
             color: categoryColors[category] || colorKeys[index % colorKeys.length]
         }));
     }, [allRecords, filterRange]);
