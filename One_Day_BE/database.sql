@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 9.5.0, for macos14.8 (arm64)
 --
--- Host: 127.0.0.1    Database: one_day_db
+-- Host: localhost    Database: one_day_db
 -- ------------------------------------------------------
 -- Server version	9.5.0
 
@@ -21,27 +21,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 -- GTID state at the beginning of the backup 
 --
 
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '618bfa50-c5c4-11f0-b0e8-eaeeecd2573f:1-58';
-
---
--- Table structure for table `daily_steps`
---
-
-DROP TABLE IF EXISTS `daily_steps`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `daily_steps` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `date` date NOT NULL,
-  `steps` int NOT NULL DEFAULT '0',
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `user_id_date` (`user_id`,`date`),
-  CONSTRAINT `daily_steps_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '618bfa50-c5c4-11f0-b0e8-eaeeecd2573f:1-101';
 
 --
 -- Table structure for table `diaries`
@@ -63,8 +43,18 @@ CREATE TABLE `diaries` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`date`),
   CONSTRAINT `diaries_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `diaries`
+--
+
+LOCK TABLES `diaries` WRITE;
+/*!40000 ALTER TABLE `diaries` DISABLE KEYS */;
+INSERT INTO `diaries` VALUES (1,1,'2025-12-11','','/uploads/1765429985561_1.png','[]','[]','2025-12-11 05:10:16','2025-12-11 05:13:05'),(4,1,'2025-12-12','','/uploads/1765552463704_1.png','[{\"x\": 51, \"y\": 50, \"id\": 1765549432729, \"color\": \"black\", \"value\": \"New Text\"}]','[]','2025-12-12 14:20:56','2025-12-12 15:14:23'),(12,1,'2025-12-10','','/uploads/1765550984909_1.png','[]','[]','2025-12-12 14:23:15','2025-12-12 14:49:44'),(30,1,'2025-12-13','','/uploads/1765552195363_1.png','[]','[]','2025-12-12 15:09:55','2025-12-12 15:09:55');
+/*!40000 ALTER TABLE `diaries` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `events`
@@ -90,6 +80,15 @@ CREATE TABLE `events` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `events`
+--
+
+LOCK TABLES `events` WRITE;
+/*!40000 ALTER TABLE `events` DISABLE KEYS */;
+/*!40000 ALTER TABLE `events` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `meal_foods`
 --
 
@@ -113,6 +112,15 @@ CREATE TABLE `meal_foods` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `meal_foods`
+--
+
+LOCK TABLES `meal_foods` WRITE;
+/*!40000 ALTER TABLE `meal_foods` DISABLE KEYS */;
+/*!40000 ALTER TABLE `meal_foods` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `meals`
 --
 
@@ -129,8 +137,18 @@ CREATE TABLE `meals` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`date`,`category`),
   CONSTRAINT `meals_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `meals`
+--
+
+LOCK TABLES `meals` WRITE;
+/*!40000 ALTER TABLE `meals` DISABLE KEYS */;
+INSERT INTO `meals` VALUES (1,1,'2025-12-11','아침','2025-12-11 04:58:44','2025-12-11 04:58:44'),(3,1,'2025-12-12','아침','2025-12-12 15:19:07','2025-12-12 15:19:07');
+/*!40000 ALTER TABLE `meals` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `menstrual_cycles`
@@ -152,6 +170,15 @@ CREATE TABLE `menstrual_cycles` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `menstrual_cycles`
+--
+
+LOCK TABLES `menstrual_cycles` WRITE;
+/*!40000 ALTER TABLE `menstrual_cycles` DISABLE KEYS */;
+/*!40000 ALTER TABLE `menstrual_cycles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `stopwatch_records`
 --
 
@@ -169,8 +196,18 @@ CREATE TABLE `stopwatch_records` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`date`),
   CONSTRAINT `stopwatch_records_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `stopwatch_records`
+--
+
+LOCK TABLES `stopwatch_records` WRITE;
+/*!40000 ALTER TABLE `stopwatch_records` DISABLE KEYS */;
+INSERT INTO `stopwatch_records` VALUES (1,1,'2025-12-12','[]','[\"공부\", \"운동\", \"취미\", \"알바\"]','2025-12-12 07:58:07','2025-12-12 14:19:18'),(29,1,'2025-12-11','[{\"id\": 1765527144518, \"category\": \"운동\", \"isPaused\": true, \"isComplete\": true, \"elapsedTime\": 11000}]','[\"공부\", \"운동\", \"취미\", \"알바\"]','2025-12-12 08:12:36','2025-12-12 08:12:36'),(31,1,'2025-12-08','[{\"id\": 1765527419531, \"category\": \"운동\", \"isPaused\": true, \"isComplete\": true, \"elapsedTime\": 25000}]','[\"공부\", \"운동\", \"취미\", \"알바\"]','2025-12-12 08:17:26','2025-12-12 08:17:26'),(55,1,'2025-12-13','[]','[\"공부\", \"운동\", \"취미\", \"알바\"]','2025-12-12 15:34:24','2025-12-12 15:58:01');
+/*!40000 ALTER TABLE `stopwatch_records` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `todos`
@@ -193,6 +230,15 @@ CREATE TABLE `todos` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `todos`
+--
+
+LOCK TABLES `todos` WRITE;
+/*!40000 ALTER TABLE `todos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `todos` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `users`
 --
 
@@ -211,6 +257,16 @@ CREATE TABLE `users` (
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'김제니s','yns2017@naver.com','$2b$10$EaKhjnIwzIXWKzFiDeIm4.eeAcAe59AsvcK6BS0I3IXho49lqOVkW','/uploads/1765543842915.jpeg','2025-12-11 04:51:55',47.00);
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
 SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -222,4 +278,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-12-12 22:10:50
+-- Dump completed on 2025-12-13  1:03:37
