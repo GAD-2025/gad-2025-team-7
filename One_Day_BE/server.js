@@ -16,7 +16,7 @@ if (!fs.existsSync(uploadsDir)) {
 
 app.use(cors());
 // Use built-in Express middleware instead of body-parser
-// app.use(express.json()); // Temporarily removed to debug multipart/form-data conflict
+app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Serve uploaded files statically
