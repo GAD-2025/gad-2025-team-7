@@ -39,7 +39,9 @@ const StopwatchCollection = () => {
         if (!userId) return;
         const fetchRecords = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/api/stopwatch/${userId}`);
+                const response = await fetch(`http://localhost:3001/api/stopwatch/${userId}`, {
+                    cache: 'no-store'
+                });
                 if (!response.ok) throw new Error('Network response was not ok');
                 const data = await response.json();
                 setAllRecords(data);
@@ -53,10 +55,9 @@ const StopwatchCollection = () => {
     const aggregatedData = useMemo(() => {
         const filteredRecords = allRecords.filter(record => {
             if (!filterRange.startDate || !filterRange.endDate) return true;
-            const recordDate = new Date(record.date);
-            const startDate = new Date(filterRange.startDate);
-            const endDate = new Date(filterRange.endDate);
-            return recordDate >= startDate && recordDate <= endDate;
+            // Perform string comparison to avoid timezone issues with `new Date()`
+            const recordDateStr = record.date.split('T')[0];
+            return recordDateStr >= filterRange.startDate && recordDateStr <= filterRange.endDate;
         });
 
         const dataByCategory = {};

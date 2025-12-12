@@ -44,8 +44,9 @@ const DiaryCollection = () => {
         return allDiaries.filter(diary => {
             const diaryDate = new Date(diary.navDate);
             const startDate = new Date(filterRange.startDate);
-            const endDate = new Date(filterRange.endDate);
-            return diaryDate >= startDate && diaryDate <= endDate;
+            const endDateInclusive = new Date(filterRange.endDate);
+            endDateInclusive.setDate(endDateInclusive.getDate() + 1); // Set to the day after the selected end date
+            return diaryDate >= startDate && diaryDate < endDateInclusive;
         });
     }, [allDiaries, filterRange]);
 

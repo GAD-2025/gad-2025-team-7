@@ -24,6 +24,26 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '618bfa50-c5c4-11f0-b0e8-eaeeecd2573f:1-58';
 
 --
+-- Table structure for table `daily_steps`
+--
+
+DROP TABLE IF EXISTS `daily_steps`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `daily_steps` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `date` date NOT NULL,
+  `steps` int NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id_date` (`user_id`,`date`),
+  CONSTRAINT `daily_steps_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `diaries`
 --
 
