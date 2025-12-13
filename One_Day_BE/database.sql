@@ -21,7 +21,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 -- GTID state at the beginning of the backup 
 --
 
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '618bfa50-c5c4-11f0-b0e8-eaeeecd2573f:1-101';
+SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '618bfa50-c5c4-11f0-b0e8-eaeeecd2573f:1-104';
 
 --
 -- Table structure for table `diaries`
@@ -137,7 +137,7 @@ CREATE TABLE `meals` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`date`,`category`),
   CONSTRAINT `meals_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -146,7 +146,7 @@ CREATE TABLE `meals` (
 
 LOCK TABLES `meals` WRITE;
 /*!40000 ALTER TABLE `meals` DISABLE KEYS */;
-INSERT INTO `meals` VALUES (1,1,'2025-12-11','아침','2025-12-11 04:58:44','2025-12-11 04:58:44'),(3,1,'2025-12-12','아침','2025-12-12 15:19:07','2025-12-12 15:19:07');
+INSERT INTO `meals` VALUES (1,1,'2025-12-11','아침','2025-12-11 04:58:44','2025-12-11 04:58:44'),(6,1,'2025-12-12','아침','2025-12-12 16:08:24','2025-12-12 16:08:24');
 /*!40000 ALTER TABLE `meals` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -278,4 +278,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-12-13  1:03:37
+-- Dump completed on 2025-12-13 22:01:28
