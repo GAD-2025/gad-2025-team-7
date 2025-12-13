@@ -158,11 +158,11 @@ router.post('/profile/:userId', uploadMiddleware, async (req, res, next) => {
 router.get('/profile/:userId', async (req, res) => {
     const { userId } = req.params;
     try {
-        const [users] = await db.query('SELECT id, username, email, profile_image_url, weight FROM users WHERE id = ?', [userId]);
+        const [users] = await db.query('SELECT id, username, email, profile_image_url FROM users WHERE id = ?', [userId]);
         if (users.length === 0) {
             return res.status(404).json({ msg: '사용자를 찾을 수 없습니다.' });
         }
-        res.json(users[0]); // Reverted to original response structure
+        res.json(users[0]);
     } catch (error) {
         console.error('Get profile error:', error);
         res.status(500).json({ msg: `Database error: ${error.message}` });
@@ -192,7 +192,7 @@ router.put('/profile/:userId', jsonParser, async (req, res) => {
 
         // Then, fetch the complete updated user profile
         const [updatedUsers] = await db.query(
-            'SELECT id, username, email, profile_image_url, weight FROM users WHERE id = ?',
+            'SELECT id, username, email, profile_image_url FROM users WHERE id = ?',
             [userId]
         );
 

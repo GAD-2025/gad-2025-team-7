@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Diary = ({ selectedDate, userId }) => {
+    const navigate = useNavigate();
     const [title, setTitle] = useState('');
     const canvasRef = useRef(null);
     const [isDrawing, setIsDrawing] = useState(false);
@@ -124,8 +126,6 @@ const Diary = ({ selectedDate, userId }) => {
             date: selectedDate,
             title,
             canvasData,
-            texts,
-            images,
         };
 
         try {
@@ -138,6 +138,7 @@ const Diary = ({ selectedDate, userId }) => {
             });
             if (res.ok) {
                 alert('다이어리가 저장되었습니다.');
+                navigate('/diary-collection');
             } else {
                 alert('저장에 실패했습니다.');
             }

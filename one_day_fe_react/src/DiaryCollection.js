@@ -2,17 +2,22 @@ import React, { useState, useEffect, useMemo } from 'react';
 import './DiaryCollection.css';
 import { useNavigate } from 'react-router-dom';
 import DateFilter from './DateFilter'; // Import the new component
+import { useProfile } from './ProfileContext'; // Import useProfile
 
 const DiaryCollection = () => {
     const [allDiaries, setAllDiaries] = useState([]);
     const [isFilterVisible, setIsFilterVisible] = useState(false);
     const [filterRange, setFilterRange] = useState({ startDate: '', endDate: '' });
     const navigate = useNavigate();
+    const { profile } = useProfile(); // Get profile from context
 
     useEffect(() => {
         const fetchDiaries = async () => {
+            if (!profile.userId) return; // Wait for userId to be available
             try {
-                const response = await fetch('http://localhost:3001/api/diaries/1'); // Temp userId 1
+                const response = await fetch(`http://localhost:3001/api/diaries/${profile.userId}`, {
+                    cache: 'no-store' // Add this to prevent browser caching
+                });
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -30,7 +35,17 @@ const DiaryCollection = () => {
         };
 
         fetchDiaries();
-    }, []);
+
+        const handleFocus = () => {
+            fetchDiaries();
+        };
+
+        window.addEventListener('focus', handleFocus);
+
+        return () => {
+            window.removeEventListener('focus', handleFocus);
+        };
+    }, [profile.userId]); // Re-run effect when userId changes
 
     const displayedDiaries = useMemo(() => {
         if (!filterRange.startDate || !filterRange.endDate) {
@@ -39,14 +54,15 @@ const DiaryCollection = () => {
         return allDiaries.filter(diary => {
             const diaryDate = new Date(diary.navDate);
             const startDate = new Date(filterRange.startDate);
-            const endDate = new Date(filterRange.endDate);
-            return diaryDate >= startDate && diaryDate <= endDate;
+            const endDateInclusive = new Date(filterRange.endDate);
+            endDateInclusive.setDate(endDateInclusive.getDate() + 1); // Set to the day after the selected end date
+            return diaryDate >= startDate && diaryDate < endDateInclusive;
         });
     }, [allDiaries, filterRange]);
 
 
-    const handleCardClick = (date) => {
-        navigate(`/diary/${date}`);
+    const handleCardClick = (id) => {
+        navigate(`/diary-view/id/${id}`);
     };
 
     const handleGoBack = () => {
@@ -64,10 +80,10 @@ const DiaryCollection = () => {
 
     const renderDiaryCard = (diary) => {
         const pastelColors = ['#ffd1dc', '#ffc3a0', '#fffdc4', '#c4eada', '#d7c4ff'];
-        const randomPastel = pastelColors[diary.id % pastelColors.length];
+        const randomPastel = diary.id ? pastelColors[diary.id % pastelColors.length] : pastelColors[0];
 
         return (
-            <div key={diary.id} className="diary-card" onClick={() => handleCardClick(diary.navDate)}>
+            <div key={diary.id} className="diary-card" onClick={() => handleCardClick(diary.id)}>
                 <div 
                     className="card-thumbnail" 
                     style={{ 

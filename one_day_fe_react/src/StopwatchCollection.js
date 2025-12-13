@@ -39,7 +39,9 @@ const StopwatchCollection = () => {
         if (!userId) return;
         const fetchRecords = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/api/stopwatch/${userId}`);
+                const response = await fetch(`http://localhost:3001/api/stopwatch/${userId}`, {
+                    cache: 'no-store'
+                });
                 if (!response.ok) throw new Error('Network response was not ok');
                 const data = await response.json();
                 setAllRecords(data);
@@ -53,28 +55,32 @@ const StopwatchCollection = () => {
     const aggregatedData = useMemo(() => {
         const filteredRecords = allRecords.filter(record => {
             if (!filterRange.startDate || !filterRange.endDate) return true;
-            const recordDate = new Date(record.date);
-            const startDate = new Date(filterRange.startDate);
-            const endDate = new Date(filterRange.endDate);
-            return recordDate >= startDate && recordDate <= endDate;
+            // Perform string comparison to avoid timezone issues with `new Date()`
+            const recordDateStr = record.date.split('T')[0];
+            return recordDateStr >= filterRange.startDate && recordDateStr <= filterRange.endDate;
         });
 
         const dataByCategory = {};
 
+        // Iterate through records, then tasks within each record
         filteredRecords.forEach(record => {
-            if (record.categories_data) {
-                record.categories_data.forEach(cat => {
-                    if (!dataByCategory[cat.category]) {
-                        dataByCategory[cat.category] = 0;
+            if (record.tasks_data) {
+                record.tasks_data.forEach(task => {
+                    // Only include completed tasks
+                    if (task.isComplete && task.category) {
+                        if (!dataByCategory[task.category]) {
+                            dataByCategory[task.category] = 0;
+                        }
+                        // Add elapsed time (which is in ms)
+                        dataByCategory[task.category] += task.elapsedTime;
                     }
-                    dataByCategory[cat.category] += cat.time; // Assuming time is in seconds
                 });
             }
         });
 
-        return Object.entries(dataByCategory).map(([category, totalTime], index) => ({
+        return Object.entries(dataByCategory).map(([category, totalTimeMs], index) => ({
             category,
-            totalTime,
+            totalTime: Math.floor(totalTimeMs / 1000), // Convert ms to seconds
             color: categoryColors[category] || colorKeys[index % colorKeys.length]
         }));
     }, [allRecords, filterRange]);

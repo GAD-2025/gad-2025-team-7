@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+router.use(express.json());
 const pool = require('../config/db'); // Corrected to use pool
 
 // @route   GET /api/healthcare/cycles/:userId

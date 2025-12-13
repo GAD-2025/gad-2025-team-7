@@ -3,7 +3,11 @@
 .dash-tab-link { padding: 10px 20px; border: none; background: none; cursor: pointer; font-size: 20px; color: var(--light-text-color); }
 .dash-tab-link.active { border-bottom: 3px solid var(--primary-color); font-weight: 700; color: var(--text-color); }
 .dash-tab-content { display: none; }
-.dash-tab-content.active { display: block; }
+.dash-tab-content.active { 
+    display: flex; /* Changed from block to flex */
+    flex-direction: column; /* Ensure content flows vertically */
+    flex-grow: 1; /* Allow content to grow */
+}
 .dashboard-section { margin-bottom: 30px; position: relative; }
 .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
 .section-header h3 { margin: 0; font-size: 17px; }

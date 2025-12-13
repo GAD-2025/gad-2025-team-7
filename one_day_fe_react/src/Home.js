@@ -7,8 +7,15 @@ import Dashboard from './Dashboard';
 import SlideOutNav from './SlideOutNav';
 
 const Home = () => {
+    const getLocalDateString = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
     const [nav, setNav] = useState(0);
-    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+    const [selectedDate, setSelectedDate] = useState(getLocalDateString(new Date()));
     const [dashboardEvents, setDashboardEvents] = useState([]);
     const [calendarEvents, setCalendarEvents] = useState([]);
     const [todos, setTodos] = useState([]);
@@ -128,7 +135,8 @@ const Home = () => {
             <Dashboard
                 userId={userId}
                 selectedDate={selectedDate}
-                events={dashboardEvents}
+                dayEvents={dashboardEvents}
+                monthEvents={calendarEvents}
                 todos={todos}
                 onDataUpdate={onDataUpdate}
                 showEventModal={showEventModal}

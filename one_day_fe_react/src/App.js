@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom';
 import Home from './Home';
 import Login from './Login';
 import DiaryCollection from './DiaryCollection';
-import StopwatchCollection from './StopwatchCollection'; // Renamed
+import StopwatchCollection from './StopwatchCollection';
 import HealthcareCollection from './HealthcareCollection';
 import MainLayout from './MainLayout';
 import Profile from './Profile';
+import Diary from './Diary'; // Import Diary component
+import DiaryView from './DiaryView'; // Import DiaryView component
+import { useProfile } from './ProfileContext'; // Import useProfile
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('userId'));
 
-  // This effect will listen for storage changes, e.g., on logout from another tab
   useEffect(() => {
     const handleStorageChange = () => {
       setIsAuthenticated(!!localStorage.getItem('userId'));
@@ -26,17 +28,31 @@ function App() {
     setIsAuthenticated(true);
   };
 
+  const DiaryWrapper = () => {
+    const { date } = useParams();
+    const { profile } = useProfile();
+    const selectedDate = date || new Date().toISOString().split('T')[0];
+    return <Diary selectedDate={selectedDate} userId={profile.userId} />;
+  };
+
+  const DiaryViewWrapper = () => {
+    const { id } = useParams();
+    return <DiaryView id={id} />;
+  };
+
   return (
     <Router>
       <div className="App">
         <Routes>
           <Route path="/login" element={isAuthenticated ? <Navigate to="/home" /> : <Login onLogin={handleLogin} />} />
           
-          {/* Authenticated Routes */}
           <Route element={isAuthenticated ? <MainLayout /> : <Navigate to="/login" />}>
             <Route path="/home" element={<Home />} />
             <Route path="/diary-collection" element={<DiaryCollection />} />
-            <Route path="/stopwatch-collection" element={<StopwatchCollection />} /> {/* Renamed route */}
+            <Route path="/diary" element={<DiaryWrapper />} />
+            <Route path="/diary/:date" element={<DiaryWrapper />} />
+            <Route path="/diary-view/id/:id" element={<DiaryViewWrapper />} />
+            <Route path="/stopwatch-collection" element={<StopwatchCollection />} />
             <Route path="/healthcare-collection" element={<HealthcareCollection />} />
             <Route path="/profile" element={<Profile />} />
           </Route>

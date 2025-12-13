@@ -22,8 +22,8 @@ export const ProfileProvider = ({ children }) => {
             if (response.ok) {
                 const data = await response.json();
                 setProfile({
+                    userId: data.id, // Store the user ID from response
                     nickname: data.username,
-                    // Prepend backend URL to the image path
                     profileImage: data.profile_image_url ? `http://localhost:3001${data.profile_image_url}` : null
                 });
             } else {
@@ -39,15 +39,21 @@ export const ProfileProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        fetchProfile();
+        const userId = localStorage.getItem('userId');
+        if (userId) {
+            fetchProfile();
+        } else {
+            setLoading(false);
+        }
     }, []);
 
     // This function will be called from the profile page after a successful update
     const updateProfileContext = (newProfileData) => {
-        const { username, profile_image_url } = newProfileData;
+        const { id, username, profile_image_url } = newProfileData;
         const newImage = profile_image_url ? `http://localhost:3001${profile_image_url}` : profile.profileImage;
         
         setProfile({
+            userId: id,
             nickname: username || profile.nickname,
             profileImage: newImage
         });
