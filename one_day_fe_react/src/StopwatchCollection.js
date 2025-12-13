@@ -22,10 +22,9 @@ const categoryColors = {
     '운동': '#ffeca9', // Yellow
     '알바': '#ffdcaa', // Orange
     '취미': '#c4f5d2', // Mint
-    // Add more default colors
     '기타': '#e9ecef',
 };
-const colorKeys = Object.keys(categoryColors);
+const fallbackColors = Object.values(categoryColors);
 
 const StopwatchCollection = () => {
     const [allRecords, setAllRecords] = useState([]);
@@ -81,7 +80,7 @@ const StopwatchCollection = () => {
         return Object.entries(dataByCategory).map(([category, totalTimeMs], index) => ({
             category,
             totalTime: Math.floor(totalTimeMs / 1000), // Convert ms to seconds
-            color: categoryColors[category] || colorKeys[index % colorKeys.length]
+            color: categoryColors[category] || fallbackColors[index % fallbackColors.length]
         }));
     }, [allRecords, filterRange]);
 
