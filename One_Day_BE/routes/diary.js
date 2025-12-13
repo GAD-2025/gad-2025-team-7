@@ -175,7 +175,7 @@ router.post('/', async (req, res) => {
 
     try {
         const sql = `
-            INSERT INTO diaries (user_id, `date`, title, canvasImagePath, texts, images)
+            INSERT INTO diaries (user_id, date, title, canvasImagePath, texts, images)
             VALUES (?, ?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE
             title = VALUES(title),
