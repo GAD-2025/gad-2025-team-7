@@ -158,7 +158,8 @@ router.post('/profile/:userId', uploadMiddleware, async (req, res, next) => {
 router.get('/profile/:userId', async (req, res) => {
     const { userId } = req.params;
     try {
-        const [users] = await db.query('SELECT id, username, email, profile_image_url FROM users WHERE id = ?', [userId]);
+        // FIX: Also select 'weight' here to ensure consistency
+        const [users] = await db.query('SELECT id, username, email, profile_image_url, weight FROM users WHERE id = ?', [userId]);
         if (users.length === 0) {
             return res.status(404).json({ msg: '사용자를 찾을 수 없습니다.' });
         }
@@ -170,29 +171,25 @@ router.get('/profile/:userId', async (req, res) => {
 });
 
 // @route   PUT /api/auth/profile/:userId
-// @desc    Update user profile
+// @desc    Update user profile (specifically weight for now)
 // @access  Private
 router.put('/profile/:userId', jsonParser, async (req, res) => {
-    // Simplified handler for weight update
     const { userId } = req.params;
     const { weight } = req.body;
 
     if (weight === undefined) {
-        // If other profile updates are intended, they should be handled here.
-        // For now, we are focusing only on the weight update.
         return res.status(400).json({ msg: 'Weight data is required.' });
     }
 
     try {
-        // First, update the weight
         await db.query(
             'UPDATE users SET weight = ? WHERE id = ?',
             [weight, userId]
         );
 
-        // Then, fetch the complete updated user profile
+        // FIX: Select 'weight' in the follow-up query to return the updated object
         const [updatedUsers] = await db.query(
-            'SELECT id, username, email, profile_image_url FROM users WHERE id = ?',
+            'SELECT id, username, email, profile_image_url, weight FROM users WHERE id = ?',
             [userId]
         );
 
@@ -200,7 +197,6 @@ router.put('/profile/:userId', jsonParser, async (req, res) => {
             return res.status(404).json({ msg: '사용자를 찾을 수 없습니다.' });
         }
 
-        // Respond with the updated user object
         res.json(updatedUsers[0]);
 
     } catch (error) {

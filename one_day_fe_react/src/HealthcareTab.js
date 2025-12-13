@@ -2,28 +2,30 @@ import React, { useState } from 'react';
 import CyclePrediction from './CyclePrediction';
 import Pedometer from './Pedometer';
 import Diet from './Diet';
+import { useData } from './DataContext'; // Import the new hook
 
 const HealthcareTab = ({ userId }) => {
-    const [dietTotals, setDietTotals] = useState({ calories: 0, carbs: 0, protein: 0, fat: 0 });
+    // Get the dietTotals from the shared context
+    const { dietTotals } = useData();
+
+    // This state is local to this component and seems fine to keep here.
     const [selectedCycleStartDate, setSelectedCycleStartDate] = useState(null); 
 
-    // Temporary dummy values for selectedDate for Diet component
-    const dummySelectedDate = new Date().toISOString().split('T')[0]; // Current date
-
-    // Default recommended calories for macro calculations in this component
+    // Recommended values can also stay here as they are constants for UI calculation.
     const defaultRecommendedCalories = 2000;
-    const recommendedCarbs = Math.round(defaultRecommendedCalories * 0.55 / 4); // 55% of calories, 4kcal/g
-    const recommendedProtein = Math.round(defaultRecommendedCalories * 0.20 / 4); // 20% of calories, 4kcal/g
-    const recommendedFat = Math.round(defaultRecommendedCalories * 0.25 / 9);    // 25% of calories, 9kcal/g
+    const recommendedCarbs = Math.round(defaultRecommendedCalories * 0.55 / 4);
+    const recommendedProtein = Math.round(defaultRecommendedCalories * 0.20 / 4);
+    const recommendedFat = Math.round(defaultRecommendedCalories * 0.25 / 9);
 
     return (
         <div id="healthcare-tab" className="dash-tab-content active">
             <div className="healthcare-row">
                 <CyclePrediction userId={userId} selectedCycleStartDate={selectedCycleStartDate} />
-                <Pedometer userId={userId} dietTotals={dietTotals} /> {/* Pass userId and dietTotals to Pedometer */}
+                <Pedometer userId={userId} dietTotals={dietTotals} />
             </div>
             
-            <Diet setDietTotals={setDietTotals} userId={userId} selectedDate={dummySelectedDate} />
+            {/* Diet component no longer needs any props, it gets everything from the context */}
+            <Diet />
 
             <div className="dashboard-section">
                 <div className="section-header">

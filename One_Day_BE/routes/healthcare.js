@@ -11,7 +11,7 @@ router.get('/cycles/:userId', async (req, res) => {
 
     try {
         const [cycles] = await pool.query(
-            'SELECT start_date, end_date FROM menstrual_cycles WHERE user_id = ? ORDER BY start_date DESC',
+            'SELECT id, start_date, end_date FROM menstrual_cycles WHERE user_id = ? ORDER BY start_date DESC',
             [userId]
         );
 

@@ -11,6 +11,8 @@ import Diary from './Diary'; // Import Diary component
 import DiaryView from './DiaryView'; // Import DiaryView component
 import { useProfile } from './ProfileContext'; // Import useProfile
 
+import { DataProvider } from './DataContext'; // Import DataProvider
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('userId'));
 
@@ -46,7 +48,7 @@ function App() {
         <Routes>
           <Route path="/login" element={isAuthenticated ? <Navigate to="/home" /> : <Login onLogin={handleLogin} />} />
           
-          <Route element={isAuthenticated ? <MainLayout /> : <Navigate to="/login" />}>
+          <Route element={isAuthenticated ? <DataProvider><MainLayout /></DataProvider> : <Navigate to="/login" />} >
             <Route path="/home" element={<Home />} />
             <Route path="/diary-collection" element={<DiaryCollection />} />
             <Route path="/diary" element={<DiaryWrapper />} />

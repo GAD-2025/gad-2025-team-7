@@ -13,10 +13,11 @@ if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir);
 }
 
-
+// Middlewares
 app.use(cors());
+app.use(express.json()); // Global JSON body parser is the standard practice
 
-// Serve uploaded files statically
+// Static file serving
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes

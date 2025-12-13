@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
+    // --- All State Hooks ---
     const [cycleHistory, setCycleHistory] = useState([]);
     const [dDay, setDDay] = useState('?');
     const [predictedStartDate, setPredictedStartDate] = useState('----.--.--');
@@ -8,7 +9,9 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
     const [showCycleModal, setShowCycleModal] = useState(false);
     const [startDateInput, setStartDateInput] = useState('');
     const [endDateInput, setEndDateInput] = useState('');
+    const [editingCycleId, setEditingCycleId] = useState(null);
 
+    // --- Effects ---
     useEffect(() => {
         if (selectedCycleStartDate) {
             setStartDateInput(selectedCycleStartDate);
@@ -39,6 +42,7 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
             }
         } catch (error) {
             console.error("Error fetching cycle history:", error);
+            // Reset state on error
             setCycleHistory([]);
             setDDay('?');
             setPredictedStartDate('----.--.--');
@@ -50,35 +54,38 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
         fetchCycleHistory();
     }, [userId]);
 
+    // --- Helper Functions ---
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toISOString().split('T')[0];
+    };
+
+    const resetForm = () => {
+        setStartDateInput('');
+        setEndDateInput('');
+        setEditingCycleId(null);
+    };
+
+    // --- Handlers ---
     const handleSaveCycleRecord = async () => {
-        if (!userId) {
-            alert('로그인이 필요합니다.');
-            return;
-        }
-        if (!startDateInput || !endDateInput) {
-            alert('시작일과 종료일을 모두 선택해주세요.');
-            return;
-        }
-        if (new Date(startDateInput) > new Date(endDateInput)) {
-            alert('종료일은 시작일보다 빠를 수 없습니다.');
-            return;
-        }
+        if (!userId) return alert('로그인이 필요합니다.');
+        if (!startDateInput || !endDateInput) return alert('시작일과 종료일을 모두 선택해주세요.');
+        if (new Date(startDateInput) > new Date(endDateInput)) return alert('종료일은 시작일보다 빠를 수 없습니다.');
 
         try {
             const res = await fetch('http://localhost:3001/api/healthcare/cycles', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId, startDate: startDateInput, endDate: endDateInput }),
             });
+            const responseData = await res.json();
             if (res.ok) {
                 alert('기록이 추가되었습니다.');
-                setStartDateInput('');
-                setEndDateInput('');
-                fetchCycleHistory(); // Refresh data
+                resetForm();
+                fetchCycleHistory();
             } else {
-                alert('기록 추가에 실패했습니다.');
+                alert(responseData.error ? `서버 오류: ${responseData.error}` : '기록 추가에 실패했습니다.');
             }
         } catch (error) {
             console.error("Error saving cycle record:", error);
@@ -86,7 +93,43 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
         }
     };
 
+    const handleUpdateCycleRecord = async () => {
+        if (!editingCycleId) return;
+        if (!startDateInput || !endDateInput) return alert('시작일과 종료일을 모두 선택해주세요.');
+        if (new Date(startDateInput) > new Date(endDateInput)) return alert('종료일은 시작일보다 빠를 수 없습니다.');
+
+        try {
+            const res = await fetch(`http://localhost:3001/api/healthcare/cycles/${editingCycleId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ startDate: startDateInput, endDate: endDateInput }),
+            });
+            const responseData = await res.json();
+            if (res.ok) {
+                alert('기록이 수정되었습니다.');
+                resetForm();
+                fetchCycleHistory();
+            } else {
+                alert(responseData.error ? `서버 오류: ${responseData.error}` : '기록 수정에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error("Error updating cycle record:", error);
+            alert('기록 수정 중 오류가 발생했습니다.');
+        }
+    };
+
+    const handleEditClick = (record) => {
+        setEditingCycleId(record.id);
+        setStartDateInput(formatDate(record.start_date));
+        setEndDateInput(formatDate(record.end_date));
+    };
+
+    const handleCancelEdit = () => {
+        resetForm();
+    };
+
     const handleDeleteCycle = async (cycleId) => {
+        if (!cycleId) return alert('삭제할 항목의 ID가 올바르지 않습니다.');
         if (!window.confirm('이 기록을 삭제하시겠습니까?')) return;
         try {
             const res = await fetch(`http://localhost:3001/api/healthcare/cycles/${cycleId}`, {
@@ -94,7 +137,7 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
             });
             if (res.ok) {
                 alert('기록이 삭제되었습니다.');
-                fetchCycleHistory(); // Refresh data
+                fetchCycleHistory();
             } else {
                 alert('기록 삭제에 실패했습니다.');
             }
@@ -104,12 +147,7 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
         }
     };
 
-    const formatDate = (dateString) => {
-        if (!dateString) return '';
-        const date = new Date(dateString);
-        return date.toISOString().split('T')[0];
-    }
-
+    // --- Render JSX ---
     return (
         <>
             <div className="dashboard-section healthcare-item">
@@ -137,7 +175,6 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
                 </div>
             </div>
 
-            {/* Menstrual Cycle Edit Modal */}
             {showCycleModal && (
                 <div id="cycle-edit-modal" className="modal-overlay" style={{display: 'flex'}}>
                     <div className="modal-content">
@@ -162,7 +199,14 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
                                 value={endDateInput} 
                                 onChange={(e) => setEndDateInput(e.target.value)} 
                             />
-                            <button id="save-cycle-record-btn" onClick={handleSaveCycleRecord}>기록 추가</button>
+                            {editingCycleId ? (
+                                <>
+                                    <button onClick={handleUpdateCycleRecord}>기록 저장</button>
+                                    <button onClick={handleCancelEdit}>취소</button>
+                                </>
+                            ) : (
+                                <button onClick={handleSaveCycleRecord}>기록 추가</button>
+                            )}
                         </div>
                         <hr />
                         <h4>과거 기록</h4>
@@ -171,8 +215,11 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
                                 <ul>
                                     {cycleHistory.map(record => (
                                         <li key={record.id}>
-                                            {formatDate(record.start_date)} ~ {formatDate(record.end_date)}
-                                            <button className="delete-item-btn" onClick={() => handleDeleteCycle(record.id)}>x</button>
+                                            <span>{formatDate(record.start_date)} ~ {formatDate(record.end_date)}</span>
+                                            <div className="record-actions">
+                                                <button className="edit-record-btn" onClick={() => handleEditClick(record)}>수정</button>
+                                                <button className="delete-record-btn" onClick={() => handleDeleteCycle(record.id)}>삭제</button> {/* Changed class name here */}
+                                            </div>
                                         </li>
                                     ))}
                                 </ul>
@@ -181,7 +228,7 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
                             )}
                         </div>
                         <div className="modal-actions">
-                            <button id="close-cycle-modal-btn" onClick={() => setShowCycleModal(false)}>닫기</button>
+                            <button id="close-cycle-modal-btn" onClick={() => { setShowCycleModal(false); resetForm(); }}>닫기</button>
                         </div>
                     </div>
                 </div>

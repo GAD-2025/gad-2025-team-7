@@ -3,19 +3,13 @@ import './Home.css';
 import './SlideOutNav.css';
 import Calendar from './Calendar';
 import Dashboard from './Dashboard';
-// Profile component is no longer used directly here
 import SlideOutNav from './SlideOutNav';
+import { useData } from './DataContext'; // Import useData
 
 const Home = () => {
-    const getLocalDateString = (date) => {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-    };
-
+    const { selectedDate, setSelectedDate } = useData(); // Get date from context
+    
     const [nav, setNav] = useState(0);
-    const [selectedDate, setSelectedDate] = useState(getLocalDateString(new Date()));
     const [dashboardEvents, setDashboardEvents] = useState([]);
     const [calendarEvents, setCalendarEvents] = useState([]);
     const [todos, setTodos] = useState([]);
@@ -34,8 +28,6 @@ const Home = () => {
     useEffect(() => {
         if (!userId || !selectedDate) return;
         
-        // Removed user profile fetch, now handled by context
-
         fetch(`http://localhost:3001/api/events/${userId}/${selectedDate}`, { cache: 'no-cache' })
             .then(res => res.ok ? res.json() : Promise.reject(new Error('Failed to fetch day events')))
             .then(setDashboardEvents)
@@ -118,12 +110,9 @@ const Home = () => {
             <button className="bookmark-btn" onClick={() => setIsSlideOutNavOpen(true)}></button>
             <SlideOutNav isOpen={isSlideOutNavOpen} onClose={() => setIsSlideOutNavOpen(false)} />
             
-            {/* Removed the old profile settings button and modal */}
             <Calendar
                 nav={nav}
                 setNav={setNav}
-                selectedDate={selectedDate}
-                setSelectedDate={setSelectedDate}
                 events={calendarEvents}
                 isDragging={isDragging}
                 dragStartDayString={dragStartDayString}

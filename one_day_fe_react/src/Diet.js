@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import { useData } from './DataContext'; // Import the new hook
 
-// --- Helper Components ---
+// --- Helper Components (These can remain as they are, they are stateless UI) ---
 
-const AutocompletePortal = ({ results, position, onSelect, containerRef }) => {
+const AutocompletePortal = ({ results, position, onSelect }) => {
     if (!results || results.length === 0 || !position) {
         return null;
     }
@@ -32,7 +33,7 @@ const CategoryMenu = ({ cardId, onSelect, onClose }) => {
     const categories = ['아침', '점심', '저녁', '간식'];
     const menuRef = useRef(null);
 
-    useEffect(() => {
+    React.useEffect(() => {
         const handleClickOutside = (event) => {
             if (menuRef.current && !menuRef.current.contains(event.target)) {
                 onClose();
@@ -55,20 +56,32 @@ const CategoryMenu = ({ cardId, onSelect, onClose }) => {
     );
 };
 
-// --- Main Diet Component ---
+// --- Main Diet Component (Refactored) ---
 
-const Diet = ({ setDietTotals, userId, selectedDate }) => {
-    const [mealCards, setMealCards] = useState([]);
+const Diet = () => {
+    // Get state and functions from the context
+    const { 
+        mealCards,
+        addMealCard,
+        deleteMealCard,
+        handleCategoryChange,
+        addFoodToCard,
+        removeFoodFromCard,
+        updateFoodQty,
+        setSearchQuery
+    } = useData();
+
+    // Local UI state can remain here
     const [openMenuCardId, setOpenMenuCardId] = useState(null);
-
     const [portalResults, setPortalResults] = useState([]);
     const [portalPosition, setPortalPosition] = useState(null);
     const [activeCardId, setActiveCardId] = useState(null);
-    const activeSearchInputRef = useRef(null);
     
+    // Refs for DOM elements
+    const activeSearchInputRef = useRef(null);
     const containerRef = useRef(null);
-    const cardRefs = useRef(new Map());
 
+    // --- Debounced search logic (can stay in this component) ---
     function debounce(func, delay) {
         let timeout;
         return function(...args) {
@@ -76,62 +89,6 @@ const Diet = ({ setDietTotals, userId, selectedDate }) => {
             timeout = setTimeout(() => func.apply(this, args), delay);
         };
     }
-
-    const debouncedSave = useRef(debounce((cards) => saveMeals(cards), 2000)).current;
-
-    async function saveMeals(currentMealCards) {
-        if (!userId || !selectedDate) return;
-        try {
-            await fetch('http://localhost:3001/api/meals', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId, date: selectedDate, mealCards: currentMealCards }),
-            });
-        } catch (error) { console.error('Error saving meals:', error); }
-    }
-
-    useEffect(() => {
-        const fetchMeals = async () => {
-            if (!userId || !selectedDate) return;
-            try {
-                const res = await fetch(`http://localhost:3001/api/meals/${userId}/${selectedDate}`);
-                const data = await res.json();
-                // Fix: The API returns a direct array, not an object with a mealCards property.
-                if (data && data.length > 0) {
-                    setMealCards(data.map(c => ({...c, searchQuery: ''}))); // Ensure searchQuery is initialized
-                } else {
-                    setMealCards([{ id: Date.now(), category: '아침', foods: [], searchQuery: '' }]);
-                }
-            } catch (error) {
-                console.error("Error fetching meals:", error);
-                setMealCards([{ id: Date.now(), category: '아침', foods: [], searchQuery: '' }]);
-            }
-        };
-        fetchMeals();
-    }, [userId, selectedDate]);
-    
-    useEffect(() => {
-        cardRefs.current = new Map();
-        mealCards.forEach(card => {
-            cardRefs.current.set(card.id, React.createRef());
-        });
-    }, [mealCards]);
-
-    useEffect(() => {
-        const totals = { calories: 0, carbs: 0, protein: 0, fat: 0 };
-        mealCards.forEach(card => {
-            card.foods.forEach(food => {
-                totals.calories += (food.calories || 0) * (food.qty || 1);
-                totals.carbs += (food.carbs || 0) * (food.qty || 1);
-                totals.protein += (food.protein || 0) * (food.qty || 1);
-                totals.fat += (food.fat || 0) * (food.qty || 1);
-            });
-        });
-        setDietTotals(totals);
-        if (mealCards.length > 0) {
-            debouncedSave(mealCards);
-        }
-    }, [mealCards, setDietTotals, debouncedSave]);
 
     const searchFoods = useCallback(debounce(async (query) => {
         if (query.length > 0 && activeSearchInputRef.current) {
@@ -155,31 +112,26 @@ const Diet = ({ setDietTotals, userId, selectedDate }) => {
         }
     }, 300), []);
 
+    // --- Event Handlers ---
+
     const handleSearchChange = (cardId, query) => {
-        setMealCards(cards => cards.map(card => card.id === cardId ? { ...card, searchQuery: query } : card));
-        setActiveCardId(cardId); // Ensure active card is set
+        setSearchQuery(cardId, query); // Update context state
+        setActiveCardId(cardId);
         searchFoods(query);
     };
-
+    
     const handleSearchFocus = (e, cardId) => {
         activeSearchInputRef.current = e.target;
         setActiveCardId(cardId);
-        // If there's already a query, trigger a search immediately on focus
         const card = mealCards.find(c => c.id === cardId);
         if (card && card.searchQuery) {
             handleSearchChange(cardId, card.searchQuery);
         }
     };
     
-    const addFoodToCard = (food) => {
+    const handleAddFood = (food) => {
         if (activeCardId) {
-            setMealCards(cards => cards.map(card => {
-                if (card.id === activeCardId) {
-                    const newFoods = [...card.foods, { ...food, qty: 1, id: Date.now() }];
-                    return { ...card, foods: newFoods, searchQuery: '' };
-                }
-                return card;
-            }));
+            addFoodToCard(activeCardId, food); // Call context function
         }
         setPortalResults([]);
         setPortalPosition(null);
@@ -188,69 +140,31 @@ const Diet = ({ setDietTotals, userId, selectedDate }) => {
         }
         activeSearchInputRef.current = null;
     };
-
-    const addMealCard = () => {
-        const newCard = { id: Date.now(), category: '점심', foods: [], searchQuery: '' };
-        setMealCards(prev => [...prev, newCard]);
+    
+    const handleAddMealCard = () => {
+        addMealCard();
         setTimeout(() => {
             containerRef.current?.scrollTo({ left: containerRef.current.scrollWidth, behavior: 'smooth' });
         }, 100);
     };
-    
-    const handleCategoryChange = (cardId, newCategory) => {
-        setMealCards(cards => cards.map(card => card.id === cardId ? { ...card, category: newCategory } : card));
-        setOpenMenuCardId(null);
-    };
 
-    const handleCardClick = (cardId) => {
-        const cardRef = cardRefs.current.get(cardId);
-        if (cardRef?.current) {
-            cardRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-        }
-    };
-
-     const deleteMealCard = (cardId) => {
-        if (mealCards.length > 1) {
-            setMealCards(mealCards.filter(card => card.id !== cardId));
-        } else {
-            alert('마지막 식단 칸은 삭제할 수 없습니다.');
-        }
-    };
-
-     const removeFoodFromCard = (cardId, foodId) => {
-        setMealCards(cards => cards.map(card => card.id === cardId ? { ...card, foods: card.foods.filter(f => f.id !== foodId) } : card));
-    };
-    
-    const updateFoodQty = (cardId, foodId, qty) => {
-        setMealCards(cards => cards.map(card => {
-            if (card.id === cardId) {
-                const newFoods = card.foods.map(food => food.id === foodId ? { ...food, qty: parseFloat(qty) || 1 } : food);
-                return { ...card, foods: newFoods };
-            }
-            return card;
-        }));
-    };
-    
     return (
         <>
             <AutocompletePortal 
                 results={portalResults} 
                 position={portalPosition} 
-                onSelect={addFoodToCard}
-                containerRef={containerRef}
+                onSelect={handleAddFood}
             />
             <div className="dashboard-section">
                 <div className="section-header">
                     <h3>식단 칼로리</h3>
-                     <button className="add-card-btn" onClick={addMealCard}>+</button>
+                     <button className="add-card-btn" onClick={handleAddMealCard}>+</button>
                 </div>
                 <div id="meal-cards-container" ref={containerRef} className="section-content horizontal-scroll">
                     {mealCards.map((card) => (
                         <div 
                             key={card.id} 
                             className="meal-card"
-                            ref={cardRefs.current.get(card.id)}
-                            onClick={() => handleCardClick(card.id)}
                         >
                              <div className="meal-card-header">
                                  <div className="meal-card-title-container" onClick={(e) => e.stopPropagation()}>

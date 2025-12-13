@@ -1,11 +1,10 @@
 import React from 'react';
 import './Calendar.css';
+import { useData } from './DataContext'; // Import the hook
 
 const Calendar = ({
     nav,
     setNav,
-    selectedDate,
-    setSelectedDate,
     events,
     // New props for drag selection
     isDragging,
@@ -15,6 +14,9 @@ const Calendar = ({
     onDragMove,
     onDragEnd,
 }) => {
+    // Get date state and updater from the context
+    const { selectedDate, setSelectedDate } = useData();
+
     const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
 
     const dt = new Date();
@@ -45,7 +47,6 @@ const Calendar = ({
         }
     }
 
-    // Function to check if a date is within the dragged range
     const isDateInDraggedRange = (currentDayString) => {
         if (!dragStartDayString || !dragEndDayString) return false;
 
@@ -53,12 +54,10 @@ const Calendar = ({
         const end = new Date(dragEndDayString);
         const current = new Date(currentDayString);
 
-        // Normalize dates to start of day for accurate comparison
         start.setHours(0, 0, 0, 0);
         end.setHours(0, 0, 0, 0);
         current.setHours(0, 0, 0, 0);
 
-        // Ensure minDate is always before maxDate
         const minDate = start < end ? start : end;
         const maxDate = start < end ? end : start;
 
