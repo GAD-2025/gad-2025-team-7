@@ -135,7 +135,8 @@ const Home = () => {
             <Dashboard
                 userId={userId}
                 selectedDate={selectedDate}
-                events={dashboardEvents}
+                dayEvents={dashboardEvents}
+                monthEvents={calendarEvents}
                 todos={todos}
                 onDataUpdate={onDataUpdate}
                 showEventModal={showEventModal}

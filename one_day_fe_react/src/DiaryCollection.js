@@ -35,6 +35,16 @@ const DiaryCollection = () => {
         };
 
         fetchDiaries();
+
+        const handleFocus = () => {
+            fetchDiaries();
+        };
+
+        window.addEventListener('focus', handleFocus);
+
+        return () => {
+            window.removeEventListener('focus', handleFocus);
+        };
     }, [profile.userId]); // Re-run effect when userId changes
 
     const displayedDiaries = useMemo(() => {

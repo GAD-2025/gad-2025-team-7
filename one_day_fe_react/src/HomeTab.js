@@ -7,7 +7,8 @@ import Template from './Template';
 const HomeTab = ({
     userId,
     selectedDate,
-    events,
+    dayEvents,
+    monthEvents,
     todos,
     onDataUpdate,
     // New props for event modal from drag selection
@@ -72,7 +73,7 @@ const HomeTab = ({
 
     useEffect(() => {
         const today = new Date(selectedDate);
-        const upcomingEvents = events
+        const upcomingEvents = monthEvents
             .filter(e => new Date(e.date) >= today && e.setReminder) // Filter by setReminder
             .sort((a, b) => new Date(a.date) - new Date(b.date))
             .slice(0, 6);
@@ -83,7 +84,7 @@ const HomeTab = ({
             return { ...event, dDay: diffDays };
         });
         setReminders(reminderData);
-    }, [selectedDate, events]);
+    }, [selectedDate, monthEvents]);
 
         useEffect(() => {
 
@@ -326,7 +327,7 @@ const HomeTab = ({
 
                         </div>
 
-                        <Schedule selectedDate={selectedDate} events={events} onDataUpdate={onDataUpdate} />
+                        <Schedule selectedDate={selectedDate} events={dayEvents} onDataUpdate={onDataUpdate} />
 
                     </div>
 
