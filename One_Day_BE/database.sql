@@ -21,7 +21,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 -- GTID state at the beginning of the backup 
 --
 
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '618bfa50-c5c4-11f0-b0e8-eaeeecd2573f:1-104';
+SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '618bfa50-c5c4-11f0-b0e8-eaeeecd2573f:1-109';
 
 --
 -- Table structure for table `diaries`
@@ -43,7 +43,7 @@ CREATE TABLE `diaries` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`date`),
   CONSTRAINT `diaries_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -52,7 +52,7 @@ CREATE TABLE `diaries` (
 
 LOCK TABLES `diaries` WRITE;
 /*!40000 ALTER TABLE `diaries` DISABLE KEYS */;
-INSERT INTO `diaries` VALUES (1,1,'2025-12-11','','/uploads/1765429985561_1.png','[]','[]','2025-12-11 05:10:16','2025-12-11 05:13:05'),(4,1,'2025-12-12','','/uploads/1765552463704_1.png','[{\"x\": 51, \"y\": 50, \"id\": 1765549432729, \"color\": \"black\", \"value\": \"New Text\"}]','[]','2025-12-12 14:20:56','2025-12-12 15:14:23'),(12,1,'2025-12-10','','/uploads/1765550984909_1.png','[]','[]','2025-12-12 14:23:15','2025-12-12 14:49:44'),(30,1,'2025-12-13','','/uploads/1765552195363_1.png','[]','[]','2025-12-12 15:09:55','2025-12-12 15:09:55');
+INSERT INTO `diaries` VALUES (1,1,'2025-12-11','','/uploads/1765429985561_1.png','[]','[]','2025-12-11 05:10:16','2025-12-11 05:13:05'),(4,1,'2025-12-12','','/uploads/1765552463704_1.png','[{\"x\": 51, \"y\": 50, \"id\": 1765549432729, \"color\": \"black\", \"value\": \"New Text\"}]','[]','2025-12-12 14:20:56','2025-12-12 15:14:23'),(12,1,'2025-12-10','','/uploads/1765550984909_1.png','[]','[]','2025-12-12 14:23:15','2025-12-12 14:49:44'),(30,1,'2025-12-13','','/uploads/1765631429395_1.png','[]','[]','2025-12-12 15:09:55','2025-12-13 13:10:29');
 /*!40000 ALTER TABLE `diaries` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -76,7 +76,7 @@ CREATE TABLE `events` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `events_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -85,6 +85,7 @@ CREATE TABLE `events` (
 
 LOCK TABLES `events` WRITE;
 /*!40000 ALTER TABLE `events` DISABLE KEYS */;
+INSERT INTO `events` VALUES (1,1,'2025-12-12','s',NULL,'personal',0,0,'2025-12-13 13:04:09'),(2,1,'2025-12-12','s',NULL,'personal',0,0,'2025-12-13 13:04:14'),(3,1,'2025-12-13','s',NULL,'personal',0,0,'2025-12-13 13:04:14'),(4,1,'2025-12-14','s',NULL,'personal',0,0,'2025-12-13 13:04:14'),(5,1,'2025-12-15','s',NULL,'personal',0,0,'2025-12-13 13:04:14'),(6,1,'2025-12-16','s',NULL,'personal',0,0,'2025-12-13 13:04:14'),(7,1,'2025-12-17','s',NULL,'personal',0,0,'2025-12-13 13:04:14'),(8,1,'2025-12-18','s',NULL,'personal',0,0,'2025-12-13 13:04:14'),(9,1,'2025-12-19','s',NULL,'personal',0,0,'2025-12-13 13:04:14'),(10,1,'2025-12-12','d',NULL,'personal',0,0,'2025-12-13 13:04:20'),(11,1,'2025-12-13','d',NULL,'personal',0,0,'2025-12-13 13:04:20'),(12,1,'2025-12-14','d',NULL,'personal',0,0,'2025-12-13 13:04:20'),(13,1,'2025-12-15','d',NULL,'personal',0,0,'2025-12-13 13:04:20'),(14,1,'2025-12-16','d',NULL,'personal',0,0,'2025-12-13 13:04:20'),(15,1,'2025-12-17','d',NULL,'personal',0,0,'2025-12-13 13:04:20'),(16,1,'2025-12-18','d',NULL,'personal',0,0,'2025-12-13 13:04:20'),(17,1,'2025-12-19','d',NULL,'personal',0,0,'2025-12-13 13:04:20'),(18,1,'2025-12-20','d',NULL,'personal',0,0,'2025-12-13 13:04:20');
 /*!40000 ALTER TABLE `events` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -226,7 +227,7 @@ CREATE TABLE `todos` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `todos_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -235,6 +236,7 @@ CREATE TABLE `todos` (
 
 LOCK TABLES `todos` WRITE;
 /*!40000 ALTER TABLE `todos` DISABLE KEYS */;
+INSERT INTO `todos` VALUES (1,1,'2025-12-12','df',0,'2025-12-13 13:04:24');
 /*!40000 ALTER TABLE `todos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -278,4 +280,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-12-13 22:01:28
+-- Dump completed on 2025-12-13 22:14:53
