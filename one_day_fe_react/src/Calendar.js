@@ -16,11 +16,13 @@ const Calendar = ({
     onDragEnd,
 }) => {
     // Get date state and updater from the context
-    const { selectedDate, setSelectedDate } = useData();
+    const { selectedDate, setSelectedDate, getDataForDate } = useData();
 
     // State for the popover
     const [popoverAnchorEl, setPopoverAnchorEl] = useState(null);
     const [popoverDate, setPopoverDate] = useState(null);
+    const [summaryData, setSummaryData] = useState(null);
+    const [isLoadingSummary, setIsLoadingSummary] = useState(false);
 
     const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -36,15 +38,34 @@ const Calendar = ({
     const dateString = firstDayOfMonth.toLocaleDateString('ko-kr', { weekday: 'long' });
     const paddingDays = weekdays.indexOf(dateString.charAt(0));
 
-    const handleDateClick = (event, dayInfo) => {
+    const handleDateClick = async (event, dayInfo) => {
+        // Set UI state immediately
         setSelectedDate(dayInfo.dayString);
         setPopoverDate(dayInfo.dayString);
         setPopoverAnchorEl(event.currentTarget);
+        setIsLoadingSummary(true);
+        setSummaryData(null); // Clear old data
+
+        // Calculate completed events count
+        const todaysEvents = events.filter(e => e.date === dayInfo.dayString);
+        const completedEventsCount = todaysEvents.filter(e => e.completed).length;
+
+        // Fetch steps data
+        const { steps } = await getDataForDate(dayInfo.dayString);
+
+        // Set the combined data
+        setSummaryData({
+            steps: steps,
+            completedEvents: completedEventsCount,
+            totalEvents: todaysEvents.length,
+        });
+        setIsLoadingSummary(false);
     };
 
     const handleClosePopover = () => {
         setPopoverAnchorEl(null);
         setPopoverDate(null);
+        setSummaryData(null);
     };
 
     const days = [];
@@ -124,6 +145,8 @@ const Calendar = ({
                     date={popoverDate}
                     anchorEl={popoverAnchorEl}
                     onClose={handleClosePopover}
+                    summaryData={summaryData}
+                    isLoading={isLoadingSummary}
                 />
             )}
         </div>

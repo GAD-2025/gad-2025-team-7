@@ -1,14 +1,14 @@
 import React from 'react';
 import './DaySummaryPopover.css';
 
-const DaySummaryPopover = ({ date, anchorEl, onClose }) => {
+const DaySummaryPopover = ({ date, anchorEl, onClose, summaryData, isLoading }) => {
     if (!anchorEl) {
         return null;
     }
 
     const rect = anchorEl.getBoundingClientRect();
     const style = {
-        top: `${rect.bottom + window.scrollY}px`,
+        top: `${rect.bottom + window.scrollY + 5}px`, // Add a small gap
         left: `${rect.left + window.scrollX}px`,
     };
 
@@ -16,12 +16,26 @@ const DaySummaryPopover = ({ date, anchorEl, onClose }) => {
         <div className="day-summary-popover-overlay" onClick={onClose}>
             <div className="day-summary-popover" style={style} onClick={(e) => e.stopPropagation()}>
                 <div className="day-summary-header">
-                    <h3>하루 요약</h3>
+                    <h3>하루 요약 ({date})</h3>
                     <button onClick={onClose} className="close-btn">&times;</button>
                 </div>
                 <div className="day-summary-content">
-                    <p>선택된 날짜: {date}</p>
-                    {/* 여기에 해당 날짜의 요약 내용을 추가합니다. */}
+                    {isLoading ? (
+                        <p>로딩 중...</p>
+                    ) : summaryData ? (
+                        <div className="summary-grid">
+                            <div className="summary-item">
+                                <span className="summary-label">👟 걸음수</span>
+                                <span className="summary-value">{summaryData.steps.toLocaleString()}</span>
+                            </div>
+                            <div className="summary-item">
+                                <span className="summary-label">✅ 일정 완료</span>
+                                <span className="summary-value">{summaryData.completedEvents} / {summaryData.totalEvents}</span>
+                            </div>
+                        </div>
+                    ) : (
+                        <p>데이터를 불러올 수 없습니다.</p>
+                    )}
                 </div>
             </div>
         </div>
