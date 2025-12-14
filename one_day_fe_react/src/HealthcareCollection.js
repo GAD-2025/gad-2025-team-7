@@ -1,50 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import React, { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useData } from './DataContext';
+
+// Helper function to get the last 7 days
+const getLastSevenDays = () => {
+    const dates = [];
+    for (let i = 0; i < 7; i++) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        dates.push(d.toISOString().split('T')[0]);
+    }
+    return dates.reverse(); // Return in chronological order
+};
 
 const HealthcareCollection = () => {
-    const [weeklyData, setWeeklyData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const navigate = useNavigate(); // Hook for navigation
+    const navigate = useNavigate();
+    const { mealsByDate, pedometerDataByDate } = useData();
 
-    const userId = localStorage.getItem('userId');
-    const endDate = new Date().toISOString().split('T')[0]; // Today's date as end date for the week
+    // useMemo will recalculate the weekly summary only when the underlying data changes
+    const weeklyData = useMemo(() => {
+        const lastSevenDays = getLastSevenDays();
 
-    useEffect(() => {
-        const fetchWeeklySummary = async () => {
-            if (!userId) {
-                setError("로그인이 필요합니다.");
-                setLoading(false);
-                return;
-            }
-            setLoading(true);
-            setError(null);
-            try {
-                const response = await fetch(`http://localhost:3001/api/healthcare/weekly_summary/${userId}/${endDate}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                setWeeklyData(data);
-            } catch (err) {
-                console.error("Failed to fetch weekly summary:", err);
-                setError("주간 요약 데이터를 불러오는데 실패했습니다.");
-            } finally {
-                setLoading(false);
-            }
-        };
+        return lastSevenDays.map(date => {
+            // Get steps for the day
+            const steps = pedometerDataByDate[date]?.steps || 0;
 
-        fetchWeeklySummary();
-    }, [userId, endDate]);
+            // Calculate total consumed calories for the day
+            const mealCards = mealsByDate[date] || [];
+            const totalConsumedCalories = mealCards.reduce((total, card) => {
+                return total + card.foods.reduce((cardTotal, food) => {
+                    return cardTotal + (food.calories || 0) * (food.qty || 1);
+                }, 0);
+            }, 0);
+            
+            return {
+                date: date,
+                steps: steps,
+                caloriesBurned: Math.round(steps * 0.04), // 1 step = 0.04 kcal
+                totalConsumedCalories: Math.round(totalConsumedCalories)
+            };
+        });
+    }, [mealsByDate, pedometerDataByDate]);
 
-    if (loading) {
-        return <div style={{ padding: '20px' }}>로딩 중...</div>;
-    }
-
-    if (error) {
-        return <div style={{ padding: '20px', color: 'red' }}>{error}</div>;
-    }
-
+    // This component no longer needs its own loading or error state,
+    // as it's just a view of the already-loaded (or loading) data in the context.
+    
     return (
         <div style={{ padding: '20px' }}>
             <button onClick={() => navigate('/home')} style={{ marginBottom: '20px', padding: '10px 15px', cursor: 'pointer' }}>
@@ -64,11 +64,10 @@ const HealthcareCollection = () => {
                             <p>소모 칼로리: {day.caloriesBurned} kcal</p>
                             <p>총 섭취 칼로리: {day.totalConsumedCalories} kcal</p>
                             
-                            {/* Simple Bar Chart for illustration */}
                             <div style={{ display: 'flex', alignItems: 'flex-end', height: '100px', borderBottom: '1px solid #eee', marginTop: '10px' }}>
                                 <div style={{ 
                                     width: '30%', 
-                                    height: `${(day.steps / 10000) * 100}%`, /* Max 10000 steps for 100% height */
+                                    height: `${Math.min(100, (day.steps / 10000) * 100)}%`, 
                                     backgroundColor: 'skyblue', 
                                     marginRight: '5%', 
                                     display: 'flex', 
@@ -79,7 +78,7 @@ const HealthcareCollection = () => {
                                 }}>{day.steps}</div>
                                 <div style={{ 
                                     width: '30%', 
-                                    height: `${(day.totalConsumedCalories / 2500) * 100}%`, /* Max 2500 kcal for 100% height */
+                                    height: `${Math.min(100, (day.totalConsumedCalories / 2500) * 100)}%`, 
                                     backgroundColor: 'lightcoral', 
                                     marginRight: '5%',
                                     display: 'flex', 
@@ -87,10 +86,10 @@ const HealthcareCollection = () => {
                                     justifyContent: 'center',
                                     color: '#fff',
                                     fontSize: '0.8em'
-                                }}>{day.totalConsumedCalories}</div>
+                                }}>{Math.round(day.totalConsumedCalories)}</div>
                                 <div style={{ 
                                     width: '30%', 
-                                    height: `${(day.caloriesBurned / 500) * 100}%`, /* Max 500 kcal for 100% height */
+                                    height: `${Math.min(100, (day.caloriesBurned / 500) * 100)}%`, 
                                     backgroundColor: 'lightgreen', 
                                     display: 'flex', 
                                     alignItems: 'flex-end', 

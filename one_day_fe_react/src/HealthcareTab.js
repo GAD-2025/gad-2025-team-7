@@ -2,16 +2,12 @@ import React, { useState } from 'react';
 import CyclePrediction from './CyclePrediction';
 import Pedometer from './Pedometer';
 import Diet from './Diet';
-import { useData } from './DataContext'; // Import the new hook
+import { useData } from './DataContext';
 
 const HealthcareTab = ({ userId }) => {
-    // Get the dietTotals from the shared context
     const { dietTotals } = useData();
-
-    // This state is local to this component and seems fine to keep here.
     const [selectedCycleStartDate, setSelectedCycleStartDate] = useState(null); 
 
-    // Recommended values can also stay here as they are constants for UI calculation.
     const defaultRecommendedCalories = 2000;
     const recommendedCarbs = Math.round(defaultRecommendedCalories * 0.55 / 4);
     const recommendedProtein = Math.round(defaultRecommendedCalories * 0.20 / 4);
@@ -21,10 +17,9 @@ const HealthcareTab = ({ userId }) => {
         <div id="healthcare-tab" className="dash-tab-content active">
             <div className="healthcare-row">
                 <CyclePrediction userId={userId} selectedCycleStartDate={selectedCycleStartDate} />
-                <Pedometer userId={userId} dietTotals={dietTotals} />
+                <Pedometer userId={userId} />
             </div>
             
-            {/* Diet component no longer needs any props, it gets everything from the context */}
             <Diet />
 
             <div className="dashboard-section">

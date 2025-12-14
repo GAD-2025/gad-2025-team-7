@@ -48,7 +48,7 @@ router.get('/cycles/:userId', async (req, res) => {
         const predictedStartDate = new Date(new Date(lastStartDate).setDate(lastStartDate.getDate() + Math.round(avgCycleLength)));
         const predictedEndDate = new Date(new Date(predictedStartDate).setDate(predictedStartDate.getDate() + Math.round(avgDuration - 1)));
         
-        const today = new Date();
+        const today = req.query.relativeDate ? new Date(req.query.relativeDate) : new Date();
         today.setHours(0, 0, 0, 0);
         const dDay = Math.ceil((predictedStartDate - today) / (1000 * 60 * 60 * 24));
 

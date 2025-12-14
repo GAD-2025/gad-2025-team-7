@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useData } from './DataContext'; // Import useData
 
 const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
-    // --- All State Hooks ---
+    // --- Get selectedDate from Context ---
+    const { selectedDate } = useData();
+
+    // --- Component State ---
     const [cycleHistory, setCycleHistory] = useState([]);
     const [dDay, setDDay] = useState('?');
     const [predictedStartDate, setPredictedStartDate] = useState('----.--.--');
@@ -11,17 +15,18 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
     const [endDateInput, setEndDateInput] = useState('');
     const [editingCycleId, setEditingCycleId] = useState(null);
 
-    // --- Effects ---
     useEffect(() => {
         if (selectedCycleStartDate) {
             setStartDateInput(selectedCycleStartDate);
         }
     }, [selectedCycleStartDate]);
 
+    // --- Data Fetching ---
     const fetchCycleHistory = async () => {
         if (!userId) return;
         try {
-            const res = await fetch(`http://localhost:3001/api/healthcare/cycles/${userId}`);
+            // FIX: Pass the selectedDate from the context as a query parameter
+            const res = await fetch(`http://localhost:3001/api/healthcare/cycles/${userId}?relativeDate=${selectedDate}`);
             const data = await res.json();
             if (res.ok && data.history) {
                 setCycleHistory(data.history);
@@ -35,6 +40,7 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
                     setPredictedEndDate('----.--.--');
                 }
             } else {
+                // Reset on failure
                 setCycleHistory([]);
                 setDDay('?');
                 setPredictedStartDate('----.--.--');
@@ -42,7 +48,6 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
             }
         } catch (error) {
             console.error("Error fetching cycle history:", error);
-            // Reset state on error
             setCycleHistory([]);
             setDDay('?');
             setPredictedStartDate('----.--.--');
@@ -50,11 +55,13 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
         }
     };
 
+    // FIX: Re-fetch data whenever the selectedDate from the context changes
     useEffect(() => {
         fetchCycleHistory();
-    }, [userId]);
+    }, [userId, selectedDate]);
 
-    // --- Helper Functions ---
+    // ... (rest of the helper and handler functions remain the same)
+
     const formatDate = (dateString) => {
         if (!dateString) return '';
         const date = new Date(dateString);
@@ -67,7 +74,6 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
         setEditingCycleId(null);
     };
 
-    // --- Handlers ---
     const handleSaveCycleRecord = async () => {
         if (!userId) return alert('로그인이 필요합니다.');
         if (!startDateInput || !endDateInput) return alert('시작일과 종료일을 모두 선택해주세요.');
@@ -147,7 +153,6 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
         }
     };
 
-    // --- Render JSX ---
     return (
         <>
             <div className="dashboard-section healthcare-item">
@@ -218,7 +223,7 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
                                             <span>{formatDate(record.start_date)} ~ {formatDate(record.end_date)}</span>
                                             <div className="record-actions">
                                                 <button className="edit-record-btn" onClick={() => handleEditClick(record)}>수정</button>
-                                                <button className="delete-record-btn" onClick={() => handleDeleteCycle(record.id)}>삭제</button> {/* Changed class name here */}
+                                                <button className="delete-record-btn" onClick={() => handleDeleteCycle(record.id)}>삭제</button>
                                             </div>
                                         </li>
                                     ))}

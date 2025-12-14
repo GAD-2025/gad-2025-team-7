@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-router.use(express.json());
 const db = require('../db');
 
-// Create a JSON parsing middleware for the routes that need it.
-const jsonParser = express.json();
+// This needs a body parser. Since the global one in server.js was problematic,
+// and other route files use their own, we will add one here.
+router.use(express.json());
 
 // @route   GET /api/events/range/:userId
 // @desc    Get all events for a user within a date range
@@ -49,7 +49,7 @@ router.get('/:userId/:date', async (req, res) => {
 // @route   POST /api/events
 // @desc    Create a new event or multiple recurring events
 // @access  Private
-router.post('/', jsonParser, async (req, res) => {
+router.post('/', async (req, res) => {
     const {
         userId,
         title,
@@ -70,30 +70,27 @@ router.post('/', jsonParser, async (req, res) => {
         await connection.beginTransaction();
 
         let newEvents = [];
-        if (selectedDays && selectedDays.length > 0) {
-            // Create recurring events for 1 year
-            const start = new Date(startDate);
-            for (let i = 0; i < 365; i++) {
-                const day = new Date(start);
-                day.setDate(day.getDate() + i);
+        const start = new Date(startDate);
+        // FIX: Use the provided endDate for repeating events, or the startDate for single/range events
+        const end = (endDate && endDate.length > 0) ? new Date(endDate) : new Date(startDate);
+        
+        let currentDate = new Date(start);
 
-                if (selectedDays.includes(day.getDay())) {
+        // Loop from start to end date
+        while (currentDate <= end) {
+            // If it's a repeating event, check if the day matches
+            if (selectedDays && selectedDays.length > 0) {
+                if (selectedDays.includes(currentDate.getDay())) {
                     newEvents.push([
                         userId,
-                        day.toISOString().split('T')[0],
+                        currentDate.toISOString().split('T')[0],
                         title,
                         time || null,
                         category || 'personal',
                         setReminder || false
                     ]);
                 }
-            }
-        } else {
-            // Create single or range event
-            const start = new Date(startDate);
-            const end = (endDate && endDate.length > 0) ? new Date(endDate) : new Date(startDate);
-            let currentDate = new Date(start);
-            while (currentDate <= end) {
+            } else { // If not a repeating event, add every day in the range
                 newEvents.push([
                     userId,
                     currentDate.toISOString().split('T')[0],
@@ -102,8 +99,8 @@ router.post('/', jsonParser, async (req, res) => {
                     category || 'personal',
                     setReminder || false
                 ]);
-                currentDate.setDate(currentDate.getDate() + 1);
             }
+            currentDate.setDate(currentDate.getDate() + 1);
         }
 
         if (newEvents.length > 0) {
@@ -126,7 +123,7 @@ router.post('/', jsonParser, async (req, res) => {
 // @route   PUT /api/events/:eventId/complete
 // @desc    Toggle event completion status
 // @access  Private
-router.put('/:eventId/complete', jsonParser, async (req, res) => {
+router.put('/:eventId/complete', async (req, res) => {
     const { eventId } = req.params;
     const { completed } = req.body;
 

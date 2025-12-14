@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import './Calendar.css';
-import { useData } from './DataContext'; // Import the hook
-import DaySummaryPopover from './DaySummaryPopover'; // Import the new popover component
+import { useData } from './DataContext';
+import DaySummaryPopover from './DaySummaryPopover';
 
 const Calendar = ({
     nav,
     setNav,
     events,
-    // New props for drag selection
     isDragging,
     dragStartDayString,
     dragEndDayString,
@@ -15,51 +14,32 @@ const Calendar = ({
     onDragMove,
     onDragEnd,
 }) => {
-    // Get date state and updater from the context
-    const { selectedDate, setSelectedDate, getDataForDate } = useData();
-
-    // State for the popover
+    const { selectedDate, setSelectedDate, pedometerDataByDate } = useData();
     const [popoverAnchorEl, setPopoverAnchorEl] = useState(null);
     const [popoverDate, setPopoverDate] = useState(null);
     const [summaryData, setSummaryData] = useState(null);
-    const [isLoadingSummary, setIsLoadingSummary] = useState(false);
 
     const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
 
-    const dt = new Date();
-    if (nav !== 0) {
-        dt.setMonth(new Date().getMonth() + nav);
-    }
-    const day = dt.getDate();
-    const month = dt.getMonth();
-    const year = dt.getFullYear();
-    const firstDayOfMonth = new Date(year, month, 1);
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const dateString = firstDayOfMonth.toLocaleDateString('ko-kr', { weekday: 'long' });
-    const paddingDays = weekdays.indexOf(dateString.charAt(0));
-
-    const handleDateClick = async (event, dayInfo) => {
-        // Set UI state immediately
+    // --- FINAL, SIMPLIFIED CLICK HANDLER ---
+    const handleDateClick = (event, dayInfo) => {
+        // First, set the globally selected date
         setSelectedDate(dayInfo.dayString);
-        setPopoverDate(dayInfo.dayString);
+        
+        // Then, set the state to show the popover
         setPopoverAnchorEl(event.currentTarget);
-        setIsLoadingSummary(true);
-        setSummaryData(null); // Clear old data
+        setPopoverDate(dayInfo.dayString);
 
-        // Calculate completed events count
+        // Calculate summary data from existing context/props
         const todaysEvents = events.filter(e => e.date === dayInfo.dayString);
         const completedEventsCount = todaysEvents.filter(e => e.completed).length;
+        const steps = pedometerDataByDate[dayInfo.dayString]?.steps || 0;
 
-        // Fetch steps data
-        const { steps } = await getDataForDate(dayInfo.dayString);
-
-        // Set the combined data
         setSummaryData({
             steps: steps,
             completedEvents: completedEventsCount,
             totalEvents: todaysEvents.length,
         });
-        setIsLoadingSummary(false);
     };
 
     const handleClosePopover = () => {
@@ -67,6 +47,17 @@ const Calendar = ({
         setPopoverDate(null);
         setSummaryData(null);
     };
+
+    // --- Calendar Grid Calculation ---
+    const dt = new Date();
+    if (nav !== 0) dt.setMonth(new Date().getMonth() + nav);
+    const day = dt.getDate();
+    const month = dt.getMonth();
+    const year = dt.getFullYear();
+    const firstDayOfMonth = new Date(year, month, 1);
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const dateString = firstDayOfMonth.toLocaleDateString('ko-kr', { weekday: 'long' });
+    const paddingDays = weekdays.indexOf(dateString.charAt(0));
 
     const days = [];
     for (let i = 1; i <= paddingDays + daysInMonth; i++) {
@@ -86,18 +77,12 @@ const Calendar = ({
 
     const isDateInDraggedRange = (currentDayString) => {
         if (!dragStartDayString || !dragEndDayString) return false;
-
         const start = new Date(dragStartDayString);
         const end = new Date(dragEndDayString);
         const current = new Date(currentDayString);
-
-        start.setHours(0, 0, 0, 0);
-        end.setHours(0, 0, 0, 0);
-        current.setHours(0, 0, 0, 0);
-
+        start.setHours(0, 0, 0, 0); end.setHours(0, 0, 0, 0); current.setHours(0, 0, 0, 0);
         const minDate = start < end ? start : end;
         const maxDate = start < end ? end : start;
-
         return current >= minDate && current <= maxDate;
     };
 
@@ -120,9 +105,9 @@ const Calendar = ({
                                 <div
                                     key={index}
                                     className={`date-cell ${dayInfo.isToday ? 'today' : ''} ${dayInfo.isSelected ? 'selected' : ''} ${isInDraggedRange ? 'drag-selected' : ''}`}
-                                    onClick={(e) => handleDateClick(e, dayInfo)}
+                                    onClick={(e) => handleDateClick(e, dayInfo)} // Reverted to simple onClick
                                     onMouseDown={() => onDragStart(dayInfo.dayString)}
-                                    onMouseEnter={() => onDragMove(dayInfo.dayString)}
+                                    onMouseEnter={() => onDragMove(dayInfo.dayString)} // Re-purposed for drag move
                                     onMouseUp={onDragEnd}
                                 >
                                     <div className="date-number">{dayInfo.day}</div>
@@ -144,9 +129,9 @@ const Calendar = ({
                 <DaySummaryPopover
                     date={popoverDate}
                     anchorEl={popoverAnchorEl}
-                    onClose={handleClosePopover}
+                    onClose={handleClosePopover} // The 'x' button and overlay click will close it
                     summaryData={summaryData}
-                    isLoading={isLoadingSummary}
+                    isLoading={!summaryData}
                 />
             )}
         </div>

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useRef, useContext, useCallback } from 'react';
+import React, { createContext, useState, useEffect, useRef, useContext } from 'react';
 import { useProfile } from './ProfileContext';
 
 const DataContext = createContext();
@@ -35,10 +35,8 @@ export const DataProvider = ({ children }) => {
 
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
     
-    // --- CACHING STATES (Initialized from Session Storage) ---
     const [mealsByDate, setMealsByDate] = useState(() => loadStateFromStorage().meals);
     const [pedometerDataByDate, setPedometerDataByDate] = useState(() => loadStateFromStorage().pedometer);
-
     const [dietTotals, setDietTotals] = useState({ calories: 0, carbs: 0, protein: 0, fat: 0 });
     
     // --- DEBOUNCED SAVE FUNCTIONS ---
@@ -76,61 +74,30 @@ export const DataProvider = ({ children }) => {
         } catch (error) { console.error(`Error saving steps for date ${dateToSave}:`, error); }
     }
 
-    // --- NEW ON-DEMAND DATA FETCHER ---
-    const getDataForDate = useCallback(async (date) => {
-        if (!userId || !date) return { steps: 0, meals: [] };
-
-        let steps = pedometerDataByDate[date]?.steps;
-        let meals = mealsByDate[date];
-
-        const promises = [];
-
-        if (steps === undefined) {
-            promises.push(
-                fetch(`http://localhost:3001/api/healthcare/steps/${userId}/${date}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        const fetchedSteps = data.steps || 0;
-                        setPedometerDataByDate(prev => ({ ...prev, [date]: { steps: fetchedSteps } }));
-                        steps = fetchedSteps;
-                    })
-                    .catch(error => {
-                        console.error(`Error fetching steps for ${date}:`, error);
-                        setPedometerDataByDate(prev => ({ ...prev, [date]: { steps: 0 } }));
-                        steps = 0;
-                    })
-            );
-        }
-
-        if (meals === undefined) {
-            promises.push(
-                fetch(`http://localhost:3001/api/meals/${userId}/${date}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        const fetchedMeals = data || [];
-                        setMealsByDate(prev => ({ ...prev, [date]: fetchedMeals }));
-                        meals = fetchedMeals;
-                    })
-                    .catch(error => {
-                        console.error(`Error fetching meals for ${date}:`, error);
-                        setMealsByDate(prev => ({ ...prev, [date]: [] }));
-                        meals = [];
-                    })
-            );
-        }
-
-        await Promise.all(promises);
-
-        return { steps: steps ?? 0, meals: meals ?? [] };
-
-    }, [userId, pedometerDataByDate, mealsByDate]);
-
-
-    // --- DATA FETCHING EFFECT for global selectedDate ---
+    // --- DATA FETCHING EFFECT ---
     useEffect(() => {
         if (!userId || !selectedDate) return;
-        getDataForDate(selectedDate);
-    }, [userId, selectedDate, getDataForDate]);
+
+        if (mealsByDate[selectedDate] === undefined) {
+            fetch(`http://localhost:3001/api/meals/${userId}/${selectedDate}`)
+                .then(res => res.json())
+                .then(data => setMealsByDate(prev => ({ ...prev, [selectedDate]: data || [] })))
+                .catch(error => {
+                    console.error("Error fetching meals:", error);
+                    setMealsByDate(prev => ({ ...prev, [selectedDate]: [] }));
+                });
+        }
+
+        if (pedometerDataByDate[selectedDate] === undefined) {
+            fetch(`http://localhost:3001/api/healthcare/steps/${userId}/${selectedDate}`)
+                .then(res => res.json())
+                .then(data => setPedometerDataByDate(prev => ({ ...prev, [selectedDate]: { steps: data.steps || 0 } })))
+                .catch(error => {
+                    console.error("Error fetching steps:", error);
+                    setPedometerDataByDate(prev => ({ ...prev, [selectedDate]: { steps: 0 } }));
+                });
+        }
+    }, [userId, selectedDate, mealsByDate, pedometerDataByDate]);
 
     // --- SAVE TO STORAGE EFFECT ---
     useEffect(() => {
@@ -177,10 +144,11 @@ export const DataProvider = ({ children }) => {
     // --- CONTEXT VALUE ---
     const value = {
         selectedDate, setSelectedDate,
+        mealsByDate, // Expose full cache
+        pedometerDataByDate, // Expose full cache
         mealCards: mealsByDate[selectedDate] || [],
         dietTotals,
         steps: pedometerDataByDate[selectedDate]?.steps || 0,
-        getDataForDate, // <-- Export the new function
         updateSteps,
         addMealCard, deleteMealCard, handleCategoryChange,
         addFoodToCard, removeFoodFromCard, updateFoodQty, setSearchQuery

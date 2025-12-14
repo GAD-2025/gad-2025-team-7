@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useData } from './DataContext';
 import { useProfile } from './ProfileContext';
 
-const Pedometer = () => {
+const Pedometer = ({ userId }) => {
     // --- Get Data From Contexts ---
     const { steps, updateSteps, dietTotals } = useData();
     const { profile, loading: profileLoading, updateWeight } = useProfile();
