@@ -1,0 +1,11 @@
+.main-background {
+  width: 834px;
+  height: 1194px;
+  /* The Swift code describes a multi-layer background.
+     Layer 1: A semi-transparent color overlay.
+     Layer 0: A gradient that is transformed.
+     This CSS is a simplified interpretation. */
+  background:
+    rgba(241, 244, 247, 0.2),
+    linear-gradient(to left, white, #F1F4F7);
+}
