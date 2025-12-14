@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Calendar.css';
 import { useData } from './DataContext'; // Import the hook
+import DaySummaryPopover from './DaySummaryPopover'; // Import the new popover component
 
 const Calendar = ({
     nav,
@@ -17,6 +18,10 @@ const Calendar = ({
     // Get date state and updater from the context
     const { selectedDate, setSelectedDate } = useData();
 
+    // State for the popover
+    const [popoverAnchorEl, setPopoverAnchorEl] = useState(null);
+    const [popoverDate, setPopoverDate] = useState(null);
+
     const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
 
     const dt = new Date();
@@ -30,6 +35,17 @@ const Calendar = ({
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const dateString = firstDayOfMonth.toLocaleDateString('ko-kr', { weekday: 'long' });
     const paddingDays = weekdays.indexOf(dateString.charAt(0));
+
+    const handleDateClick = (event, dayInfo) => {
+        setSelectedDate(dayInfo.dayString);
+        setPopoverDate(dayInfo.dayString);
+        setPopoverAnchorEl(event.currentTarget);
+    };
+
+    const handleClosePopover = () => {
+        setPopoverAnchorEl(null);
+        setPopoverDate(null);
+    };
 
     const days = [];
     for (let i = 1; i <= paddingDays + daysInMonth; i++) {
@@ -83,7 +99,7 @@ const Calendar = ({
                                 <div
                                     key={index}
                                     className={`date-cell ${dayInfo.isToday ? 'today' : ''} ${dayInfo.isSelected ? 'selected' : ''} ${isInDraggedRange ? 'drag-selected' : ''}`}
-                                    onClick={() => setSelectedDate(dayInfo.dayString)}
+                                    onClick={(e) => handleDateClick(e, dayInfo)}
                                     onMouseDown={() => onDragStart(dayInfo.dayString)}
                                     onMouseEnter={() => onDragMove(dayInfo.dayString)}
                                     onMouseUp={onDragEnd}
@@ -102,6 +118,14 @@ const Calendar = ({
                     })}
                 </div>
             </div>
+
+            {popoverAnchorEl && (
+                <DaySummaryPopover
+                    date={popoverDate}
+                    anchorEl={popoverAnchorEl}
+                    onClose={handleClosePopover}
+                />
+            )}
         </div>
     );
 };
