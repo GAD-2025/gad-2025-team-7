@@ -20,6 +20,8 @@ app.use(express.json()); // Global JSON body parser is the standard practice
 // Static file serving
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+
+
 // Routes
 const authRoutes = require('./routes/auth');
 const diaryRoutes = require('./routes/diary');

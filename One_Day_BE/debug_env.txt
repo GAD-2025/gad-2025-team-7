@@ -1,7 +1,0 @@
-
---- DATABASE CONNECTION DEBUG ---
-DB_HOST: localhost
-DB_USER: root
-DB_PASSWORD: Provided
-DB_NAME: one_day
------------------------------

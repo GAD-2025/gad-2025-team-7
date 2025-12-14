@@ -10,3 +10,4 @@ node_modules/
 # Miscellaneous
 .DS_Store
 *.log
+\n# Build artifacts\none_day_fe_react@0.1.0\nreact-scripts
