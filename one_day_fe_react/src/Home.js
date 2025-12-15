@@ -28,12 +28,12 @@ const Home = () => {
     useEffect(() => {
         if (!userId || !selectedDate) return;
         
-        fetch(`http://localhost:3001/api/events/${userId}/${selectedDate}`, { cache: 'no-cache' })
+        fetch(`${process.env.REACT_APP_API_URL}/api/events/${userId}/${selectedDate}`, { cache: 'no-cache' })
             .then(res => res.ok ? res.json() : Promise.reject(new Error('Failed to fetch day events')))
             .then(setDashboardEvents)
             .catch(console.error);
 
-        fetch(`http://localhost:3001/api/todos/${userId}/${selectedDate}`, { cache: 'no-cache' })
+        fetch(`${process.env.REACT_APP_API_URL}/api/todos/${userId}/${selectedDate}`, { cache: 'no-cache' })
             .then(res => res.ok ? res.json() : Promise.reject(new Error('Failed to fetch todos')))
             .then(setTodos)
             .catch(console.error);
@@ -53,7 +53,7 @@ const Home = () => {
         const lastDay = new Date(year, month + 1, 0).getDate();
         const lastDayOfMonth = `${year}-${String(month + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
 
-        fetch(`http://localhost:3001/api/events/range/${userId}?startDate=${firstDayOfMonth}&endDate=${lastDayOfMonth}`, { cache: 'no-cache' })
+        fetch(`${process.env.REACT_APP_API_URL}/api/events/range/${userId}?startDate=${firstDayOfMonth}&endDate=${lastDayOfMonth}`, { cache: 'no-cache' })
             .then(res => {
                 if (!res.ok) {
                     return res.json().then(err => { throw new Error(err.msg) });

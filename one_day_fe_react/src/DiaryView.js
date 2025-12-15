@@ -15,7 +15,7 @@ const DiaryView = () => {
             setLoading(true);
             setError(null);
             try {
-                const res = await fetch(`http://localhost:3001/api/diaries/id/${id}`, {
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/diaries/id/${id}`, {
                     cache: 'no-store'
                 });
                 if (!res.ok) {
@@ -62,7 +62,7 @@ const DiaryView = () => {
             <div className="diary-view-content">
                 {diary.canvasImagePath ? (
                     <img
-                        src={`http://localhost:3001${diary.canvasImagePath}`}
+                        src={`${process.env.REACT_APP_API_URL}${diary.canvasImagePath}`}
                         alt="Canvas Drawing"
                         className="diary-view-canvas-image"
                     />

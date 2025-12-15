@@ -3,7 +3,7 @@ import React from 'react';
 const TodoList = ({ selectedDate, todos, onDataUpdate }) => {
     const toggleTodoCompletion = async (todoId, currentStatus) => {
         try {
-            const res = await fetch(`http://localhost:3001/api/todos/${todoId}/complete`, {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/todos/${todoId}/complete`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ completed: !currentStatus }),
@@ -17,7 +17,7 @@ const TodoList = ({ selectedDate, todos, onDataUpdate }) => {
 
     const deleteTodo = async (todoId) => {
         try {
-            const res = await fetch(`http://localhost:3001/api/todos/${todoId}`, {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/todos/${todoId}`, {
                 method: 'DELETE',
             });
             if (!res.ok) throw new Error('Failed to delete todo');

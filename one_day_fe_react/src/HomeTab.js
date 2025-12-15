@@ -64,7 +64,7 @@ const HomeTab = ({
             endDate.setFullYear(endDate.getFullYear() + 1);
             const endDateString = endDate.toISOString().split('T')[0];
             try {
-                const res = await fetch(`http://localhost:3001/api/events/range/${userId}?startDate=${startDate}&endDate=${endDateString}`);
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/events/range/${userId}?startDate=${startDate}&endDate=${endDateString}`);
                 const data = await res.json();
                 if (res.ok) {
                     setUpcomingEvents(data.slice(0, 10));
@@ -136,7 +136,7 @@ const HomeTab = ({
         }
         const body = { userId, title: newScheduleTitle, time: newScheduleTime || null, setReminder: newScheduleSetReminder, startDate: newScheduleStartDate, endDate: newScheduleEndDate, selectedDays: newScheduleSelectedDays };
         try {
-            const res = await fetch('http://localhost:3001/api/events', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/events`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
             if (!res.ok) throw new Error('Failed to save schedule');
             onDataUpdate();
             resetScheduleForm();
@@ -150,7 +150,7 @@ const HomeTab = ({
         if (!newTodoTitle) return;
         const body = { userId, title: newTodoTitle, date: selectedDate, selectedDays: newTodoSelectedDays };
         try {
-            const res = await fetch('http://localhost:3001/api/todos', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/todos`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
             if (!res.ok) throw new Error('Failed to save todo');
             onDataUpdate();
             setShowTodoModal(false);
@@ -166,7 +166,7 @@ const HomeTab = ({
     const handleScheduleTemplateClick = async (template) => {
         const body = { userId, title: template.title, startDate: selectedDate, category: template.category || 'custom' };
         try {
-            const res = await fetch('http://localhost:3001/api/events', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/events`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
             if (!res.ok) throw new Error('Failed to save schedule from template');
             onDataUpdate();
         } catch (error) { console.error('Error saving schedule from template:', error); }
@@ -175,7 +175,7 @@ const HomeTab = ({
     const handleTodoTemplateClick = async (template) => {
         const body = { userId, title: template.title, date: selectedDate };
         try {
-            const res = await fetch('http://localhost:3001/api/todos', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/todos`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
             if (!res.ok) throw new Error('Failed to save todo from template');
             onDataUpdate();
         } catch (error) { console.error('Error saving todo from template:', error); }

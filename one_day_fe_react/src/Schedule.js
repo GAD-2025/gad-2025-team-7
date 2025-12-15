@@ -3,7 +3,7 @@ import React from 'react';
 const Schedule = ({ selectedDate, events, onDataUpdate }) => {
     const toggleEventCompletion = async (eventId, currentStatus) => {
         try {
-            const res = await fetch(`http://localhost:3001/api/events/${eventId}/complete`, {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/events/${eventId}/complete`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ completed: !currentStatus }),
@@ -17,7 +17,7 @@ const Schedule = ({ selectedDate, events, onDataUpdate }) => {
 
     const deleteEvent = async (eventId) => {
         try {
-            const res = await fetch(`http://localhost:3001/api/events/${eventId}`, {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/events/${eventId}`, {
                 method: 'DELETE',
             });
             if (!res.ok) throw new Error('Failed to delete event');

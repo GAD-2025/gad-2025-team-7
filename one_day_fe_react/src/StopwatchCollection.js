@@ -38,7 +38,7 @@ const StopwatchCollection = () => {
         if (!userId) return;
         const fetchRecords = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/api/stopwatch/${userId}`, {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/api/stopwatch/${userId}`, {
                     cache: 'no-store'
                 });
                 if (!response.ok) throw new Error('Network response was not ok');

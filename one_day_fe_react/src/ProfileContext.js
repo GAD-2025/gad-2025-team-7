@@ -24,13 +24,13 @@ export const ProfileProvider = ({ children }) => {
         }
 
         try {
-            const response = await fetch(`http://localhost:3001/api/auth/profile/${userId}`);
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/profile/${userId}`);
             if (response.ok) {
                 const data = await response.json();
                 setProfile({
                     userId: data.id,
                     nickname: data.username,
-                    profileImage: data.profile_image_url ? `http://localhost:3001${data.profile_image_url}` : null,
+                    profileImage: data.profile_image_url ? `${process.env.REACT_APP_API_URL}${data.profile_image_url}` : null,
                     weight: data.weight || null // Set weight from fetched data
                 });
             } else {
@@ -62,7 +62,7 @@ export const ProfileProvider = ({ children }) => {
             ...prev,
             userId: id || prev.userId,
             nickname: username || prev.nickname,
-            profileImage: profile_image_url ? `http://localhost:3001${profile_image_url}` : prev.profileImage,
+            profileImage: profile_image_url ? `${process.env.REACT_APP_API_URL}${profile_image_url}` : prev.profileImage,
             weight: weight !== undefined ? weight : prev.weight
         }));
     };
@@ -71,7 +71,7 @@ export const ProfileProvider = ({ children }) => {
     const updateWeight = async (newWeight) => {
         if (!profile.userId) throw new Error("User not logged in");
         
-        const response = await fetch(`http://localhost:3001/api/auth/profile/${profile.userId}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/profile/${profile.userId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ weight: parseFloat(newWeight) }),

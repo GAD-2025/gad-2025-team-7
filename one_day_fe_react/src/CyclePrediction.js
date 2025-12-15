@@ -26,7 +26,7 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
         if (!userId) return;
         try {
             // FIX: Pass the selectedDate from the context as a query parameter
-            const res = await fetch(`http://localhost:3001/api/healthcare/cycles/${userId}?relativeDate=${selectedDate}`);
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/healthcare/cycles/${userId}?relativeDate=${selectedDate}`);
             const data = await res.json();
             if (res.ok && data.history) {
                 setCycleHistory(data.history);
@@ -80,7 +80,7 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
         if (new Date(startDateInput) > new Date(endDateInput)) return alert('종료일은 시작일보다 빠를 수 없습니다.');
 
         try {
-            const res = await fetch('http://localhost:3001/api/healthcare/cycles', {
+            const res = await fetch('${process.env.REACT_APP_API_URL}/api/healthcare/cycles', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId, startDate: startDateInput, endDate: endDateInput }),
@@ -105,7 +105,7 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
         if (new Date(startDateInput) > new Date(endDateInput)) return alert('종료일은 시작일보다 빠를 수 없습니다.');
 
         try {
-            const res = await fetch(`http://localhost:3001/api/healthcare/cycles/${editingCycleId}`, {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/healthcare/cycles/${editingCycleId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ startDate: startDateInput, endDate: endDateInput }),
@@ -138,7 +138,7 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
         if (!cycleId) return alert('삭제할 항목의 ID가 올바르지 않습니다.');
         if (!window.confirm('이 기록을 삭제하시겠습니까?')) return;
         try {
-            const res = await fetch(`http://localhost:3001/api/healthcare/cycles/${cycleId}`, {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/healthcare/cycles/${cycleId}`, {
                 method: 'DELETE',
             });
             if (res.ok) {

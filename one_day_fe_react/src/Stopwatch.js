@@ -16,7 +16,7 @@ const Stopwatch = ({ userId, selectedDate }) => {
 
         const fetchData = async () => {
             try {
-                const res = await fetch(`http://localhost:3001/api/stopwatch/${userId}/${selectedDate}`);
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/stopwatch/${userId}/${selectedDate}`);
                 if (res.ok) {
                     const data = await res.json();
                     // Data exists and has non-empty categories
@@ -48,7 +48,7 @@ const Stopwatch = ({ userId, selectedDate }) => {
     const saveStopwatchData = async (currentTasks, currentCategories) => {
         if (!userId || !selectedDate) return;
         try {
-            const res = await fetch('http://localhost:3001/api/stopwatch', {
+            const res = await fetch('${process.env.REACT_APP_API_URL}/api/stopwatch', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

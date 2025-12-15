@@ -54,7 +54,7 @@ const Profile = () => {
         }
 
         try {
-            const res = await fetch(`http://localhost:3001/api/auth/profile/${userId}`, {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/profile/${userId}`, {
                 method: 'POST', // Changed from PUT to POST
                 body: formData,
             });
@@ -87,7 +87,7 @@ const Profile = () => {
         }
 
         try {
-            const res = await fetch(`http://localhost:3001/api/auth/change-password/${userId}`, {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/change-password/${userId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ oldPassword: currentPassword, newPassword }),
@@ -118,7 +118,7 @@ const Profile = () => {
         }
 
         try {
-            const res = await fetch(`http://localhost:3001/api/auth/change-email/${userId}`, {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/change-email/${userId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ newEmail, password: passwordForEmailChange }),

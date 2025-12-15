@@ -15,7 +15,7 @@ const DiaryCollection = () => {
         const fetchDiaries = async () => {
             if (!profile.userId) return; // Wait for userId to be available
             try {
-                const response = await fetch(`http://localhost:3001/api/diaries/${profile.userId}`, {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/api/diaries/${profile.userId}`, {
                     cache: 'no-store' // Add this to prevent browser caching
                 });
                 if (!response.ok) {
@@ -26,7 +26,7 @@ const DiaryCollection = () => {
                     ...diary,
                     navDate: new Date(diary.date).toISOString().split('T')[0],
                     displayDate: new Date(diary.date).toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\. /g, '/').replace('.', ''),
-                    image: diary.canvasImagePath ? `http://localhost:3001${diary.canvasImagePath}` : null,
+                    image: diary.canvasImagePath ? `${process.env.REACT_APP_API_URL}${diary.canvasImagePath}` : null,
                 }));
                 setAllDiaries(formattedData);
             } catch (error) {

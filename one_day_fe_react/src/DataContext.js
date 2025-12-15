@@ -55,7 +55,7 @@ export const DataProvider = ({ children }) => {
         if (!userId || !dateToSave || !mealCardsToSave) return;
         if (mealCardsToSave.length === 0 || (mealCardsToSave.length === 1 && mealCardsToSave[0].foods.length === 0)) return; 
         try {
-            await fetch('http://localhost:3001/api/meals', {
+            await fetch('${process.env.REACT_APP_API_URL}/api/meals', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId, date: dateToSave, mealCards: mealCardsToSave }),
@@ -66,7 +66,7 @@ export const DataProvider = ({ children }) => {
     async function saveSteps(dateToSave, stepsToSave) {
         if (!userId || !dateToSave || stepsToSave === undefined) return;
         try {
-            await fetch('http://localhost:3001/api/healthcare/steps', {
+            await fetch('${process.env.REACT_APP_API_URL}/api/healthcare/steps', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId, date: dateToSave, steps: stepsToSave }),
@@ -79,7 +79,7 @@ export const DataProvider = ({ children }) => {
         if (!userId || !selectedDate) return;
 
         if (mealsByDate[selectedDate] === undefined) {
-            fetch(`http://localhost:3001/api/meals/${userId}/${selectedDate}`)
+            fetch(`${process.env.REACT_APP_API_URL}/api/meals/${userId}/${selectedDate}`)
                 .then(res => res.json())
                 .then(data => setMealsByDate(prev => ({ ...prev, [selectedDate]: data || [] })))
                 .catch(error => {
@@ -89,7 +89,7 @@ export const DataProvider = ({ children }) => {
         }
 
         if (pedometerDataByDate[selectedDate] === undefined) {
-            fetch(`http://localhost:3001/api/healthcare/steps/${userId}/${selectedDate}`)
+            fetch(`${process.env.REACT_APP_API_URL}/api/healthcare/steps/${userId}/${selectedDate}`)
                 .then(res => res.json())
                 .then(data => setPedometerDataByDate(prev => ({ ...prev, [selectedDate]: { steps: data.steps || 0 } })))
                 .catch(error => {

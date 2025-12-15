@@ -52,7 +52,7 @@ const Diary = ({ selectedDate, userId }) => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
             try {
-                const res = await fetch(`http://localhost:3001/api/diaries/${userId}/${selectedDate}`);
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/diaries/${userId}/${selectedDate}`);
                 const data = await res.json();
                 
                 const loadedTexts = data?.texts || [];
@@ -70,7 +70,7 @@ const Diary = ({ selectedDate, userId }) => {
                         setHistory([initialState]);
                         setHistoryStep(0);
                     };
-                    img.src = `http://localhost:3001${data.canvasImagePath}`;
+                    img.src = `${process.env.REACT_APP_API_URL}${data.canvasImagePath}`;
                 } else {
                     const initialState = { canvasData: canvas.toDataURL(), texts: loadedTexts, images: loadedImages };
                     setHistory([initialState]);
@@ -129,7 +129,7 @@ const Diary = ({ selectedDate, userId }) => {
         };
 
         try {
-            const res = await fetch('http://localhost:3001/api/diaries', {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/diaries`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

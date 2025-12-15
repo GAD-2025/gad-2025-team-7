@@ -93,7 +93,7 @@ const Diet = () => {
     const searchFoods = useCallback(debounce(async (query) => {
         if (query.length > 0 && activeSearchInputRef.current) {
             try {
-                const res = await fetch(`http://localhost:3001/api/foods?search=${encodeURIComponent(query)}`);
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/foods?search=${encodeURIComponent(query)}`);
                 const matches = await res.json();
                 
                 const rect = activeSearchInputRef.current.getBoundingClientRect();
