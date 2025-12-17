@@ -3,6 +3,7 @@
   border-radius: 8px;
   padding: 20px;
   width: 100%;
+  max-width: 100%; /* Added to ensure it doesn't exceed parent width */
   height: 100%;
   box-sizing: border-box;
   display: flex;

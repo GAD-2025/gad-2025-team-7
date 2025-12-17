@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './Diary.css'; // Import the new CSS file
 
 const Diary = ({ selectedDate, userId }) => {
     const navigate = useNavigate();
@@ -36,8 +37,11 @@ const Diary = ({ selectedDate, userId }) => {
             canvas.width = container.clientWidth;
             canvas.height = container.clientHeight;
             // Restore drawing if any after resizing
-            if (historyStep >= 0) {
+            if (historyStep >= 0 && history[historyStep]) { // Check if history[historyStep] exists
                 restoreState(history[historyStep]);
+            } else if (historyStep === -1) { // If no history, just clear canvas
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
             }
         };
 
@@ -66,7 +70,7 @@ const Diary = ({ selectedDate, userId }) => {
         const img = new Image();
         img.onload = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(img, 0, 0);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height); // Draw image to fill canvas
         };
         img.src = canvasData;
     };
@@ -92,7 +96,7 @@ const Diary = ({ selectedDate, userId }) => {
                     const img = new Image();
                     img.crossOrigin = 'anonymous'; // Handle potential CORS issues
                     img.onload = () => {
-                        ctx.drawImage(img, 0, 0);
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height); // Draw image to fill canvas
                         const initialState = { canvasData: canvas.toDataURL(), texts: loadedTexts, images: loadedImages };
                         setHistory([initialState]);
                         setHistoryStep(0);
@@ -364,7 +368,7 @@ const Diary = ({ selectedDate, userId }) => {
     };
 
     return (
-        <div id="diary-content" className="record-content active" onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}>
+        <div id="diary-content" className="diary-page-container" onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}>
             <div className="dashboard-section">
                 <div className="section-header">
                     <h3>다이어리</h3>
@@ -373,16 +377,16 @@ const Diary = ({ selectedDate, userId }) => {
                     </div>
                 </div>
                 
-                <div id="diary-editor" style={{ position: 'relative' }}>
+                <div id="diary-editor" className="diary-editor-container">
                     <input type="text" id="diary-title" placeholder="제목을 입력하세요" value={title} onChange={(e) => setTitle(e.target.value)} />
                     <div className="diary-toolbar">
-                        <div className="drawing-tools" style={{display: 'flex'}}>
+                        <div className="drawing-tools">
                             <div className="tool-buttons">
                                 <button className={`tool-btn ${drawingTool === 'pen' ? 'active' : ''}`} onClick={() => setDrawingTool('pen')}>✏️</button>
                                 <button className={`tool-btn ${drawingTool === 'eraser' ? 'active' : ''}`} onClick={() => setDrawingTool('eraser')}>🧼</button>
                                 <button className={`tool-btn ${drawingTool === 'text' ? 'active' : ''}`} onClick={() => setDrawingTool('text')}>T</button>
                                 <label className="tool-btn" htmlFor="image-upload-input">🖼️
-                                    <input type="file" id="image-upload-input" accept="image/*" style={{display:'none'}} onChange={handleImageUpload} />
+                                    <input type="file" id="image-upload-input" accept="image/*" className="hidden-input" onChange={handleImageUpload} />
                                 </label>
                                 <button className="tool-btn" onClick={undo} disabled={historyStep <= 0}>↩️</button>
                                 <button className="tool-btn" onClick={redo} disabled={historyStep >= history.length - 1}>↪️</button>
@@ -400,8 +404,8 @@ const Diary = ({ selectedDate, userId }) => {
                             </div>
                         </div>
                     </div>
-                    {drawingTool === 'text' && ( <div style={{ padding: '10px', textAlign: 'center', backgroundColor: '#f0f0f0', borderRadius: '4px', margin: '8px 0' }}> Double-click on the canvas to add text. </div> )}
-                    <div ref={containerRef} style={{ position: 'relative', width: '100%', minHeight: '300px', border: '1px solid #ddd', borderRadius: '5px' }}>
+                    {drawingTool === 'text' && ( <div className="text-tool-message"> Double-click on the canvas to add text. </div> )}
+                    <div ref={containerRef} className="canvas-wrapper">
                         <canvas
                             id="diary-canvas"
                             ref={canvasRef}
@@ -416,22 +420,20 @@ const Diary = ({ selectedDate, userId }) => {
                             return (
                                 <div
                                     key={image.id}
+                                    className={`resizable-image-wrapper ${isSelected ? 'selected' : ''}`}
                                     style={{
-                                        position: 'absolute',
                                         top: image.y,
                                         left: image.x,
                                         width: image.width,
                                         height: image.height,
-                                        cursor: 'move',
-                                        border: isSelected ? '1px dashed #000' : 'none',
                                     }}
                                     onMouseDown={(e) => handleItemDragStart('image', image.id, e)}
                                 >
                                     <img src={image.src} alt="" style={{ width: '100%', height: '100%' }} />
                                     {isSelected && (
                                         <>
-                                            <button onClick={(e) => { e.stopPropagation(); deleteImage(image.id); }} style={{ position: 'absolute', top: 0, right: 0, transform: 'translate(50%, -50%)', background: 'red', color: 'white', border: 'none', borderRadius: '50%', cursor: 'pointer', width: '20px', height: '20px' }}>&times;</button>
-                                            <div onMouseDown={(e) => handleImageResizeStart(image.id, e)} style={{ position: 'absolute', bottom: 0, right: 0, transform: 'translate(50%, 50%)', width: '10px', height: '10px', background: 'blue', cursor: 'se-resize' }}></div>
+                                            <button onClick={(e) => { e.stopPropagation(); deleteImage(image.id); }} className="item-action-btn delete">&times;</button>
+                                            <div onMouseDown={(e) => handleImageResizeStart(image.id, e)} className="item-action-btn resize"></div>
                                         </>
                                     )}
                                 </div>
@@ -444,13 +446,13 @@ const Diary = ({ selectedDate, userId }) => {
                                 <div
                                     key={text.id}
                                     ref={el => textRefs.current[text.id] = el}
-                                    className="diary-text-box"
-                                    style={{ position: 'absolute', top: text.y, left: text.x, cursor: 'move', border: editingText === text.id ? '2px solid #000' : (isSelected ? '1px dashed #000' : 'none'), padding: '2px' }}
+                                    className={`diary-text-box ${isSelected ? 'selected' : ''} ${editingText === text.id ? 'editing' : ''}`}
+                                    style={{ top: text.y, left: text.x, color: text.color || 'black', fontSize: '16px', /* other text styles from canvas context */}}
                                     onMouseDown={(e) => handleItemDragStart('text', text.id, e)}
                                     onDoubleClick={(e) => { e.stopPropagation(); startEditingText(text.id); }}
                                 >
                                     {isSelected && editingText !== text.id && (
-                                         <button onClick={(e) => { e.stopPropagation(); deleteText(text.id); }} style={{ position: 'absolute', top: '-10px', right: '-10px', background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight:'1', padding: '0' }}>&times;</button>
+                                         <button onClick={(e) => { e.stopPropagation(); deleteText(text.id); }} className="item-action-btn delete">&times;</button>
                                     )}
                                     {editingText === text.id ? (
                                         <textarea
@@ -458,10 +460,10 @@ const Diary = ({ selectedDate, userId }) => {
                                             onChange={(e) => handleTextChange(text.id, e.target.value)}
                                             onBlur={handleTextBlur}
                                             autoFocus
-                                            style={{ font: '16px sans-serif', border: 'none', background: 'transparent', width: 'auto', height: 'auto', resize: 'none', outline: 'none' }}
+                                            className="diary-textarea-input"
                                         />
                                      ) : (
-                                        <div style={{ whiteSpace: 'pre-wrap' }}>{text.value}</div>
+                                        <div className="diary-display-text">{text.value}</div>
                                     )}
                                 </div>
                             );
@@ -474,4 +476,3 @@ const Diary = ({ selectedDate, userId }) => {
 };
 
 export default Diary;
-

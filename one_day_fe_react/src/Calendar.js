@@ -18,7 +18,6 @@ const Calendar = ({
     const [popoverAnchorEl, setPopoverAnchorEl] = useState(null);
     const [popoverDate, setPopoverDate] = useState(null);
     const [summaryData, setSummaryData] = useState(null);
-    const [view, setView] = useState('Month'); // 'Month' or 'Week'
 
     const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -77,7 +76,7 @@ const Calendar = ({
     }
 
     const isDateInDraggedRange = (currentDayString) => {
-        if (!dragStartDayString || !dragEndDayString || !currentDayString) return false;
+        if (!dragStartDayString || !dragEndDayString) return false;
         const start = new Date(dragStartDayString);
         const end = new Date(dragEndDayString);
         const current = new Date(currentDayString);
@@ -90,10 +89,6 @@ const Calendar = ({
     return (
         <div className="calendar-wrapper">
             <div className="calendar-header">
-                <div className="view-toggle">
-                    <button className={view === 'Month' ? 'active' : ''} onClick={() => setView('Month')}>Month</button>
-                    <button className={view === 'Week' ? 'active' : ''} onClick={() => setView('Week')}>Week</button>
-                </div>
                 <div className="month-year-container">
                     <p className="month-text">{monthNames[month]}</p>
                     <p className="year-text">{year}</p>
