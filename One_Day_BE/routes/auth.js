@@ -110,7 +110,7 @@ router.post('/profile/:userId', uploadMiddleware, async (req, res, next) => {
         const updates = [];
         const params = [];
 
-        if (username) {
+        if (username !== undefined) {
             updates.push('username = ?');
             params.push(username);
         }
@@ -144,11 +144,11 @@ router.post('/profile/:userId', uploadMiddleware, async (req, res, next) => {
         res.json(updatedUsers[0]);
 
     } catch (error) {
-        await connection.rollback();
-        // Pass to the global error handler
-        next(error);
+        if (connection) await connection.rollback();
+        console.error("Profile update error:", error);
+        res.status(500).json({ msg: `프로필 업데이트 중 서버 오류 발생: ${error.message}` });
     } finally {
-        connection.release();
+        if (connection) connection.release();
     }
 });
 

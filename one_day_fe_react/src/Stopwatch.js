@@ -7,10 +7,7 @@ const Stopwatch = ({ userId, selectedDate }) => {
     const [categories, setCategories] = useState([]);
     const [newCategory, setNewCategory] = useState('');
     const intervalRef = useRef(null);
-    // saveTimeoutRef removed as it's no longer needed for debounced saves
 
-
-    // Fetch data on load and date change
     useEffect(() => {
         if (!userId || !selectedDate) return;
 
@@ -19,23 +16,19 @@ const Stopwatch = ({ userId, selectedDate }) => {
                 const res = await fetch(`${process.env.REACT_APP_API_URL}/api/stopwatch/${userId}/${selectedDate}`);
                 if (res.ok) {
                     const data = await res.json();
-                    // Data exists and has non-empty categories
                     if (data && data.categories_data && data.categories_data.length > 0) {
                         setTasks(data.tasks_data || []);
                         setCategories(data.categories_data);
                     } else {
-                        // Data is null, or categories are empty, set to default
                         setTasks(data ? data.tasks_data || [] : []);
                         setCategories(['공부', '운동', '취미', '알바']);
                     }
                 } else {
-                    // Handle non-ok responses (e.g., 500 error)
                     setTasks([]);
                     setCategories(['공부', '운동', '취미', '알바']);
                 }
             } catch (error) {
                 console.error("Error fetching stopwatch data:", error);
-                // Handle fetch errors (e.g., network issue)
                 setTasks([]);
                 setCategories(['공부', '운동', '취미', '알바']);
             }
@@ -43,16 +36,13 @@ const Stopwatch = ({ userId, selectedDate }) => {
 
         fetchData();
     }, [userId, selectedDate]);
-    
-    // Function to save stopwatch data explicitly
+
     const saveStopwatchData = async (currentTasks, currentCategories) => {
         if (!userId || !selectedDate) return;
         try {
-            const res = await fetch('${process.env.REACT_APP_API_URL}/api/stopwatch', {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/stopwatch`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     userId,
                     date: selectedDate,
@@ -69,35 +59,30 @@ const Stopwatch = ({ userId, selectedDate }) => {
         }
     };
 
-
-    // Timer interval
     useEffect(() => {
         intervalRef.current = setInterval(() => {
             setTasks(prevTasks =>
-                prevTasks.map(task => {
-                    if (!task.isPaused && !task.isComplete) {
-                        return { ...task, elapsedTime: task.elapsedTime + 1000 };
-                    }
-                    return task;
-                })
+                prevTasks.map(task => 
+                    (!task.isPaused && !task.isComplete) 
+                        ? { ...task, elapsedTime: task.elapsedTime + 1000 } 
+                        : task
+                )
             );
         }, 1000);
-
         return () => clearInterval(intervalRef.current);
     }, []);
 
     const formatTime = (ms) => {
         const totalSeconds = Math.floor(ms / 1000);
-        const hours = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
-        const minutes = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
-        const seconds = (totalSeconds % 60).toString().padStart(2, '0');
+        const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+        const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+        const seconds = String(totalSeconds % 60).padStart(2, '0');
         return `${hours}:${minutes}:${seconds}`;
     };
 
     const selectCategory = (categoryName) => {
         setSelectedCategory(categoryName);
-        const task = tasks.find(task => task.category === categoryName && !task.isComplete);
-        if (!task) {
+        if (!tasks.some(task => task.category === categoryName && !task.isComplete)) {
             const newTask = {
                 id: Date.now(),
                 category: categoryName,
@@ -105,57 +90,42 @@ const Stopwatch = ({ userId, selectedDate }) => {
                 isPaused: true,
                 isComplete: false,
             };
-            setTasks([...tasks, newTask]);
+            setTasks(prev => [...prev, newTask]);
         }
     };
 
     const startTask = (task) => {
         if (!task || !task.isPaused) return;
-        setTasks(tasks.map(t => 
-            t.id === task.id ? { ...t, isPaused: false } : t
-        ));
+        setTasks(tasks.map(t => t.id === task.id ? { ...t, isPaused: false } : t));
     };
 
     const pauseTask = (task) => {
         if (!task || task.isPaused) return;
-        setTasks(prevTasks => {
-            const updatedTasks = prevTasks.map(t => 
-                t.id === task.id ? { ...t, isPaused: true } : t
-            );
-            saveStopwatchData(updatedTasks, categories); // Save immediately
-            return updatedTasks;
-        });
+        const updatedTasks = tasks.map(t => t.id === task.id ? { ...t, isPaused: true } : t);
+        setTasks(updatedTasks);
+        saveStopwatchData(updatedTasks, categories);
     };
 
     const resetTask = (task) => {
         if (!task || !task.isPaused) return;
-        setTasks(tasks.map(t => 
-            t.id === task.id ? { ...t, elapsedTime: 0 } : t
-        ));
+        const updatedTasks = tasks.map(t => t.id === task.id ? { ...t, elapsedTime: 0 } : t);
+        setTasks(updatedTasks);
+        saveStopwatchData(updatedTasks, categories);
     };
 
     const finishTask = (taskId) => {
-        setTasks(prevTasks => {
-            const updatedTasks = prevTasks.map(t => 
-                t.id === taskId ? { ...t, isComplete: true, isPaused: true } : t
-            );
-            saveStopwatchData(updatedTasks, categories); // Save immediately
-            return updatedTasks;
-        });
-
-        // The selectedCategory logic can remain
-        const task = tasks.find(t => t.id === taskId);
-        if (task && selectedCategory === task.category) {
+        const updatedTasks = tasks.map(t => t.id === taskId ? { ...t, isComplete: true, isPaused: true } : t);
+        setTasks(updatedTasks);
+        saveStopwatchData(updatedTasks, categories);
+        if (selectedCategory === tasks.find(t => t.id === taskId)?.category) {
             setSelectedCategory(null);
         }
     };
 
     const deleteTask = (taskId) => {
-        setTasks(prevTasks => {
-            const updatedTasks = prevTasks.filter(t => t.id !== taskId);
-            saveStopwatchData(updatedTasks, categories); // Save immediately
-            return updatedTasks;
-        });
+        const updatedTasks = tasks.filter(t => t.id !== taskId);
+        setTasks(updatedTasks);
+        saveStopwatchData(updatedTasks, categories);
     };
 
     const addNewCategory = () => {
@@ -163,98 +133,86 @@ const Stopwatch = ({ userId, selectedDate }) => {
             const updatedCategories = [...categories, newCategory];
             setCategories(updatedCategories);
             setNewCategory('');
-            saveStopwatchData(tasks, updatedCategories); // Save immediately
+            saveStopwatchData(tasks, updatedCategories);
         }
     };
-
+    
     const selectedTask = tasks.find(t => t.category === selectedCategory && !t.isComplete);
 
     return (
-        <div className="record-container">
-            <aside className="category-sidebar">
+        <div className="stopwatch-container" data-node-id="661:4003">
+            <div className="category-section" data-node-id="661:4148">
                 <h2>카테고리</h2>
-                <ul id="category-list">
-                    {categories.map(category => (
-                        <li 
-                            key={category} 
-                            data-category={category} 
-                            className={selectedCategory === category ? 'selected' : ''}
-                            onClick={() => selectCategory(category)}
+                <div className="category-list">
+                    {categories.map(cat => (
+                        <div 
+                            key={cat} 
+                            className={`category-chip ${selectedCategory === cat ? 'selected' : ''}`}
+                            onClick={() => selectCategory(cat)}
                         >
-                            {category}
+                            {cat}
+                        </div>
+                    ))}
+                </div>
+                <div className="add-category-wrapper">
+                    <input
+                        type="text"
+                        value={newCategory}
+                        onChange={(e) => setNewCategory(e.target.value)}
+                        placeholder="새 카테고리 추가"
+                    />
+                    <button onClick={addNewCategory}>+</button>
+                </div>
+            </div>
+            
+            <div className="main-stopwatch" data-node-id="661:4191">
+                <h3>{selectedCategory || '카테고리를 선택하세요'}</h3>
+                <div className="timer-display" data-node-id="661:4197">
+                    {selectedTask ? formatTime(selectedTask.elapsedTime) : '00:00:00'}
+                </div>
+                <div className="main-controls" data-node-id="661:4198">
+                    <button 
+                        onClick={() => selectedTask && (selectedTask.isPaused ? startTask(selectedTask) : pauseTask(selectedTask))}
+                        disabled={!selectedTask}
+                        className="start-button"
+                    >
+                        {selectedTask && !selectedTask.isPaused ? '일시정지' : '시작'}
+                    </button>
+                    <button 
+                        onClick={() => resetTask(selectedTask)}
+                        disabled={!selectedTask || !selectedTask.isPaused}
+                        className="reset-button"
+                    >
+                        초기화
+                    </button>
+                </div>
+            </div>
+
+            <div className="task-list-section" data-node-id="661:4171">
+                <h3>진행중인 기록</h3>
+                <ul>
+                    {tasks.filter(t => !t.isComplete).map(task => (
+                        <li key={task.id}>
+                            <span>{task.category}</span>
+                            <span>{formatTime(task.elapsedTime)}</span>
+                            <button onClick={() => finishTask(task.id)}>완료</button>
                         </li>
                     ))}
                 </ul>
-                <div className="add-category">
-                    <input 
-                        type="text" 
-                        id="new-category-input" 
-                        placeholder="새 카테고리 추가" 
-                        value={newCategory} 
-                        onChange={(e) => setNewCategory(e.target.value)} 
-                    />
-                    <button id="add-category-btn" onClick={addNewCategory}>+</button>
-                </div>
-            </aside>
-    
-            <main className="stopwatch-main">
-                <div className="stopwatch-display-area">
-                    <h3 id="current-category-display">{selectedCategory || '카테고리를 선택하세요'}</h3>
-                    <div id="stopwatch-timer">{selectedTask ? formatTime(selectedTask.elapsedTime) : '00:00:00'}</div>
-                    <div className="stopwatch-controls">
-                        <button 
-                            id="start-pause-btn" 
-                            disabled={!selectedTask}
-                            onClick={() => selectedTask && (selectedTask.isPaused ? startTask(selectedTask) : pauseTask(selectedTask))}
-                            className={selectedTask && !selectedTask.isPaused ? 'paused' : ''}
-                        >
-                            {selectedTask && !selectedTask.isPaused ? '일시정지' : '시작'}
-                        </button>
-                        <button 
-                            id="reset-btn" 
-                            disabled={!selectedTask || !selectedTask.isPaused}
-                            onClick={() => resetTask(selectedTask)}
-                        >
-                            초기화
-                        </button>
-                    </div>
-                </div>
-    
-                <div className="task-lists">
-                    <section className="task-list-section">
-                        <h3>진행중인 기록</h3>
-                        <ul id="in-progress-list">
-                            {tasks.filter(t => !t.isComplete).map(task => (
-                                <li key={task.id} className={`task-item ${!task.isPaused ? 'active' : 'paused'}`}>
-                                    <span className="task-category" onClick={() => selectCategory(task.category)}>{task.category}</span>
-                                    <span className="task-time">{formatTime(task.elapsedTime)}</span>
-                                    <div className="task-controls">
-                                        {task.isPaused
-                                            ? <button className="resume-btn" onClick={() => startTask(task)}>▶</button>
-                                            : <button className="pause-btn" onClick={() => pauseTask(task)}>❚❚</button>
-                                        }
-                                        <button className="finish-btn" onClick={() => finishTask(task.id)}>완료</button>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    </section>
-                    <section className="task-list-section">
-                        <h3>기록 완료</h3>
-                        <ul id="completed-list">
-                            {tasks.filter(t => t.isComplete).map(task => (
-                                <li key={task.id} className="task-item completed">
-                                    <span className="task-category">{task.category}</span>
-                                    <span className="task-time">{formatTime(task.elapsedTime)}</span>
-                                    <div className="task-controls">
-                                        <button className="delete-btn" onClick={() => deleteTask(task.id)}>삭제</button>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    </section>
-                </div>
-            </main>
+            </div>
+
+            <div className="task-list-section" data-node-id="661:4172">
+                <h3>기록 완료</h3>
+                <ul>
+                    {tasks.filter(t => t.isComplete).map(task => (
+                        <li key={task.id}>
+                            <span>{task.category}</span>
+                            <span>{formatTime(task.elapsedTime)}</span>
+                            <button onClick={() => deleteTask(task.id)}>삭제</button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 };

@@ -1,44 +1,44 @@
-.right-column { 
-  flex: 4; 
-  padding: 20px; 
-  background-color: transparent; 
-  overflow-y: auto; 
+.right-column {
+  flex: 4;
+  padding: 20px;
+  background-color: #F8F9FA; /* Figma background color */
+  overflow-y: auto;
 }
 
 .dashboard-container {
-    background-color: white;
-    border-radius: 20px;
+    background-color: #FFFFFF;
+    border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    padding: 15px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
-.dashboard-tabs { 
-  display: flex; 
-  justify-content: center; 
-  margin-bottom: 15px; 
-  background-color: #f1f3f5;
-  border-radius: 20px;
-  padding: 5px;
+.dashboard-tabs {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #E9ECEF;
+    padding: 0;
 }
-.dash-tab-link { 
-  padding: 8px 25px; 
-  border: none; 
-  background: none; 
-  cursor: pointer; 
-  font-size: 16px; 
-  color: #868e96; 
-  font-weight: 500;
-  border-radius: 18px;
-  transition: all 0.2s;
+.dash-tab-link {
+    padding: 10px 15px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 20px;
+    font-family: 'Pretendard', sans-serif;
+    color: #C0C0C0;
+    font-weight: 500;
+    transition: all 0.2s;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px; /* Overlap with container border */
 }
-.dash-tab-link.active {  
-  background-color: #ffffff;
-  font-weight: 700; 
-  color: #212529; 
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+.dash-tab-link.active {
+    font-weight: 700;
+    color: #7C8083;
+    border-bottom: 3px solid #7C8083;
 }
 
 .dashboard-content-wrapper {
@@ -47,11 +47,13 @@
 }
 
 .dash-tab-content { display: none; }
-.dash-tab-content.active { 
-    display: flex; /* Changed from block to flex */
-    flex-direction: column; /* Ensure content flows vertically */
-    flex-grow: 1; /* Allow content to grow */
+.dash-tab-content.active {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
+/* Keep other styles below if they are still needed, but the primary container styles are updated. */
+
 .dashboard-section { margin-bottom: 30px; position: relative; }
 .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
 .section-header h3 { margin: 0; font-size: 17px; }
@@ -151,7 +153,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 9999;
 }
 .modal-content {
     background: white;

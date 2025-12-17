@@ -1,133 +1,300 @@
 .home-tab-content {
+    font-family: 'Pretendard', sans-serif;
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-.dashboard-section-row {
-    display: flex;
+.home-section-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 20px;
 }
 
-.dashboard-section {
+.home-card {
     background-color: #ffffff;
-    border-radius: 8px;
+    border-radius: 16px;
     padding: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    flex: 1;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
 }
 
-.section-header {
+.home-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #E9ECEF;
 }
 
-.section-header h3 {
+.home-card-title {
     margin: 0;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 600;
+    color: #383838;
 }
 
-.add-btn {
-    background-color: #f1f3f5;
-    color: #868e96;
-    border: none;
+.home-add-btn {
+    background-color: #F8F9FA;
+    color: #383838;
+    border: 1px solid #E9ECEF;
     border-radius: 50%;
-    width: 28px;
-    height: 28px;
-    font-size: 20px;
-    line-height: 28px;
+    width: 24px;
+    height: 24px;
+    font-size: 18px;
+    line-height: 22px;
     text-align: center;
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
-.add-btn:hover {
-    background-color: #e9ecef;
+.home-add-btn:hover {
+    background-color: #E9ECEF;
 }
 
-.section-content {
+.home-card-body {
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }
 
-.schedule-item-detail,
-.todo-item-detail {
+.schedule-item, .todo-item {
     display: flex;
     align-items: center;
     gap: 10px;
+    padding: 2px 0;
 }
 
-.checkbox-icon {
+.item-checkbox-container {
     width: 20px;
     height: 20px;
-    border-radius: 50%;
-    border: 2px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.item-checkbox {
+    border: 1.5px solid #E0E0E0;
+    transition: all 0.2s;
     cursor: pointer;
+}
+
+.item-checkbox.circle {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: transparent; /* Default state */
+}
+
+.item-checkbox.circle.completed {
+    background-color: #FF7581; /* Filled color when completed */
+    border-color: #FF7581; /* Border color when completed */
     position: relative;
 }
 
-.checkbox-icon.completed {
-    background-color: #ff6f61;
-    border-color: #ff6f61;
-}
-
-.checkbox-icon.completed::after {
-    content: '✓';
-    color: white;
-    font-size: 14px;
+.item-checkbox.circle.completed::after {
+    content: '✔'; /* Checkmark for completed */
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    color: white;
+    font-size: 10px;
 }
 
-.schedule-item-title,
-.todo-item-title {
+.item-checkbox.square {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+}
+
+.item-checkbox.square.completed {
+    background-color: #FF7581;
+    border-color: #FF7581;
+}
+
+.checkmark {
+    color: white;
+    font-weight: bold;
+}
+
+
+.item-title {
     flex-grow: 1;
-    font-size: 15px;
-}
-
-.schedule-item-time {
     font-size: 14px;
-    color: #868e96;
+    font-weight: 500;
+    color: #383838;
+    transition: color 0.2s, text-decoration 0.2s;
 }
 
-.reminders-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+.item-title.completed {
+    text-decoration: line-through;
+    color: #A0A0A0;
+}
+
+.item-time {
+    font-size: 14px;
+    font-weight: 600;
+    color: #FFA3A3;
+}
+
+.empty-message {
+    text-align: center;
+    color: #A0A0A0;
+    font-size: 14px;
+    padding: 20px 0;
+}
+
+/* Delete button for schedule items */
+.schedule-item {
+    position: relative; /* For positioning the delete button */
+    padding-right: 30px; /* Make space for delete button */
+}
+
+.delete-schedule-btn {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #C0C0C0;
+    font-size: 16px;
+    cursor: pointer;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.2s;
+}
+
+.schedule-item:hover .delete-schedule-btn {
+    opacity: 1; /* Visible on hover */
+}
+
+
+/* Overriding Template Button Styles */
+.template-tag {
+    font-size: 11px !important;
+    padding: 4px 12px !important;
+    border-radius: 22px !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+    font-weight: 500 !important;
+    color: #383838; /* Default text color */
+}
+
+.tag-yellow { background-color: rgba(255, 231, 157, 0.5) !important; border-color: #FFE79D !important; color: #A38B46 !important; }
+.tag-blue { background-color: rgba(157, 219, 255, 0.5) !important; border-color: #9DDBFF !important; color: #4593C0 !important; }
+.tag-gray { background-color: rgba(165, 165, 165, 0.5) !important; border-color: #A5A5A5 !important; color: #6E6E6E !important; }
+.tag-green { background-color: rgba(157, 255, 167, 0.5) !important; border-color: #9DFFA7 !important; color: #1C9128 !important; }
+.tag-orange { background-color: rgba(255, 188, 115, 0.5) !important; border-color: #FFA544 !important; color: #D78B3A !important; }
+
+
+/* Reminder Styles */
+.reminder-body {
+    display: flex;
+    flex-direction: row; /* Added to ensure horizontal layout */
     gap: 15px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    justify-content: flex-start;
+    padding-bottom: 5px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    white-space: nowrap;
+}
+
+/* Hide scrollbar for Webkit browsers */
+.reminder-body::-webkit-scrollbar {
+    display: none;
 }
 
 .reminder-card {
+    flex-shrink: 0; /* Prevent cards from shrinking */
+    min-width: 120px; /* Minimum width for each card */
+    max-width: 150px;
     padding: 15px;
-    border-radius: 8px;
-    color: white;
+    border-radius: 12px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    position: relative; /* Added for positioning delete button */
 }
 
-.reminder-dday {
-    font-size: 22px;
-    font-weight: 700;
-    margin-bottom: 5px;
+.reminder-card:hover {
+    transform: translateY(-3px);
+}
+
+.delete-reminder-btn {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    background: none;
+    border: none;
+    color: #C0C0C0;
+    font-size: 14px;
+    cursor: pointer;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.2s;
+}
+
+.reminder-card:hover .delete-reminder-btn {
+    opacity: 1; /* Visible on hover */
+}
+
+.reminder-dday-badge {
+    font-size: 14px;
+    font-weight: 600;
+    color: #6E6E6E;
+    background-color: #F1F1F1;
+    border-radius: 4px;
+    padding: 4px 8px;
 }
 
 .reminder-title {
-    font-size: 13px;
-    word-break: keep-all;
+    font-size: 14px;
+    font-weight: 500;
+    color: #383838;
 }
 
-.urgency-high {
-    background-color: #ff6f61; /* D-3 or less */
+/* Urgency-based styles for reminders */
+.reminder-card.urgency-high {
+    background-color: #FF7581;
+}
+.reminder-card.urgency-high .reminder-dday-badge {
+    background-color: #FFFFFF;
+    color: #FF8A8A;
+}
+.reminder-card.urgency-high .reminder-title {
+    color: #FFFFFF;
+    font-weight: 600;
 }
 
-.urgency-medium {
-    background-color: #ffc952; /* D-7 or less */
+.reminder-card.urgency-medium,
+.reminder-card.urgency-low {
+    background-color: #FFFFFF;
+    border: 1px solid #F1F1F1;
 }
 
-.urgency-low {
-    background-color: #4caf50;
+.reminder-card.urgency-medium .reminder-dday-badge,
+.reminder-card.urgency-low .reminder-dday-badge {
+    background-color: #D2D2D2;
+    color: #6E6E6E;
+}
+
+.reminder-card.urgency-medium .reminder-title,
+.reminder-card.urgency-low .reminder-title {
+    color: #6E7279;
 }

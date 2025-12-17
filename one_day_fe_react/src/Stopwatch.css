@@ -1,149 +1,116 @@
-/* 
-  Stopwatch Component Stylesheet - Redesigned
-  - Author: Gemini
-  - Date: 2025-12-13
-  - Description: A modular, single-column UI with a bright, modern, and clean theme as per user request.
-*/
+/* Stopwatch.css */
 
-:root {
-    /* Define the new color palette */
-    --theme-bg: #fdfcfa; /* Bright pastel white background */
-    --card-bg: #ffffff;
-    --primary-accent: #F1898F; /* Coral for highlights */
-    --base-text: #555; /* Thin gray for base text */
-    --light-text: #999;
-    --divider-color: #eee;
-    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --card-radius: 20px;
-}
-
-/* General container for the entire stopwatch view */
-.record-container {
+.stopwatch-container {
     display: flex;
-    flex-direction: column; /* Always a single vertical column */
-    width: 100%;
-    background-color: var(--theme-bg);
-    gap: 20px; /* Gap between card modules */
+    flex-direction: column; /* Changed to column for vertical stacking */
+    gap: 20px; /* Space between the sections */
     padding: 20px;
-    box-sizing: border-box;
+    background-color: #F1F4F6; /* Match the Figma background */
+    font-family: 'Pretendard', sans-serif;
 }
 
-/* --- Base Card Styles --- */
-.category-sidebar,
-.stopwatch-display-area,
-.task-list-section {
-    background-color: var(--card-bg);
-    border-radius: var(--card-radius);
-    box-shadow: var(--card-shadow);
+.category-section, .main-stopwatch, .task-list-section {
+    background-color: white;
+    border-radius: 20px;
     padding: 20px;
-    width: 100%;
-    box-sizing: border-box;
+    border: 1px solid #E1E7EF;
+    flex: 1; /* Make all sections take equal width */
+    min-width: 250px; /* Ensure sections don't get too small */
 }
 
-/* --- Section Titles --- */
-.category-sidebar h2,
-.task-list-section h3,
-#current-category-display {
-    margin: 0 0 15px 0;
+h2, h3 {
     font-size: 18px;
-    font-weight: 700;
-    color: var(--primary-accent); /* Coral highlight text */
-    text-align: left; /* Left-aligned */
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--divider-color); /* Thin gray line */
+    font-weight: 600;
+    color: #4B4B4B;
+    margin-top: 0;
+    margin-bottom: 15px;
 }
 
-/* --- Category Section --- */
-#category-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.category-list {
     display: flex;
-    flex-wrap: wrap; /* Allow categories to wrap */
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.category-chip {
+    background-color: rgba(255, 198, 157, 0.5);
+    border: 1px solid #FFC69D;
+    border-radius: 22px;
+    padding: 5px 15px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #383838;
+}
+
+.category-chip.selected {
+    background-color: #FF7581;
+    color: white;
+    border-color: #FF7581;
+}
+
+.add-category-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid #F0F3F6;
+    border-radius: 20px;
+    padding: 5px;
+}
+
+.add-category-wrapper input {
+    border: none;
+    outline: none;
+    flex-grow: 1;
+    padding: 5px 10px;
+    background-color: transparent;
+}
+
+.add-category-wrapper button {
+    background-color: #E1E7EF;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+    color: #383838;
+    cursor: pointer;
+}
+
+.main-stopwatch {
+    text-align: center;
+}
+
+.timer-display {
+    font-size: 40px;
+    font-weight: bold;
+    color: #383838;
+    margin: 20px 0;
+}
+
+.main-controls {
+    display: flex;
+    justify-content: center;
     gap: 10px;
 }
 
-#category-list li {
+.main-controls .start-button {
+    background-color: #FF7581;
+    color: white;
+    border: 1px solid #E1E7EF;
+    border-radius: 11px;
     padding: 10px 20px;
-    border-radius: 50px; /* Rounded capsule shape */
-    cursor: pointer;
-    transition: all 0.3s;
-    font-weight: 500;
-    color: var(--base-text);
-    background-color: #f0f0f0;
-}
-
-#category-list li.selected {
-    background-color: var(--primary-accent);
-    color: white;
-    font-weight: 700;
-}
-
-.add-category {
-    display: flex;
-    margin-top: 15px;
-}
-
-#new-category-input {
-    flex-grow: 1;
-    border: 1px solid var(--divider-color);
-    border-radius: 25px 0 0 25px; /* Rounded capsule shape */
-    padding: 10px 15px;
-    font-size: 14px;
-    outline: none;
-}
-#new-category-input:focus {
-    border-color: var(--primary-accent);
-}
-
-#add-category-btn {
-    border: none;
-    background-color: var(--primary-accent);
-    color: white;
-    font-size: 20px;
-    padding: 0 20px;
-    border-radius: 0 25px 25px 0; /* Rounded capsule shape */
     cursor: pointer;
 }
 
-/* --- Stopwatch Display Section --- */
-.stopwatch-display-area {
-    text-align: center; /* Center-aligned content */
-}
-
-#stopwatch-timer {
-    font-size: 3em;
-    font-weight: 700;
-    font-family: 'Roboto Mono', monospace;
-    color: var(--base-text);
-    margin: 10px 0 20px 0;
-}
-
-/* Base button style */
-.stopwatch-controls button,
-.task-controls button {
-    font-size: 15px;
-    padding: 10px 25px;
-    margin: 0 8px;
-    border: none;
-    border-radius: 50px; /* Rounded capsule shape */
+.main-controls .reset-button {
+    background-color: white;
+    color: #404040;
+    border: 1px solid #E1E7EF;
+    border-radius: 11px;
+    padding: 10px 20px;
     cursor: pointer;
-    transition: all 0.3s;
-    font-weight: bold;
-    color: white;
-    background-color: var(--primary-accent); /* Coral background */
 }
 
-.stopwatch-controls button.paused {
-    background-color: #ffab00; /* Keep pause color distinct */
-}
-
-.stopwatch-controls button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-/* --- Task Lists Section --- */
 .task-list-section ul {
     list-style: none;
     padding: 0;
@@ -153,50 +120,22 @@
     gap: 10px;
 }
 
-.task-item {
+.task-list-section li {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    gap: 15px;
-    padding: 12px 20px;
-    border-radius: 50px; /* Rounded capsule layout */
-    margin: 0;
-    font-size: 15px;
-    background-color: #f7f7f7;
+    align-items: center;
+    background-color: #F8F9FA;
+    padding: 10px;
+    border-radius: 5px;
 }
 
-.task-item.active { background-color: #e3f2fd; }
-.task-item.paused { background-color: #fff8e1; }
-.task-item.completed { background-color: #e8f5e9; text-decoration: line-through; color: var(--light-text); }
-
-.task-category { 
-    font-weight: 700; 
-    color: var(--base-text);
-    white-space: nowrap;
-}
-
-.task-time { 
-    font-family: 'Roboto Mono', monospace; 
-    font-weight: 500; 
-    margin-left: auto;
-    color: var(--base-text);
-}
-
-.task-controls .delete-btn {
-    background-color: var(--primary-accent); /* Coral background */
+.task-list-section button {
+    background-color: #BFBFBF;
     color: white;
-    min-width: 60px;
-    text-align: center;
+    border: none;
+    border-radius: 10px;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
 }
 
-/* Make inner task control buttons more subtle */
-.task-controls .resume-btn,
-.task-controls .pause-btn,
-.task-controls .finish-btn {
-    background-color: transparent;
-    color: var(--base-text);
-    padding: 5px;
-}
-.task-controls button:hover {
-    transform: scale(1.05);
-}

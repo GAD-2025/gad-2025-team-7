@@ -41,7 +41,7 @@ const Template = ({ type, onTemplateClick }) => {
             {type === 'schedule' && (
                 <>
                     <button
-                        className="template-btn"
+                        className="template-btn template-tag tag-blue"
                         data-title="회의"
                         data-category="work"
                         onClick={() => onTemplateClick({ title: '회의', category: 'work' })}
@@ -49,7 +49,7 @@ const Template = ({ type, onTemplateClick }) => {
                         회의
                     </button>
                     <button
-                        className="template-btn"
+                        className="template-btn template-tag tag-yellow"
                         data-title="알바"
                         data-category="work"
                         onClick={() => onTemplateClick({ title: '알바', category: 'work' })}
@@ -57,7 +57,7 @@ const Template = ({ type, onTemplateClick }) => {
                         알바
                     </button>
                     <button
-                        className="template-btn"
+                        className="template-btn template-tag tag-gray"
                         data-title="동아리"
                         data-category="personal"
                         onClick={() => onTemplateClick({ title: '동아리', category: 'personal' })}
@@ -68,8 +68,8 @@ const Template = ({ type, onTemplateClick }) => {
             )}
             {type === 'todo' && (
                 <>
-                    <button className="template-btn" onClick={() => onTemplateClick({ title: '장보기' })}>장보기</button>
-                    <button className="template-btn" onClick={() => onTemplateClick({ title: '과제' })}>과제</button>
+                    <button className="template-btn template-tag tag-orange" onClick={() => onTemplateClick({ title: '장보기' })}>장보기</button>
+                    <button className="template-btn template-tag tag-green" onClick={() => onTemplateClick({ title: '과제' })}>과제</button>
                 </>
             )}
             {customTemplates.map(template => (
