@@ -8,14 +8,33 @@
 
 .main-header {
     display: flex;
-    justify-content: flex-end; /* Changed from space-between */
+    justify-content: space-between; /* Changed from flex-end */
     align-items: center;
-    padding: 5px 15px;
+    padding: 5px 25px; /* Adjusted padding */
     background-color: #ffffff;
     border-bottom: 1px solid #dee2e6;
     height: 60px;
     box-sizing: border-box;
     flex-shrink: 0;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-container h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ff6f61; /* Coral color from screenshot */
+    margin: 0;
+}
+
+.logo-container p {
+    font-size: 14px;
+    color: #868e96;
+    margin: 0;
 }
 
 .logout-button {

@@ -1,90 +1,22 @@
 .home-container {
-  width: 1194px;
-  height: 834px;
-  position: relative;
-  margin: auto;
-  background-image: linear-gradient(90deg, rgba(241, 244, 246, 0.2) 0%, rgba(241, 244, 246, 0.2) 100%), linear-gradient(-89.27868584570083deg, white 0.83114%, #f1f4f6 99.076%);
-  overflow: hidden;
-}
-
-.header {
-  position: absolute;
-  top: 20px; /* Adjust as needed */
-  left: 20px;
-  right: 20px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 10;
-}
-
-.logo-container {
-  display: flex;
-  align-items: baseline;
-}
-
-.logo-text {
-  font-family: 'Pretendard', sans-serif;
-  font-weight: 700;
-  font-size: 33px;
-  color: #ff7581;
-  margin-right: 10px;
-}
-
-.subtitle-text {
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  font-size: 14px;
-  color: #909090;
-}
-
-.profile-container {
-  display: flex;
-  align-items: center;
-}
-
-.profile-name {
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  color: #383838;
-}
-
-.profile-name-main {
-  font-size: 30px;
-}
-
-.profile-name-sub {
-  font-size: 20px;
-}
-
-.profile-img {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  margin-left: 15px;
-}
-
-.main-content {
-    /* This is now a container for absolutely positioned elements, so it doesn't need much styling */
-    position: relative;
-    width: 100%;
-    height: 100%;
+  gap: 20px;
+  padding: 20px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .calendar-area {
-  position: absolute;
-  left: 27px;
-  top: 188px;
-  width: 599px;
-  height: 611px;
+  flex: 1;
+  /* Additional styling for calendar area if needed */
 }
 
 .dashboard-area {
-  position: absolute;
-  left: 646px;
-  top: 186px;
-  width: 505px;
-  height: 599px;
+  flex: 1;
   display: flex;
   flex-direction: column;
+  /* Additional styling for dashboard area if needed */
 }
 
 .tabs {

@@ -1,0 +1,133 @@
+.home-tab-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.dashboard-section-row {
+    display: flex;
+    gap: 20px;
+}
+
+.dashboard-section {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    flex: 1;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.section-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.add-btn {
+    background-color: #f1f3f5;
+    color: #868e96;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    font-size: 20px;
+    line-height: 28px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.add-btn:hover {
+    background-color: #e9ecef;
+}
+
+.section-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.schedule-item-detail,
+.todo-item-detail {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #e9ecef;
+    cursor: pointer;
+    position: relative;
+}
+
+.checkbox-icon.completed {
+    background-color: #ff6f61;
+    border-color: #ff6f61;
+}
+
+.checkbox-icon.completed::after {
+    content: '✓';
+    color: white;
+    font-size: 14px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.schedule-item-title,
+.todo-item-title {
+    flex-grow: 1;
+    font-size: 15px;
+}
+
+.schedule-item-time {
+    font-size: 14px;
+    color: #868e96;
+}
+
+.reminders-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 15px;
+}
+
+.reminder-card {
+    padding: 15px;
+    border-radius: 8px;
+    color: white;
+    text-align: center;
+}
+
+.reminder-dday {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.reminder-title {
+    font-size: 13px;
+    word-break: keep-all;
+}
+
+.urgency-high {
+    background-color: #ff6f61; /* D-3 or less */
+}
+
+.urgency-medium {
+    background-color: #ffc952; /* D-7 or less */
+}
+
+.urgency-low {
+    background-color: #4caf50;
+}

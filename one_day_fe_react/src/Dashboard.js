@@ -62,12 +62,16 @@ const Dashboard = ({
 
     return (
         <div className="right-column">
-            <div className="dashboard-tabs">
-                <button className={`dash-tab-link ${activeTab === 'home-tab' ? 'active' : ''}`} onClick={() => setActiveTab('home-tab')}>홈</button>
-                <button className={`dash-tab-link ${activeTab === 'records-tab' ? 'active' : ''}`} onClick={() => setActiveTab('records-tab')}>기록</button>
-                <button className={`dash-tab-link ${activeTab === 'healthcare-tab' ? 'active' : ''}`} onClick={() => setActiveTab('healthcare-tab')}>헬스케어</button>
+            <div className="dashboard-container">
+                <div className="dashboard-tabs">
+                    <button className={`dash-tab-link ${activeTab === 'home-tab' ? 'active' : ''}`} onClick={() => setActiveTab('home-tab')}>홈</button>
+                    <button className={`dash-tab-link ${activeTab === 'records-tab' ? 'active' : ''}`} onClick={() => setActiveTab('records-tab')}>기록</button>
+                    <button className={`dash-tab-link ${activeTab === 'healthcare-tab' ? 'active' : ''}`} onClick={() => setActiveTab('healthcare-tab')}>헬스케어</button>
+                </div>
+                <div className="dashboard-content-wrapper">
+                    {renderTabContent()}
+                </div>
             </div>
-            {renderTabContent()}
         </div>
     );
 };

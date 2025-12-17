@@ -3,24 +3,18 @@
 .profile-header-container {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px;
+    gap: 15px; /* Adjusted gap */
     cursor: pointer;
-    border-radius: 50px;
-    transition: background-color 0.2s;
-}
-
-.profile-header-container:hover {
-    background-color: #f1f3f5;
 }
 
 .profile-image-wrapper {
-    width: 35px;
-    height: 35px;
+    width: 40px; /* Increased size */
+    height: 40px; /* Increased size */
     border-radius: 50%;
     overflow: hidden;
     background-color: #e9ecef;
     flex-shrink: 0;
+    border: 2px solid #d0ebff; /* Light blue border */
 }
 
 .profile-image {
@@ -36,9 +30,9 @@
 }
 
 .profile-nickname {
-    font-size: 15px;
-    font-weight: 500;
-    color: #495057;
+    font-size: 16px; /* Increased font size */
+    font-weight: bold; /* Made font bold */
+    color: #212529; /* Darker color */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

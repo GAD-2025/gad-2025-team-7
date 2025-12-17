@@ -3,12 +3,6 @@ import './HomeTab.css';
 import Modal from './Modal';
 import Template from './Template';
 
-// Icons from the new Figma design
-const imgGroup1686559560 = "https://www.figma.com/api/mcp/asset/bf0b6c14-fe29-4d31-b9ee-ca5a00f12395"; // Unchecked
-const imgGroup1686559696 = "https://www.figma.com/api/mcp/asset/376dbe83-8785-44b9-9309-71812f8cc643"; // Checked for schedule
-const imgGroup1686559697 = "https://www.figma.com/api/mcp/asset/fba52ed4-de12-46e8-b496-e527e6900721"; // Checked for todo
-
-
 const getUrgencyClass = (eventDate, selectedDate) => {
     const today = new Date(selectedDate);
     const date = new Date(eventDate);
@@ -207,8 +201,8 @@ const HomeTab = ({
 
     return (
         <div className="home-tab-content">
-            <div className="section-container">
-                <div className="section">
+            <div className="dashboard-section-row">
+                <div className="dashboard-section">
                     <div className="section-header">
                         <h3>오늘의 일정</h3>
                     </div>
@@ -216,7 +210,7 @@ const HomeTab = ({
                         {dayEvents.length > 0 ? (
                             dayEvents.map(event => (
                                 <div key={event.id} className="schedule-item-detail">
-                                    <img src={event.completed ? imgGroup1686559560 : imgGroup1686559696} alt="checkbox" className="checkbox-icon" onClick={() => handleToggleSchedule(event.id, event.completed)} />
+                                    <div className={`checkbox-icon ${event.completed ? 'completed' : ''}`} onClick={() => handleToggleSchedule(event.id, event.completed)}></div>
                                     <span className="schedule-item-title">{event.title}</span>
                                     <span className="schedule-item-time">{event.time}</span>
                                 </div>
@@ -226,7 +220,7 @@ const HomeTab = ({
                         )}
                     </div>
                 </div>
-                <div className="section">
+                <div className="dashboard-section">
                     <div className="section-header">
                         <h3>일정 추가</h3>
                         <button className="add-btn" onClick={() => setShowScheduleModal(true)}>+</button>
@@ -237,8 +231,8 @@ const HomeTab = ({
                 </div>
             </div>
 
-            <div className="section-container">
-                <div className="section">
+            <div className="dashboard-section-row">
+                <div className="dashboard-section">
                     <div className="section-header">
                         <h3>투두리스트</h3>
                     </div>
@@ -246,7 +240,7 @@ const HomeTab = ({
                         {todos.length > 0 ? (
                             todos.map(todo => (
                                 <div key={todo.id} className="todo-item-detail">
-                                    <img src={todo.completed ? imgGroup1686559560 : imgGroup1686559697} alt="checkbox" className="checkbox-icon" onClick={() => handleToggleTodo(todo.id, todo.completed)} />
+                                    <div className={`checkbox-icon ${todo.completed ? 'completed' : ''}`} onClick={() => handleToggleTodo(todo.id, todo.completed)}></div>
                                     <span className="todo-item-title">{todo.title}</span>
                                 </div>
                             ))
@@ -255,7 +249,7 @@ const HomeTab = ({
                         )}
                     </div>
                 </div>
-                <div className="section">
+                <div className="dashboard-section">
                     <div className="section-header">
                         <h3>투두리스트 추가</h3>
                         <button className="add-btn" onClick={() => setShowTodoModal(true)}>+</button>
@@ -266,7 +260,7 @@ const HomeTab = ({
                 </div>
             </div>
 
-            <div className="section">
+            <div className="dashboard-section">
                 <div className="section-header">
                     <h3>리마인더</h3>
                 </div>

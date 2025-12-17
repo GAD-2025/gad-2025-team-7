@@ -6,9 +6,6 @@ import Dashboard from './Dashboard';
 import SlideOutNav from './SlideOutNav';
 import { useData } from './DataContext'; // Import useData
 
-const imgVector6551 = "https://www.figma.com/api/mcp/asset/13bd5b75-f6e3-45fe-8b16-c4abd3fdeb18";
-const imgEllipse6 = "https://www.figma.com/api/mcp/asset/01034083-e09c-4c55-9cd8-edc56181f730";
-
 const Home = () => {
     const { selectedDate, setSelectedDate } = useData(); // Get date from context
     
@@ -110,25 +107,8 @@ const Home = () => {
 
     return (
         <div className="home-container" onMouseUp={handleDragEnd} onMouseLeave={handleDragEnd}>
-            <button className="bookmark-btn" onClick={() => setIsSlideOutNavOpen(true)}>
-                <img src={imgVector6551} alt="Collection" className="bookmark-icon" />
-            </button>
             <SlideOutNav isOpen={isSlideOutNavOpen} onClose={() => setIsSlideOutNavOpen(false)} />
             
-            <header className="header">
-                <div className="logo-container">
-                    <p className="logo-text">OneDay</p>
-                    <p className="subtitle-text">하루를 하나로 관리하다.</p>
-                </div>
-                <div className="profile-container">
-                    <p className="profile-name">
-                        <span className="profile-name-main">수정</span>
-                        <span className="profile-name-sub">님</span>
-                    </p>
-                    <img alt="profile" className="profile-img" src={imgEllipse6} />
-                </div>
-            </header>
-
             <div className="calendar-area">
                 <Calendar
                     nav={nav}

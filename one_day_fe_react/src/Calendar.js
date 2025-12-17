@@ -3,10 +3,6 @@ import './Calendar.css';
 import { useData } from './DataContext';
 import DaySummaryPopover from './DaySummaryPopover';
 
-const imgEllipse8 = "https://www.figma.com/api/mcp/asset/bc047c4f-3b01-477a-b891-96d01a416555";
-const imgVector6543 = "https://www.figma.com/api/mcp/asset/23c11059-3f1b-4f6d-8b56-94284e6e1087";
-const imgVector6544 = "https://www.figma.com/api/mcp/asset/785f8a31-38ec-4732-834a-c96a6f59d75f";
-
 const Calendar = ({
     nav,
     setNav,
@@ -22,6 +18,7 @@ const Calendar = ({
     const [popoverAnchorEl, setPopoverAnchorEl] = useState(null);
     const [popoverDate, setPopoverDate] = useState(null);
     const [summaryData, setSummaryData] = useState(null);
+    const [view, setView] = useState('Month'); // 'Month' or 'Week'
 
     const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -93,17 +90,17 @@ const Calendar = ({
     return (
         <div className="calendar-wrapper">
             <div className="calendar-header">
+                <div className="view-toggle">
+                    <button className={view === 'Month' ? 'active' : ''} onClick={() => setView('Month')}>Month</button>
+                    <button className={view === 'Week' ? 'active' : ''} onClick={() => setView('Week')}>Week</button>
+                </div>
                 <div className="month-year-container">
                     <p className="month-text">{monthNames[month]}</p>
                     <p className="year-text">{year}</p>
                 </div>
                 <div className="calendar-nav">
-                    <button onClick={() => setNav(nav - 1)} className="nav-btn">
-                        <img alt="Previous" src={imgVector6543} />
-                    </button>
-                    <button onClick={() => setNav(nav + 1)} className="nav-btn">
-                        <img alt="Next" src={imgVector6544} className="next-arrow-icon" />
-                    </button>
+                    <button onClick={() => setNav(nav - 1)} className="nav-btn">&lt;</button>
+                    <button onClick={() => setNav(nav + 1)} className="nav-btn">&gt;</button>
                 </div>
             </div>
 
@@ -123,8 +120,15 @@ const Calendar = ({
                         >
                             <p>{dayInfo.day}</p>
                             {dayInfo.isToday && !dayInfo.isOtherMonth && (
-                                <img src={imgEllipse8} alt="today-dot" className="today-dot" />
+                                <div className="today-dot"></div>
                             )}
+                            <div className="events-container">
+                                {dayInfo.events && dayInfo.events.map(event => (
+                                    <div key={event.id} className="event">
+                                        {event.title}
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     ))}
                 </div>

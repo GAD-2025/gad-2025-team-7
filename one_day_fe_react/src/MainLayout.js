@@ -9,6 +9,10 @@ const MainLayout = () => {
         <MainBackground>
             <div className="main-layout">
                 <header className="main-header">
+                    <div className="logo-container">
+                        <h1>OneDay</h1>
+                        <p>하루를 하나로 관리하다.</p>
+                    </div>
                     <ProfileHeader />
                 </header>
                 <main className="main-content">
