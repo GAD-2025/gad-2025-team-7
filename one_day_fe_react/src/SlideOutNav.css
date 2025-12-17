@@ -84,24 +84,31 @@
     background-color: #f0f0f0;
 }
 
-/* Bookmark button style - to be placed in another CSS file like Home.css */
+/* Bookmark button style */
 .bookmark-btn {
     position: fixed;
     left: 15px;
     top: 15px;
     z-index: 1000;
-    background: #f0f0f0;
-    border: 1px solid #ccc;
-    border-left: none;
-    padding: 10px 12px;
+    background-color: #FF7581; /* Pink color */
+    border: none;
+    border-radius: 50%; /* Circular shape */
+    width: 50px;   /* Fixed size */
+    height: 50px;  /* Fixed size */
+    display: flex; /* To center content */
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-    font-size: 1.5rem;
-    line-height: 1;
     box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    padding: 0; /* Remove padding */
 }
 
+/* Remove ::before content */
 .bookmark-btn:before {
-    content: '🔖'; /* Bookmark emoji */
+    content: none;
+}
+
+.bookmark-icon {
+    width: 24px; /* Adjust size as needed */
+    height: 24px; /* Adjust size as needed */
 }

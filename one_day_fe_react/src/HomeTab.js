@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import Schedule from './Schedule';
-import TodoList from './TodoList';
+import './HomeTab.css';
 import Modal from './Modal';
 import Template from './Template';
-import './UpcomingEvents.css';
+
+// Icons from the new Figma design
+const imgGroup1686559560 = "https://www.figma.com/api/mcp/asset/bf0b6c14-fe29-4d31-b9ee-ca5a00f12395"; // Unchecked
+const imgGroup1686559696 = "https://www.figma.com/api/mcp/asset/376dbe83-8785-44b9-9309-71812f8cc643"; // Checked for schedule
+const imgGroup1686559697 = "https://www.figma.com/api/mcp/asset/fba52ed4-de12-46e8-b496-e527e6900721"; // Checked for todo
+
 
 const getUrgencyClass = (eventDate, selectedDate) => {
     const today = new Date(selectedDate);
@@ -12,10 +16,9 @@ const getUrgencyClass = (eventDate, selectedDate) => {
     date.setHours(0, 0, 0, 0);
     const diffTime = date - today;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays <= 1) return 'urgency-high';
-    if (diffDays <= 3) return 'urgency-medium';
-    if (diffDays <= 7) return 'urgency-low';
-    return 'urgency-default';
+    if (diffDays <= 3) return 'urgency-high'; // D-3 or less
+    if (diffDays <= 7) return 'urgency-medium'; // D-7 or less
+    return 'urgency-low';
 };
 
 const getDday = (eventDate, selectedDate) => {
@@ -67,7 +70,7 @@ const HomeTab = ({
                 const res = await fetch(`${process.env.REACT_APP_API_URL}/api/events/range/${userId}?startDate=${startDate}&endDate=${endDateString}`);
                 const data = await res.json();
                 if (res.ok) {
-                    setUpcomingEvents(data.slice(0, 10));
+                    setUpcomingEvents(data.slice(0, 3));
                 } else {
                     setUpcomingEvents([]);
                     console.error("Failed to fetch upcoming events:", data.msg);
@@ -109,7 +112,7 @@ const HomeTab = ({
     useEffect(() => {
         if (showScheduleModal && initialScheduleStartDate) {
             setNewScheduleStartDate(initialScheduleStartDate);
-            setNewScheduleEndDate(initialScheduleEndDate || ''); // FIX: Default endDate to empty string
+            setNewScheduleEndDate(initialScheduleEndDate || '');
         } else {
             setNewScheduleStartDate(selectedDate);
             setNewScheduleEndDate('');
@@ -129,7 +132,6 @@ const HomeTab = ({
 
     const handleSaveSchedule = async () => {
         if (!newScheduleTitle) return;
-        // FIX: Add validation for end date when repeating
         if (showScheduleDayPicker && !newScheduleEndDate) {
             alert('요일 반복 일정은 종료일을 반드시 지정해야 합니다.');
             return;
@@ -181,45 +183,105 @@ const HomeTab = ({
         } catch (error) { console.error('Error saving todo from template:', error); }
     };
 
+    const handleToggleSchedule = async (eventId, currentStatus) => {
+        const body = { completed: !currentStatus };
+        try {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/events/${eventId}/complete`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+            if (!res.ok) throw new Error('Failed to update schedule status');
+            onDataUpdate();
+        } catch (error) {
+            console.error('Error updating schedule status:', error);
+        }
+    };
+
+    const handleToggleTodo = async (todoId, currentStatus) => {
+        const body = { completed: !currentStatus };
+        try {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/todos/${todoId}/complete`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+            if (!res.ok) throw new Error('Failed to update todo status');
+            onDataUpdate();
+        } catch (error) {
+            console.error('Error updating todo status:', error);
+        }
+    };
+
     return (
-        <div id="home-tab" className="dash-tab-content active">
-            <div className="schedule-container">
-                <div className="dashboard-section schedule-main">
-                    <div className="section-header"><h3>오늘의 일정</h3><div className="header-actions"><button className="add-btn" onClick={() => setShowScheduleModal(true)}>+</button></div></div>
-                    <Schedule selectedDate={selectedDate} events={dayEvents} onDataUpdate={onDataUpdate} />
+        <div className="home-tab-content">
+            <div className="section-container">
+                <div className="section">
+                    <div className="section-header">
+                        <h3>오늘의 일정</h3>
+                    </div>
+                    <div className="section-content">
+                        {dayEvents.length > 0 ? (
+                            dayEvents.map(event => (
+                                <div key={event.id} className="schedule-item-detail">
+                                    <img src={event.completed ? imgGroup1686559560 : imgGroup1686559696} alt="checkbox" className="checkbox-icon" onClick={() => handleToggleSchedule(event.id, event.completed)} />
+                                    <span className="schedule-item-title">{event.title}</span>
+                                    <span className="schedule-item-time">{event.time}</span>
+                                </div>
+                            ))
+                        ) : (
+                            <p>오늘의 일정이 없습니다.</p>
+                        )}
+                    </div>
                 </div>
-                <div className="dashboard-section schedule-add">
-                    <div className="section-header"><h3>일정 추가</h3></div>
-                    <div className="section-content"><p>새로운 일정을 추가하려면 위 버튼을 클릭하세요.</p></div>
-                    <Template type="schedule" onTemplateClick={handleScheduleTemplateClick} />
+                <div className="section">
+                    <div className="section-header">
+                        <h3>일정 추가</h3>
+                        <button className="add-btn" onClick={() => setShowScheduleModal(true)}>+</button>
+                    </div>
+                    <div className="section-content">
+                        <Template type="schedule" onTemplateClick={handleScheduleTemplateClick} />
+                    </div>
                 </div>
             </div>
-            <div className="todo-container">
-                <div className="dashboard-section todo-main">
-                    <div className="section-header"><h3>투두리스트</h3><div className="header-actions"><button className="add-btn" onClick={() => setShowTodoModal(true)}>+</button></div></div>
-                    <TodoList selectedDate={selectedDate} todos={todos} onDataUpdate={onDataUpdate} />
+
+            <div className="section-container">
+                <div className="section">
+                    <div className="section-header">
+                        <h3>투두리스트</h3>
+                    </div>
+                    <div className="section-content">
+                        {todos.length > 0 ? (
+                            todos.map(todo => (
+                                <div key={todo.id} className="todo-item-detail">
+                                    <img src={todo.completed ? imgGroup1686559560 : imgGroup1686559697} alt="checkbox" className="checkbox-icon" onClick={() => handleToggleTodo(todo.id, todo.completed)} />
+                                    <span className="todo-item-title">{todo.title}</span>
+                                </div>
+                            ))
+                        ) : (
+                            <p>오늘 할 일이 없습니다.</p>
+                        )}
+                    </div>
                 </div>
-                <div className="dashboard-section todo-add">
-                    <div className="section-header"><h3>투두리스트 추가</h3></div>
-                    <Template type="todo" onTemplateClick={handleTodoTemplateClick} />
+                <div className="section">
+                    <div className="section-header">
+                        <h3>투두리스트 추가</h3>
+                        <button className="add-btn" onClick={() => setShowTodoModal(true)}>+</button>
+                    </div>
+                    <div className="section-content">
+                        <Template type="todo" onTemplateClick={handleTodoTemplateClick} />
+                    </div>
                 </div>
             </div>
-            <div className="dashboard-section">
-                <div className="section-header"><h3>리마인더</h3></div>
-                <div className="upcoming-events-list section-content">
+
+            <div className="section">
+                <div className="section-header">
+                    <h3>리마인더</h3>
+                </div>
+                <div className="reminders-container">
                     {isLoadingEvents ? <p>로딩 중...</p> : upcomingEvents.length > 0 ? (
                         upcomingEvents.map(event => (
-                            <div key={event.id} className={`upcoming-event-card ${getUrgencyClass(event.date, selectedDate)}`}>
-                                <div className="event-card-content">
-                                    <p className="event-card-title">{event.title}</p>
-                                    <p className="event-card-body">{new Date(event.date).toLocaleDateString('ko-KR', { month: '2-digit', day: '2-digit' })}</p>
-                                </div>
-                                <span className="event-card-dday">{getDday(event.date, selectedDate)}</span>
+                            <div key={event.id} className={`reminder-card ${getUrgencyClass(event.date, selectedDate)}`}>
+                                <div className="reminder-dday">{getDday(event.date, selectedDate)}</div>
+                                <p className="reminder-title">{event.title}</p>
                             </div>
                         ))
                     ) : <p>다가오는 일정이 없습니다.</p>}
                 </div>
             </div>
+
             <Modal show={showTodoModal} onClose={() => setShowTodoModal(false)}>
                 <h3>새 투두리스트 추가</h3>
                 <input type="text" placeholder="새로운 할 일" value={newTodoTitle} onChange={(e) => setNewTodoTitle(e.target.value)} />

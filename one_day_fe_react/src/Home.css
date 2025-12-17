@@ -1,117 +1,106 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
-
-:root {
-    --primary-color: #FF7581;
-    --background-color: #fdfcfa;
-    --border-color: #eee;
-    --text-color: #333;
-    --light-text-color: #888;
-    --event-work: #87CEEB;
-    --event-personal: #F08080;
-    --event-health: #90EE90;
-    --container-bg: #ffffff;
+.home-container {
+  width: 1194px;
+  height: 834px;
+  position: relative;
+  margin: auto;
+  background-image: linear-gradient(90deg, rgba(241, 244, 246, 0.2) 0%, rgba(241, 244, 246, 0.2) 100%), linear-gradient(-89.27868584570083deg, white 0.83114%, #f1f4f6 99.076%);
+  overflow: hidden;
 }
 
-body {
-    font-family: 'Noto Sans KR', sans-serif;
-    margin: 0;
-    color: var(--text-color);
-    background-color: var(--background-color);
+.header {
+  position: absolute;
+  top: 20px; /* Adjust as needed */
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
 }
 
-.main-content-wrapper { 
-    display: flex; 
+.logo-container {
+  display: flex;
+  align-items: baseline;
+}
+
+.logo-text {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
+  font-size: 33px;
+  color: #ff7581;
+  margin-right: 10px;
+}
+
+.subtitle-text {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  color: #909090;
+}
+
+.profile-container {
+  display: flex;
+  align-items: center;
+}
+
+.profile-name {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  color: #383838;
+}
+
+.profile-name-main {
+  font-size: 30px;
+}
+
+.profile-name-sub {
+  font-size: 20px;
+}
+
+.profile-img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  margin-left: 15px;
+}
+
+.main-content {
+    /* This is now a container for absolutely positioned elements, so it doesn't need much styling */
+    position: relative;
     width: 100%;
-    min-height: 100vh; /* Use min-height to allow content to grow */
-    position: relative; 
+    height: 100%;
 }
 
-.profile-settings-button {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
-    font-size: 16px;
-    cursor: pointer;
-    z-index: 100;
+.calendar-area {
+  position: absolute;
+  left: 27px;
+  top: 188px;
+  width: 599px;
+  height: 611px;
 }
 
-.profile-settings-button:hover {
-    background-color: #e06b75;
+.dashboard-area {
+  position: absolute;
+  left: 646px;
+  top: 186px;
+  width: 505px;
+  height: 599px;
+  display: flex;
+  flex-direction: column;
 }
 
-.left-column {
-    flex: 6;
-    padding: 20px 20px 20px 60px;
-    display: flex;
-    flex-direction: column;
-    min-width: 0; /* Prevents flex items from overflowing */
+.tabs {
+  display: flex;
+  margin-bottom: 10px;
 }
 
-.right-column { 
-    flex: 4; 
-    padding: 20px; 
-    background-color: #fff; 
-    border-left: 1px solid var(--border-color); 
-    overflow-y: auto; 
-    min-width: 0; /* Prevents flex items from overflowing */
+.tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  color: #c0c0c0;
+  font-size: 20px;
 }
 
-.calendar-container { width: 100%; flex-grow: 1; display: flex; flex-direction: column; }
-.calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.calendar-header h2 { color: var(--primary-color); font-size: 28px; }
-.calendar-header button { background: none; border: none; font-size: 24px; cursor: pointer; padding: 10px; }
-.calendar-grid, .calendar-body { display: grid; grid-template-columns: repeat(7, 1fr); }
-.calendar-grid { gap: 5px; }
-.calendar-body { flex-grow: 1; gap: 5px; }
-.day-name { text-align: center; font-weight: 700; padding-bottom: 10px; color: #555; }
-.date-cell { position: relative; border: 1px solid var(--border-color); border-radius: 8px; padding: 8px; cursor: pointer; transition: background-color 0.3s; display: flex; flex-direction: column; }
-.date-cell:hover { background-color: #fdf5f6; }
-.date-cell.selected { background-color: #ffe4e8; border-color: var(--primary-color); }
-.date-cell .date-number { font-weight: 700; margin-bottom: 5px; }
-.date-cell.other-month .date-number { color: #ccc; }
-.date-cell.today .date-number { color: var(--primary-color); }
-.event-preview { font-size: 12px; padding: 2px 5px; border-radius: 3px; color: white; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.event-work { background-color: var(--event-work); }
-.event-personal { background-color: var(--event-personal); }
-.event-health { background-color: var(--event-health); }
-
-
-/* --- GLOBAL RESPONSIVE LAYOUT --- */
-@media (max-width: 900px) {
-    .main-content-wrapper {
-        flex-direction: column; /* Stack columns vertically */
-        height: auto; /* Allow height to be determined by content */
-    }
-
-    .left-column {
-        padding: 15px; /* Reduce padding on mobile */
-        border-right: none;
-    }
-
-    .right-column {
-        border-left: none; /* Remove border when stacked */
-        overflow-y: visible; /* Let the body handle scrolling */
-        padding: 15px;
-    }
-
-    .calendar-header h2 {
-        font-size: 22px;
-    }
-
-    .day-name {
-        font-size: 14px;
-    }
-
-    .date-cell {
-        padding: 5px;
-    }
-    
-    .event-preview {
-        font-size: 10px;
-    }
+.tab.active {
+  color: #7c8083;
+  border-bottom-color: #7c8083;
 }

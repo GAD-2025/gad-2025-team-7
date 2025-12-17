@@ -1,6 +1,6 @@
 .main-background {
-  width: 834px;
-  height: 1194px;
+  width: 100%;
+  height: 100%;
   /* The Swift code describes a multi-layer background.
      Layer 1: A semi-transparent color overlay.
      Layer 0: A gradient that is transformed.

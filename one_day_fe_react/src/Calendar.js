@@ -3,6 +3,10 @@ import './Calendar.css';
 import { useData } from './DataContext';
 import DaySummaryPopover from './DaySummaryPopover';
 
+const imgEllipse8 = "https://www.figma.com/api/mcp/asset/bc047c4f-3b01-477a-b891-96d01a416555";
+const imgVector6543 = "https://www.figma.com/api/mcp/asset/23c11059-3f1b-4f6d-8b56-94284e6e1087";
+const imgVector6544 = "https://www.figma.com/api/mcp/asset/785f8a31-38ec-4732-834a-c96a6f59d75f";
+
 const Calendar = ({
     nav,
     setNav,
@@ -19,22 +23,16 @@ const Calendar = ({
     const [popoverDate, setPopoverDate] = useState(null);
     const [summaryData, setSummaryData] = useState(null);
 
-    const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+    const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-    // --- FINAL, SIMPLIFIED CLICK HANDLER ---
     const handleDateClick = (event, dayInfo) => {
-        // First, set the globally selected date
         setSelectedDate(dayInfo.dayString);
-        
-        // Then, set the state to show the popover
         setPopoverAnchorEl(event.currentTarget);
         setPopoverDate(dayInfo.dayString);
-
-        // Calculate summary data from existing context/props
         const todaysEvents = events.filter(e => e.date === dayInfo.dayString);
         const completedEventsCount = todaysEvents.filter(e => e.completed).length;
         const steps = pedometerDataByDate[dayInfo.dayString]?.steps || 0;
-
         setSummaryData({
             steps: steps,
             completedEvents: completedEventsCount,
@@ -48,35 +46,41 @@ const Calendar = ({
         setSummaryData(null);
     };
 
-    // --- Calendar Grid Calculation ---
     const dt = new Date();
     if (nav !== 0) dt.setMonth(new Date().getMonth() + nav);
-    const day = dt.getDate();
     const month = dt.getMonth();
     const year = dt.getFullYear();
     const firstDayOfMonth = new Date(year, month, 1);
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const dateString = firstDayOfMonth.toLocaleDateString('ko-kr', { weekday: 'long' });
-    const paddingDays = weekdays.indexOf(dateString.charAt(0));
+    const paddingDays = firstDayOfMonth.getDay();
 
     const days = [];
-    for (let i = 1; i <= paddingDays + daysInMonth; i++) {
-        const dayString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i - paddingDays).padStart(2, '0')}`;
-        if (i > paddingDays) {
-            days.push({
-                day: i - paddingDays,
-                dayString,
-                isToday: i - paddingDays === day && nav === 0,
-                isSelected: dayString === selectedDate,
-                events: events.filter(e => e.date === dayString),
-            });
-        } else {
-            days.push(null);
-        }
+    // Previous month's padding days
+    const prevMonthLastDay = new Date(year, month, 0).getDate();
+    for (let i = paddingDays; i > 0; i--) {
+        days.push({ day: prevMonthLastDay - i + 1, isOtherMonth: true });
+    }
+
+    // Current month's days
+    for (let i = 1; i <= daysInMonth; i++) {
+        const dayString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+        days.push({
+            day: i,
+            dayString,
+            isToday: new Date().getFullYear() === year && new Date().getMonth() === month && new Date().getDate() === i,
+            isSelected: dayString === selectedDate,
+            events: events.filter(e => e.date === dayString),
+        });
+    }
+
+    // Next month's padding days
+    const nextMonthDays = 42 - days.length;
+    for (let i = 1; i <= nextMonthDays; i++) {
+        days.push({ day: i, isOtherMonth: true });
     }
 
     const isDateInDraggedRange = (currentDayString) => {
-        if (!dragStartDayString || !dragEndDayString) return false;
+        if (!dragStartDayString || !dragEndDayString || !currentDayString) return false;
         const start = new Date(dragStartDayString);
         const end = new Date(dragEndDayString);
         const current = new Date(currentDayString);
@@ -87,41 +91,42 @@ const Calendar = ({
     };
 
     return (
-        <div className="left-column">
-            <div className="calendar-container">
-                <div className="calendar-header">
-                    <button onClick={() => setNav(nav - 1)}>&lt;</button>
-                    <h2>{`${year}년 ${month + 1}월`}</h2>
-                    <button onClick={() => setNav(nav + 1)}>&gt;</button>
+        <div className="calendar-wrapper">
+            <div className="calendar-header">
+                <div className="month-year-container">
+                    <p className="month-text">{monthNames[month]}</p>
+                    <p className="year-text">{year}</p>
                 </div>
-                <div className="calendar-grid">
-                    {weekdays.map(weekday => <div key={weekday} className="day-name">{weekday}</div>)}
+                <div className="calendar-nav">
+                    <button onClick={() => setNav(nav - 1)} className="nav-btn">
+                        <img alt="Previous" src={imgVector6543} />
+                    </button>
+                    <button onClick={() => setNav(nav + 1)} className="nav-btn">
+                        <img alt="Next" src={imgVector6544} className="next-arrow-icon" />
+                    </button>
                 </div>
-                <div className="calendar-body">
-                    {days.map((dayInfo, index) => {
-                        if (dayInfo) {
-                            const isInDraggedRange = isDateInDraggedRange(dayInfo.dayString);
-                            return (
-                                <div
-                                    key={index}
-                                    className={`date-cell ${dayInfo.isToday ? 'today' : ''} ${dayInfo.isSelected ? 'selected' : ''} ${isInDraggedRange ? 'drag-selected' : ''}`}
-                                    onClick={(e) => handleDateClick(e, dayInfo)} // Reverted to simple onClick
-                                    onMouseDown={() => onDragStart(dayInfo.dayString)}
-                                    onMouseEnter={() => onDragMove(dayInfo.dayString)} // Re-purposed for drag move
-                                    onMouseUp={onDragEnd}
-                                >
-                                    <div className="date-number">{dayInfo.day}</div>
-                                    {dayInfo.events.map(event => (
-                                        <div key={event.id} className={`event-preview event-${event.category}`}>
-                                            {event.title}
-                                        </div>
-                                    ))}
-                                </div>
-                            );
-                        } else {
-                            return <div key={index} className="date-cell other-month"></div>;
-                        }
-                    })}
+            </div>
+
+            <div className="calendar-grid">
+                <div className="calendar-weekdays">
+                    {weekdays.map(day => <div key={day} className="weekday">{day}</div>)}
+                </div>
+                <div className="calendar-days">
+                    {days.map((dayInfo, index) => (
+                        <div
+                            key={index}
+                            className={`day-cell ${dayInfo.isOtherMonth ? 'other-month' : ''} ${dayInfo.isToday ? 'today' : ''} ${dayInfo.isSelected ? 'selected' : ''} ${isDateInDraggedRange(dayInfo.dayString) ? 'drag-selected' : ''}`}
+                            onClick={(e) => dayInfo.dayString && handleDateClick(e, dayInfo)}
+                            onMouseDown={() => dayInfo.dayString && onDragStart(dayInfo.dayString)}
+                            onMouseEnter={() => dayInfo.dayString && onDragMove(dayInfo.dayString)}
+                            onMouseUp={onDragEnd}
+                        >
+                            <p>{dayInfo.day}</p>
+                            {dayInfo.isToday && !dayInfo.isOtherMonth && (
+                                <img src={imgEllipse8} alt="today-dot" className="today-dot" />
+                            )}
+                        </div>
+                    ))}
                 </div>
             </div>
 
@@ -129,7 +134,7 @@ const Calendar = ({
                 <DaySummaryPopover
                     date={popoverDate}
                     anchorEl={popoverAnchorEl}
-                    onClose={handleClosePopover} // The 'x' button and overlay click will close it
+                    onClose={handleClosePopover}
                     summaryData={summaryData}
                     isLoading={!summaryData}
                 />
