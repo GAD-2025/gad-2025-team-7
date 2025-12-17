@@ -107,7 +107,7 @@ const Home = () => {
 
     return (
         <div className="home-container" onMouseUp={handleDragEnd} onMouseLeave={handleDragEnd}>
-            <div id="collection-trigger" onClick={() => setIsSlideOutNavOpen(true)}>모아보기</div>
+            <div id="collection-trigger" onClick={() => setIsSlideOutNavOpen(true)} className="collection-trigger"></div>
             <SlideOutNav isOpen={isSlideOutNavOpen} onClose={() => setIsSlideOutNavOpen(false)} />
             
             <div className="calendar-area">

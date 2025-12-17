@@ -80,7 +80,7 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
         if (new Date(startDateInput) > new Date(endDateInput)) return alert('종료일은 시작일보다 빠를 수 없습니다.');
 
         try {
-            const res = await fetch('${process.env.REACT_APP_API_URL}/api/healthcare/cycles', {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/healthcare/cycles`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId, startDate: startDateInput, endDate: endDateInput }),

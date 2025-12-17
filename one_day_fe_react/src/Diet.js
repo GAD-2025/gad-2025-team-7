@@ -1,8 +1,53 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { useData } from './DataContext'; // Import the new hook
+import { useData } from './DataContext';
+import './Diet.css'; // Import the new CSS file
 
-// --- Helper Components (These can remain as they are, they are stateless UI) ---
+const imgPolygon4 = "https://www.figma.com/api/mcp/asset/c6b7ce0f-1bfa-4f5d-9227-19fb806c34bd";
+const imgEllipse7 = "https://www.figma.com/api/mcp/asset/4906b425-206e-4d9e-9e41-81728c38cb87";
+const imgRectangle240653668 = "https://www.figma.com/api/mcp/asset/6414e675-9fdd-4f75-a751-39ac75aaa291";
+
+function X({ onClick }) {
+    return (
+        <button className="delete-meal-card-btn" onClick={onClick} data-name="x" data-node-id="771:2407">
+            x
+        </button>
+    );
+}
+
+function Polygon() {
+    return (
+        <span className="meal-card-title-icon" data-node-id="771:2403">
+            <img alt="" src={imgPolygon4} />
+        </span>
+    );
+}
+
+// Reverted Component back to its structural form from Figma output,
+// without an onClick prop directly on its root div.
+function Component() {
+    return (
+        <div className="add-food-icon" data-name="Component 3" data-node-id="771:2404">
+            <div className="add-food-icon-plus-bg" data-node-id="771:2386">
+                <div className="add-food-icon-ellipse" data-node-id="771:2387">
+                    <img alt="" src={imgEllipse7} />
+                </div>
+                <p className="add-food-icon-plus-text" data-node-id="771:2388">
+                    +
+                </p>
+            </div>
+            <div className="add-food-icon-plus-bg bottom" data-node-id="771:2390">
+                <div className="add-food-icon-ellipse" data-node-id="771:2391">
+                    <img alt="" src={imgEllipse7} />
+                </div>
+                <p className="add-food-icon-plus-text" data-node-id="771:2392">
+                    +
+                </p>
+            </div>
+        </div>
+    );
+}
+
 
 const AutocompletePortal = ({ results, position, onSelect }) => {
     if (!results || results.length === 0 || !position) {
@@ -20,7 +65,7 @@ const AutocompletePortal = ({ results, position, onSelect }) => {
     return createPortal(
         <div className="autocomplete-results" style={style}>
             {results.map(food => (
-                <div key={food.name} className="autocomplete-item" onClick={() => onSelect(food)}>
+                <div key={food.id} className="autocomplete-item" onClick={() => onSelect(food)}>
                     {food.name} ({Math.round(food.calories)}kcal)
                 </div>
             ))}
@@ -56,10 +101,7 @@ const CategoryMenu = ({ cardId, onSelect, onClose }) => {
     );
 };
 
-// --- Main Diet Component (Refactored) ---
-
 const Diet = () => {
-    // Get state and functions from the context
     const { 
         mealCards,
         addMealCard,
@@ -71,17 +113,14 @@ const Diet = () => {
         setSearchQuery
     } = useData();
 
-    // Local UI state can remain here
     const [openMenuCardId, setOpenMenuCardId] = useState(null);
     const [portalResults, setPortalResults] = useState([]);
     const [portalPosition, setPortalPosition] = useState(null);
     const [activeCardId, setActiveCardId] = useState(null);
     
-    // Refs for DOM elements
     const activeSearchInputRef = useRef(null);
     const containerRef = useRef(null);
 
-    // --- Debounced search logic (can stay in this component) ---
     function debounce(func, delay) {
         let timeout;
         return function(...args) {
@@ -112,10 +151,8 @@ const Diet = () => {
         }
     }, 300), []);
 
-    // --- Event Handlers ---
-
     const handleSearchChange = (cardId, query) => {
-        setSearchQuery(cardId, query); // Update context state
+        setSearchQuery(cardId, query);
         setActiveCardId(cardId);
         searchFoods(query);
     };
@@ -131,7 +168,7 @@ const Diet = () => {
     
     const handleAddFood = (food) => {
         if (activeCardId) {
-            addFoodToCard(activeCardId, food); // Call context function
+            addFoodToCard(activeCardId, food);
         }
         setPortalResults([]);
         setPortalPosition(null);
@@ -160,16 +197,17 @@ const Diet = () => {
                     <h3>식단 칼로리</h3>
                      <button className="add-card-btn" onClick={handleAddMealCard}>+</button>
                 </div>
-                <div id="meal-cards-container" ref={containerRef} className="section-content horizontal-scroll">
+                <div id="meal-cards-container" ref={containerRef} className="meal-cards-wrapper">
                     {mealCards.map((card) => (
                         <div 
                             key={card.id} 
                             className="meal-card"
+                            data-node-id="661:2905" // Overall meal card div
                         >
                              <div className="meal-card-header">
-                                 <div className="meal-card-title-container" onClick={(e) => e.stopPropagation()}>
-                                    <button className="meal-card-title-btn" onClick={() => setOpenMenuCardId(card.id)}>
-                                        {card.category} <span>▾</span>
+                                 <div className="meal-card-title-container" onClick={(e) => e.stopPropagation()} data-node-id="661:2907">
+                                    <button className="meal-card-title-btn" onClick={() => setOpenMenuCardId(card.id)} data-node-id="661:2908">
+                                        {card.category} <Polygon />
                                     </button>
                                     {openMenuCardId === card.id && (
                                         <CategoryMenu 
@@ -179,36 +217,58 @@ const Diet = () => {
                                         />
                                     )}
                                 </div>
-                                <button className="delete-meal-card-btn" onClick={(e) => { e.stopPropagation(); deleteMealCard(card.id); }}>X</button>
+                                <X onClick={(e) => { e.stopPropagation(); deleteMealCard(card.id); }} />
                             </div>
                             <div className="meal-card-body" onClick={(e) => e.stopPropagation()}>
                                 <ul className="food-list">
                                     {card.foods.map((food) => (
-                                        <li key={food.id}>
+                                        <li key={food.id} data-node-id="661:2912">
                                             <span className="food-name">{food.name}</span>
                                             <input 
                                                 className="food-qty" type="number" value={food.qty} min="0.1" step="0.1" 
                                                 onChange={(e) => updateFoodQty(card.id, food.id, e.target.value)}
+                                                data-node-id="771:2394"
                                             />
-                                            <span className="food-cal">{Math.round((food.calories || 0) * (food.qty || 1))} kcal</span>
+                                            <span className="food-cal" data-node-id="771:2399">{Math.round((food.calories || 0) * (food.qty || 1))} kcal</span>
                                             <button className="remove-food-btn" onClick={() => removeFoodFromCard(card.id, food.id)}>x</button>
                                         </li>
                                     ))}
                                 </ul>
-                                <div className="food-search-wrapper">
-                                    <input 
-                                        type="text" 
-                                        className="food-search-input" 
+                                <div className="food-search-wrapper" data-node-id="771:2383">
+                                    <input
+                                        type="text"
+                                        className="food-search-input"
                                         placeholder="음식 검색..."
                                         value={card.searchQuery}
                                         onFocus={(e) => handleSearchFocus(e, card.id)}
                                         onChange={(e) => handleSearchChange(card.id, e.target.value)}
                                         onClick={(e) => e.stopPropagation()}
                                     />
+                                    {/* The Figma design's plus icon is part of the search input area to add a food item */}
+                                    {/* Wrapping Component in a button to handle clicks for adding food. */}
+                                    <button className="add-food-btn-component" onClick={() => {
+                                        if (card.searchQuery) {
+                                            // Assuming a food item can be added directly from the search query
+                                            // This is a new functional decision based on the user's intent to "add food"
+                                            // when the plus icon (Component) is clicked.
+                                            // For now, let's keep it simple and just add the search query text as a food item.
+                                            // A more robust solution would involve fetching the food details based on the query.
+                                            const newFood = {
+                                                id: Date.now(), // Unique ID
+                                                name: card.searchQuery,
+                                                calories: 0, // Placeholder
+                                                qty: 1
+                                            };
+                                            addFoodToCard(card.id, newFood);
+                                            setSearchQuery(card.id, ''); // Clear search query after adding
+                                        }
+                                    }}>
+                                        <Component />
+                                    </button>
                                 </div>
                             </div>
                             <div className="meal-card-footer">
-                                <span>총: <span className="meal-card-total-calories">{Math.round(card.foods.reduce((acc, food) => acc + (food.calories || 0) * (food.qty || 1), 0))}</span> kcal</span>
+                                <span>총: <span className="meal-card-total-calories" data-node-id="771:2385">{Math.round(card.foods.reduce((acc, food) => acc + (food.calories || 0) * (food.qty || 1), 0))}</span> kcal</span>
                             </div>
                         </div>
                     ))}

@@ -1,0 +1,189 @@
+/* Styles for HealthcareCollection.js (New Design) */
+
+/* General container and header styling */
+.healthcare-container {
+    padding: 20px;
+    font-family: 'Pretendard', sans-serif;
+}
+
+.healthcare-back-button {
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    cursor: pointer;
+    background-color: #F8F9FA;
+    color: #383838;
+    border: 1px solid #E9ECEF;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.healthcare-back-button:hover {
+    background-color: #E9ECEF;
+}
+
+.healthcare-header {
+    margin-bottom: 20px;
+}
+
+.healthcare-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #383838;
+    margin-bottom: 5px;
+}
+
+.healthcare-header p {
+    font-size: 14px;
+    color: #6E7279;
+}
+
+/* Grid for weekly summary cards */
+.weekly-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Responsive grid */
+    gap: 20px;
+}
+
+/* Individual daily info card - "하얀박스", "동글동글" */
+.healthcare-daily-card {
+    background-color: #ffffff;
+    border-radius: 16px; /* 동글동글 */
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: transform 0.2s;
+}
+
+.healthcare-daily-card:hover {
+    transform: translateY(-3px);
+}
+
+.daily-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed #E9ECEF;
+    padding-bottom: 10px;
+}
+
+.daily-card-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #383838;
+}
+
+.daily-card-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns for metrics */
+    gap: 10px;
+}
+
+.metric-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f8f9fa; /* Pastel background */
+    border-radius: 12px; /* 동글동글 */
+    padding: 10px;
+    gap: 5px;
+    text-align: center;
+}
+
+.metric-item-label {
+    font-size: 13px;
+    color: #6E7279; /* Soft grey */
+    font-weight: 500;
+}
+
+.metric-item-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #FF7581; /* Accent color, cute pink */
+}
+
+.metric-item-unit {
+    font-size: 12px;
+    color: #6E7279;
+}
+
+/* Bar Chart Styling - More cute and pastel */
+.daily-chart-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    height: 120px;
+    padding-top: 10px;
+    border-top: 1px dashed #E9ECEF;
+    margin-top: 15px;
+}
+
+.chart-bar-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    width: 25%;
+    position: relative;
+    height: 100%;
+}
+
+.chart-bar {
+    width: 80%; /* Slimmer bars */
+    border-radius: 8px 8px 0 0; /* 동글동글 top */
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    color: #fff;
+    font-size: 0.75em;
+    font-weight: 600;
+    transition: height 0.3s ease-out;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Subtle shadow */
+}
+
+/* Pastel Tones for Bars */
+.chart-bar-steps {
+    background-color: #B3E0FF; /* Pastel Blue */
+}
+
+.chart-bar-consumed {
+    background-color: #FFC0CB; /* Pastel Pink */
+}
+
+.chart-bar-burned {
+    background-color: #C1FFD7; /* Pastel Green */
+}
+
+.bar-value {
+    font-size: 0.8em;
+    font-weight: 500;
+    color: #6E7279; /* Soft grey */
+    margin-top: 5px;
+}
+
+.chart-labels {
+    display: flex;
+    justify-content: space-around;
+    font-size: 0.8em;
+    margin-top: 10px;
+    color: #6E7279;
+    font-weight: 500;
+}
+
+.chart-label-item {
+    width: 25%;
+    text-align: center;
+}
+
+.empty-weekly-data {
+    text-align: center;
+    color: #A0A0A0;
+    font-size: 16px;
+    padding: 30px 0;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}

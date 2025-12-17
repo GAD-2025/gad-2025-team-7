@@ -10,7 +10,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 30px; /* Adjusted padding */
+    padding: 15px 30px 15px 90px; /* Adjusted padding-left to move content right */
     background-color: transparent; /* Transparent background */
     border-bottom: none; /* No border */
     height: 80px; /* Adjusted height */

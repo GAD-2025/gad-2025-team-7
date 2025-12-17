@@ -1,0 +1,325 @@
+/* Styles for Diet.js */
+.meal-cards-wrapper {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 10px; /* Space for scrollbar */
+    -webkit-overflow-scrolling: touch; /* For smoother scrolling on iOS */
+    scrollbar-width: none; /* Firefox */
+}
+
+/* Hide scrollbar for Webkit browsers */
+.meal-cards-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.meal-card {
+    flex-shrink: 0;
+    width: 228px; /* Fixed width as per Figma design */
+    min-height: 139px; /* Fixed height as per Figma design */
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    padding: 15px;
+    position: relative;
+    border: 1px solid transparent; /* Default border */
+    transition: border-color 0.2s ease-in-out;
+    display: flex; /* Use flexbox for internal layout */
+    flex-direction: column; /* Stack children vertically */
+    justify-content: space-between; /* Push footer to bottom */
+}
+
+/* Add a pink border for selected card */
+.meal-card.selected {
+    border-color: #FF7581; /* Pink border */
+}
+
+.meal-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    height: 30px; /* As per Figma's category button height */
+}
+
+.meal-card-title-container {
+    position: relative;
+    z-index: 10; /* Ensure menu is above other card content */
+}
+
+.meal-card-title-btn {
+    background: linear-gradient(90deg, #FFE1E3 0%, #FFE1E3 100%), linear-gradient(90deg, #FFFFFF 0%, #FFFFFF 100%);
+    border: 1px solid #FF7581;
+    border-radius: 21px;
+    padding: 5px 15px;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #383838;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px; /* Match Figma design */
+}
+
+.meal-card-title-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 11px; /* Figma polygon size */
+    height: 11px;
+}
+.meal-card-title-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+
+.category-select-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    padding: 5px 0;
+    min-width: 86px; /* Width of the button */
+}
+
+.category-select-menu button {
+    background: none;
+    border: none;
+    padding: 8px 15px;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 14px;
+    color: #383838;
+}
+
+.category-select-menu button:hover {
+    background-color: #f5f5f5;
+}
+
+/* Positioning for the X (delete meal card) button */
+.delete-meal-card-btn {
+    position: absolute; /* Absolute positioning */
+    top: 10px; /* 10px from top */
+    right: 10px; /* 10px from right */
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: #9a9a9a; /* Figma's 'x' color */
+    cursor: pointer;
+    padding: 0;
+    width: 17px; /* Matches Figma's 'x' size for better click area */
+    height: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; /* Make it circular */
+    transition: background-color 0.2s;
+    z-index: 10; /* Ensure it's above other elements */
+}
+
+.delete-meal-card-btn:hover {
+    background-color: #f0f0f0;
+}
+
+
+.meal-card-body {
+    flex-grow: 1; /* Allows body to take up available space */
+    padding-bottom: 10px; /* Spacing before footer */
+}
+
+.food-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+.food-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px; /* Reduced margin */
+    background-color: rgba(191,191,191,0.3); /* Grey background */
+    border: 0.569px solid #bfbfbf; /* Grey border */
+    border-radius: 17.079px; /* Rounded corners */
+    padding: 3px 8px; /* Adjusted padding */
+    font-size: 11.386px; /* Smaller font size */
+    color: #383838;
+}
+
+.food-name {
+    flex-grow: 1;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    font-weight: normal;
+    font-size: 11.386px;
+    color: #383838;
+}
+
+.food-qty {
+    width: 40px;
+    text-align: center;
+    border: 0.7px solid #9a9a9a; /* Figma's grey border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 2px 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 11.386px;
+    color: #404040;
+}
+
+.food-cal {
+    font-family: 'Inter', sans-serif;
+    font-weight: normal;
+    font-size: 10px;
+    color: #000;
+    white-space: nowrap; /* Prevent wrapping */
+}
+
+.remove-food-btn {
+    background: none;
+    border: none;
+    color: #9a9a9a; /* Figma's 'x' color */
+    font-size: 12px;
+    cursor: pointer;
+    padding: 0 5px;
+    margin-left: 5px;
+}
+
+.food-search-wrapper {
+    position: relative; /* For absolute positioning of the plus icon */
+    display: flex; /* Use flex to align input and icon */
+    align-items: center;
+    border: 1px solid #9a9a9a; /* Border for the whole search wrapper */
+    border-radius: 15px; /* Rounded corners for the combined unit */
+    padding-right: 5px; /* Space for the plus icon */
+}
+
+.food-search-input {
+    flex-grow: 1; /* Allow input to take remaining space */
+    border: none; /* Remove individual input border */
+    background: none; /* Make input background transparent */
+    padding: 5px 10px;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 12px;
+    color: #9a9a9a;
+    outline: none;
+    height: 22px; /* Fixed height for input */
+    box-sizing: border-box; /* Include padding in height */
+}
+
+.food-search-input::placeholder {
+    color: #9a9a9a;
+}
+
+.add-food-btn-component { /* This is the button wrapping the Component visual */
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px; /* Adjust size as needed */
+    height: 20px;
+    position: absolute; /* Position relative to wrapper */
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+}
+
+.add-food-icon { /* The visual Component itself */
+    width: 32.487px; /* Figma's width */
+    height: 58.126px; /* Figma's height */
+    position: relative; /* To allow its children absolute positioning */
+    transform: scale(0.4); /* Scale down to fit in button */
+    transform-origin: center;
+    pointer-events: none; /* Ensure clicks go to the button */
+}
+
+.add-food-icon-plus-bg {
+    position: absolute;
+    width: 100%;
+    height: 50%; /* Top half of the plus icon component */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    left: 0;
+}
+
+.add-food-icon-plus-bg.bottom {
+    top: 50%;
+}
+
+.add-food-icon-ellipse {
+    width: 16.053px; /* Figma's ellipse size */
+    height: 16.053px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(46.84deg); /* Figma's rotation */
+}
+.add-food-icon-ellipse img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.add-food-icon-plus-text {
+    position: absolute;
+    font-family: 'Inter', sans-serif; /* Use Inter as per Figma */
+    font-weight: 300; /* Light as per Figma */
+    font-size: 19.791px;
+    color: #383838;
+    transform: rotate(46.84deg); /* Figma's rotation */
+}
+
+
+.meal-card-footer {
+    border-top: 1px dashed #E9ECEF;
+    padding-top: 10px;
+    margin-top: auto; /* Push footer to bottom in flex container */
+    text-align: right;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    color: #000;
+}
+
+.meal-card-total-calories {
+    font-weight: normal;
+    font-size: 12px; /* Figma's font size */
+}
+
+
+/* Autocomplete portal styling */
+.autocomplete-results {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.autocomplete-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 14px;
+    color: #383838;
+}
+
+.autocomplete-item:hover {
+    background-color: #f5f5f5;
+}

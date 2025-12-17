@@ -1,0 +1,110 @@
+/* Styles for HealthcareTab.js */
+
+.healthcare-tab-content {
+    font-family: 'Pretendard', sans-serif;
+}
+
+.healthcare-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.dashboard-section {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+}
+
+.section-header {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #E9ECEF;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section-header h3 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+    color: #383838;
+}
+
+.section-content {
+    /* General styling for content within sections */
+}
+
+.total-calorie-display {
+    font-size: 16px;
+    font-weight: 600;
+    color: #383838;
+    margin-bottom: 20px;
+    text-align: center;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+#total-intake-display {
+    color: #FF7581;
+}
+
+.macro-bars-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.macro-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.macro-item label {
+    flex-basis: 60px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6E7279;
+}
+
+.macro-bar {
+    flex-grow: 1;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    height: 10px;
+    overflow: hidden;
+}
+
+.macro-bar-progress {
+    height: 100%;
+    border-radius: 5px;
+    background-color: #FF7581; /* Accent color */
+    transition: width 0.5s ease-out;
+}
+
+#carb-bar {
+    background-color: #6C5CE7; /* Example color for carbs */
+}
+
+#protein-bar {
+    background-color: #00B894; /* Example color for protein */
+}
+
+#fat-bar {
+    background-color: #FDCB6E; /* Example color for fat */
+}
+
+.macro-item span {
+    flex-basis: 50px;
+    text-align: right;
+    font-size: 14px;
+    font-weight: 500;
+    color: #383838;
+}
+
+/* Specific styling for Pedometer and CyclePrediction can be added here or in their own CSS */

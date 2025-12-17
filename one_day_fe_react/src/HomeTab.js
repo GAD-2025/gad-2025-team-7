@@ -53,6 +53,13 @@ const HomeTab = ({
     const [upcomingEvents, setUpcomingEvents] = useState([]);
     const [isLoadingEvents, setIsLoadingEvents] = useState(true);
 
+    // Update newScheduleStartDate when selectedDate prop changes
+    useEffect(() => {
+        setNewScheduleStartDate(selectedDate);
+        // Optionally, reset newScheduleEndDate if it's meant to be for single-day events by default
+        // setNewScheduleEndDate('');
+    }, [selectedDate]);
+
     useEffect(() => {
         if (!userId) return;
         const fetchUpcomingEvents = async () => {

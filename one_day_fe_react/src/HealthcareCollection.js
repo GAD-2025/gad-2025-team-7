@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from './DataContext';
+import './HealthcareCollection.css'; // Import the new CSS file
 
 // Helper function to get the last 7 days
 const getLastSevenDays = () => {
@@ -42,64 +43,79 @@ const HealthcareCollection = () => {
         });
     }, [mealsByDate, pedometerDataByDate]);
 
-    // This component no longer needs its own loading or error state,
-    // as it's just a view of the already-loaded (or loading) data in the context.
+    // Figma shows max values for progress bars
+    const maxSteps = 10000;
+    const maxConsumedCalories = 2500;
+    const maxCaloriesBurned = 500;
     
     return (
-        <div style={{ padding: '20px' }}>
-            <button onClick={() => navigate('/home')} style={{ marginBottom: '20px', padding: '10px 15px', cursor: 'pointer' }}>
+        <div className="healthcare-container">
+            <button onClick={() => navigate('/home')} className="healthcare-back-button">
                 &larr; 홈으로 돌아가기
             </button>
-            <h1>헬스케어 모아보기 (주간 요약)</h1>
-            <p>지난 7일간의 건강 기록입니다.</p>
+            <div className="healthcare-header">
+                <h1>헬스케어 모아보기 (주간 요약)</h1>
+                <p>지난 7일간의 건강 기록입니다.</p>
+            </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div className="weekly-summary-grid">
                 {weeklyData.length === 0 ? (
-                    <p>표시할 주간 기록이 없습니다.</p>
+                    <p className="empty-weekly-data">표시할 주간 기록이 없습니다.</p>
                 ) : (
                     weeklyData.map(day => (
-                        <div key={day.date} style={{ border: '1px solid #ccc', padding: '10px', borderRadius: '5px' }}>
-                            <h3>{day.date}</h3>
-                            <p>걸음 수: {day.steps} 걸음</p>
-                            <p>소모 칼로리: {day.caloriesBurned} kcal</p>
-                            <p>총 섭취 칼로리: {day.totalConsumedCalories} kcal</p>
-                            
-                            <div style={{ display: 'flex', alignItems: 'flex-end', height: '100px', borderBottom: '1px solid #eee', marginTop: '10px' }}>
-                                <div style={{ 
-                                    width: '30%', 
-                                    height: `${Math.min(100, (day.steps / 10000) * 100)}%`, 
-                                    backgroundColor: 'skyblue', 
-                                    marginRight: '5%', 
-                                    display: 'flex', 
-                                    alignItems: 'flex-end', 
-                                    justifyContent: 'center',
-                                    color: '#fff',
-                                    fontSize: '0.8em'
-                                }}>{day.steps}</div>
-                                <div style={{ 
-                                    width: '30%', 
-                                    height: `${Math.min(100, (day.totalConsumedCalories / 2500) * 100)}%`, 
-                                    backgroundColor: 'lightcoral', 
-                                    marginRight: '5%',
-                                    display: 'flex', 
-                                    alignItems: 'flex-end', 
-                                    justifyContent: 'center',
-                                    color: '#fff',
-                                    fontSize: '0.8em'
-                                }}>{Math.round(day.totalConsumedCalories)}</div>
-                                <div style={{ 
-                                    width: '30%', 
-                                    height: `${Math.min(100, (day.caloriesBurned / 500) * 100)}%`, 
-                                    backgroundColor: 'lightgreen', 
-                                    display: 'flex', 
-                                    alignItems: 'flex-end', 
-                                    justifyContent: 'center',
-                                    color: '#fff',
-                                    fontSize: '0.8em'
-                                }}>{day.caloriesBurned}</div>
+                        <div key={day.date} className="healthcare-daily-card">
+                            <div className="daily-card-header">
+                                <h3>{day.date}</h3>
                             </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8em', marginTop: '5px' }}>
-                                <span>걸음</span><span>섭취</span><span>소모</span>
+                            
+                            <div className="daily-card-metrics">
+                                <div className="metric-item">
+                                    <span className="metric-item-label">걸음 수</span>
+                                    <span className="metric-item-value">{day.steps}</span>
+                                    <span className="metric-item-unit">걸음</span>
+                                </div>
+                                <div className="metric-item">
+                                    <span className="metric-item-label">소모 칼로리</span>
+                                    <span className="metric-item-value">{day.caloriesBurned}</span>
+                                    <span className="metric-item-unit">kcal</span>
+                                </div>
+                                <div className="metric-item">
+                                    <span className="metric-item-label">총 섭취 칼로리</span>
+                                    <span className="metric-item-value">{day.totalConsumedCalories}</span>
+                                    <span className="metric-item-unit">kcal</span>
+                                </div>
+                            </div>
+                            
+                            <div className="daily-chart-container">
+                                {/* Steps Bar */}
+                                <div className="chart-bar-wrapper">
+                                    <div 
+                                        className="chart-bar chart-bar-steps" 
+                                        style={{ height: `${Math.min(100, (day.steps / maxSteps) * 100)}%` }}
+                                    ></div>
+                                    <span className="bar-value">{day.steps}</span>
+                                </div>
+                                {/* Consumed Calories Bar */}
+                                <div className="chart-bar-wrapper">
+                                    <div 
+                                        className="chart-bar chart-bar-consumed" 
+                                        style={{ height: `${Math.min(100, (day.totalConsumedCalories / maxConsumedCalories) * 100)}%` }}
+                                    ></div>
+                                    <span className="bar-value">{Math.round(day.totalConsumedCalories)}</span>
+                                </div>
+                                {/* Burned Calories Bar */}
+                                <div className="chart-bar-wrapper">
+                                    <div 
+                                        className="chart-bar chart-bar-burned" 
+                                        style={{ height: `${Math.min(100, (day.caloriesBurned / maxCaloriesBurned) * 100)}%` }}
+                                    ></div>
+                                    <span className="bar-value">{day.caloriesBurned}</span>
+                                </div>
+                            </div>
+                            <div className="chart-labels">
+                                <span className="chart-label-item">걸음</span>
+                                <span className="chart-label-item">섭취</span>
+                                <span className="chart-label-item">소모</span>
                             </div>
                         </div>
                     ))

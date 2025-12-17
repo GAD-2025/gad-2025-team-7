@@ -3,6 +3,7 @@ import CyclePrediction from './CyclePrediction';
 import Pedometer from './Pedometer';
 import Diet from './Diet';
 import { useData } from './DataContext';
+import './HealthcareTab.css'; // Import the new CSS file
 
 const HealthcareTab = ({ userId }) => {
     const { dietTotals } = useData();
@@ -14,7 +15,7 @@ const HealthcareTab = ({ userId }) => {
     const recommendedFat = Math.round(defaultRecommendedCalories * 0.25 / 9);
 
     return (
-        <div id="healthcare-tab" className="dash-tab-content active">
+        <div id="healthcare-tab" className="healthcare-tab-content dash-tab-content active">
             <div className="healthcare-row">
                 <CyclePrediction userId={userId} selectedCycleStartDate={selectedCycleStartDate} />
                 <Pedometer userId={userId} />

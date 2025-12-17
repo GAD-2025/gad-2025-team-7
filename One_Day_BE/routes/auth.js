@@ -94,12 +94,31 @@ const uploadMiddleware = multer({ storage: storage }).single('profileImage');
 // @desc    Update user profile with nickname and/or image
 // @access  Private
 // IMPORTANT: This route uses multer for multipart/form-data, so it does NOT use the jsonParser.
-router.post('/profile/:userId', uploadMiddleware, async (req, res, next) => {
+// @route   POST /api/auth/profile/:userId
+// @desc    Update user profile with nickname and/or image
+// @access  Private
+// IMPORTANT: This route uses multer for multipart/form-data, so it does NOT use the jsonParser.
+router.post('/profile/:userId', (req, res, next) => {
+    uploadMiddleware(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+            // A Multer error occurred when uploading.
+            console.error("Multer error:", err);
+            return res.status(500).json({ msg: `파일 업로드 중 오류 발생: ${err.message}` });
+        } else if (err) {
+            // An unknown error occurred when uploading.
+            console.error("Unknown upload error:", err);
+            return res.status(500).json({ msg: `알 수 없는 파일 업로드 오류 발생: ${err.message}` });
+        }
+        // Everything went fine, proceed to the next middleware/route handler
+        next();
+    });
+}, async (req, res, next) => {
     const connection = await db.getConnection();
     try {
         await connection.beginTransaction();
 
         const { userId } = req.params;
+        // The username is now available directly on req.body because Multer parsed it
         const { username } = req.body;
         let profileImageUrl = null;
 

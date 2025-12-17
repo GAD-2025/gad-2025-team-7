@@ -1,7 +1,9 @@
-/* StopwatchCollection.css */
+/* StopwatchCollection.css (New Design) */
 .stopwatch-collection-container {
     padding: 20px;
-    background-color: #fff;
+    background-color: #F8F9FA; /* Light background for pastel feel */
+    font-family: 'Pretendard', sans-serif;
+    min-height: 100vh; /* Ensure it takes full height */
 }
 
 .sc-header {
@@ -9,6 +11,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 25px;
+    padding: 10px 0;
 }
 
 .sc-header-left {
@@ -26,49 +29,62 @@
 .sc-back-icon {
     font-size: 24px;
     cursor: pointer;
+    color: #6E7279; /* Soft grey */
 }
 
 .sc-title {
     font-size: 22px;
-    font-weight: bold;
+    font-weight: 700;
+    color: #383838;
 }
 
 .sc-filters .filter-toggle {
-    background-color: #f1f3f5;
-    border: 1px solid #dee2e6;
-    padding: 8px 12px;
-    border-radius: 20px;
+    background-color: #ffffff; /* White box for filter */
+    border: 1px solid #E9ECEF; /* Soft border */
+    padding: 6px 10px; /* Adjusted padding */
+    border-radius: 20px; /* 동글동글 */
     cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    display: flex; /* Ensure buttons are aligned */
+    gap: 5px;
 }
 .sc-filters .filter-toggle button {
     background: none;
     border: none;
     font-weight: 500;
-    color: #868e96;
-    padding: 0 8px;
+    color: #9a9a9a; /* Softer color */
+    padding: 4px 10px; /* Adjusted padding */
     cursor: pointer;
+    border-radius: 15px; /* 동글동글 */
+    transition: all 0.2s;
 }
 
 .sc-filters .filter-toggle button.active {
-    color: #212529;
-    font-weight: bold;
+    color: #FF7581; /* Accent color */
+    font-weight: 700;
+    background-color: #FFE1E3; /* Lighter pink background */
 }
 
 .sc-calendar-icon {
     font-size: 24px;
     cursor: pointer;
+    color: #6E7279; /* Soft grey */
 }
 
 .sc-bar-chart-list {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px; /* Closer spacing for cute feel */
 }
 
 .sc-category-item {
+    background-color: #ffffff; /* 하얀박스 */
+    border-radius: 16px; /* 동글동글 */
+    padding: 15px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px; /* Spacing between label and bar */
     animation: slideUp 0.5s ease-out;
 }
 
@@ -85,13 +101,14 @@
 
 .sc-category-label {
     flex-shrink: 0;
-    width: 60px; /* Fixed width for alignment */
-    padding: 5px 10px;
-    border-radius: 15px;
+    width: 70px; /* Slightly wider for better text fit */
+    padding: 8px 0; /* Vertical padding */
+    border-radius: 20px; /* More 동글동글 */
     text-align: center;
-    font-weight: bold;
-    font-size: 12px;
-    color: white;
+    font-weight: 600; /* Medium bold */
+    font-size: 13px;
+    color: #383838; /* Darker text for readability on pastel */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .sc-bar-wrapper {
@@ -102,23 +119,24 @@
 }
 
 .sc-bar {
-    height: 20px;
-    background-color: #e9ecef;
-    border-radius: 10px;
+    height: 16px; /* Slightly slimmer bar */
+    background-color: #E9ECEF; /* Lighter background for bar track */
+    border-radius: 8px; /* 동글동글 */
     flex-grow: 1;
     overflow: hidden;
 }
 
 .sc-bar-fill {
     height: 100%;
-    border-radius: 10px;
+    border-radius: 8px; /* 동글동글 */
     transition: width 0.5s ease-in-out;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
 .sc-time {
     font-size: 14px;
-    font-weight: 500;
-    color: #495057;
+    font-weight: 600; /* Slightly bolder */
+    color: #6E7279; /* Softer color */
     min-width: 80px; /* To prevent layout shifts */
     text-align: right;
 }
@@ -126,10 +144,16 @@
 .sc-empty-state {
     text-align: center;
     padding-top: 100px;
-    color: #868e96;
+    color: #9a9a9a; /* Softer grey */
+    background-color: #ffffff; /* 하얀박스 */
+    border-radius: 16px; /* 동글동글 */
+    margin: 20px; /* Add margin to float it */
+    padding: 40px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
 .sc-empty-state .icon {
     font-size: 50px;
     margin-bottom: 20px;
+    color: #C0C0C0; /* Soft icon color */
 }

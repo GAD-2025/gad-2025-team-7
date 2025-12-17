@@ -55,7 +55,7 @@ export const DataProvider = ({ children }) => {
         if (!userId || !dateToSave || !mealCardsToSave) return;
         if (mealCardsToSave.length === 0 || (mealCardsToSave.length === 1 && mealCardsToSave[0].foods.length === 0)) return; 
         try {
-            await fetch('${process.env.REACT_APP_API_URL}/api/meals', {
+            await fetch(`${process.env.REACT_APP_API_URL}/api/meals`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId, date: dateToSave, mealCards: mealCardsToSave }),
@@ -66,7 +66,7 @@ export const DataProvider = ({ children }) => {
     async function saveSteps(dateToSave, stepsToSave) {
         if (!userId || !dateToSave || stepsToSave === undefined) return;
         try {
-            await fetch('${process.env.REACT_APP_API_URL}/api/healthcare/steps', {
+            await fetch(`${process.env.REACT_APP_API_URL}/api/healthcare/steps`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId, date: dateToSave, steps: stepsToSave }),

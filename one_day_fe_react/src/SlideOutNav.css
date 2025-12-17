@@ -19,8 +19,8 @@
 .slide-out-nav-container {
     position: fixed;
     top: 0;
-    left: -300px; /* Start off-screen */
-    width: 300px;
+    left: -350px; /* Start off-screen, adjusted width */
+    width: 350px; /* Adjusted width as per Figma for content */
     height: 100%;
     background-color: #fff;
     box-shadow: 2px 0 5px rgba(0,0,0,0.2);
@@ -28,6 +28,8 @@
     z-index: 1300;
     display: flex;
     flex-direction: column;
+    border-top-right-radius: 20px; /* From Figma */
+    border-bottom-right-radius: 20px; /* From Figma */
 }
 
 .slide-out-nav-container.show {
@@ -40,11 +42,25 @@
     align-items: center;
     padding: 15px 20px;
     border-bottom: 1px solid #eee;
+    position: relative; /* For absolute positioning of h2 */
 }
 
 .slide-out-nav-header h2 {
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 20px; /* From Figma */
+    font-family: 'Pretendard', sans-serif; /* From Figma */
+    font-weight: 600; /* SemiBold from Figma */
+    color: #FF7581; /* From Figma */
+    /* Removed transform: rotate, as text should be upright horizontally */
+    /* Use positioning to align it within the header if needed */
+    position: static; /* Reset from absolute */
+    left: auto;
+    top: auto;
+    width: auto;
+    height: auto;
+    white-space: nowrap; /* Prevent text wrapping */
+    text-align: center; /* Center "모아보기" title */
+    flex-grow: 1; /* Allow it to take space */
 }
 
 .close-btn {
@@ -54,61 +70,81 @@
     cursor: pointer;
     padding: 0;
     line-height: 1;
+    position: absolute; /* Position relative to sidebar container */
+    right: 15px;
+    top: 15px;
+    z-index: 10;
 }
 
 .slide-out-nav-content {
+    flex-grow: 1; /* Take remaining space */
+    display: flex;
+    justify-content: center; /* Center the grid horizontally */
+    align-items: center; /* Center the grid vertically */
     padding: 20px;
+    position: relative; /* For absolute positioning of children */
 }
 
-.slide-out-nav-content ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.collection-nav-grid {
+    display: flex; /* Use flexbox for the grid layout */
+    flex-direction: column; /* Stack items vertically */
+    gap: 10px; /* Space between items */
+    /* Removed absolute positioning and related properties */
+    justify-content: center; /* Center content vertically in flex container */
+    align-items: center; /* Center content horizontally in flex container */
+    width: 100%; /* Take full width for centering */
 }
 
-.slide-out-nav-content li {
-    margin-bottom: 15px;
-}
-
-.slide-out-nav-content a {
+.collection-link {
     text-decoration: none;
-    color: #333;
-    font-size: 1.1rem;
-    display: block;
-    padding: 10px;
-    border-radius: 5px;
-    transition: background-color 0.2s ease;
+    color: inherit;
+    display: flex; /* Ensure Link takes up space for its content */
+    width: 100%; /* Take full width of parent */
+    justify-content: center; /* Center content within link */
+    align-items: center;
 }
 
-.slide-out-nav-content a:hover {
-    background-color: #f0f0f0;
-}
-
-/* Bookmark button style */
-.bookmark-btn {
-    position: fixed;
-    left: 15px;
-    top: 15px;
-    z-index: 1000;
-    background-color: #FF7581; /* Pink color */
-    border: none;
-    border-radius: 50%; /* Circular shape */
-    width: 50px;   /* Fixed size */
-    height: 50px;  /* Fixed size */
-    display: flex; /* To center content */
+/* Base style for collection items wrapper */
+.collection-item-wrapper {
+    width: 100px; /* Adjust width to fit content, or make flexible */
+    height: 50px; /* Adjust height to fit content, or make flexible */
+    position: relative; /* For absolute positioning of content if needed */
+    display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-    padding: 0; /* Remove padding */
+    background-color: #f8f8f8; /* Light background for visibility */
+    border-radius: 8px;
+    margin-bottom: 5px; /* Spacing between items */
 }
 
-/* Remove ::before content */
-.bookmark-btn:before {
-    content: none;
+.collection-item-content {
+    display: flex;
+    flex-direction: row; /* Changed to row to keep text horizontal */
+    align-items: center;
+    justify-content: center;
+    /* Removed transform: rotate, as text should be upright horizontally */
+    transform-origin: center;
+    white-space: nowrap; /* Prevent text wrapping */
 }
 
-.bookmark-icon {
-    width: 24px; /* Adjust size as needed */
-    height: 24px; /* Adjust size as needed */
+.collection-item-icon {
+    width: 24px; /* Adjusted size */
+    height: 24px; /* Adjusted size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px; /* Space between icon and text */
+}
+
+.collection-item-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.collection-item-text {
+    font-family: 'Pretendard', sans-serif;
+    font-size: 16px; /* Adjusted font size for readability */
+    color: #FF7581; /* Pink color from Figma */
+    margin: 0;
 }

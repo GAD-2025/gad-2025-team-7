@@ -23,6 +23,33 @@ const Diary = ({ selectedDate, userId }) => {
     const [history, setHistory] = useState([]);
     const [historyStep, setHistoryStep] = useState(-1);
 
+    const containerRef = useRef(null); // Ref for the canvas's parent container
+
+    // Effect to adjust canvas dimensions to its container's size
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        const container = containerRef.current;
+        if (!canvas || !container) return;
+
+        const adjustCanvasSize = () => {
+            // Set canvas drawing buffer size to its actual rendered size
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            // Restore drawing if any after resizing
+            if (historyStep >= 0) {
+                restoreState(history[historyStep]);
+            }
+        };
+
+        // Adjust initially and on window resize
+        adjustCanvasSize();
+        window.addEventListener('resize', adjustCanvasSize);
+
+        return () => {
+            window.removeEventListener('resize', adjustCanvasSize);
+        };
+    }, [historyStep, history]); // Depend on history to restore state after resize
+
     const pushToHistory = (currentState = { texts, images, canvasData: canvasRef.current.toDataURL() }) => {
         const newHistory = history.slice(0, historyStep + 1);
         newHistory.push(currentState);
@@ -374,14 +401,14 @@ const Diary = ({ selectedDate, userId }) => {
                         </div>
                     </div>
                     {drawingTool === 'text' && ( <div style={{ padding: '10px', textAlign: 'center', backgroundColor: '#f0f0f0', borderRadius: '4px', margin: '8px 0' }}> Double-click on the canvas to add text. </div> )}
-                    <div style={{ position: 'relative' }}>
-                        <canvas 
-                            id="diary-canvas" 
+                    <div ref={containerRef} style={{ position: 'relative', width: '100%', minHeight: '300px', border: '1px solid #ddd', borderRadius: '5px' }}>
+                        <canvas
+                            id="diary-canvas"
                             ref={canvasRef}
-                            width="500"
-                            height="300"
+                            // width and height are now managed by useEffect
                             onMouseDown={handleCanvasMouseDown}
                             onDoubleClick={handleCanvasDoubleClick}
+                            style={{ display: 'block' }} // Prevent extra space below canvas
                         ></canvas>
                         {/* Render Images */}
                         {images.map(image => {
