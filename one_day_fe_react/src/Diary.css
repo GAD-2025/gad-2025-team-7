@@ -187,7 +187,6 @@
 .canvas-wrapper {
     position: relative;
     width: 100%;
-    min-height: 300px;
     border: 1px solid #E9ECEF; /* Soft border */
     border-radius: 12px; /* 동글동글 */
     background-color: #ffffff; /* White canvas background */
