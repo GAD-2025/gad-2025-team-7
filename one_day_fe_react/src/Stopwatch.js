@@ -12,25 +12,32 @@ const Stopwatch = ({ userId, selectedDate }) => {
         if (!userId || !selectedDate) return;
 
         const fetchData = async () => {
+            const baseCategories = ['공부', '운동', '취미', '알바'];
             try {
                 const res = await fetch(`${process.env.REACT_APP_API_URL}/api/stopwatch/${userId}/${selectedDate}`);
                 if (res.ok) {
                     const data = await res.json();
-                    if (data && data.categories_data && data.categories_data.length > 0) {
-                        setTasks(data.tasks_data || []);
-                        setCategories(data.categories_data);
-                    } else {
-                        setTasks(data ? data.tasks_data || [] : []);
-                        setCategories(['공부', '운동', '취미', '알바']);
+                    let fetchedCategories = [];
+                    if (data && data.categories_data && Array.isArray(data.categories_data)) {
+                        // 1. Filter out "???" categories
+                        fetchedCategories = data.categories_data.filter(cat => cat !== '???');
                     }
+
+                    // 2. Ensure base categories are present and remove duplicates
+                    const combinedCategories = [...new Set([...baseCategories, ...fetchedCategories])];
+                    
+                    setTasks(data?.tasks_data || []);
+                    setCategories(combinedCategories);
                 } else {
+                    // If fetch fails or not ok, set to base categories
                     setTasks([]);
-                    setCategories(['공부', '운동', '취미', '알바']);
+                    setCategories(baseCategories);
                 }
             } catch (error) {
                 console.error("Error fetching stopwatch data:", error);
+                // On error, set to base categories
                 setTasks([]);
-                setCategories(['공부', '운동', '취미', '알바']);
+                setCategories(baseCategories);
             }
         };
 
