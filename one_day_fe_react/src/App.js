@@ -14,7 +14,7 @@ import { useProfile } from './ProfileContext'; // Import useProfile
 import { DataProvider } from './DataContext'; // Import DataProvider
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('userId'));
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const handleStorageChange = () => {

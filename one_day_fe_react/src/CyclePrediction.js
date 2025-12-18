@@ -158,7 +158,7 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
         <>
             <div className="dashboard-section healthcare-item">
                 <div className="section-header">
-                    <h3>생리 주기 예측</h3>
+                    <h3>생리 주기</h3>
                     <div className="header-actions">
                         <button className="edit-btn" onClick={() => setShowCycleModal(true)}>수정</button>
                     </div>
