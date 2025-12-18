@@ -17,6 +17,7 @@ const ProfileHeader = () => {
 
     return (
         <div className="profile-header-container" onClick={handleProfileClick}>
+            <span className="profile-nickname">{profile.nickname}</span>
             <div className="profile-image-wrapper">
                 {profile.profileImage ? (
                     <img src={profile.profileImage} alt="Profile" className="profile-image" />
@@ -24,7 +25,6 @@ const ProfileHeader = () => {
                     <div className="profile-image-default"></div>
                 )}
             </div>
-            <span className="profile-nickname">{profile.nickname}</span>
         </div>
     );
 };

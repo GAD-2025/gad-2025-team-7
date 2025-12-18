@@ -2,12 +2,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Removed justify-content: center; */
-    /* Removed min-height: 100vh; */
-    background-color: #fdfcfa;
-    padding: 15px; /* Reduced padding */
+    background-color: white; /* White box */
+    padding: 30px 20px; /* Increased padding */
     box-sizing: border-box;
     position: relative;
+    border-radius: 20px; /* More rounded */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Subtle shadow */
+    max-width: 500px; /* Constrain width for better look */
+    margin: 30px auto; /* Center the container with margin */
 }
 
 .close-profile-modal-button {
@@ -45,46 +47,70 @@
     color: #333;
 }
 
-.profile-form-group input[type="text"] {
+.profile-form-group input[type="text"],
+.profile-form-group input[type="email"],
+.profile-form-group input[type="password"] {
     width: 100%;
-    padding: 10px; /* Reduced padding */
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 0.9em; /* Slightly smaller font size */
+    padding: 12px 15px; /* Adjusted padding */
+    border: 1px solid #E9ECEF; /* Soft border color */
+    border-radius: 12px; /* More rounded */
+    font-size: 1em; /* Increased font size */
     box-sizing: border-box;
+    background-color: white; /* White background */
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.profile-form-group input[type="text"]:focus,
+.profile-form-group input[type="email"]:focus,
+.profile-form-group input[type="password"]:focus {
+    border-color: #FFC0CB; /* Pink focus border */
+    box-shadow: 0 0 0 3px rgba(255, 192, 203, 0.5); /* Soft pink shadow on focus */
+    outline: none;
+}
+
+.profile-form-group input[type="email"][disabled] {
+    background-color: #F8F9FA; /* Slightly different background for disabled */
+    color: #9a9a9a;
+    cursor: not-allowed;
 }
 
 .profile-actions {
     display: flex;
-    gap: 10px; /* Reduced gap */
-    margin-top: 15px; /* Reduced margin */
+    gap: 15px; /* Increased gap */
+    margin-top: 25px; /* Increased margin */
+    width: 100%;
+    max-width: 400px;
 }
 
 .profile-actions button {
-    padding: 10px 20px; /* Reduced padding */
+    flex: 1; /* Make buttons take equal space */
+    padding: 12px 20px; /* Adjusted padding */
     border: none;
-    border-radius: 8px;
-    font-size: 0.9em; /* Slightly smaller font size */
+    border-radius: 15px; /* More rounded */
+    font-size: 1em; /* Adjusted font size */
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, box-shadow 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Subtle shadow */
 }
 
 .profile-actions .save-button {
-    background-color: #FF7581;
+    background-color: #FF7581; /* Pink accent */
     color: white;
 }
 
 .profile-actions .save-button:hover {
     background-color: #e06b75;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .profile-actions .back-button {
-    background-color: #e0e0e0;
-    color: #333;
+    background-color: #E9ECEF; /* Light grey */
+    color: #383838;
 }
 
 .profile-actions .back-button:hover {
     background-color: #cccccc;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .profile-display {
@@ -104,27 +130,29 @@
 .profile-settings-options {
     display: flex;
     flex-direction: column;
-    gap: 8px; /* Reduced gap */
-    margin-top: 20px; /* Reduced margin */
+    gap: 10px; /* Increased gap */
+    margin-top: 30px; /* Increased margin */
     width: 100%;
     max-width: 400px;
 }
 
 .settings-button {
-    background-color: #f0f0f0;
-    color: #333;
-    padding: 10px 15px; /* Reduced padding */
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 0.9em; /* Slightly smaller font size */
+    background-color: white; /* White box */
+    color: #FF7581; /* Pink accent */
+    padding: 12px 15px; /* Adjusted padding */
+    border: 1px solid #FFC0CB; /* Pink border */
+    border-radius: 15px; /* More rounded */
+    font-size: 1em; /* Adjusted font size */
     cursor: pointer;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-    text-align: left;
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.2s;
+    text-align: center; /* Center text */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Subtle shadow */
 }
 
 .settings-button:hover {
-    background-color: #e0e0e0;
-    border-color: #ccc;
+    background-color: #FFE1E3; /* Lighter pink on hover */
+    border-color: #FF7581; /* Darker pink border on hover */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .personal-info-edit-form {
@@ -134,12 +162,14 @@
 }
 
 .profile-picture-preview, .profile-picture {
-    width: 80px; /* Reduced size */
-    height: 80px; /* Reduced size */
+    width: 100px; /* Increased size */
+    height: 100px; /* Increased size */
     border-radius: 50%;
     object-fit: cover;
-    margin-top: 8px; /* Reduced margin */
-    border: 2px solid #FF7581;
+    margin-top: 15px; /* Adjusted margin */
+    margin-bottom: 20px; /* Added margin to separate from next group */
+    border: 3px solid #FF7581; /* Thicker pink border */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Subtle shadow */
 }
 
 .profile-picture-preview {
@@ -274,16 +304,18 @@
     background-color: #f44336; /* Red color for logout */
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 15px; /* More rounded */
     padding: 12px 25px;
     font-size: 1em;
     cursor: pointer;
-    margin-top: 30px; /* Space from other options */
+    margin-top: 40px; /* More space from other options */
     width: 100%;
     max-width: 400px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, box-shadow 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Subtle shadow */
 }
 
 .logout-button:hover {
     background-color: #d32f2f;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
