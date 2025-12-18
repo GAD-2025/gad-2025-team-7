@@ -89,6 +89,9 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   margin-bottom: 10px;
+  background-color: #F8F9FA; /* Light grey background */
+  padding: 8px 0; /* Add vertical padding */
+  border-radius: 8px; /* Rounded corners */
 }
 
 .weekday {

@@ -12,8 +12,8 @@
     position: absolute;
     width: 250px;
     background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    border: 1px solid #FFC0CB; /* Thin pink border */
+    border-radius: 15px; /* More rounded */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     z-index: 1000;
     font-family: 'Arial', sans-serif;
@@ -24,10 +24,10 @@
     justify-content: space-between;
     align-items: center;
     padding: 8px 12px;
-    border-bottom: 1px solid #eee;
-    background-color: #f7f7f7;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+    border-bottom: none; /* Remove bottom border to avoid double border with main popover border */
+    background-color: white; /* Interior white */
+    border-top-left-radius: 15px; /* Match new radius */
+    border-top-right-radius: 15px; /* Match new radius */
 }
 
 .day-summary-header h3 {

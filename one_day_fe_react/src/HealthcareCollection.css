@@ -10,16 +10,17 @@
     margin-bottom: 20px;
     padding: 10px 15px;
     cursor: pointer;
-    background-color: #F8F9FA;
-    color: #383838;
-    border: 1px solid #E9ECEF;
+    background-color: #FFC0CB; /* Pink */
+    color: #FFFFFF; /* White text */
+    border: 1px solid #FFC0CB; /* Pink border */
     border-radius: 8px;
     font-size: 14px;
     transition: background-color 0.2s, border-color 0.2s;
 }
 
 .healthcare-back-button:hover {
-    background-color: #E9ECEF;
+    background-color: #FFB6C1; /* Lighter pink on hover */
+    border-color: #FFB6C1;
 }
 
 .healthcare-header {
