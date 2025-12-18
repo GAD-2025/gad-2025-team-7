@@ -1,7 +1,7 @@
 /* Styles for Diet.js */
 .meal-cards-wrapper {
     display: flex;
-    gap: 15px;
+    gap: 20px; /* Increased gap */
     overflow-x: auto;
     padding-bottom: 10px; /* Space for scrollbar */
     -webkit-overflow-scrolling: touch; /* For smoother scrolling on iOS */
@@ -15,31 +15,32 @@
 
 .meal-card {
     flex-shrink: 0;
-    width: 228px; /* Fixed width as per Figma design */
-    min-height: 139px; /* Fixed height as per Figma design */
+    width: 250px; /* Slightly larger width */
+    min-height: 160px; /* Slightly larger height */
     background-color: #fff;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    padding: 15px;
+    border-radius: 20px; /* More rounded */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Softer, larger shadow */
+    padding: 20px; /* More padding */
     position: relative;
     border: 1px solid transparent; /* Default border */
-    transition: border-color 0.2s ease-in-out;
+    transition: border-color 0.2s ease-in-out, transform 0.2s ease-in-out;
     display: flex; /* Use flexbox for internal layout */
     flex-direction: column; /* Stack children vertically */
     justify-content: space-between; /* Push footer to bottom */
 }
 
-/* Add a pink border for selected card */
+/* Add a pastel border for selected card */
 .meal-card.selected {
-    border-color: #FF7581; /* Pink border */
+    border-color: #a2d2ff; /* Pastel blue border */
+    transform: translateY(-3px); /* Lift on selection */
 }
 
 .meal-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
-    height: 30px; /* As per Figma's category button height */
+    margin-bottom: 15px; /* More space */
+    height: auto; /* Allow height to adjust */
 }
 
 .meal-card-title-container {
@@ -48,32 +49,39 @@
 }
 
 .meal-card-title-btn {
-    background: linear-gradient(90deg, #FFE1E3 0%, #FFE1E3 100%), linear-gradient(90deg, #FFFFFF 0%, #FFFFFF 100%);
-    border: 1px solid #FF7581;
-    border-radius: 21px;
-    padding: 5px 15px;
+    background: #e0f2f7; /* Light pastel blue background */
+    border: 1px solid #a2d2ff; /* Pastel blue border */
+    border-radius: 25px; /* More rounded */
+    padding: 8px 18px; /* More padding */
     font-family: 'Pretendard', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    color: #383838;
+    font-size: 15px; /* Slightly larger font */
+    font-weight: 600;
+    color: #4a4a4a; /* Soft dark grey */
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 5px;
-    height: 30px; /* Match Figma design */
+    gap: 8px; /* More gap */
+    height: auto; /* Allow height to adjust */
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.meal-card-title-btn:hover {
+    background-color: #c0e0eb; /* Darker pastel blue on hover */
+    border-color: #8cbcdc;
 }
 
 .meal-card-title-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 11px; /* Figma polygon size */
-    height: 11px;
+    width: 12px; /* Slightly larger icon */
+    height: 12px;
 }
 .meal-card-title-icon img {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    filter: brightness(0.8) sepia(1) hue-rotate(180deg) saturate(2); /* Tinting icon to fit pastel theme */
 }
 
 
@@ -81,245 +89,275 @@
     position: absolute;
     top: 100%;
     left: 0;
-    background-color: #fff;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    background-color: #ffffff;
+    border: 1px solid #e0e6ed;
+    border-radius: 12px; /* More rounded */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     z-index: 1000;
     display: flex;
     flex-direction: column;
-    padding: 5px 0;
-    min-width: 86px; /* Width of the button */
+    padding: 8px 0; /* More padding */
+    min-width: 100px; /* Slightly wider */
 }
 
 .category-select-menu button {
     background: none;
     border: none;
-    padding: 8px 15px;
+    padding: 10px 18px; /* More padding */
     text-align: left;
     cursor: pointer;
     font-family: 'Pretendard', sans-serif;
-    font-size: 14px;
-    color: #383838;
+    font-size: 15px;
+    color: #5a5a5a; /* Soft dark grey */
+    transition: background-color 0.2s;
 }
 
 .category-select-menu button:hover {
-    background-color: #f5f5f5;
+    background-color: #f0f4f8; /* Light pastel background on hover */
 }
 
 /* Positioning for the X (delete meal card) button */
 .delete-meal-card-btn {
-    position: absolute; /* Absolute positioning */
-    top: 10px; /* 10px from top */
-    right: 10px; /* 10px from right */
-    background: none;
+    position: absolute;
+    top: 12px; /* Adjusted position */
+    right: 12px; /* Adjusted position */
+    background-color: #ffeff1; /* Light pastel pink */
     border: none;
-    font-size: 14px;
-    color: #9a9a9a; /* Figma's 'x' color */
+    font-size: 15px; /* Slightly larger */
+    color: #ff9aa2; /* Softer pink */
     cursor: pointer;
-    padding: 0;
-    width: 17px; /* Matches Figma's 'x' size for better click area */
-    height: 17px;
+    padding: 5px 8px; /* More padding for better click area */
+    width: auto;
+    height: auto;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%; /* Make it circular */
-    transition: background-color 0.2s;
-    z-index: 10; /* Ensure it's above other elements */
+    transition: background-color 0.2s, color 0.2s;
+    z-index: 10;
 }
 
 .delete-meal-card-btn:hover {
-    background-color: #f0f0f0;
+    background-color: #ffdbde; /* Darker pastel pink on hover */
+    color: #f07e8a;
 }
 
 
 .meal-card-body {
-    flex-grow: 1; /* Allows body to take up available space */
-    padding-bottom: 10px; /* Spacing before footer */
+    flex-grow: 1;
+    padding-bottom: 15px; /* More spacing before footer */
 }
 
 .food-list {
     list-style: none;
     padding: 0;
     margin: 0;
-    margin-bottom: 10px;
+    margin-bottom: 15px; /* More space */
 }
 
 .food-list li {
     display: flex;
     align-items: center;
-    margin-bottom: 5px; /* Reduced margin */
-    background-color: rgba(191,191,191,0.3); /* Grey background */
-    border: 0.569px solid #bfbfbf; /* Grey border */
-    border-radius: 17.079px; /* Rounded corners */
-    padding: 3px 8px; /* Adjusted padding */
-    font-size: 11.386px; /* Smaller font size */
-    color: #383838;
+    margin-bottom: 8px; /* More margin */
+    background-color: #f8fafd; /* Very light pastel blue */
+    border: 1px solid #e0e6ed; /* Softer border */
+    border-radius: 15px; /* More rounded */
+    padding: 8px 12px; /* More padding */
+    font-size: 13px; /* Slightly larger font */
+    color: #5a5a5a;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.03); /* Subtle inner shadow */
 }
 
 .food-name {
     flex-grow: 1;
-    font-family: 'Inter', 'Noto Sans KR', sans-serif;
-    font-weight: normal;
-    font-size: 11.386px;
-    color: #383838;
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: #4a4a4a;
 }
 
 .food-qty {
-    width: 40px;
+    width: 50px; /* Wider input */
     text-align: center;
-    border: 0.7px solid #9a9a9a; /* Figma's grey border */
-    border-radius: 5px; /* Rounded corners */
-    padding: 2px 5px;
-    margin-left: 5px;
-    margin-right: 5px;
-    font-size: 11.386px;
-    color: #404040;
+    border: 1px solid #e0e6ed; /* Softer border */
+    border-radius: 8px; /* Rounded corners */
+    padding: 5px 8px;
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 14px;
+    color: #5a5a5a;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.food-qty:focus {
+    outline: none;
+    border-color: #a2d2ff;
+    box-shadow: 0 0 0 3px rgba(162, 210, 255, 0.3);
 }
 
 .food-cal {
-    font-family: 'Inter', sans-serif;
-    font-weight: normal;
-    font-size: 10px;
-    color: #000;
-    white-space: nowrap; /* Prevent wrapping */
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: #8c9eff; /* Pastel accent */
+    white-space: nowrap;
 }
 
 .remove-food-btn {
-    background: none;
+    background-color: #ffeff1; /* Light pastel pink */
     border: none;
-    color: #9a9a9a; /* Figma's 'x' color */
-    font-size: 12px;
+    color: #ff9aa2; /* Softer pink */
+    font-size: 14px;
     cursor: pointer;
-    padding: 0 5px;
-    margin-left: 5px;
+    padding: 3px 8px;
+    margin-left: 10px;
+    border-radius: 8px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.remove-food-btn:hover {
+    background-color: #ffdbde;
+    color: #f07e8a;
 }
 
 .food-search-wrapper {
-    position: relative; /* For absolute positioning of the plus icon */
-    display: flex; /* Use flex to align input and icon */
+    position: relative;
+    display: flex;
     align-items: center;
-    border: 1px solid #9a9a9a; /* Border for the whole search wrapper */
-    border-radius: 15px; /* Rounded corners for the combined unit */
-    padding-right: 5px; /* Space for the plus icon */
+    border: 1px solid #e0e6ed; /* Softer border */
+    border-radius: 15px; /* More rounded */
+    padding-right: 10px; /* Space for the plus icon */
+    background-color: #f8fafd; /* Light pastel background */
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.03);
+    height: 40px; /* Fixed height for consistency */
 }
 
 .food-search-input {
-    flex-grow: 1; /* Allow input to take remaining space */
-    border: none; /* Remove individual input border */
-    background: none; /* Make input background transparent */
-    padding: 5px 10px;
+    flex-grow: 1;
+    border: none;
+    background: none;
+    padding: 5px 15px; /* More padding */
     font-family: 'Pretendard', sans-serif;
-    font-size: 12px;
-    color: #9a9a9a;
+    font-size: 15px;
+    color: #5a5a5a;
     outline: none;
-    height: 22px; /* Fixed height for input */
-    box-sizing: border-box; /* Include padding in height */
+    height: 100%; /* Fill wrapper height */
+    box-sizing: border-box;
 }
 
 .food-search-input::placeholder {
-    color: #9a9a9a;
+    color: #9ab4cc; /* Softer placeholder color */
 }
 
-.add-food-btn-component { /* This is the button wrapping the Component visual */
-    background: none;
+.add-food-btn-component {
+    background: #baffc9; /* Pastel green background */
     border: none;
     padding: 0;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 20px; /* Adjust size as needed */
-    height: 20px;
-    position: absolute; /* Position relative to wrapper */
-    right: 5px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 5;
+    width: 30px; /* Larger button */
+    height: 30px;
+    border-radius: 50%; /* Circular */
+    transition: background-color 0.2s, transform 0.1s;
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
-.add-food-icon { /* The visual Component itself */
-    width: 32.487px; /* Figma's width */
-    height: 58.126px; /* Figma's height */
-    position: relative; /* To allow its children absolute positioning */
-    transform: scale(0.4); /* Scale down to fit in button */
-    transform-origin: center;
-    pointer-events: none; /* Ensure clicks go to the button */
+.add-food-btn-component:hover {
+    background-color: #92e6a7;
+    transform: translateY(-1px);
+}
+
+
+.add-food-icon {
+    width: 20px; /* Adjusted size to fit button */
+    height: 20px;
+    position: relative;
+    transform: scale(1); /* No scaling, let button control size */
+    pointer-events: none;
 }
 
 .add-food-icon-plus-bg {
     position: absolute;
     width: 100%;
-    height: 50%; /* Top half of the plus icon component */
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     left: 0;
+    top: 0;
+    background-color: transparent; /* Ensure transparent background */
 }
 
 .add-food-icon-plus-bg.bottom {
-    top: 50%;
+    display: none; /* Only need one plus for simplicity */
 }
 
 .add-food-icon-ellipse {
-    width: 16.053px; /* Figma's ellipse size */
-    height: 16.053px;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    transform: rotate(46.84deg); /* Figma's rotation */
+    transform: rotate(0deg); /* No rotation needed for simple plus */
 }
 .add-food-icon-ellipse img {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    filter: none; /* Remove filter for simplicity, assuming a white or transparent image */
 }
 
 .add-food-icon-plus-text {
     position: absolute;
-    font-family: 'Inter', sans-serif; /* Use Inter as per Figma */
-    font-weight: 300; /* Light as per Figma */
-    font-size: 19.791px;
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 500;
+    font-size: 20px;
     color: #383838;
-    transform: rotate(46.84deg); /* Figma's rotation */
+    transform: rotate(0deg);
+    line-height: 1; /* Adjust line height for better centering */
 }
 
 
 .meal-card-footer {
-    border-top: 1px dashed #E9ECEF;
-    padding-top: 10px;
-    margin-top: auto; /* Push footer to bottom in flex container */
+    border-top: 1px solid #e0e6ed; /* Softer border */
+    padding-top: 15px;
+    margin-top: auto;
     text-align: right;
     font-family: 'Pretendard', sans-serif;
-    font-size: 12px;
-    font-weight: 300;
-    color: #000;
+    font-size: 14px;
+    font-weight: 500;
+    color: #5a5a5a;
 }
 
 .meal-card-total-calories {
-    font-weight: normal;
-    font-size: 12px; /* Figma's font size */
+    font-weight: 700;
+    font-size: 15px;
+    color: #ff9aa2; /* Pastel accent */
 }
 
 
 /* Autocomplete portal styling */
 .autocomplete-results {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    background-color: #ffffff;
+    border: 1px solid #e0e6ed;
+    border-radius: 12px; /* More rounded */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     max-height: 200px;
     overflow-y: auto;
+    z-index: 1100;
 }
 
 .autocomplete-item {
-    padding: 10px 15px;
+    padding: 12px 18px; /* More padding */
     cursor: pointer;
     font-family: 'Pretendard', sans-serif;
-    font-size: 14px;
-    color: #383838;
+    font-size: 15px;
+    color: #5a5a5a;
+    transition: background-color 0.2s;
 }
 
 .autocomplete-item:hover {
-    background-color: #f5f5f5;
+    background-color: #f0f4f8; /* Light pastel background on hover */
 }

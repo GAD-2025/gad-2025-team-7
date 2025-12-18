@@ -2,6 +2,9 @@
 
 .healthcare-tab-content {
     font-family: 'Pretendard', sans-serif;
+    background-color: #f0f4f8; /* Light pastel background */
+    padding: 20px;
+    border-radius: 20px; /* More rounded overall container */
 }
 
 .healthcare-row {
@@ -11,27 +14,46 @@
 }
 
 .dashboard-section {
-    background-color: #ffffff;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    background-color: #ffffff; /* White box */
+    border-radius: 20px; /* More rounded corners */
+    padding: 25px; /* Slightly more padding */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Softer, larger shadow */
     margin-bottom: 20px;
+    transition: transform 0.2s ease-in-out; /* Add a subtle hover effect */
+}
+
+.dashboard-section:hover {
+    transform: translateY(-3px);
 }
 
 .section-header {
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px dashed #E9ECEF;
+    margin-bottom: 18px; /* Slightly more space */
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e0e6ed; /* Softer border */
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative; /* For potential icon positioning */
 }
 
 .section-header h3 {
     margin: 0;
-    font-size: 17px;
-    font-weight: 600;
-    color: #383838;
+    font-size: 19px; /* Slightly larger font */
+    font-weight: 700; /* Bolder */
+    color: #4a4a4a; /* Darker, but soft grey */
+    letter-spacing: -0.5px; /* Subtle text effect */
+}
+
+/* Icon placeholder styling */
+.section-header .icon {
+    font-size: 22px;
+    color: #8c9eff; /* Pastel icon color */
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    /* You would typically use an icon library like Font Awesome or a custom SVG here */
+    /* Example: <i class="fas fa-heartbeat icon"></i> */
 }
 
 .section-content {
@@ -39,18 +61,20 @@
 }
 
 .total-calorie-display {
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 600;
-    color: #383838;
+    color: #555; /* Softer dark color */
     margin-bottom: 20px;
     text-align: center;
-    padding: 10px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
+    padding: 12px;
+    background-color: #e9eff6; /* Lighter pastel blue */
+    border-radius: 12px; /* More rounded */
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); /* Subtle inner shadow */
 }
 
 #total-intake-display {
-    color: #FF7581;
+    color: #ff9aa2; /* Softer red/pink pastel */
+    font-weight: 700;
 }
 
 .macro-bars-container {
@@ -62,49 +86,495 @@
 .macro-item {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px; /* Increased gap */
 }
 
 .macro-item label {
-    flex-basis: 60px;
-    font-size: 14px;
+    flex-basis: 70px; /* Slightly wider label area */
+    font-size: 15px;
     font-weight: 500;
-    color: #6E7279;
+    color: #6a7480; /* Soft grey blue */
 }
 
 .macro-bar {
     flex-grow: 1;
-    background-color: #e9ecef;
-    border-radius: 5px;
-    height: 10px;
+    background-color: #e0e6ed; /* Light grey for empty bar */
+    border-radius: 6px;
+    height: 12px; /* Slightly taller bar */
     overflow: hidden;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.06); /* Subtle inner shadow */
 }
 
 .macro-bar-progress {
     height: 100%;
-    border-radius: 5px;
-    background-color: #FF7581; /* Accent color */
-    transition: width 0.5s ease-out;
+    border-radius: 6px; /* Match outer bar */
+    background-color: #8c9eff; /* Default pastel accent */
+    transition: width 0.4s ease-out, background-color 0.3s ease-in-out;
 }
 
-#carb-bar {
-    background-color: #6C5CE7; /* Example color for carbs */
+#carb-bar .macro-bar-progress {
+    background-color: #a2d2ff; /* Pastel blue for carbs */
 }
 
-#protein-bar {
-    background-color: #00B894; /* Example color for protein */
+#protein-bar .macro-bar-progress {
+    background-color: #baffc9; /* Pastel green for protein */
 }
 
-#fat-bar {
-    background-color: #FDCB6E; /* Example color for fat */
+#fat-bar .macro-bar-progress {
+    background-color: #ffda9e; /* Pastel yellow/orange for fat */
 }
 
 .macro-item span {
-    flex-basis: 50px;
+    flex-basis: 55px; /* Slightly wider span area */
     text-align: right;
-    font-size: 14px;
-    font-weight: 500;
-    color: #383838;
+    font-size: 15px;
+    font-weight: 600;
+    color: #5a5a5a; /* Soft dark grey */
 }
 
-/* Specific styling for Pedometer and CyclePrediction can be added here or in their own CSS */
+/* --- Cycle Prediction Specific Styles --- */
+
+.healthcare-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.prediction-main-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.prediction-main-info p {
+    font-size: 16px;
+    color: #777;
+    margin-bottom: 5px;
+}
+
+.d-day-display {
+    font-size: 4em; /* Very large D-Day */
+    font-weight: 800;
+    color: #ff9aa2; /* Pastel pink accent */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.08);
+    margin-top: 0;
+}
+
+.predicted-dates-grid {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    gap: 15px;
+    padding: 10px 0;
+    border-top: 1px dashed #e0e6ed;
+    border-bottom: 1px dashed #e0e6ed;
+    margin-bottom: 20px;
+}
+
+.predicted-date-item p {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.large-date {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #5a5a5a;
+}
+
+
+/* Modal Styles (for CyclePrediction) */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050; /* Increased z-index */
+    isolation: isolate; /* Create new stacking context */
+}
+
+.modal-content {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 25px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    width: 90%;
+    max-width: 500px;
+    opacity: 0; /* Start with opacity 0 */
+    animation: fadeIn 0.3s ease-out forwards; /* Apply animation and keep final state */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content h3 {
+    font-size: 22px;
+    color: #4a4a4a;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 700;
+    position: relative;
+}
+
+.modal-content h3::after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 3px;
+    background-color: #ff9aa2;
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+
+.cycle-input-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.cycle-input-form label {
+    font-size: 15px;
+    color: #6a7480;
+    font-weight: 500;
+}
+
+.cycle-input-form input[type="date"] {
+    padding: 12px;
+    border: 1px solid #e0e6ed;
+    border-radius: 10px;
+    font-size: 16px;
+    color: #5a5a5a;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.cycle-input-form input[type="date"]:focus {
+    outline: none;
+    border-color: #a2d2ff;
+    box-shadow: 0 0 0 3px rgba(162, 210, 255, 0.3);
+}
+
+.cycle-input-form button,
+.record-actions button,
+.modal-actions button {
+    background-color: #baffc9; /* Pastel green */
+    color: #383838;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+}
+
+.cycle-input-form button:hover,
+.record-actions button:hover,
+.modal-actions button:hover {
+    background-color: #92e6a7; /* Darker pastel green */
+    transform: translateY(-1px);
+}
+
+.cycle-input-form button:active,
+.record-actions button:active,
+.modal-actions button:active {
+    transform: translateY(0);
+}
+
+.record-actions .edit-record-btn {
+    background-color: #a2d2ff; /* Pastel blue */
+    margin-right: 8px;
+}
+
+.record-actions .edit-record-btn:hover {
+    background-color: #7dbcef;
+}
+
+.record-actions .delete-record-btn {
+    background-color: #ff9aa2; /* Pastel pink */
+}
+
+.record-actions .delete-record-btn:hover {
+    background-color: #ff6b7e;
+}
+
+.modal-actions #close-cycle-modal-btn {
+    background-color: #e0e6ed; /* Light grey */
+    color: #5a5a5a;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.modal-actions #close-cycle-modal-btn:hover {
+    background-color: #c9d2de;
+}
+
+
+/* Past Cycle History */
+.modal-content hr {
+    border: none;
+    border-top: 1px solid #e0e6ed;
+    margin: 25px 0;
+}
+
+.modal-content h4 {
+    font-size: 18px;
+    color: #4a4a4a;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+#past-cycles-list ul {
+    list-style: none;
+    padding: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #e0e6ed;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #f8fafd;
+}
+
+#past-cycles-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f4f8;
+    font-size: 15px;
+    color: #5a5a5a;
+}
+
+#past-cycles-list li:last-child {
+    border-bottom: none;
+}
+
+#past-cycles-list .record-actions {
+    display: flex;
+    gap: 8px;
+}
+
+#past-cycles-list .record-actions button {
+    padding: 6px 12px;
+    font-size: 13px;
+    border-radius: 8px;
+}
+
+/* Animation for modal */
+/* Note: The old keyframes fadeIn with transform was causing issues. */
+/* New keyframes fadeIn for opacity only. */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Utility for Flex containers if needed for other components */
+.flex-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* --- Pedometer Specific Styles --- */
+.health-content-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+@media (min-width: 768px) {
+    .health-content-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.weight-input-container {
+    background-color: #f8fafd;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.weight-input-container p {
+    font-size: 16px;
+    color: #5a5a5a;
+    font-weight: 500;
+    margin: 0;
+}
+
+.weight-input-container p span {
+    font-weight: 700;
+    color: #8c9eff; /* Pastel accent */
+}
+
+.weight-input-container label {
+    font-size: 15px;
+    color: #6a7480;
+    font-weight: 500;
+}
+
+.weight-input-container input[type="number"] {
+    padding: 10px;
+    border: 1px solid #e0e6ed;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #5a5a5a;
+    width: 100px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.weight-input-container input[type="number"]:focus {
+    outline: none;
+    border-color: #a2d2ff;
+    box-shadow: 0 0 0 3px rgba(162, 210, 255, 0.3);
+}
+
+.weight-input-container button {
+    background-color: #a2d2ff; /* Pastel blue */
+    color: #383838;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+}
+
+.weight-input-container button:hover {
+    background-color: #7dbcef;
+    transform: translateY(-1px);
+}
+
+.weight-input-container button:active {
+    transform: translateY(0);
+}
+
+.calorie-info {
+    background-color: #f8fafd;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.calorie-info p {
+    font-size: 16px;
+    color: #5a5a5a;
+    margin: 0;
+}
+
+.calorie-info p span {
+    font-weight: 700;
+    color: #ff9aa2; /* Pastel accent */
+}
+
+.pedometer {
+    text-align: center;
+    background-color: #f8fafd;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.pedometer h4 {
+    font-size: 18px;
+    color: #4a4a4a;
+    margin-bottom: 10px;
+}
+
+.pedometer-display {
+    font-size: 3em;
+    font-weight: 800;
+    color: #baffc9; /* Pastel green accent */
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.05);
+}
+
+.pedometer p {
+    font-size: 15px;
+    color: #777;
+    margin-bottom: 15px;
+}
+
+.pedometer-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.pedometer-controls button {
+    background-color: #ffda9e; /* Pastel yellow/orange */
+    color: #383838;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+}
+
+.pedometer-controls button:hover {
+    background-color: #ffc977;
+    transform: translateY(-1px);
+}
+
+.calorie-graph-container {
+    position: relative;
+    width: 150px; /* Adjust size as needed */
+    height: 150px;
+    margin: 20px auto;
+}
+
+#calorie-graph {
+    transform: rotate(-90deg); /* Start from top */
+}
+
+.graph-bg {
+    fill: none;
+    stroke: #e0e6ed; /* Light grey background for the circle */
+    stroke-width: 10;
+}
+
+.graph-progress {
+    fill: none;
+    stroke: #ff9aa2; /* Pastel pink for progress */
+    stroke-width: 10;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.5s ease-out;
+    stroke-dasharray: 283; /* Approximately 2 * pi * 45 */
+}
+
+.graph-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: 14px;
+    color: #6a7480;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.graph-text span {
+    display: block;
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #4a4a4a;
+    margin-top: 5px;
+}

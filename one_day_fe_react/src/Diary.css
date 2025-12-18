@@ -3,7 +3,7 @@
 .diary-page-container {
     padding: 20px;
     font-family: 'Pretendard', sans-serif;
-    background-color: #F8F9FA; /* Light pastel background */
+    background-color: transparent; /* Changed to transparent */
     height: 100%; /* Changed from min-height */
     display: flex; /* Added for flex layout */
     flex-direction: column; /* Arrange children vertically */

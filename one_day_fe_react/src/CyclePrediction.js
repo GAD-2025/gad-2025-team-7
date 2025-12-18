@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useData } from './DataContext'; // Import useData
 
 const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
@@ -75,9 +76,9 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
     };
 
     const handleSaveCycleRecord = async () => {
-        if (!userId) return alert('로그인이 필요합니다.');
-        if (!startDateInput || !endDateInput) return alert('시작일과 종료일을 모두 선택해주세요.');
-        if (new Date(startDateInput) > new Date(endDateInput)) return alert('종료일은 시작일보다 빠를 수 없습니다.');
+        if (!userId) { console.warn('User not logged in. Cannot save cycle record.'); return; }
+        if (!startDateInput || !endDateInput) { console.warn('Start and end dates are required.'); return; }
+        if (new Date(startDateInput) > new Date(endDateInput)) { console.warn('End date cannot be earlier than start date.'); return; }
 
         try {
             const res = await fetch(`${process.env.REACT_APP_API_URL}/api/healthcare/cycles`, {
@@ -87,22 +88,22 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
             });
             const responseData = await res.json();
             if (res.ok) {
-                alert('기록이 추가되었습니다.');
+                console.log('Cycle record added successfully.');
                 resetForm();
                 fetchCycleHistory();
             } else {
-                alert(responseData.error ? `서버 오류: ${responseData.error}` : '기록 추가에 실패했습니다.');
+                console.error('Failed to add cycle record:', responseData.error || 'Unknown error');
             }
         } catch (error) {
             console.error("Error saving cycle record:", error);
-            alert('기록 추가 중 오류가 발생했습니다.');
+            console.error('Error while adding cycle record.');
         }
     };
 
     const handleUpdateCycleRecord = async () => {
         if (!editingCycleId) return;
-        if (!startDateInput || !endDateInput) return alert('시작일과 종료일을 모두 선택해주세요.');
-        if (new Date(startDateInput) > new Date(endDateInput)) return alert('종료일은 시작일보다 빠를 수 없습니다.');
+        if (!startDateInput || !endDateInput) { console.warn('Start and end dates are required for update.'); return; }
+        if (new Date(startDateInput) > new Date(endDateInput)) { console.warn('End date cannot be earlier than start date for update.'); return; }
 
         try {
             const res = await fetch(`${process.env.REACT_APP_API_URL}/api/healthcare/cycles/${editingCycleId}`, {
@@ -112,15 +113,15 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
             });
             const responseData = await res.json();
             if (res.ok) {
-                alert('기록이 수정되었습니다.');
+                console.log('Cycle record updated successfully.');
                 resetForm();
                 fetchCycleHistory();
             } else {
-                alert(responseData.error ? `서버 오류: ${responseData.error}` : '기록 수정에 실패했습니다.');
+                console.error('Failed to update cycle record:', responseData.error || 'Unknown error');
             }
         } catch (error) {
             console.error("Error updating cycle record:", error);
-            alert('기록 수정 중 오류가 발생했습니다.');
+            console.error('Error while updating cycle record.');
         }
     };
 
@@ -135,17 +136,17 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
     };
 
     const handleDeleteCycle = async (cycleId) => {
-        if (!cycleId) return alert('삭제할 항목의 ID가 올바르지 않습니다.');
+        if (!cycleId) { console.warn('Invalid ID for deletion.'); return; }
         if (!window.confirm('이 기록을 삭제하시겠습니까?')) return;
         try {
             const res = await fetch(`${process.env.REACT_APP_API_URL}/api/healthcare/cycles/${cycleId}`, {
                 method: 'DELETE',
             });
             if (res.ok) {
-                alert('기록이 삭제되었습니다.');
+                console.log('Cycle record deleted successfully.');
                 fetchCycleHistory();
             } else {
-                alert('기록 삭제에 실패했습니다.');
+                console.error('Failed to delete cycle record.');
             }
         } catch (error) {
             console.error("Error deleting cycle record:", error);
@@ -157,7 +158,7 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
         <>
             <div className="dashboard-section healthcare-item">
                 <div className="section-header">
-                    <h3>월경 예정일</h3>
+                    <h3>생리 주기 예측</h3>
                     <div className="header-actions">
                         <button className="edit-btn" onClick={() => setShowCycleModal(true)}>수정</button>
                     </div>
@@ -180,10 +181,10 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
                 </div>
             </div>
 
-            {showCycleModal && (
-                <div id="cycle-edit-modal" className="modal-overlay" style={{display: 'flex'}}>
+            {showCycleModal && createPortal(
+                <div id="cycle-edit-modal" className="modal-overlay">
                     <div className="modal-content">
-                        <h3>월경 기록</h3>
+                        <h3>생리 주기 기록</h3>
                         {cycleHistory.length < 2 && (
                             <p style={{ color: 'red', marginBottom: '15px' }}>
                                 예측을 위해 최소 2번의 주기 기록이 필요합니다.
@@ -236,7 +237,8 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
                             <button id="close-cycle-modal-btn" onClick={() => { setShowCycleModal(false); resetForm(); }}>닫기</button>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.getElementById('portal-root')
             )}
         </>
     );

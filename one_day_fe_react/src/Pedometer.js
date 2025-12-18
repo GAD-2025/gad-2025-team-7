@@ -74,66 +74,61 @@ const Pedometer = ({ userId }) => {
     }, [steps, dietTotals, dailyCalorieGoal]);
 
     return (
-        <div className="dashboard-section healthcare-item">
-            <div className="section-header">
-                <h3>오늘의 건강</h3>
+        <div className="section-content health-content-grid">
+            {/* Compact Weight Input UI */}
+            <div className="weight-input-container compact">
+                {profileLoading ? (
+                    <p>로딩 중...</p>
+                ) : isEditingWeight ? (
+                    <>
+                        <label>체중 (kg):</label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            value={weightInput}
+                            onChange={(e) => setWeightInput(e.target.value)}
+                            placeholder="kg"
+                        />
+                        <button onClick={handleSaveWeight}>저장</button>
+                        <button onClick={handleCancelEdit}>취소</button>
+                    </>
+                ) : (
+                    <>
+                        <p>현재 체중: {profile.weight ? `${profile.weight} kg` : '미입력'}</p>
+                        <button onClick={() => setIsEditingWeight(true)}>수정</button>
+                    </>
+                )}
             </div>
-            <div className="section-content health-content-grid">
-                {/* Compact Weight Input UI */}
-                <div className="weight-input-container compact">
-                    {profileLoading ? (
-                        <p>로딩 중...</p>
-                    ) : isEditingWeight ? (
-                        <>
-                            <label>체중 (kg):</label>
-                            <input
-                                type="number"
-                                step="0.01"
-                                value={weightInput}
-                                onChange={(e) => setWeightInput(e.target.value)}
-                                placeholder="kg"
-                            />
-                            <button onClick={handleSaveWeight}>저장</button>
-                            <button onClick={handleCancelEdit}>취소</button>
-                        </>
-                    ) : (
-                        <>
-                            <p>현재 체중: {profile.weight ? `${profile.weight} kg` : '미입력'}</p>
-                            <button onClick={() => setIsEditingWeight(true)}>수정</button>
-                        </>
-                    )}
-                </div>
 
-                {/* Calorie Info */}
-                <div className="calorie-info">
-                    <p>하루 평균 섭취 칼로리 목표: <span>{dailyCalorieGoal}</span> kcal</p>
-                    <p>오늘 섭취한 총 칼로리: <span>{Math.round(dietTotals.calories)}</span> kcal</p>
-                </div>
+            {/* Calorie Info */}
+            <div className="calorie-info">
+                <p>하루 평균 섭취 칼로리 목표: <span>{dailyCalorieGoal}</span> kcal</p>
+                <p>오늘 섭취한 총 칼로리: <span>{Math.round(dietTotals.calories)}</span> kcal</p>
+            </div>
 
-                {/* Pedometer and Graph */}
-                <div className="pedometer">
-                    <h4>만보기</h4>
-                    <div id="step-count" className="pedometer-display">{steps}</div>
-                    <p>걸음</p>
-                    <div className="pedometer-controls" style={{display: 'flex !important'}}>
-                        <button id="add-steps-btn" onClick={() => updateSteps(steps + 100)}>+100</button>
-                        <button id="reset-steps-btn" onClick={() => updateSteps(0)}>리셋</button>
-                    </div>
+            {/* Pedometer and Graph */}
+            <div className="pedometer">
+                <h4>만보기</h4>
+                <div id="step-count" className="pedometer-display">{steps}</div>
+                <p>걸음</p>
+                <div className="pedometer-controls">
+                    <button id="add-steps-btn" onClick={() => updateSteps(steps + 100)}>+100</button>
+                    <button id="reset-steps-btn" onClick={() => updateSteps(0)}>리셋</button>
                 </div>
-                <div className="calorie-graph-container">
-                    <svg id="calorie-graph" viewBox="0 0 100 100">
-                        <circle className="graph-bg" cx="50" cy="50" r="45"></circle>
-                        <path 
-                            id="graph-progress" 
-                            className="graph-progress" 
-                            d="M 50, 5 a 45,45 0 1,1 0,90 a 45,45 0 1,1 0,-90"
-                            style={{ strokeDashoffset: graphPathLength * (1 - graphProgress / 100) }}
-                        ></path>
-                    </svg>
-                    <div id="graph-text" className="graph-text">
-                        오늘의 건강까지<br />
-                        <span id="kcal-remaining">{kcalRemaining}</span>kcal
-                    </div>
+            </div>
+            <div className="calorie-graph-container">
+                <svg id="calorie-graph" viewBox="0 0 100 100">
+                    <circle className="graph-bg" cx="50" cy="50" r="45"></circle>
+                    <path 
+                        id="graph-progress" 
+                        className="graph-progress" 
+                        d="M 50, 5 a 45,45 0 1,1 0,90 a 45,45 0 1,1 0,-90"
+                        style={{ strokeDashoffset: graphPathLength * (1 - graphProgress / 100) }}
+                    ></path>
+                </svg>
+                <div id="graph-text" className="graph-text">
+                    오늘의 건강까지<br />
+                    <span id="kcal-remaining">{kcalRemaining}</span>kcal
                 </div>
             </div>
         </div>

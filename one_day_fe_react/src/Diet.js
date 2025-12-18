@@ -194,8 +194,11 @@ const Diet = () => {
             />
             <div className="dashboard-section">
                 <div className="section-header">
-                    <h3>식단 칼로리</h3>
-                     <button className="add-card-btn" onClick={handleAddMealCard}>+</button>
+                    <h3>식단 기록</h3>
+                    <div className="header-actions">
+
+                        <button className="add-card-btn" onClick={handleAddMealCard}>+</button>
+                    </div>
                 </div>
                 <div id="meal-cards-container" ref={containerRef} className="meal-cards-wrapper">
                     {mealCards.map((card) => (
@@ -246,25 +249,7 @@ const Diet = () => {
                                     />
                                     {/* The Figma design's plus icon is part of the search input area to add a food item */}
                                     {/* Wrapping Component in a button to handle clicks for adding food. */}
-                                    <button className="add-food-btn-component" onClick={() => {
-                                        if (card.searchQuery) {
-                                            // Assuming a food item can be added directly from the search query
-                                            // This is a new functional decision based on the user's intent to "add food"
-                                            // when the plus icon (Component) is clicked.
-                                            // For now, let's keep it simple and just add the search query text as a food item.
-                                            // A more robust solution would involve fetching the food details based on the query.
-                                            const newFood = {
-                                                id: Date.now(), // Unique ID
-                                                name: card.searchQuery,
-                                                calories: 0, // Placeholder
-                                                qty: 1
-                                            };
-                                            addFoodToCard(card.id, newFood);
-                                            setSearchQuery(card.id, ''); // Clear search query after adding
-                                        }
-                                    }}>
-                                        <Component />
-                                    </button>
+
                                 </div>
                             </div>
                             <div className="meal-card-footer">
