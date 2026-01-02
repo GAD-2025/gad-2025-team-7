@@ -17,6 +17,7 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     z-index: 1000;
     font-family: 'Arial', sans-serif;
+    margin: 0; /* Explicitly remove margin */
 }
 
 .day-summary-header {

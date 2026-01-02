@@ -141,18 +141,24 @@
   color: #ff6f61;
 }
 
-.today-dot {
-  position: absolute;
-  top: 8px;
-  right: 8px;
+.selected-day-indicator {
+  position: relative; /* For pseudo-element positioning */
   width: 6px;
   height: 6px;
   background-color: #ff6f61;
   border-radius: 50%;
+  margin: 2px auto 0;
 }
 
-.day-cell.selected {
-  background-color: #e6f7ff;
+.selected-day-indicator::after {
+  content: '';
+  position: absolute;
+  top: 100%; /* Position below the indicator */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0.7px;
+  height: 6.4px;
+  background-color: #ff6f61;
 }
 
 .day-cell.selected p {

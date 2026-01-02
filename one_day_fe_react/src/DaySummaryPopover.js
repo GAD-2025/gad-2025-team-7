@@ -8,8 +8,8 @@ const DaySummaryPopover = ({ date, anchorEl, onClose, summaryData, isLoading }) 
 
     const rect = anchorEl.getBoundingClientRect();
     const style = {
-        top: `${rect.bottom + window.scrollY + 5}px`, // Add a small gap
-        left: `${rect.left + window.scrollX}px`,
+        top: `${rect.bottom + window.scrollY + 6.4}px`, // Position below the pseudo-element line
+        left: `${rect.left + window.scrollX + (rect.width / 2) - 125}px`, // 125 is half of popover width (250px)
     };
 
     return (

@@ -24,7 +24,14 @@ const Calendar = ({
 
     const handleDateClick = (event, dayInfo) => {
         setSelectedDate(dayInfo.dayString);
-        setPopoverAnchorEl(event.currentTarget);
+        const currentTarget = event.currentTarget; // Persist the event target
+        // The anchor is now the indicator itself, which will be rendered on the next cycle.
+        // We need to find it after the state update. A timeout helps, though not ideal.
+        // A better solution might involve refs, but this is a simpler change for now.
+        setTimeout(() => {
+            const anchor = currentTarget.querySelector('.selected-day-indicator');
+            setPopoverAnchorEl(anchor || currentTarget);
+        }, 0);
         setPopoverDate(dayInfo.dayString);
         const todaysEvents = events.filter(e => e.date === dayInfo.dayString);
         const completedEventsCount = todaysEvents.filter(e => e.completed).length;
@@ -114,8 +121,8 @@ const Calendar = ({
                             onMouseUp={onDragEnd}
                         >
                             <p>{dayInfo.day}</p>
-                            {dayInfo.isToday && !dayInfo.isOtherMonth && (
-                                <div className="today-dot"></div>
+                            {popoverDate === dayInfo.dayString && !dayInfo.isOtherMonth && (
+                                <div className="selected-day-indicator"></div>
                             )}
                             <div className="events-container">
                                 {dayInfo.events && dayInfo.events.map(event => (
