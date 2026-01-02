@@ -2,31 +2,37 @@
     font-family: 'Pretendard', sans-serif;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 20px; /* Gap between combined-content-box and modals */
+}
+
+.combined-content-box {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 20px; /* Overall padding for the combined box */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Gap between sections inside the combined box */
+    flex-grow: 1; /* Allow it to fill available space */
 }
 
 .home-section-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    gap: 20px; /* Gap between grid items */
 }
 
-.home-card {
-    background-color: #ffffff;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+.dashboard-section {
     display: flex;
     flex-direction: column;
+    gap: 10px; /* Space between title and content */
 }
 
 .home-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px dashed #E9ECEF;
+    /* No border or padding needed as it's a standalone element */
 }
 
 .home-card-title {
@@ -54,12 +60,24 @@
     background-color: #E9ECEF;
 }
 
+/* The home-card now only contains the body, no box styling */
+.home-card {
+    /* Removed background-color, border-radius, padding, box-shadow */
+    padding: 0; /* Ensure no extra padding */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
 .home-card-body {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
     gap: 12px;
+    padding: 0; /* Ensure no extra padding */
 }
+
+/* --- Rest of the styles are mostly the same, just need to ensure they work with the new structure --- */
 
 .schedule-item, .todo-item {
     display: flex;
@@ -86,17 +104,17 @@
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background-color: transparent; /* Default state */
+    background-color: transparent;
 }
 
 .item-checkbox.circle.completed {
-    background-color: #FF7581; /* Filled color when completed */
-    border-color: #FF7581; /* Border color when completed */
+    background-color: #FF7581;
+    border-color: #FF7581;
     position: relative;
 }
 
 .item-checkbox.circle.completed::after {
-    content: '✔'; /* Checkmark for completed */
+    content: '✔';
     position: absolute;
     top: 50%;
     left: 50%;
@@ -151,12 +169,12 @@
     color: #A0A0A0;
     font-size: 14px;
     padding: 20px 0;
+    margin: auto;
 }
 
-/* Delete button for schedule items */
 .schedule-item {
-    position: relative; /* For positioning the delete button */
-    padding-right: 30px; /* Make space for delete button */
+    position: relative;
+    padding-right: 30px;
 }
 
 .delete-schedule-btn {
@@ -169,12 +187,12 @@
     color: #C0C0C0;
     font-size: 16px;
     cursor: pointer;
-    opacity: 0; /* Hidden by default */
+    opacity: 0;
     transition: opacity 0.2s;
 }
 
 .schedule-item:hover .delete-schedule-btn {
-    opacity: 1; /* Visible on hover */
+    opacity: 1;
 }
 
 
@@ -186,7 +204,7 @@
     border-width: 1px !important;
     border-style: solid !important;
     font-weight: 500 !important;
-    color: #383838; /* Default text color */
+    color: #383838;
 }
 
 .tag-yellow { background-color: rgba(255, 231, 157, 0.5) !important; border-color: #FFE79D !important; color: #A38B46 !important; }
@@ -199,7 +217,7 @@
 /* Reminder Styles */
 .reminder-body {
     display: flex;
-    flex-direction: row; /* Added to ensure horizontal layout */
+    flex-direction: row;
     gap: 15px;
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -217,8 +235,8 @@
 }
 
 .reminder-card {
-    flex-shrink: 0; /* Prevent cards from shrinking */
-    min-width: 120px; /* Minimum width for each card */
+    flex-shrink: 0;
+    min-width: 120px;
     max-width: 150px;
     padding: 15px;
     border-radius: 12px;
@@ -230,7 +248,7 @@
     justify-content: center;
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
-    position: relative; /* Added for positioning delete button */
+    position: relative;
 }
 
 .reminder-card:hover {
@@ -246,12 +264,12 @@
     color: #C0C0C0;
     font-size: 14px;
     cursor: pointer;
-    opacity: 0; /* Hidden by default */
+    opacity: 0;
     transition: opacity 0.2s;
 }
 
 .reminder-card:hover .delete-reminder-btn {
-    opacity: 1; /* Visible on hover */
+    opacity: 1;
 }
 
 .reminder-dday-badge {
@@ -269,7 +287,6 @@
     color: #383838;
 }
 
-/* Urgency-based styles for reminders */
 .reminder-card.urgency-high {
     background-color: #FF7581;
 }

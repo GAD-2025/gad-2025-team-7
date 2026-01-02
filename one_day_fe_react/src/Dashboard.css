@@ -12,26 +12,21 @@
 }
 
 .dashboard-container {
-    background-color: #FFFFFF;
-    border-radius: 17px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     padding: 20px;
     display: flex;
     flex-direction: column;
     height: 100%;
-    border: 0.9px solid #E1E7EF;
 }
 
 .dashboard-tabs {
     display: flex;
-    justify-content: flex-start;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #E9ECEF;
-    padding: 0;
+    justify-content: center;
+    border-bottom: 1px solid #E9ECEF; /* 탭과 콘텐츠를 나누는 구분선 */
 }
 .dash-tab-link {
     padding: 10px 15px;
-    border: none;
+    border: 1px solid transparent;
+    border-bottom: 1px solid #E9ECEF; /* Match the container's bottom border */
     background: none;
     cursor: pointer;
     font-size: 20px;
@@ -39,21 +34,21 @@
     color: #C0C0C0;
     font-weight: 500;
     transition: all 0.2s;
-    border-bottom: 3px solid transparent;
-    margin-bottom: -1px; /* Overlap with container border */
+    margin-bottom: 0; /* Remove negative margin */
 }
 .dash-tab-link.active {
     font-weight: 700;
     color: #7C8083;
-    border-bottom: 3px solid #7C8083;
+    background-color: white; /* 콘텐츠 영역과 같은 배경색 */
+    border-color: #E9ECEF; /* 구분선과 같은 색의 테두리 */
+    border-bottom-color: white; /* 아래쪽 테두리만 없애서 연결된 느낌을 줌 */
+    border-radius: 8px 8px 0 0; /* 위쪽 모서리만 둥글게 */
+    position: relative; /* For z-index */
+    z-index: 1; /* Bring active tab to front */
 }
 
 .dashboard-content-wrapper {
-  background-color: white;
-  border-radius: 8px;
-  padding: 20px;
   flex-grow: 1;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   height: 100%; /* Ensure it takes full height of its flex parent */
   overflow-y: auto; /* Enable vertical scrolling */
   display: flex; /* Make it a flex container */
