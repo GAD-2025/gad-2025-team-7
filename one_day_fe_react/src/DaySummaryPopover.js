@@ -12,11 +12,15 @@ const DaySummaryPopover = ({ date, anchorEl, onClose, summaryData, isLoading }) 
         left: `${rect.left + window.scrollX + (rect.width / 2) - 125}px`, // 125 is half of popover width (250px)
     };
 
+    // Format date to "M/D"
+    const [, month, day] = date.split('-');
+    const formattedDate = `${parseInt(month, 10)}/${parseInt(day, 10)}`;
+
     return (
         <div className="day-summary-popover-overlay" onClick={onClose}>
             <div className="day-summary-popover" style={style} onClick={(e) => e.stopPropagation()}>
                 <div className="day-summary-header">
-                    <h3>하루 요약 ({date})</h3>
+                    <h3>하루 요약 ({formattedDate})</h3>
                     <button onClick={onClose} className="close-btn">&times;</button>
                 </div>
                 <div className="day-summary-content">

@@ -121,6 +121,7 @@
   border-radius: 6px;
   position: relative;
   min-height: 80px; /* Keep min-height for consistent cell size */
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
 }
 
 .day-cell:hover {
@@ -188,7 +189,7 @@
   color: #856404;
   border-radius: 4px;
   padding: 2px 5px;
-  font-size: 12px;
+  font-size: 8.8px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

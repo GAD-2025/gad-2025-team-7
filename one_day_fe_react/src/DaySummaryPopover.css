@@ -24,7 +24,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 12px;
+    padding: 12.3px 12px 8px 14.6px;
     border-bottom: none; /* Remove bottom border to avoid double border with main popover border */
     background-color: white; /* Interior white */
     border-top-left-radius: 15px; /* Match new radius */
@@ -33,9 +33,9 @@
 
 .day-summary-header h3 {
     margin: 0;
-    font-size: 14px;
+    font-size: 9.6px;
     font-weight: 600;
-    color: #333;
+    color: #ff6f61;
 }
 
 .close-btn {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Calendar.css';
 import { useData } from './DataContext';
 import DaySummaryPopover from './DaySummaryPopover';
@@ -18,16 +18,16 @@ const Calendar = ({
     const [popoverAnchorEl, setPopoverAnchorEl] = useState(null);
     const [popoverDate, setPopoverDate] = useState(null);
     const [summaryData, setSummaryData] = useState(null);
+    const calendarDaysRef = useRef(null);
 
     const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     const handleDateClick = (event, dayInfo) => {
         setSelectedDate(dayInfo.dayString);
-        const currentTarget = event.currentTarget; // Persist the event target
-        // The anchor is now the indicator itself, which will be rendered on the next cycle.
-        // We need to find it after the state update. A timeout helps, though not ideal.
-        // A better solution might involve refs, but this is a simpler change for now.
+        sessionStorage.setItem('popoverOpenForDate', dayInfo.dayString); // Save popover state
+
+        const currentTarget = event.currentTarget;
         setTimeout(() => {
             const anchor = currentTarget.querySelector('.selected-day-indicator');
             setPopoverAnchorEl(anchor || currentTarget);
@@ -44,10 +44,23 @@ const Calendar = ({
     };
 
     const handleClosePopover = () => {
+        sessionStorage.removeItem('popoverOpenForDate'); // Clear popover state
         setPopoverAnchorEl(null);
         setPopoverDate(null);
         setSummaryData(null);
     };
+
+    // On initial mount, check if a popover should be reopened
+    useEffect(() => {
+        const popoverDateToOpen = sessionStorage.getItem('popoverOpenForDate');
+        if (popoverDateToOpen && calendarDaysRef.current) {
+            const dayCell = calendarDaysRef.current.querySelector(`[data-date="${popoverDateToOpen}"]`);
+            if (dayCell) {
+                // Mock event to open popover for the persisted date
+                handleDateClick({ currentTarget: dayCell }, { dayString: popoverDateToOpen });
+            }
+        }
+    }, []); // Empty array ensures this runs only once on mount
 
     const dt = new Date();
     if (nav !== 0) dt.setMonth(new Date().getMonth() + nav);
@@ -110,10 +123,11 @@ const Calendar = ({
                 <div className="calendar-weekdays">
                     {weekdays.map(day => <div key={day} className="weekday">{day}</div>)}
                 </div>
-                <div className="calendar-days">
+                <div className="calendar-days" ref={calendarDaysRef}>
                     {days.map((dayInfo, index) => (
                         <div
                             key={index}
+                            data-date={dayInfo.dayString} // Add data-date for easy selection
                             className={`day-cell ${dayInfo.isOtherMonth ? 'other-month' : ''} ${dayInfo.isToday ? 'today' : ''} ${dayInfo.isSelected ? 'selected' : ''} ${isDateInDraggedRange(dayInfo.dayString) ? 'drag-selected' : ''}`}
                             onClick={(e) => dayInfo.dayString && handleDateClick(e, dayInfo)}
                             onMouseDown={() => dayInfo.dayString && onDragStart(dayInfo.dayString)}

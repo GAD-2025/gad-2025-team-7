@@ -29,11 +29,24 @@ const loadStateFromStorage = () => {
     return { meals: {}, pedometer: {} }; // Default structure
 };
 
+// Helper to get initial date from sessionStorage or default to today
+const getInitialDate = () => {
+    try {
+        const storedDate = sessionStorage.getItem('selectedDate');
+        if (storedDate) {
+            return storedDate;
+        }
+    } catch (e) {
+        console.error("Failed to load selectedDate from sessionStorage", e);
+    }
+    return new Date().toISOString().split('T')[0];
+};
+
 export const DataProvider = ({ children }) => {
     const { profile } = useProfile();
     const userId = profile?.userId;
 
-    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+    const [selectedDate, setSelectedDate] = useState(getInitialDate);
     
     const [mealsByDate, setMealsByDate] = useState(() => loadStateFromStorage().meals);
     const [pedometerDataByDate, setPedometerDataByDate] = useState(() => loadStateFromStorage().pedometer);
@@ -49,6 +62,15 @@ export const DataProvider = ({ children }) => {
             console.error("Failed to save state to sessionStorage", e);
         }
     }, 500));
+
+    // --- SAVE SELECTED DATE EFFECT ---
+    useEffect(() => {
+        try {
+            sessionStorage.setItem('selectedDate', selectedDate);
+        } catch (e) {
+            console.error("Failed to save selectedDate to sessionStorage", e);
+        }
+    }, [selectedDate]);
 
     // --- API FUNCTIONS ---
     async function saveMeals(dateToSave, mealCardsToSave) {

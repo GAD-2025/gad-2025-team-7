@@ -97,15 +97,13 @@
 
 #schedule-list input[type="checkbox"]:checked::after,
 #todolist-list input[type="checkbox"]:checked::after {
-    content: '';
+    content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none'%3e%3cpath d='M3 8L6 11L11 4' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e");
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 6px;
-    height: 6px;
-    background: white;
-    border-radius: 50%;
     transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
 }
 .template-bar { margin-top: 10px; font-size: 13px; color: var(--light-text-color); display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
 .template-btn { background: #eee; border: none; border-radius: 15px; padding: 5px 10px; font-size: 12px; cursor: pointer; }
@@ -128,17 +126,18 @@
     gap: 10px;
 }
 .reminder-card {
-    width: 90px;
-    height: 90px;
+    width: 126.71px;
+    height: 75.32px;
     padding: 10px;
     box-sizing: border-box;
-    border-radius: 8px;
+    border-radius: 30px;
     color: white;
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    border: 0.9px solid #E1E7EF;
 }
 .reminder-card .d-day {
     font-size: 20px;
