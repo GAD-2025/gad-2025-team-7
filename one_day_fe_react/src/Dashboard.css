@@ -1,8 +1,14 @@
 .right-column {
   flex: 4;
-  padding: 20px;
-  background-color: #F8F9FA; /* Figma background color */
+  padding: 0; /* Removed padding to fix alignment */
+  background-color: transparent;
   overflow-y: auto;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.right-column::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
 }
 
 .dashboard-container {

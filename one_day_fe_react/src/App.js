@@ -17,12 +17,17 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const handleStorageChange = () => {
-      setIsAuthenticated(!!localStorage.getItem('userId'));
+    const checkAuth = () => {
+      const userId = localStorage.getItem('userId');
+      setIsAuthenticated(!!userId);
     };
-    window.addEventListener('storage', handleStorageChange);
+
+    checkAuth(); // Check on initial load
+
+    window.addEventListener('storage', checkAuth); // Check on storage change
+
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('storage', checkAuth);
     };
   }, []);
 
