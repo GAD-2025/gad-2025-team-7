@@ -13,12 +13,13 @@
 
 .dashboard-container {
     background-color: #FFFFFF;
-    border-radius: 16px;
+    border-radius: 17px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     padding: 20px;
     display: flex;
     flex-direction: column;
     height: 100%;
+    border: 0.9px solid #E1E7EF;
 }
 
 .dashboard-tabs {
