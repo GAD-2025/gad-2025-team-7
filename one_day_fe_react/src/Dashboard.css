@@ -20,11 +20,10 @@
 
 .dashboard-tabs {
     display: flex;
-    justify-content: center;
     border-bottom: 1px solid #E9ECEF; /* 탭과 콘텐츠를 나누는 구분선 */
 }
 .dash-tab-link {
-    padding: 10px 15px;
+    padding: 10px 0;
     border: 1px solid transparent;
     border-bottom: 1px solid #E9ECEF; /* Match the container's bottom border */
     background: none;
@@ -35,6 +34,8 @@
     font-weight: 500;
     transition: all 0.2s;
     margin-bottom: 0; /* Remove negative margin */
+    flex: 1;
+    text-align: center;
 }
 .dash-tab-link.active {
     font-weight: 700;
