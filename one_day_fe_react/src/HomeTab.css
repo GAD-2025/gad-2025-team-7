@@ -39,6 +39,8 @@
     display: flex;
     flex-direction: column;
     gap: 10px; /* Space between title and content */
+    background-color: transparent !important;
+    box-shadow: none !important;
 }
 
 .home-card-header {
@@ -56,9 +58,7 @@
 }
 
 .home-add-btn {
-    background-color: #F8F9FA;
     color: #383838;
-    border: 1px solid #E9ECEF;
     border-radius: 50%;
     width: 24px;
     height: 24px;
@@ -220,11 +220,11 @@
     color: #383838;
 }
 
-.tag-yellow { background-color: rgba(255, 231, 157, 0.5) !important; border-color: #FFE79D !important; color: #A38B46 !important; }
-.tag-blue { background-color: rgba(157, 219, 255, 0.5) !important; border-color: #9DDBFF !important; color: #4593C0 !important; }
-.tag-gray { background-color: rgba(165, 165, 165, 0.5) !important; border-color: #A5A5A5 !important; color: #6E6E6E !important; }
-.tag-green { background-color: rgba(157, 255, 167, 0.5) !important; border-color: #9DFFA7 !important; color: #1C9128 !important; }
-.tag-orange { background-color: rgba(255, 188, 115, 0.5) !important; border-color: #FFA544 !important; color: #D78B3A !important; }
+.tag-yellow { border-color: #FFE79D !important; color: #A38B46 !important; }
+.tag-blue { border-color: #9DDBFF !important; color: #4593C0 !important; }
+.tag-gray { border-color: #A5A5A5 !important; color: #6E6E6E !important; }
+.tag-green { border-color: #9DFFA7 !important; color: #1C9128 !important; }
+.tag-orange { border-color: #FFA544 !important; color: #D78B3A !important; }
 
 
 /* Reminder Styles */
@@ -259,7 +259,6 @@
     gap: 5px;
     align-items: center;
     justify-content: center;
-    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
     position: relative;
 }
@@ -300,9 +299,6 @@
     color: #383838;
 }
 
-.reminder-card.urgency-high {
-    background-color: #FF7581;
-}
 .reminder-card.urgency-high .reminder-dday-badge {
     background-color: #FFFFFF;
     color: #FF8A8A;
@@ -310,12 +306,6 @@
 .reminder-card.urgency-high .reminder-title {
     color: #FFFFFF;
     font-weight: 600;
-}
-
-.reminder-card.urgency-medium,
-.reminder-card.urgency-low {
-    background-color: #FFFFFF;
-    border: 1px solid #F1F1F1;
 }
 
 .reminder-card.urgency-medium .reminder-dday-badge,

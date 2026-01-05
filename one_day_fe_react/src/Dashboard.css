@@ -101,7 +101,12 @@
     height: 12px;
 }
 .template-bar { margin-top: 10px; font-size: 13px; color: var(--light-text-color); display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
-.template-btn { background: #eee; border: none; border-radius: 15px; padding: 5px 10px; font-size: 12px; cursor: pointer; }
+.template-btn {
+    border-radius: 15px;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+}
 .add-template-btn {
     background: #ddd;
     color: #555;
