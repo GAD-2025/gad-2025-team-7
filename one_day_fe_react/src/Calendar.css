@@ -52,12 +52,12 @@
 
 .month-text {
   font-weight: 600;
-  font-size: 22px;
+  font-size: 25px;
   color: #4B4B4B;
 }
 
 .year-text {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
   color: #868e96;
 }
@@ -98,7 +98,7 @@
 .weekday {
   text-align: center;
   font-weight: 500;
-  font-size: 11.5px;
+  font-size: 11px;
   color: #868e96;
 }
 
@@ -115,7 +115,7 @@
   flex-direction: column;
   align-items: center;
   padding: 8px;
-  font-size: 9.7px;
+  font-size: 11px;
   color: #343a40;
   cursor: pointer;
   border-radius: 6px;
@@ -163,7 +163,7 @@
 }
 
 .day-cell.selected p {
-  font-size: 13.3px;
+  font-size: 15px;
   font-weight: bold;
 }
 
@@ -184,14 +184,14 @@
 }
 
 .event {
-  background-color: #fffbe6;
-  border: 1px solid #ffeeba;
-  color: #856404;
-  border-radius: 4px;
-  padding: 2px 5px;
-  font-size: 8.8px;
+  background-color: #f0f0f0; /* Default background */
+  color: #333; /* Default text color */
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-size: 10pt;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   flex-shrink: 0; /* Prevent event items from shrinking */
+  box-sizing: border-box;
 }

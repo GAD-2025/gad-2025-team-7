@@ -69,6 +69,7 @@ CREATE TABLE `events` (
   `title` varchar(255) NOT NULL,
   `time` time DEFAULT NULL,
   `category` varchar(50) DEFAULT NULL,
+  `color` varchar(50) DEFAULT '#fffbe6', -- Added color column
   `completed` tinyint(1) DEFAULT '0',
   `setReminder` tinyint(1) DEFAULT '0',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -221,6 +222,7 @@ CREATE TABLE `todos` (
   `user_id` int NOT NULL,
   `date` date NOT NULL,
   `title` varchar(255) NOT NULL,
+  `color` varchar(50) DEFAULT '#fffbe6', -- Added color column
   `completed` tinyint(1) DEFAULT '0',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

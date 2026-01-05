@@ -24,7 +24,7 @@ router.get('/:userId/:date', async (req, res) => {
 // @desc    Create a new todo or multiple recurring todos
 // @access  Private
 router.post('/', async (req, res) => {
-    const { userId, title, date, selectedDays } = req.body;
+    const { userId, title, date, color, selectedDays } = req.body; // Added color
 
     if (!userId || !title || !date) {
         return res.status(400).json({ msg: 'userId, title, and date are required.' });
@@ -46,17 +46,18 @@ router.post('/', async (req, res) => {
                     newTodos.push([
                         userId,
                         day.toISOString().split('T')[0],
-                        title
+                        title,
+                        color || '#fffbe6' // Added color with default
                     ]);
                 }
             }
         } else {
             // Create single todo
-            newTodos.push([userId, date, title]);
+            newTodos.push([userId, date, title, color || '#fffbe6']); // Added color with default
         }
 
         if (newTodos.length > 0) {
-            const sql = 'INSERT INTO todos (user_id, `date`, title) VALUES ?';
+            const sql = 'INSERT INTO todos (user_id, `date`, title, color) VALUES ?'; // Added color to INSERT
             await connection.query(sql, [newTodos]);
         }
 

@@ -139,11 +139,36 @@ const Calendar = ({
                                 <div className="selected-day-indicator"></div>
                             )}
                             <div className="events-container">
-                                {dayInfo.events && dayInfo.events.map(event => (
-                                    <div key={event.id} className="event">
-                                        {event.title}
-                                    </div>
-                                ))}
+                                {dayInfo.events && dayInfo.events.map(event => {
+                                    const style = {};
+                                    if (event.color) {
+                                        style.backgroundColor = event.color;
+                                        // Basic luminance check to set text color
+                                        try {
+                                            const hex = event.color.replace('#', '');
+                                            if (hex.length === 6) {
+                                                const r = parseInt(hex.substring(0, 2), 16);
+                                                const g = parseInt(hex.substring(2, 4), 16);
+                                                const b = parseInt(hex.substring(4, 6), 16);
+                                                const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+                                                style.color = luminance > 0.5 ? 'black' : 'white';
+                                            }
+                                        } catch (e) {
+                                            // if color is not a valid hex, do nothing, defaults will be used
+                                            console.error("Could not parse event color: ", event.color, e);
+                                        }
+                                    }
+
+                                    return (
+                                        <div
+                                            key={event.id}
+                                            className="event"
+                                            style={style}
+                                        >
+                                            {event.title}
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
                     ))}

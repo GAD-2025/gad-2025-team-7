@@ -55,6 +55,7 @@ router.post('/', async (req, res) => {
         title,
         time,
         category,
+        color, // Added color
         setReminder,
         startDate,
         endDate,
@@ -87,6 +88,7 @@ router.post('/', async (req, res) => {
                         title,
                         time || null,
                         category || 'personal',
+                        color || '#fffbe6', // Added color with default
                         setReminder || false
                     ]);
                 }
@@ -97,6 +99,7 @@ router.post('/', async (req, res) => {
                     title,
                     time || null,
                     category || 'personal',
+                    color || '#fffbe6', // Added color with default
                     setReminder || false
                 ]);
             }
@@ -104,7 +107,7 @@ router.post('/', async (req, res) => {
         }
 
         if (newEvents.length > 0) {
-            const sql = 'INSERT INTO events (user_id, `date`, title, `time`, category, setReminder) VALUES ?';
+            const sql = 'INSERT INTO events (user_id, `date`, title, `time`, category, color, setReminder) VALUES ?'; // Added color to INSERT
             await connection.query(sql, [newEvents]);
         }
 
