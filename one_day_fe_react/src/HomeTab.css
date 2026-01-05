@@ -68,6 +68,7 @@
     font-size: 17px;
     font-weight: 600;
     color: #383838;
+    white-space: nowrap;
 }
 
 .home-add-btn {
