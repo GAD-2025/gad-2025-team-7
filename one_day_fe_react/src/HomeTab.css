@@ -31,7 +31,7 @@
 
 .home-section-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 282px 143px;
     gap: 20px; /* Gap between grid items */
 }
 

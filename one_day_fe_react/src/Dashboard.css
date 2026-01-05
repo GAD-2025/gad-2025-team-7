@@ -63,7 +63,7 @@
 }
 /* Keep other styles below if they are still needed, but the primary container styles are updated. */
 
-.dashboard-section { margin-bottom: 30px; position: relative; }
+.dashboard-section { position: relative; }
 .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
 .section-header h3 { margin: 0; font-size: 17px; }
 .add-btn, .save-btn, .edit-btn { background-color: var(--primary-color); color: white; border: none; border-radius: 5px; padding: 5px 10px; font-size: 14px; cursor: pointer; }

@@ -225,7 +225,6 @@ const HomeTab = ({
                     <div className="dashboard-section">
                         <div className="home-card-header">
                             <h3 className="home-card-title">오늘의 일정</h3>
-                            <button className="home-add-btn" onClick={() => setShowScheduleModal(true)}>+</button>
                         </div>
                         <div className="home-card-body">
                             {dayEvents.length > 0 ? (
@@ -252,6 +251,7 @@ const HomeTab = ({
                         </div>
                         <div className="home-card-body">
                             <Template type="schedule" onTemplateClick={handleScheduleTemplateClick} />
+                            <button className="home-add-btn" onClick={() => setShowScheduleModal(true)}>+</button>
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,6 @@
 .home-container {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 20px;
   padding: 30px; /* Increased padding for softer look */
   width: 100%;
@@ -36,14 +37,12 @@
 }
 
 .calendar-area {
-  flex: 1;
   overflow: hidden; /* Added to contain calendar content */
   display: flex;
   /* Additional styling for calendar area if needed */
 }
 
 .dashboard-area {
-  flex: 1;
   display: flex;
   flex-direction: column;
   /* Additional styling for dashboard area if needed */
