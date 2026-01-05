@@ -1,6 +1,6 @@
 .calendar-wrapper {
   background-color: white;
-  border-radius: 17px;
+  border-radius: 20px;
   padding: 20px;
   width: 100%;
   max-width: 100%; /* Added to ensure it doesn't exceed parent width */

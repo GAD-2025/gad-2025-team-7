@@ -6,7 +6,10 @@
 }
 
 .combined-content-box {
-    /* background-color, border-radius, and box-shadow are now on the parent .unified-background */
+    background-color: #ffffff;
+    border: 0.9px solid #E1E7EF;
+    border-top: none;
+    border-radius: 0 0 20px 20px;
     padding: 20px; /* Overall padding for the combined box */
     display: flex;
     flex-direction: column;

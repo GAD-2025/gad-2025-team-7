@@ -63,15 +63,13 @@ const Dashboard = ({
     return (
         <div className="right-column">
             <div className="dashboard-container">
-                <div className="unified-background">
-                    <div className="dashboard-tabs">
-                        <button className={`dash-tab-link dash-tab-home ${activeTab === 'home-tab' ? 'active' : ''}`} onClick={() => setActiveTab('home-tab')}>홈</button>
-                        <button className={`dash-tab-link dash-tab-records ${activeTab === 'records-tab' ? 'active' : ''}`} onClick={() => setActiveTab('records-tab')}>기록</button>
-                        <button className={`dash-tab-link dash-tab-healthcare ${activeTab === 'healthcare-tab' ? 'active' : ''}`} onClick={() => setActiveTab('healthcare-tab')}>헬스케어</button>
-                    </div>
-                    <div className="dashboard-content-wrapper">
-                        {renderTabContent()}
-                    </div>
+                <div className="dashboard-tabs">
+                    <button className={`dash-tab-link dash-tab-home ${activeTab === 'home-tab' ? 'active' : ''}`} onClick={() => setActiveTab('home-tab')}>홈</button>
+                    <button className={`dash-tab-link dash-tab-records ${activeTab === 'records-tab' ? 'active' : ''}`} onClick={() => setActiveTab('records-tab')}>기록</button>
+                    <button className={`dash-tab-link dash-tab-healthcare ${activeTab === 'healthcare-tab' ? 'active' : ''}`} onClick={() => setActiveTab('healthcare-tab')}>헬스케어</button>
+                </div>
+                <div className="dashboard-content-wrapper">
+                    {renderTabContent()}
                 </div>
             </div>
         </div>

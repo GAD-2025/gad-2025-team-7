@@ -16,35 +16,26 @@
     height: 100%;
 }
 
-.unified-background {
-    background-color: #ffffff;
-    border-radius: 29px;
-    border: 0.9px solid #E1E7EF;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    overflow: hidden; /* Ensures children conform to border-radius */
-}
-
 .dashboard-tabs {
     display: flex;
-    /* border-bottom is removed to merge with content */
+    height: 57px;
+    flex-shrink: 0;
+    border-bottom: 1px solid #E9ECEF; /* 탭과 콘텐츠를 나누는 구분선 */
 }
 .dash-tab-link {
-    padding: 10px 0;
     border: 1px solid transparent;
-    /* border-bottom is removed to blend inactive tabs */
-    background-color: #F1F4F6; /* Match the main background */
+    background: transparent; /* Inactive tabs are transparent */
     cursor: pointer;
     font-size: 20px;
     font-family: 'Pretendard', sans-serif;
     color: #C0C0C0;
     font-weight: 500;
     transition: all 0.2s;
-    margin-bottom: 0; /* Remove negative margin */
+    margin-bottom: -1px; /* Overlap the container's border-bottom */
     flex: 1;
-    text-align: center;
-    border-radius: 8px 8px 0 0; /* Match active tab shape */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .dash-tab-link.active {
     font-weight: 700;
