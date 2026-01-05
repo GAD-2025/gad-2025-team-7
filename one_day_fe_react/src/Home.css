@@ -38,6 +38,7 @@
 .calendar-area {
   flex: 1;
   overflow: hidden; /* Added to contain calendar content */
+  display: flex;
   /* Additional styling for calendar area if needed */
 }
 

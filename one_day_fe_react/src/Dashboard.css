@@ -2,7 +2,6 @@
   flex: 4;
   padding: 0; /* Removed padding to fix alignment */
   background-color: transparent;
-  overflow-y: auto;
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
@@ -12,21 +11,29 @@
 }
 
 .dashboard-container {
-    padding: 20px;
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
+.unified-background {
+    background-color: #ffffff;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden; /* Ensures children conform to border-radius */
+}
+
 .dashboard-tabs {
     display: flex;
-    border-bottom: 1px solid #E9ECEF; /* 탭과 콘텐츠를 나누는 구분선 */
+    /* border-bottom is removed to merge with content */
 }
 .dash-tab-link {
     padding: 10px 0;
     border: 1px solid transparent;
-    border-bottom: 1px solid #E9ECEF; /* Match the container's bottom border */
-    background: none;
+    /* border-bottom is removed to blend inactive tabs */
+    background-color: #F1F4F6; /* Match the main background */
     cursor: pointer;
     font-size: 20px;
     font-family: 'Pretendard', sans-serif;
@@ -36,6 +43,7 @@
     margin-bottom: 0; /* Remove negative margin */
     flex: 1;
     text-align: center;
+    border-radius: 8px 8px 0 0; /* Match active tab shape */
 }
 .dash-tab-link.active {
     font-weight: 700;
@@ -50,7 +58,6 @@
 
 .dashboard-content-wrapper {
   flex-grow: 1;
-  height: 100%; /* Ensure it takes full height of its flex parent */
   overflow-y: auto; /* Enable vertical scrolling */
   display: flex; /* Make it a flex container */
   flex-direction: column; /* Stack children vertically */

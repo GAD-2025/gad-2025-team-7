@@ -33,7 +33,7 @@
 
 .main-content {
     flex-grow: 1;
-    overflow-y: auto;
+    overflow: hidden;
     background-color: transparent; /* Make content background transparent */
     display: flex; /* Enable flexbox for centering */
     justify-content: center; /* Center horizontally */
