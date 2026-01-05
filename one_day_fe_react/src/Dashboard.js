@@ -68,7 +68,7 @@ const Dashboard = ({
                     <button className={`dash-tab-link dash-tab-records ${activeTab === 'records-tab' ? 'active' : ''}`} onClick={() => setActiveTab('records-tab')}>기록</button>
                     <button className={`dash-tab-link dash-tab-healthcare ${activeTab === 'healthcare-tab' ? 'active' : ''}`} onClick={() => setActiveTab('healthcare-tab')}>헬스케어</button>
                 </div>
-                <div className="dashboard-content-wrapper">
+                <div className={`dashboard-content-wrapper content-for-${activeTab}`}>
                     {renderTabContent()}
                 </div>
             </div>

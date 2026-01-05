@@ -14,16 +14,9 @@
 }
 
 .dashboard-section {
-    background-color: #ffffff; /* White box */
-    border-radius: 20px; /* More rounded corners */
-    padding: 25px; /* Slightly more padding */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Softer, larger shadow */
-    margin-bottom: 20px;
-    transition: transform 0.2s ease-in-out; /* Add a subtle hover effect */
-}
-
-.dashboard-section:hover {
-    transform: translateY(-3px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between title and content */
 }
 
 .section-header {
