@@ -123,13 +123,8 @@ const HomeTab = ({
         }
     };
     
-    const handleScheduleTemplateClick = async (template) => {
-        const body = { userId, title: template.title, startDate: selectedDate, category: template.category || 'custom' };
-        try {
-            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/events`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-            if (!res.ok) throw new Error('Failed to save schedule from template');
-            onDataUpdate();
-        } catch (error) { console.error('Error saving schedule from template:', error); }
+    const handleScheduleTemplateClick = (template) => {
+        setNewScheduleTitle(template.title);
     };
 
     const handleTodoTemplateClick = async (template) => {
@@ -324,6 +319,7 @@ const HomeTab = ({
             </Modal>
             <Modal show={showScheduleModal} onClose={resetScheduleForm}>
                 <h3>새 일정 추가</h3>
+                <Template type="schedule" onTemplateClick={handleScheduleTemplateClick} />
                 <input type="text" placeholder="일정명" value={newScheduleTitle} onChange={(e) => setNewScheduleTitle(e.target.value)} />
                 <input type="time" value={newScheduleTime} onChange={(e) => setNewScheduleTime(e.target.value)} />
                 <div><label><input type="checkbox" checked={showScheduleDayPicker} onChange={handleShowScheduleDayPickerChange} /> 요일 반복</label></div>
