@@ -18,7 +18,8 @@
 
 .unified-background {
     background-color: #ffffff;
-    border-radius: 16px;
+    border-radius: 29px;
+    border: 0.9px solid #E1E7EF;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
