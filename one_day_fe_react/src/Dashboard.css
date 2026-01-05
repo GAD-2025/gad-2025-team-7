@@ -100,12 +100,13 @@
     width: 12px;
     height: 12px;
 }
-.template-bar { margin-top: 10px; font-size: 13px; color: var(--light-text-color); display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
+.template-bar { margin-top: 10px; font-size: 13px; color: var(--light-text-color); display: flex; flex-direction: column; align-items: flex-start; gap: 5px; }
 .template-btn {
     border-radius: 15px;
     padding: 5px 10px;
     font-size: 12px;
     cursor: pointer;
+    white-space: nowrap;
 }
 .add-template-btn {
     background: #ddd;

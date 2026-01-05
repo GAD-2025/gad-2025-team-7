@@ -44,7 +44,7 @@ const Template = ({ type, onTemplateClick }) => {
                         className="template-btn template-tag tag-blue"
                         data-title="회의"
                         data-category="work"
-                        onClick={() => onTemplateClick({ title: '회의', category: 'work', color: '#9DDBFF' })} // color 추가
+                        onClick={() => onTemplateClick({ title: '회의', category: 'work', color: '#9DDBFF' })}
                     >
                         회의
                     </button>
@@ -52,7 +52,7 @@ const Template = ({ type, onTemplateClick }) => {
                         className="template-btn template-tag tag-yellow"
                         data-title="알바"
                         data-category="work"
-                        onClick={() => onTemplateClick({ title: '알바', category: 'work', color: '#FFE79D' })} // color 추가
+                        onClick={() => onTemplateClick({ title: '알바', category: 'work', color: '#FFE79D' })}
                     >
                         알바
                     </button>
@@ -60,7 +60,7 @@ const Template = ({ type, onTemplateClick }) => {
                         className="template-btn template-tag tag-gray"
                         data-title="동아리"
                         data-category="personal"
-                        onClick={() => onTemplateClick({ title: '동아리', category: 'personal', color: '#A5A5A5' })} // color 추가
+                        onClick={() => onTemplateClick({ title: '동아리', category: 'personal', color: '#A5A5A5' })}
                     >
                         동아리
                     </button>
@@ -68,8 +68,8 @@ const Template = ({ type, onTemplateClick }) => {
             )}
             {type === 'todo' && (
                 <>
-                    <button className="template-btn template-tag tag-orange" onClick={() => onTemplateClick({ title: '장보기', color: '#FFA544' })}>장보기</button> // color 추가
-                    <button className="template-btn template-tag tag-green" onClick={() => onTemplateClick({ title: '과제', color: '#9DFFA7' })}>과제</button> // color 추가
+                    <button className="template-btn template-tag tag-orange" onClick={() => onTemplateClick({ title: '장보기', color: '#FFA544' })}>장보기</button>
+                    <button className="template-btn template-tag tag-green" onClick={() => onTemplateClick({ title: '과제', color: '#9DFFA7' })}>과제</button>
                 </>
             )}
             {customTemplates.map(template => (
@@ -77,7 +77,7 @@ const Template = ({ type, onTemplateClick }) => {
                     key={template.name}
                     className="template-btn custom-template"
                     style={{ backgroundColor: template.color }}
-                    onClick={() => onTemplateClick({ title: template.name, category: 'custom', color: template.color })} // color 추가
+                    onClick={() => onTemplateClick({ title: template.name, category: 'custom', color: template.color })}
                 >
                     {template.name}
                 </button>

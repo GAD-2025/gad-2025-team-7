@@ -261,7 +261,6 @@ const HomeTab = ({
                     <div className="dashboard-section">
                         <div className="home-card-header">
                             <h3 className="home-card-title">투두리스트</h3>
-                            <button className="home-add-btn" onClick={() => setShowTodoModal(true)}>+</button>
                         </div>
                         <div className="home-card-body">
                             {todos.length > 0 ? (
@@ -281,6 +280,8 @@ const HomeTab = ({
                         </div>
                     </div>
 
+                    <div className="grid-separator"></div>
+
                     {/* 투두리스트 추가 */}
                     <div className="dashboard-section">
                         <div className="home-card-header">
@@ -288,6 +289,7 @@ const HomeTab = ({
                         </div>
                         <div className="home-card-body">
                            <Template type="todo" onTemplateClick={handleTodoTemplateClick} />
+                           <button className="home-add-btn" onClick={() => setShowTodoModal(true)}>+</button>
                         </div>
                     </div>
                 </div>
