@@ -188,7 +188,7 @@
   color: #333; /* Default text color */
   border-radius: 3px;
   padding: 2px 4px;
-  font-size: 10pt;
+  font-size: 10px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
