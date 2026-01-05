@@ -14,7 +14,7 @@
     padding: 20px; /* Overall padding for the combined box */
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Gap between sections inside the combined box */
+    gap: 5px; /* Gap between sections inside the combined box */
     flex-grow: 1; /* Allow it to fill available space */
 }
 
@@ -31,8 +31,8 @@
 
 .home-section-grid {
     display: grid;
-    grid-template-columns: 282px 143px;
-    gap: 20px; /* Gap between grid items */
+    grid-template-columns: 282fr 143fr;
+    gap: 10px; /* Gap between grid items */
 }
 
 .dashboard-section {
