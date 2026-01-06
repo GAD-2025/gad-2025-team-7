@@ -18,10 +18,10 @@
 
 .dashboard-tabs {
     display: flex;
-    height: 37px;
+    height: 47px;
     flex-shrink: 0;
     border-bottom: 1px solid #E9ECEF; /* 탭과 콘텐츠를 나누는 구분선 */
-    margin-top: -20px;
+    margin-top: 0px;
 }
 .dash-tab-link {
     border: 1px solid transparent;
@@ -61,6 +61,7 @@
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    padding-bottom: 10px;
 }
 /* Keep other styles below if they are still needed, but the primary container styles are updated. */
 
