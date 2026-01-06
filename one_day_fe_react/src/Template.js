@@ -48,40 +48,14 @@ const Template = ({ type, onTemplateClick }) => {
                     >
                         회의
                     </button>
-                    <button
-                        className="template-btn template-tag tag-yellow"
-                        data-title="알바"
-                        data-category="work"
-                        onClick={() => onTemplateClick({ title: '알바', category: 'work', color: '#FFE79D' })}
-                    >
-                        알바
-                    </button>
-                    <button
-                        className="template-btn template-tag tag-gray"
-                        data-title="동아리"
-                        data-category="personal"
-                        onClick={() => onTemplateClick({ title: '동아리', category: 'personal', color: '#A5A5A5' })}
-                    >
-                        동아리
-                    </button>
                 </>
             )}
             {type === 'todo' && (
                 <>
                     <button className="template-btn template-tag tag-orange" onClick={() => onTemplateClick({ title: '장보기', color: '#FFA544' })}>장보기</button>
-                    <button className="template-btn template-tag tag-green" onClick={() => onTemplateClick({ title: '과제', color: '#9DFFA7' })}>과제</button>
                 </>
             )}
-            {customTemplates.map(template => (
-                <button
-                    key={template.name}
-                    className="template-btn custom-template"
-                    style={{ backgroundColor: template.color }}
-                    onClick={() => onTemplateClick({ title: template.name, category: 'custom', color: template.color })}
-                >
-                    {template.name}
-                </button>
-            ))}
+            {/* Removed customTemplates.map */}
 
             <Modal show={showTemplateModal} onClose={() => setShowTemplateModal(false)}>
                 <h3>새 {type === 'schedule' ? '일정' : '투두'} 템플릿</h3>
@@ -107,26 +81,10 @@ const Template = ({ type, onTemplateClick }) => {
                     <button onClick={() => setShowTemplateModal(false)}>취소</button>
                 </div>
 
-                {customTemplates.length > 0 && (
-                    <div className="existing-templates-list">
-                        <h4>기존 템플릿:</h4>
-                        {customTemplates.map(template => (
-                            <div key={template.name} className="existing-template-item">
-                                <span className="existing-template-color" style={{ backgroundColor: template.color }}></span>
-                                <span>{template.name}</span>
-                                <button
-                                    className="delete-existing-template-btn"
-                                    onClick={() => handleDeleteCustomTemplateFromModal(template)}
-                                >
-                                    x
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                )}
+                {/* Removed existing-templates-list */}
             </Modal>
         </div>
-    );
+);
 };
 
 export default Template;
