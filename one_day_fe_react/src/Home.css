@@ -1,12 +1,17 @@
 .home-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  display: flex; /* Changed from grid */
+  flex-direction: column; /* Stack children vertically */
   padding: 30px; /* Increased padding for softer look */
   width: 100%;
   height: 90%; /* Reduced height by 10% */
   box-sizing: border-box;
   margin-bottom: 30px; /* Added bottom margin */
+}
+
+.calendar-dashboard-wrapper {
+  display: flex; /* To maintain side-by-side layout */
+  gap: 20px; /* Space between calendar and dashboard */
+  flex-grow: 1; /* Allow it to take remaining vertical space */
 }
 
 .calendar-area {
@@ -19,8 +24,8 @@
 
 .dashboard-area {
   /* flex: 1; Removed */
-  width: 601px; /* Changed width */
-  height: 503px; /* Changed height */
+  width: 503px; /* Changed width */
+  height: 611px; /* Changed height to match calendar-area */
   display: flex;
   flex-direction: column;
   /* Additional styling for dashboard area if needed */

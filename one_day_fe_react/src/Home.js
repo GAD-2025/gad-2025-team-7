@@ -5,12 +5,12 @@ import './SlideOutNav.css';
 import Calendar from './Calendar';
 import Dashboard from './Dashboard';
 import { useData } from './DataContext';
-// import ViewToggle from './ViewToggle'; // Removed
+import ViewToggle from './ViewToggle'; // Import ViewToggle
 
 const Home = () => {
     const { setIsSlideOutNavOpen } = useOutletContext();
     const { selectedDate, setSelectedDate } = useData();
-    // const [isMonthView, setIsMonthView] = useState(true); // Removed
+    const [isMonthView, setIsMonthView] = useState(true); // State for month/week view
     
     const [nav, setNav] = useState(0);
     const [dashboardEvents, setDashboardEvents] = useState([]);
@@ -109,35 +109,37 @@ const Home = () => {
 
     return (
         <div className="home-container" onMouseUp={handleDragEnd} onMouseLeave={handleDragEnd}>
-            {/* <ViewToggle isMonthView={isMonthView} setIsMonthView={setIsMonthView} /> Removed */}
-            <div className="calendar-area">
-                <Calendar
-                    nav={nav}
-                    setNav={setNav}
-                    events={calendarEvents}
-                    isDragging={isDragging}
-                    dragStartDayString={dragStartDayString}
-                    dragEndDayString={dragEndDayString}
-                    onDragStart={handleDragStart}
-                    onDragMove={handleDragMove}
-                    onDragEnd={handleDragEnd}
-                    // isMonthView={isMonthView} // Removed
-                />
-            </div>
+            <ViewToggle isMonthView={isMonthView} setIsMonthView={setIsMonthView} /> {/* Render ViewToggle here */}
+            <div className="calendar-dashboard-wrapper"> {/* New wrapper */}
+                <div className="calendar-area">
+                    <Calendar
+                        nav={nav}
+                        setNav={setNav}
+                        events={calendarEvents}
+                        isDragging={isDragging}
+                        dragStartDayString={dragStartDayString}
+                        dragEndDayString={dragEndDayString}
+                        onDragStart={handleDragStart}
+                        onDragMove={handleDragMove}
+                        onDragEnd={handleDragEnd}
+                        isMonthView={isMonthView} // Pass isMonthView to Calendar
+                    />
+                </div>
 
-            <div className="dashboard-area">
-                <Dashboard
-                    userId={userId}
-                    selectedDate={selectedDate}
-                    dayEvents={dashboardEvents}
-                    monthEvents={calendarEvents}
-                    todos={todos}
-                    onDataUpdate={onDataUpdate}
-                    showEventModal={showEventModal}
-                    setShowEventModal={setShowEventModal}
-                    initialEventStartDate={initialEventStartDate}
-                    initialEventEndDate={initialEventEndDate}
-                />
+                <div className="dashboard-area">
+                    <Dashboard
+                        userId={userId}
+                        selectedDate={selectedDate}
+                        dayEvents={dashboardEvents}
+                        monthEvents={calendarEvents}
+                        todos={todos}
+                        onDataUpdate={onDataUpdate}
+                        showEventModal={showEventModal}
+                        setShowEventModal={setShowEventModal}
+                        initialEventStartDate={initialEventStartDate}
+                        initialEventEndDate={initialEventEndDate}
+                    />
+                </div>
             </div>
         </div>
     );

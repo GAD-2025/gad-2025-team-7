@@ -14,7 +14,7 @@ const Calendar = ({
     onDragStart,
     onDragMove,
     onDragEnd,
-    // isMonthView, // Removed
+    isMonthView, // Accept isMonthView as prop
 }) => {
     const { selectedDate, setSelectedDate, pedometerDataByDate } = useData();
     const [popoverAnchorEl, setPopoverAnchorEl] = useState(null);
@@ -75,28 +75,48 @@ const Calendar = ({
 
     const days = [];
 
-    // Previous month's padding days
-    const prevMonthLastDay = new Date(year, month, 0).getDate();
-    for (let i = paddingDays; i > 0; i--) {
-        days.push({ day: prevMonthLastDay - i + 1, isOtherMonth: true });
-    }
+    if (isMonthView) {
+        // Previous month's padding days
+        const prevMonthLastDay = new Date(year, month, 0).getDate();
+        for (let i = paddingDays; i > 0; i--) {
+            days.push({ day: prevMonthLastDay - i + 1, isOtherMonth: true });
+        }
 
-    // Current month's days
-    for (let i = 1; i <= daysInMonth; i++) {
-        const dayString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-        days.push({
-            day: i,
-            dayString,
-            isToday: new Date().getFullYear() === year && new Date().getMonth() === month && new Date().getDate() === i,
-            isSelected: dayString === selectedDate,
-            events: events.filter(e => e.date === dayString),
-        });
-    }
+        // Current month's days
+        for (let i = 1; i <= daysInMonth; i++) {
+            const dayString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+            days.push({
+                day: i,
+                dayString,
+                isToday: new Date().getFullYear() === year && new Date().getMonth() === month && new Date().getDate() === i,
+                isSelected: dayString === selectedDate,
+                events: events.filter(e => e.date === dayString),
+            });
+        }
 
-    // Next month's padding days
-    const nextMonthDays = 35 - days.length; // Changed from 42 to 35 for 5 weeks
-    for (let i = 1; i <= nextMonthDays; i++) {
-        days.push({ day: i, isOtherMonth: true });
+        // Next month's padding days
+        const nextMonthDays = 42 - days.length;
+        for (let i = 1; i <= nextMonthDays; i++) {
+            days.push({ day: i, isOtherMonth: true });
+        }
+    } else {
+        // Week view logic
+        const currentSelectedDate = new Date(selectedDate);
+        const startOfWeek = new Date(currentSelectedDate);
+        startOfWeek.setDate(currentSelectedDate.getDate() - currentSelectedDate.getDay()); // Go to Sunday
+
+        for (let i = 0; i < 7; i++) {
+            const day = new Date(startOfWeek);
+            day.setDate(startOfWeek.getDate() + i);
+            const dayString = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
+            days.push({
+                day: day.getDate(),
+                dayString,
+                isToday: new Date().getFullYear() === day.getFullYear() && new Date().getMonth() === day.getMonth() && new Date().getDate() === day.getDate(),
+                isSelected: dayString === selectedDate,
+                events: events.filter(e => e.date === dayString),
+            });
+        }
     }
 
     const isDateInDraggedRange = (currentDayString) => {
@@ -112,7 +132,7 @@ const Calendar = ({
 
     return (
         <div className="calendar-wrapper">
-            {/* <ViewToggle isMonthView={isMonthView} setIsMonthView={setIsMonthView} /> Removed */}
+            {/* Removed ViewToggle from here */}
             <div className="calendar-header">
                 <div className="month-year-container">
                     <p className="month-text">{monthNames[month]}</p>
@@ -124,7 +144,7 @@ const Calendar = ({
                 </div>
             </div>
 
-            <div className="calendar-grid">
+            <div className={`calendar-grid ${!isMonthView ? 'week-view' : ''}`}> {/* Conditionally add week-view class */}
                 <div className="calendar-weekdays">
                     {weekdays.map(day => <div key={day} className="weekday">{day}</div>)}
                 </div>
