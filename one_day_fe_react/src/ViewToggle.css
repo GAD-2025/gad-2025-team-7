@@ -4,7 +4,7 @@
     align-items: center;
     padding: 0;
     margin-bottom: 15px;
-    margin-top: -10px; /* Added margin to separate from calendar header */
+    margin-top: -30px; /* Added margin to separate from calendar header */
     width: 599px; /* Match calendar width */
 }
 
