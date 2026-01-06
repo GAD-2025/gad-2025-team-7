@@ -4,17 +4,23 @@
   gap: 20px;
   padding: 30px; /* Increased padding for softer look */
   width: 100%;
-  height: 100%;
+  height: 90%; /* Reduced height by 10% */
   box-sizing: border-box;
+  margin-bottom: 30px; /* Added bottom margin */
 }
 
 .calendar-area {
+  /* flex: 1; Removed */
+  width: 599px; /* Set fixed width */
+  height: 611px; /* Set fixed height */
   overflow: hidden; /* Added to contain calendar content */
   display: flex;
-  /* Additional styling for calendar area if needed */
 }
 
 .dashboard-area {
+  /* flex: 1; Removed */
+  width: 601px; /* Changed width */
+  height: 503px; /* Changed height */
   display: flex;
   flex-direction: column;
   /* Additional styling for dashboard area if needed */

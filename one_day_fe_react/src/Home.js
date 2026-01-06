@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useOutletContext } from 'react-router-dom'; // Import useOutletContext
+import { useOutletContext } from 'react-router-dom';
 import './Home.css';
-import './SlideOutNav.css'; // Keep this import for SlideOutNav styles
+import './SlideOutNav.css';
 import Calendar from './Calendar';
 import Dashboard from './Dashboard';
-import { useData } from './DataContext'; // Import useData
+import { useData } from './DataContext';
+// import ViewToggle from './ViewToggle'; // Removed
 
-const Home = () => { // No longer accepts setIsSlideOutNavOpen as prop
-    const { setIsSlideOutNavOpen } = useOutletContext(); // Get from context
-    const { selectedDate, setSelectedDate } = useData(); // Get date from context
+const Home = () => {
+    const { setIsSlideOutNavOpen } = useOutletContext();
+    const { selectedDate, setSelectedDate } = useData();
+    // const [isMonthView, setIsMonthView] = useState(true); // Removed
     
     const [nav, setNav] = useState(0);
     const [dashboardEvents, setDashboardEvents] = useState([]);
@@ -16,9 +18,9 @@ const Home = () => { // No longer accepts setIsSlideOutNavOpen as prop
     const [todos, setTodos] = useState([]);
     const [lastUpdated, setLastUpdated] = useState(Date.now());
 
-    const [isDragging, setIsDragging] = useState(false);
-    const [dragStartDayString, setDragStartDayString] = useState(null);
-    const [dragEndDayString, setDragEndDayString] = useState(null);
+    const [isDragging, setIsDragging] = useState(false); // Re-introduced
+    const [dragStartDayString, setDragStartDayString] = useState(null); // Re-introduced
+    const [dragEndDayString, setDragEndDayString] = useState(null); // Re-introduced
     const [showEventModal, setShowEventModal] = useState(false);
     const [initialEventStartDate, setInitialEventStartDate] = useState(null);
     const [initialEventEndDate, setInitialEventEndDate] = useState(null);
@@ -71,19 +73,19 @@ const Home = () => { // No longer accepts setIsSlideOutNavOpen as prop
         setLastUpdated(Date.now());
     };
 
-    const handleDragStart = (dayString) => {
+    const handleDragStart = (dayString) => { // Re-introduced
         setIsDragging(true);
         setDragStartDayString(dayString);
         setDragEndDayString(dayString);
     };
 
-    const handleDragMove = (dayString) => {
+    const handleDragMove = (dayString) => { // Re-introduced
         if (isDragging) {
             setDragEndDayString(dayString);
         }
     };
 
-    const handleDragEnd = () => {
+    const handleDragEnd = () => { // Re-introduced
         setIsDragging(false);
         if (dragStartDayString && dragEndDayString) {
             if (dragStartDayString !== dragEndDayString) {
@@ -107,9 +109,7 @@ const Home = () => { // No longer accepts setIsSlideOutNavOpen as prop
 
     return (
         <div className="home-container" onMouseUp={handleDragEnd} onMouseLeave={handleDragEnd}>
-            {/* <div id="collection-trigger" onClick={() => setIsSlideOutNavOpen(true)} className="collection-trigger"></div> */}
-            {/* <SlideOutNav isOpen={isSlideOutNavOpen} onClose={() => setIsSlideOutNavOpen(false)} /> */}
-            
+            {/* <ViewToggle isMonthView={isMonthView} setIsMonthView={setIsMonthView} /> Removed */}
             <div className="calendar-area">
                 <Calendar
                     nav={nav}
@@ -121,6 +121,7 @@ const Home = () => { // No longer accepts setIsSlideOutNavOpen as prop
                     onDragStart={handleDragStart}
                     onDragMove={handleDragMove}
                     onDragEnd={handleDragEnd}
+                    // isMonthView={isMonthView} // Removed
                 />
             </div>
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './Calendar.css';
 import { useData } from './DataContext';
 import DaySummaryPopover from './DaySummaryPopover';
+// import ViewToggle from './ViewToggle'; // Removed
 
 const Calendar = ({
     nav,
@@ -13,12 +14,14 @@ const Calendar = ({
     onDragStart,
     onDragMove,
     onDragEnd,
+    // isMonthView, // Removed
 }) => {
     const { selectedDate, setSelectedDate, pedometerDataByDate } = useData();
     const [popoverAnchorEl, setPopoverAnchorEl] = useState(null);
     const [popoverDate, setPopoverDate] = useState(null);
     const [summaryData, setSummaryData] = useState(null);
     const calendarDaysRef = useRef(null);
+    // const [isMonthView, setIsMonthView] = useState(true); // Removed
 
     const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -71,6 +74,7 @@ const Calendar = ({
     const paddingDays = firstDayOfMonth.getDay();
 
     const days = [];
+
     // Previous month's padding days
     const prevMonthLastDay = new Date(year, month, 0).getDate();
     for (let i = paddingDays; i > 0; i--) {
@@ -90,7 +94,7 @@ const Calendar = ({
     }
 
     // Next month's padding days
-    const nextMonthDays = 42 - days.length;
+    const nextMonthDays = 35 - days.length; // Changed from 42 to 35 for 5 weeks
     for (let i = 1; i <= nextMonthDays; i++) {
         days.push({ day: i, isOtherMonth: true });
     }
@@ -108,6 +112,7 @@ const Calendar = ({
 
     return (
         <div className="calendar-wrapper">
+            {/* <ViewToggle isMonthView={isMonthView} setIsMonthView={setIsMonthView} /> Removed */}
             <div className="calendar-header">
                 <div className="month-year-container">
                     <p className="month-text">{monthNames[month]}</p>
