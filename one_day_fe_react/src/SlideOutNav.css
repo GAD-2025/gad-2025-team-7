@@ -1,5 +1,5 @@
 .slide-out-nav-overlay {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -9,31 +9,34 @@
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
     z-index: 1200;
+    display: none; /* Added for forceful hiding */
 }
 
 .slide-out-nav-overlay.show {
     opacity: 1;
     visibility: visible;
+    display: block; /* Override display: none */
 }
 
 .slide-out-nav-container {
-    position: fixed;
+    position: absolute;
     top: 0;
-    left: -350px; /* Start off-screen, adjusted width */
-    width: 350px; /* Adjusted width as per Figma for content */
+    left: -350px;
+    width: 350px;
     height: 100%;
     background-color: #fff;
     box-shadow: 2px 0 5px rgba(0,0,0,0.2);
     transition: left 0.3s ease-in-out;
     z-index: 1300;
-    display: flex;
+    display: none; /* Added for forceful hiding */
     flex-direction: column;
-    border-top-right-radius: 20px; /* From Figma */
-    border-bottom-right-radius: 20px; /* From Figma */
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
 }
 
 .slide-out-nav-container.show {
-    left: 0; /* Slide in */
+    left: 0;
+    display: flex; /* Override display: none */
 }
 
 .slide-out-nav-header {

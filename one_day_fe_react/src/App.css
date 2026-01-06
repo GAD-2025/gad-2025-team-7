@@ -1,40 +1,67 @@
-.App {
-  text-align: center;
+html, body {
+  height: 100%;
+  overflow: hidden; /* Prevent extra vertical scroll on body/html */
+}
+
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: flex-start; /* Align to top, as transform-origin is top left */
+  overflow-x: auto; /* Allow horizontal scrolling if content overflows */
+}
+
+#scale-wrapper {
+  /* This wrapper will contain the scaled ipad-root */
+  /* No specific width/height needed here, as ipad-root is fixed and scaled */
+  /* The centering of ipad-root within this wrapper is handled by JS for scale < 1 */
+}
+
+#ipad-root {
+  width: 1194px; /* New width */
+  height: 834px; /* New height */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.1s ease-out;
+  flex-shrink: 0; /* Prevent ipad-root from shrinking */
+
+  /* Debug Overlay removed */
+  /* border: 2px solid red; */
+  box-sizing: border-box;
+  /* background-color: #f5f7fb; */
+  position: relative; /* For absolute positioning of safe-area content */
+}
+
+#safe-area {
+  padding-top: 24px;
+  padding-bottom: 34px;
+  padding-left: 0px;
+  padding-right: 0px;
   width: 100%;
   height: 100%;
+  box-sizing: border-box; /* Include padding in the element's total width and height */
+  position: relative; /* For absolute positioning of test-box */
+  display: flex; /* To make content-frame fill the safe area */
+  justify-content: center; /* Center content-frame horizontally */
+  align-items: flex-start; /* Align content-frame to the top */
+
+  /* Debug Overlay removed */
+  /* border: 2px dashed blue; */
+  /* background-color: #ffffff; */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+#content-frame {
+  width: 1194px; /* New width */
+  height: 100%; /* Fill parent height */
+  margin: 0 auto; /* Center horizontally within safe-area */
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain; /* Prevent scroll chaining */
+  /* Optional: Add a background to distinguish it */
+  /* background-color: rgba(255, 255, 255, 0.9); */
+  box-sizing: border-box; /* Ensure padding/border doesn't affect width/height */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.App {
+  width: 100%;
+  height: 100%;
 }
