@@ -316,14 +316,7 @@
     color: #383838;
 }
 
-.reminder-card.urgency-high .reminder-dday-badge {
-    background-color: #FFFFFF;
-    color: #FF8A8A;
-}
-.reminder-card.urgency-high .reminder-title {
-    color: #FFFFFF;
-    font-weight: 600;
-}
+
 
 .reminder-card.urgency-medium .reminder-dday-badge,
 .reminder-card.urgency-low .reminder-dday-badge {
