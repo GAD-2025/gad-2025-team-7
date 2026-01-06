@@ -41,7 +41,7 @@
 
 .main-content {
     flex-grow: 1; /* Take remaining horizontal space */
-    overflow-y: auto; /* Allow vertical scrolling within main content */
+    /* overflow-y: auto; */
     overflow-x: hidden; /* Hide horizontal overflow */
     background-color: transparent; /* Make content background transparent */
     display: flex; /* Enable flexbox for centering */

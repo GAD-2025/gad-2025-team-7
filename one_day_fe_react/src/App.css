@@ -52,7 +52,6 @@ body {
   width: 1194px; /* New width */
   height: 100%; /* Fill parent height */
   margin: 0 auto; /* Center horizontally within safe-area */
-  overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain; /* Prevent scroll chaining */
   /* Optional: Add a background to distinguish it */
