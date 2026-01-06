@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useOutletContext } from 'react-router-dom'; // Import useOutletContext
 import './Home.css';
-import './SlideOutNav.css';
+import './SlideOutNav.css'; // Keep this import for SlideOutNav styles
 import Calendar from './Calendar';
 import Dashboard from './Dashboard';
-import SlideOutNav from './SlideOutNav';
 import { useData } from './DataContext'; // Import useData
 
-const Home = () => {
+const Home = () => { // No longer accepts setIsSlideOutNavOpen as prop
+    const { setIsSlideOutNavOpen } = useOutletContext(); // Get from context
     const { selectedDate, setSelectedDate } = useData(); // Get date from context
     
     const [nav, setNav] = useState(0);
@@ -14,7 +15,6 @@ const Home = () => {
     const [calendarEvents, setCalendarEvents] = useState([]);
     const [todos, setTodos] = useState([]);
     const [lastUpdated, setLastUpdated] = useState(Date.now());
-    const [isSlideOutNavOpen, setIsSlideOutNavOpen] = useState(false);
 
     const [isDragging, setIsDragging] = useState(false);
     const [dragStartDayString, setDragStartDayString] = useState(null);
@@ -107,8 +107,8 @@ const Home = () => {
 
     return (
         <div className="home-container" onMouseUp={handleDragEnd} onMouseLeave={handleDragEnd}>
-            <div id="collection-trigger" onClick={() => setIsSlideOutNavOpen(true)} className="collection-trigger"></div>
-            <SlideOutNav isOpen={isSlideOutNavOpen} onClose={() => setIsSlideOutNavOpen(false)} />
+            {/* <div id="collection-trigger" onClick={() => setIsSlideOutNavOpen(true)} className="collection-trigger"></div> */}
+            {/* <SlideOutNav isOpen={isSlideOutNavOpen} onClose={() => setIsSlideOutNavOpen(false)} /> */}
             
             <div className="calendar-area">
                 <Calendar

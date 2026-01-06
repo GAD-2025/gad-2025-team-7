@@ -4,7 +4,7 @@ import ProfileHeader from './ProfileHeader';
 import MainBackground from './components/MainBackground';
 import './MainLayout.css';
 
-const MainLayout = () => {
+const MainLayout = ({ setIsSlideOutNavOpen }) => { // Accept setIsSlideOutNavOpen as prop
     return (
         <MainBackground>
             <div className="main-layout">
@@ -16,7 +16,7 @@ const MainLayout = () => {
                     <ProfileHeader />
                 </header>
                 <main className="main-content">
-                    <Outlet />
+                    <Outlet context={{ setIsSlideOutNavOpen }} /> {/* Pass setIsSlideOutNavOpen via context */}
                 </main>
             </div>
         </MainBackground>

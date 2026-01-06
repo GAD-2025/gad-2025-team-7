@@ -1,7 +1,7 @@
 .calendar-wrapper {
   background-color: white;
   border-radius: 20px;
-  padding: 20px;
+  padding: 5px 20px 3px 20px; /* Adjusted bottom padding to 3px */
   width: 100%;
   max-width: 100%; /* Added to ensure it doesn't exceed parent width */
   height: 100%;
@@ -16,7 +16,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
+  margin-bottom: 0px; /* Completely removed margin */
 }
 
 .view-toggle {
@@ -71,7 +71,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 10px 5px;
+  padding: 5px 5px; /* Reduced vertical padding by 50% */
   font-size: 20px;
   color: #adb5bd;
 }
