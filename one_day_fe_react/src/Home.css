@@ -1,6 +1,8 @@
 .home-container {
-  display: flex; /* Changed from grid */
-  flex-direction: column; /* Stack children vertically */
+  display: grid; /* Changed to grid */
+  grid-template-rows: auto 1fr; /* Two rows: auto for ViewToggle, 1fr for content */
+  grid-template-columns: 1fr; /* Single column */
+  gap: 20px; /* Gap between rows */
   padding: 30px; /* Increased padding for softer look */
   width: 100%;
   height: 90%; /* Reduced height by 10% */
@@ -12,6 +14,7 @@
   display: flex; /* To maintain side-by-side layout */
   gap: 20px; /* Space between calendar and dashboard */
   flex-grow: 1; /* Allow it to take remaining vertical space */
+  grid-column: 1 / -1; /* Span all columns */
 }
 
 .calendar-area {
@@ -29,6 +32,11 @@
   display: flex;
   flex-direction: column;
   /* Additional styling for dashboard area if needed */
+}
+
+/* Add styles for ViewToggle to span all columns */
+.home-container > .view-toggle-container { /* Target ViewToggle directly */
+  grid-column: 1 / -1; /* Span all columns */
 }
 
 .tabs {

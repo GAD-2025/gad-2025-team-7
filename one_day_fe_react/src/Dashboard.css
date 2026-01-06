@@ -1,5 +1,5 @@
 .right-column {
-  flex: 4;
+  /* flex: 4; Removed */
   padding: 0; /* Removed padding to fix alignment */
   background-color: transparent;
   -ms-overflow-style: none;  /* IE and Edge */
