@@ -25,6 +25,20 @@
     /* Removed margin-bottom */
 }
 
+.main-header .logo-container h1 {
+    font-size: 33px; /* From Figma */
+    font-weight: bold;
+    color: #ff7581; /* From Figma */
+    margin: 0;
+    margin-bottom: 6px; /* Added for spacing */
+}
+
+.main-header .logo-container p {
+    font-size: 14px;
+    color: #909090; /* From Figma */
+    margin: 0;
+}
+
 .main-content {
     flex-grow: 1; /* Take remaining horizontal space */
     overflow-y: auto; /* Allow vertical scrolling within main content */

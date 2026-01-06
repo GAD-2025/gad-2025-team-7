@@ -24,15 +24,14 @@ body {
   transition: transform 0.1s ease-out;
   flex-shrink: 0; /* Prevent ipad-root from shrinking */
 
-  /* Debug Overlay removed */
-  /* border: 2px solid red; */
+  border: 1px solid black; /* Added for visualization */
   box-sizing: border-box;
   /* background-color: #f5f7fb; */
   position: relative; /* For absolute positioning of safe-area content */
 }
 
 #safe-area {
-  padding-top: 24px;
+  padding-top: 0px; /* Changed from 24px to 0px */
   padding-bottom: 34px;
   padding-left: 0px;
   padding-right: 0px;
