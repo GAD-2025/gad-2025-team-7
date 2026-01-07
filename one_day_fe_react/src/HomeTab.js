@@ -44,6 +44,8 @@ const HomeTab = ({
     const [newScheduleStartDate, setNewScheduleStartDate] = useState(selectedDate);
     const [newScheduleEndDate, setNewScheduleEndDate] = useState('');
     const [newScheduleSetReminder, setNewScheduleSetReminder] = useState(false);
+    const [showScheduleTimePicker, setShowScheduleTimePicker] = useState(false); // New state for time chip
+    const [showScheduleRepeat, setShowScheduleRepeat] = useState(false); // New state for repeat chip
     const [newTodoTitle, setNewTodoTitle] = useState('');
     const [newTodoSelectedDays, setNewTodoSelectedDays] = useState([]);
     const [newScheduleSelectedDays, setNewScheduleSelectedDays] = useState([]);
@@ -212,6 +214,20 @@ const HomeTab = ({
         else setNewScheduleSelectedDays(newScheduleSelectedDays.filter(d => d !== dayIndex));
     };
 
+    const handleShowScheduleTimePickerChange = (e) => {
+        setShowScheduleTimePicker(e.target.checked);
+        if (!e.target.checked) setNewScheduleTime(''); // Clear time if unchecked
+    };
+
+    const handleShowScheduleRepeatChange = (e) => {
+        setShowScheduleRepeat(e.target.checked);
+        if (!e.target.checked) {
+            setShowScheduleDayPicker(false); // Hide day picker if repeat is unchecked
+            setNewScheduleSelectedDays([]); // Clear selected days
+            setNewScheduleEndDate(''); // Clear end date
+        }
+    };
+
     return (
         <div className="home-tab-content">
             <div className="combined-content-box"> {/* New wrapper */}
@@ -325,11 +341,21 @@ const HomeTab = ({
                 </div>
                 <Template type="schedule" onTemplateClick={handleScheduleTemplateClick} />
                 <input type="text" className="schedule-title-input" placeholder="일정명을 입력해주세요" value={newScheduleTitle} onChange={(e) => setNewScheduleTitle(e.target.value)} />
-                <input type="time" value={newScheduleTime} onChange={(e) => setNewScheduleTime(e.target.value)} />
+                {showScheduleTimePicker && (
+                    <input type="time" value={newScheduleTime} onChange={(e) => setNewScheduleTime(e.target.value)} />
+                )}
                 <div className="chip-container">
+                    <div><label className="chip-checkbox-label"><input type="checkbox" checked={showScheduleTimePicker} onChange={handleShowScheduleTimePickerChange} /> 시간</label></div>
+                    <div><label className="chip-checkbox-label"><input type="checkbox" checked={showScheduleRepeat} onChange={handleShowScheduleRepeatChange} /> 반복</label></div>
                     <div><label className="chip-checkbox-label"><input type="checkbox" checked={showScheduleDayPicker} onChange={handleShowScheduleDayPickerChange} /> 요일</label></div>
                     <div><label className="chip-checkbox-label"><input type="checkbox" checked={newScheduleSetReminder} onChange={() => setNewScheduleSetReminder(!newScheduleSetReminder)} /> 리마인더</label></div>
                 </div>
+                {showScheduleRepeat && showScheduleDayPicker && (
+                    <>
+                        <div className="days-of-week">{['일', '월', '화', '수', '목', '금', '토'].map((day, index) => (<label key={day}><input type="checkbox" value={index} onChange={handleScheduleDayOfWeekChange} checked={newScheduleSelectedDays.includes(index)} />{day}</label>))}</div>
+                        <div><label>종료일: <input type="date" value={newScheduleEndDate} onChange={(e) => setNewScheduleEndDate(e.target.value)} /></label></div>
+                    </>
+                )}
                 <div className="modal-actions"><button onClick={handleSaveSchedule}>저장</button></div>
             </Modal>
         </div>
