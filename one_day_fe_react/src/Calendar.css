@@ -199,3 +199,14 @@
   flex-shrink: 0; /* Prevent event items from shrinking */
   box-sizing: border-box;
 }
+
+.calendar-grid.week-view .day-cell {
+  height: auto; /* Allow height to expand based on content */
+  min-height: 60px; /* Maintain a minimum height */
+  overflow: visible; /* Ensure all content is visible */
+}
+
+.calendar-grid.week-view .day-cell .events-container {
+  overflow-y: visible; /* Allow events to push the day-cell height */
+}
+
