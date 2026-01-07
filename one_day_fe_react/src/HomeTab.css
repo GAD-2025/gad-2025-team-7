@@ -371,3 +371,13 @@
 .modal-close-btn:hover {
     color: #000;
 }
+
+.schedule-title-input {
+    width: 266px;
+    height: 31px;
+    border-radius: 8px; /* Rounded rectangle */
+    border: 1px solid #ccc; /* A subtle border */
+    padding: 5px 10px; /* Adjust padding as needed */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    font-size: 14px; /* Adjust font size for better fit */
+}

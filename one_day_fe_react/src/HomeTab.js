@@ -324,7 +324,7 @@ const HomeTab = ({
                     <button className="modal-close-btn" onClick={resetScheduleForm}>x</button>
                 </div>
                 <Template type="schedule" onTemplateClick={handleScheduleTemplateClick} />
-                <input type="text" placeholder="일정명" value={newScheduleTitle} onChange={(e) => setNewScheduleTitle(e.target.value)} />
+                <input type="text" className="schedule-title-input" placeholder="일정명" value={newScheduleTitle} onChange={(e) => setNewScheduleTitle(e.target.value)} />
                 <input type="time" value={newScheduleTime} onChange={(e) => setNewScheduleTime(e.target.value)} />
                 <div><label><input type="checkbox" checked={showScheduleDayPicker} onChange={handleShowScheduleDayPickerChange} /> 요일 반복</label></div>
                 {showScheduleDayPicker && (
