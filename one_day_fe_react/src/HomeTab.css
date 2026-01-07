@@ -375,11 +375,51 @@
 .schedule-title-input {
     width: 266px;
     height: 31px;
-    border-radius: 30px; /* Rounded rectangle */
+    border-radius: 50%; /* Rounded rectangle */
     border: none; /* Remove border */
     background-color: #f0f0f0; /* Light background for chip effect */
     padding: 8px 12px; /* Adjust padding for chip effect */
     box-sizing: border-box; /* Include padding and border in the element's total width and height */
     font-size: 14px; /* Adjust font size for better fit */
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); /* Subtle inner shadow for depth */
+}
+
+.chip-checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 20px; /* Rounded corners for chip */
+    background-color: #e0e0e0; /* Light gray background */
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-right: 8px; /* Space between chips if multiple */
+}
+
+.chip-checkbox-label:hover {
+    background-color: #d0d0d0;
+}
+
+.chip-checkbox-label input[type="checkbox"] {
+    /* Hide default checkbox */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+}
+
+/* Style for when checkbox is checked */
+.chip-checkbox-label input[type="checkbox"]:checked {
+    background-color: var(--primary-color); /* Key color when checked */
+    color: white;
 }
