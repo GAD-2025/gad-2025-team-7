@@ -318,7 +318,11 @@ const HomeTab = ({
                 <div className="modal-actions"><button onClick={handleSaveTodo}>저장</button><button onClick={() => setShowTodoModal(false)}>취소</button></div>
             </Modal>
             <Modal show={showScheduleModal} onClose={resetScheduleForm}>
-                <h3>새 일정 추가</h3>
+                <div className="schedule-modal-header">
+                    <h3 className="schedule-modal-title">새 일정 추가</h3>
+                    <span className="schedule-modal-date">{new Date(selectedDate).getMonth() + 1}월 {new Date(selectedDate).getDate()}일</span>
+                    <button className="modal-close-btn" onClick={resetScheduleForm}>x</button>
+                </div>
                 <Template type="schedule" onTemplateClick={handleScheduleTemplateClick} />
                 <input type="text" placeholder="일정명" value={newScheduleTitle} onChange={(e) => setNewScheduleTitle(e.target.value)} />
                 <input type="time" value={newScheduleTime} onChange={(e) => setNewScheduleTime(e.target.value)} />
@@ -330,7 +334,7 @@ const HomeTab = ({
                     </>
                 )}
                 <div><label><input type="checkbox" checked={newScheduleSetReminder} onChange={() => setNewScheduleSetReminder(!newScheduleSetReminder)} /> 리마인더 설정</label></div>
-                <div className="modal-actions"><button onClick={handleSaveSchedule}>저장</button><button onClick={resetScheduleForm}>취소</button></div>
+                <div className="modal-actions"><button onClick={handleSaveSchedule}>저장</button></div>
             </Modal>
         </div>
     );
