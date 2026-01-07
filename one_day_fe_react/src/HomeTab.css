@@ -420,7 +420,7 @@
 
 /* Style for when checkbox is checked */
 .chip-checkbox-label input[type="checkbox"]:checked {
-    background-color: var(--primary-color); /* Key color when checked */
+    background-color: #FFE1E3; /* Key color when checked */
     color: white;
 }
 
