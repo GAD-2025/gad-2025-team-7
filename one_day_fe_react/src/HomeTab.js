@@ -345,10 +345,10 @@ const HomeTab = ({
                     <input type="time" value={newScheduleTime} onChange={(e) => setNewScheduleTime(e.target.value)} />
                 )}
                 <div className="chip-container">
-                    <div><label className="chip-checkbox-label"><input type="checkbox" checked={showScheduleTimePicker} onChange={handleShowScheduleTimePickerChange} /> 시간</label></div>
-                    <div><label className="chip-checkbox-label"><input type="checkbox" checked={showScheduleRepeat} onChange={handleShowScheduleRepeatChange} /> 반복</label></div>
-                    <div><label className="chip-checkbox-label"><input type="checkbox" checked={showScheduleDayPicker} onChange={handleShowScheduleDayPickerChange} /> 요일</label></div>
-                    <div><label className="chip-checkbox-label"><input type="checkbox" checked={newScheduleSetReminder} onChange={() => setNewScheduleSetReminder(!newScheduleSetReminder)} /> 리마인더</label></div>
+                    <div><label className="chip-checkbox-label"><input type="checkbox" checked={showScheduleTimePicker} onChange={handleShowScheduleTimePickerChange} /><span> 시간</span></label></div>
+                    <div><label className="chip-checkbox-label"><input type="checkbox" checked={showScheduleRepeat} onChange={handleShowScheduleRepeatChange} /><span> 반복</span></label></div>
+                    <div><label className="chip-checkbox-label"><input type="checkbox" checked={showScheduleDayPicker} onChange={handleShowScheduleDayPickerChange} /><span> 요일</span></label></div>
+                    <div><label className="chip-checkbox-label"><input type="checkbox" checked={newScheduleSetReminder} onChange={() => setNewScheduleSetReminder(!newScheduleSetReminder)} /><span> 리마인더</span></label></div>
                 </div>
                 {showScheduleRepeat && showScheduleDayPicker && (
                     <>
