@@ -391,7 +391,7 @@
     border-radius: 20px; /* Rounded corners for chip */
     background-color: #e0e0e0; /* Light gray background */
     color: #333;
-    font-size: 14px;
+    font-size: 12px;
     cursor: pointer;
     transition: background-color 0.2s;
     margin-right: 8px; /* Space between chips if multiple */
