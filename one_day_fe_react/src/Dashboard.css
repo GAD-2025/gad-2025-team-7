@@ -18,7 +18,7 @@
 
 .dashboard-tabs {
     display: flex;
-    height: 47px;
+    height: 57px;
     flex-shrink: 0;
     border-bottom: 1px solid #E9ECEF; /* 탭과 콘텐츠를 나누는 구분선 */
     margin-top: 0px;
