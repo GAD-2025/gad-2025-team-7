@@ -375,9 +375,11 @@
 .schedule-title-input {
     width: 266px;
     height: 31px;
-    border-radius: 8px; /* Rounded rectangle */
-    border: 1px solid #ccc; /* A subtle border */
-    padding: 5px 10px; /* Adjust padding as needed */
+    border-radius: 30px; /* Rounded rectangle */
+    border: none; /* Remove border */
+    background-color: #f0f0f0; /* Light background for chip effect */
+    padding: 8px 12px; /* Adjust padding for chip effect */
     box-sizing: border-box; /* Include padding and border in the element's total width and height */
     font-size: 14px; /* Adjust font size for better fit */
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); /* Subtle inner shadow for depth */
 }
