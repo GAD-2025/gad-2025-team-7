@@ -197,8 +197,8 @@
     background-color: #ffffff;
     border: none; /* No border for the button itself */
     border-radius: 50%; /* Make it a circle */
-    width: 36px;   /* Fixed width for the circle */
-    height: 36px;  /* Fixed height for the circle */
+    width: 28px;   /* Fixed width for the circle */
+    height: 28px;  /* Fixed height for the circle */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -207,14 +207,17 @@
     /* Light gray shadow */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle light gray shadow */
 
-    /* Thin pink line drawing of a pen */
-    /* Using Unicode character as a simple pen icon */
-    font-size: 18px; /* Size of the pen icon */
-    color: #ff9aa2; /* Thin pink line color for the pen */
-    font-family: 'serif'; /* Ensure Unicode character renders well */
     padding: 0; /* Remove default button padding */
     line-height: 1; /* Adjust line height for icon centering */
     transition: box-shadow 0.2s ease-in-out; /* Smooth transition for hover */
+}
+
+.edit-btn > svg {
+    width: 14px; /* Slightly smaller than button size to fit nicely */
+    height: 14px;
+    stroke: #FF7581; /* The requested pink color */
+    stroke-width: 1.4px; /* The requested line thickness */
+    fill: none; /* Ensure fill is transparent for line icons */
 }
 
 .edit-btn:hover {

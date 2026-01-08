@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useData } from './DataContext'; // Import useData
+import { LuPencil } from 'react-icons/lu'; // Import Lucide Pencil icon
 import './CyclePrediction.css';
 
 const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
@@ -174,7 +175,7 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
             <div className="cycle-prediction-wrapper">
                 <div className="section-header">
                     <h3>월경 예정일</h3>
-                    <button className="edit-btn" onClick={() => setShowCycleModal(true)}>&#9999;</button>
+                    <button className="edit-btn" onClick={() => setShowCycleModal(true)}><LuPencil /></button>
                 </div>
                 <div className="healthcare-content-box">
                     <div className="cycle-prediction-body">
