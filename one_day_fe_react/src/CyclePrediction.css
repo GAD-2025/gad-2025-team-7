@@ -20,66 +20,58 @@
 
 .cycle-dates-wrapper {
     display: flex;
-    justify-content: center; /* Center items horizontally */
-    align-items: center;
-    gap: 15px; /* Increased gap for better spacing */
+    justify-content: space-around; /* Distribute space evenly */
+    align-items: center; /* Align items to the center vertically */
+    gap: 10px; /* Adjusted gap */
     margin-top: 10px;
+}
+
+.date-label-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px; /* Space between label and box */
+}
+
+.date-label {
+    font-size: 11px; /* Smaller font for the label */
+    color: #777;
+    margin: 0; /* Remove default paragraph margin */
 }
 
 .date-box {
     text-align: center;
-    padding: 8px; /* Reduced padding */
+    padding: 6px; /* Reduced padding further */
     background-color: #f8fafd;
     border-radius: 8px;
     border: 1px solid #e0e6ed;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    flex: 1;
-    max-width: 120px; /* Constrain max width for date boxes */
-    height: 90px; /* Fixed height for consistency */
+    width: 60px; /* Further reduced width for consistency */
+    height: 60px; /* Adjusted height for consistency */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.d-day-box {
-    text-align: center;
-    background-color: #ffffff; /* White background */
-    border-radius: 50%; /* Rounded to a circle */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Light gray shadow */
-    width: 80px; /* Fixed width for the circle */
-    height: 80px; /* Fixed height for the circle */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column; /* To stack D-text and number if needed, currently only D-text */
-    flex-shrink: 0; /* Prevent shrinking */
-}
-
-.date-box-header p {
-    font-size: 10px; /* Reduced font-size */
-    color: #777;
-    margin-bottom: 2px; /* Reduced margin */
-}
-
 .date-info-box .date-mmdd {
-    font-size: 0.9em; /* Reduced font-size */
+    font-size: 0.8em; /* Reduced font-size further */
     font-weight: 600;
     color: #4a4a4a;
     display: block;
 }
 
 .date-info-box .date-day {
-    font-size: 0.65em; /* Reduced font-size */
+    font-size: 0.6em; /* Reduced font-size further */
     color: #888;
     display: block;
 }
 
 .d-day-text {
-    font-size: 1.1em; /* Significantly reduced font-size */
-    font-weight: 300; /* Thin font */
-    color: #555; /* Darker gray color */
-    line-height: 1; /* Adjust line height for better vertical centering */
+    font-size: 1em; /* Adjusted font-size */
+    font-weight: 700; /* Bold font */
+    color: #ff6b7e; /* Bold pink color */
+    line-height: 1;
 }
 
 /* Modal Styles */

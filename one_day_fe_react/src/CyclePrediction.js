@@ -174,27 +174,27 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
             <div className="cycle-prediction-wrapper">
                 <div className="section-header">
                     <h3>월경 예정일</h3>
-                    <button className="edit-btn" onClick={() => setShowCycleModal(true)}>수정</button>
+                    <button className="edit-btn" onClick={() => setShowCycleModal(true)}>&#9999;</button>
                 </div>
                 <div className="healthcare-content-box">
                     <div className="cycle-prediction-body">
                         <div className="cycle-dates-wrapper">
-                            <div className="date-box start-date">
-                                <div className="date-box-header">
-                                    <p>시작</p>
-                                </div>
-                                <div className="date-info-box">
-                                    <span className="date-mmdd">{startMMDD}</span>
-                                    <span className="date-day">{startDay}</span>
+                            <div className="date-label-wrapper">
+                                <p className="date-label">시작</p>
+                                <div className="date-box start-date">
+                                    <div className="date-info-box">
+                                        <span className="date-mmdd">{startMMDD}</span>
+                                        <span className="date-day">{startDay}</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="date-box end-date">
-                                <div className="date-box-header">
-                                    <p>종료</p>
-                                </div>
-                                <div className="date-info-box">
-                                    <span className="date-mmdd">{endMMDD}</span>
-                                    <span className="date-day">{endDay}</span>
+                            <div className="date-label-wrapper">
+                                <p className="date-label">종료</p>
+                                <div className="date-box end-date">
+                                    <div className="date-info-box">
+                                        <span className="date-mmdd">{endMMDD}</span>
+                                        <span className="date-day">{endDay}</span>
+                                    </div>
                                 </div>
                             </div>
                             <div className="d-day-box">
