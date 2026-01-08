@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { HexColorPicker } from "react-colorful"; // Import HexColorPicker
 import './Diary.css'; // Import the new CSS file
 
 const Diary = ({ selectedDate, userId }) => {
@@ -10,6 +11,31 @@ const Diary = ({ selectedDate, userId }) => {
     const [drawingTool, setDrawingTool] = useState('pen');
     const [penColor, setPenColor] = useState('black');
     const [penSize, setPenSize] = useState(8);
+    const [textSize, setTextSize] = useState(16); // New state for text size
+    const [showMoreColors, setShowMoreColors] = useState(false);
+    
+    const moreColorsBtnRef = useRef(null); // Ref for the '+' button
+    const expandedColorPaletteRef = useRef(null); // Ref for the expanded color palette
+
+    // Effect to close expanded color palette on outside click
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                showMoreColors &&
+                expandedColorPaletteRef.current &&
+                !expandedColorPaletteRef.current.contains(event.target) &&
+                moreColorsBtnRef.current &&
+                !moreColorsBtnRef.current.contains(event.target)
+            ) {
+                setShowMoreColors(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showMoreColors]);
     
     const [texts, setTexts] = useState([]);
     const textRefs = useRef({});
@@ -146,7 +172,7 @@ const Diary = ({ selectedDate, userId }) => {
         await Promise.all(imageLoadPromises);
 
         texts.forEach(text => {
-            finalCtx.font = '16px sans-serif';
+            finalCtx.font = `${text.size}px sans-serif`;
             finalCtx.fillStyle = text.color || 'black';
             finalCtx.fillText(text.value, text.x, text.y);
         });
@@ -218,7 +244,7 @@ const Diary = ({ selectedDate, userId }) => {
     const handleCanvasDoubleClick = ({ nativeEvent }) => {
         if (drawingTool === 'text') {
             const { offsetX, offsetY } = nativeEvent;
-            const newText = { id: Date.now(), x: offsetX, y: offsetY, value: 'New Text', color: penColor };
+            const newText = { id: Date.now(), x: offsetX, y: offsetY, value: 'New Text', color: penColor, size: textSize };
             const newTexts = [...texts, newText];
             setTexts(newTexts);
             startEditingText(newText.id);
@@ -370,12 +396,6 @@ const Diary = ({ selectedDate, userId }) => {
     return (
         <div id="diary-content" className="diary-page-container" onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}>
             <div className="dashboard-section">
-                <div className="section-header">
-                    <h3>다이어리</h3>
-                    <div className="header-actions">
-                        <button className="save-btn" onClick={saveDiary}>저장</button>
-                    </div>
-                </div>
                 
                 <div id="diary-editor" className="diary-editor-container">
                     <input type="text" id="diary-title" placeholder="제목을 입력하세요" value={title} onChange={(e) => setTitle(e.target.value)} />
@@ -391,21 +411,52 @@ const Diary = ({ selectedDate, userId }) => {
                                 <button className="tool-btn" onClick={undo} disabled={historyStep <= 0}>↩️</button>
                                 <button className="tool-btn" onClick={redo} disabled={historyStep >= history.length - 1}>↪️</button>
                             </div>
-                            <div className="color-palette">
-                                <div className={`color-box ${penColor === 'black' ? 'active' : ''}`} style={{backgroundColor: 'black'}} data-color="black" onClick={() => setPenColor('black')}></div>
-                                <div className={`color-box ${penColor === 'red' ? 'active' : ''}`} style={{backgroundColor: 'red'}} data-color="red" onClick={() => setPenColor('red')}></div>
-                                <div className={`color-box ${penColor === 'blue' ? 'active' : ''}`} style={{backgroundColor: 'blue'}} data-color="blue" onClick={() => setPenColor('blue')}></div>
-                                <div className={`color-box ${penColor === 'green' ? 'active' : ''}`} style={{backgroundColor: 'green'}} data-color="green" onClick={() => setPenColor('green')}></div>
+                            <div className="color-palette-wrapper">
+                                <div className="color-palette">
+                                    <div className={`color-box ${penColor === 'black' ? 'active' : ''}`} style={{backgroundColor: 'black'}} data-color="black" onClick={() => setPenColor('black')}></div>
+                                    <div className={`color-box ${penColor === 'blue' ? 'active' : ''}`} style={{backgroundColor: 'blue'}} data-color="blue" onClick={() => setPenColor('blue')}></div>
+                                    <div className="color-box current-selected-color-indicator" style={{backgroundColor: penColor}} onClick={() => setShowMoreColors(true)}></div>
+                                    <div ref={moreColorsBtnRef} className="color-box more-colors-btn" onClick={() => setShowMoreColors(!showMoreColors)}>+</div>
+                                </div>
                             </div>
                             <div className="size-controls">
-                                <button className={`size-btn ${penSize === 3 ? 'active' : ''}`} onClick={() => setPenSize(3)}>S</button>
-                                <button className={`size-btn ${penSize === 8 ? 'active' : ''}`} onClick={() => setPenSize(8)}>M</button>
-                                <button className={`size-btn ${penSize === 15 ? 'active' : ''}`} onClick={() => setPenSize(15)}>L</button>
+                                {(drawingTool === 'pen' || drawingTool === 'eraser') && (
+                                    <>
+                                        <input
+                                            type="number"
+                                            value={penSize}
+                                            onChange={(e) => setPenSize(parseInt(e.target.value) || 1)}
+                                            min="1"
+                                            max="50"
+                                            className="size-input"
+                                        />
+                                        <span className="size-label">px</span>
+                                    </>
+                                )}
+                                {drawingTool === 'text' && (
+                                    <>
+                                        <input
+                                            type="number"
+                                            value={textSize}
+                                            onChange={(e) => setTextSize(parseInt(e.target.value) || 1)}
+                                            min="1"
+                                            max="72"
+                                            className="size-input"
+                                        />
+                                        <span className="size-label">px</span>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>
+                    {showMoreColors && ( // Moved outside of diary-toolbar
+                        <div ref={expandedColorPaletteRef} className="expanded-color-palette">
+                            <HexColorPicker color={penColor} onChange={setPenColor} />
+                        </div>
+                    )}
                     {drawingTool === 'text' && ( <div className="text-tool-message"> Double-click on the canvas to add text. </div> )}
                     <div ref={containerRef} className="canvas-wrapper">
+                        <button className="save-btn" onClick={saveDiary}>저장</button> {/* Moved save button here */}
                         <canvas
                             id="diary-canvas"
                             ref={canvasRef}
@@ -447,7 +498,7 @@ const Diary = ({ selectedDate, userId }) => {
                                     key={text.id}
                                     ref={el => textRefs.current[text.id] = el}
                                     className={`diary-text-box ${isSelected ? 'selected' : ''} ${editingText === text.id ? 'editing' : ''}`}
-                                    style={{ top: text.y, left: text.x, color: text.color || 'black', fontSize: '16px', /* other text styles from canvas context */}}
+                                    style={{ top: text.y, left: text.x, color: text.color || 'black', fontSize: `${text.size}px` }} // Use text.size
                                     onMouseDown={(e) => handleItemDragStart('text', text.id, e)}
                                     onDoubleClick={(e) => { e.stopPropagation(); startEditingText(text.id); }}
                                 >
@@ -461,9 +512,10 @@ const Diary = ({ selectedDate, userId }) => {
                                             onBlur={handleTextBlur}
                                             autoFocus
                                             className="diary-textarea-input"
+                                            style={{ color: text.color || 'black', fontSize: `${text.size}px` }} // Use text.size
                                         />
                                      ) : (
-                                        <div className="diary-display-text">{text.value}</div>
+                                        <div className="diary-display-text" style={{ fontSize: `${text.size}px` }}>{text.value}</div> // Use text.size
                                     )}
                                 </div>
                             );

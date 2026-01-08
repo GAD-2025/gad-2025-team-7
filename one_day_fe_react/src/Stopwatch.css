@@ -132,6 +132,7 @@ h2, h3 {
     background-color: #F8F9FA;
     padding: 10px;
     border-radius: 5px;
+    gap: 8px; /* Add 8px gap here */
 }
 
 .task-list-section button {

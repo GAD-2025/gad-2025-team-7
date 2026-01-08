@@ -121,8 +121,8 @@
   cursor: pointer;
   border-radius: 6px;
   position: relative;
-  height: 60px; /* Reduced height to 60px */
-  /* Removed min-height */
+  height: 60px; /* Restored original height */
+  /* overflow: hidden; Removed */
   -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
 }
 

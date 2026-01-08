@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useData } from './DataContext';
 import { useProfile } from './ProfileContext';
+import './Pedometer.css';
 
 const Pedometer = ({ userId }) => {
     // --- Get Data From Contexts ---
@@ -37,22 +38,26 @@ const Pedometer = ({ userId }) => {
     const handleSaveWeight = async () => {
         if (!weightInput || isNaN(weightInput) || parseFloat(weightInput) <= 0) {
             alert('유효한 체중을 입력해주세요.');
+            // Reset to original weight on invalid input
+            setWeightInput(profile.weight ? String(profile.weight) : '');
+            setIsEditingWeight(false);
             return;
         }
         try {
             await updateWeight(weightInput);
-            alert("체중이 성공적으로 업데이트되었습니다.");
-            setIsEditingWeight(false);
+            // alert("체중이 성공적으로 업데이트되었습니다."); // Optional: remove alert for seamless experience
+            setIsEditingWeight(false); // Exit editing mode on successful save
         } catch (error) {
             console.error(error);
             alert(error.message || "체중 업데이트에 실패했습니다.");
+            setIsEditingWeight(false); // Also exit editing mode on failure
         }
     };
     
-    const handleCancelEdit = () => {
-        // Reset input to the value from context
-        setWeightInput(profile.weight ? String(profile.weight) : '');
-        setIsEditingWeight(false);
+    const handleWeightInputKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.target.blur(); // Trigger onBlur to save
+        }
     };
 
     // --- Graph Calculation ---
@@ -74,61 +79,41 @@ const Pedometer = ({ userId }) => {
     }, [steps, dietTotals, dailyCalorieGoal]);
 
     return (
-        <div className="section-content health-content-grid">
-            {/* Compact Weight Input UI */}
-            <div className="weight-input-container compact">
-                {profileLoading ? (
-                    <p>로딩 중...</p>
-                ) : isEditingWeight ? (
-                    <>
-                        <label>체중 (kg):</label>
-                        <input
-                            type="number"
-                            step="0.01"
-                            value={weightInput}
-                            onChange={(e) => setWeightInput(e.target.value)}
-                            placeholder="kg"
-                        />
-                        <button onClick={handleSaveWeight}>저장</button>
-                        <button onClick={handleCancelEdit}>취소</button>
-                    </>
-                ) : (
-                    <>
-                        <p>현재 체중: {profile.weight ? `${profile.weight} kg` : '미입력'}</p>
-                        <button onClick={() => setIsEditingWeight(true)}>수정</button>
-                    </>
-                )}
+        <div className="pedometer-wrapper">
+            <div className="section-header">
+                <h3>섭취 칼로리</h3>
             </div>
-
-            {/* Calorie Info */}
-            <div className="calorie-info">
-                <p>하루 평균 섭취 칼로리 목표: <span>{dailyCalorieGoal}</span> kcal</p>
-                <p>오늘 섭취한 총 칼로리: <span>{Math.round(dietTotals.calories)}</span> kcal</p>
-            </div>
-
-            {/* Pedometer and Graph */}
-            <div className="pedometer">
-                <h4>만보기</h4>
-                <div id="step-count" className="pedometer-display">{steps}</div>
-                <p>걸음</p>
-                <div className="pedometer-controls">
-                    <button id="add-steps-btn" onClick={() => updateSteps(steps + 100)}>+100</button>
-                    <button id="reset-steps-btn" onClick={() => updateSteps(0)}>리셋</button>
+            <div className="healthcare-content-box">
+                <div className="pedometer-column weight-column">
+                    <div className="weight-info">
+                        {profileLoading ? (
+                            <p>로딩 중...</p>
+                        ) : isEditingWeight ? (
+                            <input
+                                type="number"
+                                step="0.01"
+                                value={weightInput}
+                                onChange={(e) => setWeightInput(e.target.value)}
+                                onBlur={handleSaveWeight} // Save on blur
+                                onKeyDown={handleWeightInputKeyDown} // Save on Enter
+                                placeholder="kg"
+                                autoFocus
+                            />
+                        ) : (
+                            <div className="weight-display-container" onClick={() => setIsEditingWeight(true)}>
+                                {profile.weight ? (
+                                    <p>{profile.weight} kg</p>
+                                ) : (
+                                    <p>현재 체중</p>
+                                )}
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
-            <div className="calorie-graph-container">
-                <svg id="calorie-graph" viewBox="0 0 100 100">
-                    <circle className="graph-bg" cx="50" cy="50" r="45"></circle>
-                    <path 
-                        id="graph-progress" 
-                        className="graph-progress" 
-                        d="M 50, 5 a 45,45 0 1,1 0,90 a 45,45 0 1,1 0,-90"
-                        style={{ strokeDashoffset: graphPathLength * (1 - graphProgress / 100) }}
-                    ></path>
-                </svg>
-                <div id="graph-text" className="graph-text">
-                    오늘의 건강까지<br />
-                    <span id="kcal-remaining">{kcalRemaining}</span>kcal
+                <div className="pedometer-column calorie-column">
+                    <p className="calorie-display-format">
+                        <span className="calorie-value">{Math.round(dietTotals.calories)}kcal</span> / <span className="calorie-goal-value">{dailyCalorieGoal}kcal</span>
+                    </p>
                 </div>
             </div>
         </div>

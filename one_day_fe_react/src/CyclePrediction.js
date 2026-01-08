@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useData } from './DataContext'; // Import useData
+import './CyclePrediction.css';
 
 const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
     // --- Get selectedDate from Context ---
@@ -32,7 +33,7 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
             if (res.ok && data.history) {
                 setCycleHistory(data.history);
                 if (data.prediction) {
-                    setDDay(data.prediction.dDay >= 0 ? `-${data.prediction.dDay}` : `+${Math.abs(data.prediction.dDay)}`);
+                    setDDay(`-${Math.abs(data.prediction.dDay)}`);
                     setPredictedStartDate(data.prediction.startDate);
                     setPredictedEndDate(data.prediction.endDate);
                 } else {
@@ -154,87 +155,112 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
         }
     };
 
+    const formatCycleDate = (dateString) => {
+        if (!dateString || dateString === '----.--.--') {
+            return { mmdd: '--.--', day: '---' };
+        }
+        const date = new Date(dateString);
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        const day = date.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
+        return { mmdd: `${mm}.${dd}`, day };
+    };
+
+    const { mmdd: startMMDD, day: startDay } = formatCycleDate(predictedStartDate);
+    const { mmdd: endMMDD, day: endDay } = formatCycleDate(predictedEndDate);
+
     return (
         <>
-            <div className="dashboard-section healthcare-item">
+            <div className="cycle-prediction-wrapper">
                 <div className="section-header">
-                    <h3>생리 주기</h3>
-                    <div className="header-actions">
-                        <button className="edit-btn" onClick={() => setShowCycleModal(true)}>수정</button>
-                    </div>
+                    <h3>월경 예정일</h3>
+                    <button className="edit-btn" onClick={() => setShowCycleModal(true)}>수정</button>
                 </div>
-                <div className="section-content" id="cycle-prediction-content">
-                    <div className="prediction-main-info">
-                        <p>다음 월경 시작일까지</p>
-                        <h2 className="d-day-display">D{dDay}</h2>
-                    </div>
-                    <div className="predicted-dates-grid">
-                        <div className="predicted-date-item">
-                            <p>예상 시작일</p>
-                            <span id="predicted-start-date" className="large-date">{predictedStartDate}</span>
-                        </div>
-                        <div className="predicted-date-item">
-                            <p>예상 종료일</p>
-                            <span id="predicted-end-date" className="large-date">{predictedEndDate}</span>
+                <div className="healthcare-content-box">
+                    <div className="cycle-prediction-body">
+                        <div className="cycle-dates-wrapper">
+                            <div className="date-box start-date">
+                                <div className="date-box-header">
+                                    <p>시작</p>
+                                </div>
+                                <div className="date-info-box">
+                                    <span className="date-mmdd">{startMMDD}</span>
+                                    <span className="date-day">{startDay}</span>
+                                </div>
+                            </div>
+                            <div className="date-box end-date">
+                                <div className="date-box-header">
+                                    <p>종료</p>
+                                </div>
+                                <div className="date-info-box">
+                                    <span className="date-mmdd">{endMMDD}</span>
+                                    <span className="date-day">{endDay}</span>
+                                </div>
+                            </div>
+                            <div className="d-day-box">
+                                <span className="d-day-text">D{dDay}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             {showCycleModal && createPortal(
-                <div id="cycle-edit-modal" className="modal-overlay">
-                    <div className="modal-content">
-                        <h3>생리 주기 기록</h3>
-                        {cycleHistory.length < 2 && (
-                            <p style={{ color: 'red', marginBottom: '15px' }}>
-                                예측을 위해 최소 2번의 주기 기록이 필요합니다.
-                            </p>
-                        )}
-                        <div className="cycle-input-form">
-                            <label htmlFor="cycle-start-date">시작일:</label>
-                            <input 
-                                type="date" 
-                                id="cycle-start-date" 
-                                value={startDateInput} 
-                                onChange={(e) => setStartDateInput(e.target.value)} 
-                            />
-                            <label htmlFor="cycle-end-date">종료일:</label>
-                            <input 
-                                type="date" 
-                                id="cycle-end-date" 
-                                value={endDateInput} 
-                                onChange={(e) => setEndDateInput(e.target.value)} 
-                            />
-                            {editingCycleId ? (
-                                <>
-                                    <button onClick={handleUpdateCycleRecord}>기록 저장</button>
-                                    <button onClick={handleCancelEdit}>취소</button>
-                                </>
-                            ) : (
-                                <button onClick={handleSaveCycleRecord}>기록 추가</button>
+                <div id="cycle-edit-modal">
+                    <div className="modal-overlay">
+                        <div className="modal-content">
+                            <h3>생리 주기 기록</h3>
+                            {cycleHistory.length < 2 && (
+                                <p style={{ color: 'red', marginBottom: '15px' }}>
+                                    예측을 위해 최소 2번의 주기 기록이 필요합니다.
+                                </p>
                             )}
-                        </div>
-                        <hr />
-                        <h4>과거 기록</h4>
-                        <div id="past-cycles-list" className="section-content">
-                            {cycleHistory.length > 0 ? (
-                                <ul>
-                                    {cycleHistory.map(record => (
-                                        <li key={record.id}>
-                                            <span>{formatDate(record.start_date)} ~ {formatDate(record.end_date)}</span>
-                                            <div className="record-actions">
-                                                <button className="edit-record-btn" onClick={() => handleEditClick(record)}>수정</button>
-                                                <button className="delete-record-btn" onClick={() => handleDeleteCycle(record.id)}>삭제</button>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p>기록이 없습니다.</p>
-                            )}
-                        </div>
-                        <div className="modal-actions">
-                            <button id="close-cycle-modal-btn" onClick={() => { setShowCycleModal(false); resetForm(); }}>닫기</button>
+                            <div className="cycle-input-form">
+                                <label htmlFor="cycle-start-date">시작일:</label>
+                                <input 
+                                    type="date" 
+                                    id="cycle-start-date" 
+                                    value={startDateInput} 
+                                    onChange={(e) => setStartDateInput(e.target.value)} 
+                                />
+                                <label htmlFor="cycle-end-date">종료일:</label>
+                                <input 
+                                    type="date" 
+                                    id="cycle-end-date" 
+                                    value={endDateInput} 
+                                    onChange={(e) => setEndDateInput(e.target.value)} 
+                                />
+                                {editingCycleId ? (
+                                    <>
+                                        <button onClick={handleUpdateCycleRecord}>기록 저장</button>
+                                        <button onClick={handleCancelEdit}>취소</button>
+                                    </>
+                                ) : (
+                                    <button onClick={handleSaveCycleRecord}>기록 추가</button>
+                                )}
+                            </div>
+                            <hr />
+                            <h4>과거 기록</h4>
+                            <div id="past-cycles-list" className="section-content">
+                                {cycleHistory.length > 0 ? (
+                                    <ul>
+                                        {cycleHistory.map(record => (
+                                            <li key={record.id}>
+                                                <span>{formatDate(record.start_date)} ~ {formatDate(record.end_date)}</span>
+                                                <div className="record-actions">
+                                                    <button className="edit-record-btn" onClick={() => handleEditClick(record)}>수정</button>
+                                                    <button className="delete-record-btn" onClick={() => handleDeleteCycle(record.id)}>삭제</button>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <p>기록이 없습니다.</p>
+                                )}
+                            </div>
+                            <div className="modal-actions">
+                                <button id="close-cycle-modal-btn" onClick={() => { setShowCycleModal(false); resetForm(); }}>닫기</button>
+                            </div>
                         </div>
                     </div>
                 </div>,

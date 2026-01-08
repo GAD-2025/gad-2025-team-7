@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "one_day_fe_react/build",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

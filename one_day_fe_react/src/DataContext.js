@@ -157,7 +157,7 @@ export const DataProvider = ({ children }) => {
     const updateSteps = (newSteps) => setPedometerDataByDate(prev => ({ ...prev, [selectedDate]: { steps: newSteps } }));
     const addMealCard = () => updateCurrentMeals(cards => [...cards, { id: Date.now(), category: '점심', foods: [], searchQuery: '' }]);
     const handleCategoryChange = (cardId, newCategory) => updateCurrentMeals(cards => cards.map(card => card.id === cardId ? { ...card, category: newCategory } : card));
-    const deleteMealCard = (cardId) => updateCurrentMeals(cards => cards.length > 1 ? cards.filter(card => card.id !== cardId) : cards);
+    const deleteMealCard = (cardId) => updateCurrentMeals(cards => cards.filter(card => card.id !== cardId));
     const removeFoodFromCard = (cardId, foodId) => updateCurrentMeals(cards => cards.map(card => card.id === cardId ? { ...card, foods: card.foods.filter(f => f.id !== foodId) } : card));
     const updateFoodQty = (cardId, foodId, qty) => updateCurrentMeals(cards => cards.map(card => card.id === cardId ? { ...card, foods: card.foods.map(f => f.id === foodId ? { ...f, qty: parseFloat(qty) || 1 } : f) } : cards));
     const addFoodToCard = (cardId, food) => updateCurrentMeals(cards => cards.map(card => card.id === cardId ? { ...card, foods: [...card.foods, { ...food, qty: 1, id: Date.now() }], searchQuery: '' } : card));

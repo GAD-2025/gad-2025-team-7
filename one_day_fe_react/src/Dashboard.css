@@ -14,13 +14,14 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    /* background-color: lightblue !important; Removed diagnostic color */
 }
 
 .dashboard-tabs {
     display: flex;
     height: 57px;
     flex-shrink: 0;
-    border-bottom: 1px solid #E9ECEF; /* 탭과 콘텐츠를 나누는 구분선 */
+    /* border-bottom: 1px solid #E9ECEF; /* Removed the line causing interference */
     margin-top: 0px;
 }
 .dash-tab-link {
@@ -60,10 +61,12 @@
 .dash-tab-content.active {
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
     padding-bottom: 10px;
     overflow-y: auto;
-    height: 100%;
+    height: 543px; /* Fixed height for tab content */
+    width: 465px; /* Fixed width for tab content */
+    border-radius: 20px 20px 20px 20px; /* Apply full border-radius to all corners */
+    background-color: white; /* Match background for seamless rounded corners */
 }
 /* Keep other styles below if they are still needed, but the primary container styles are updated. */
 
@@ -376,23 +379,35 @@
 .record-menu {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 5px; /* Reduced margin */
+    border-bottom: none; /* Explicitly remove border-bottom */
 }
 
 .record-menu-btn {
-    padding: 10px 20px;
+    padding: 10px 20px 10px 30px; /* Added left padding for circle */
     border: none;
     background: none;
     cursor: pointer;
     font-size: 16px;
     color: var(--light-text-color);
-    border-bottom: 3px solid transparent;
+    position: relative; /* For pseudo-element positioning */
 }
 
 .record-menu-btn.active {
-    border-bottom: 3px solid var(--primary-color);
     font-weight: 700;
-    color: var(--text-color);
+    color: var(--primary-color);
+}
+
+.record-menu-btn.active::before {
+    content: '';
+    position: absolute;
+    left: 10px; /* Position of the circle */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
 }
 
 .record-content {

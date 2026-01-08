@@ -15,23 +15,24 @@
   gap: 20px; /* Space between calendar and dashboard */
   flex-grow: 1; /* Allow it to take remaining vertical space */
   grid-column: 1 / -1; /* Span all columns */
+  align-items: stretch; /* Ensure children stretch to equal height */
+  height: 100%; /* Take full height of parent */
 }
 
 .calendar-area {
-  /* flex: 1; Removed */
-  width: 599px; /* Set fixed width */
-  height: 611px; /* Set fixed height */
-  overflow: hidden; /* Added to contain calendar content */
+  /* flex: 1; Removed as fixed height is required */
+  height: 600px; /* Fixed height */
+  overflow: hidden; /* Contain calendar content */
   display: flex;
+  flex-direction: column;
 }
 
 .dashboard-area {
-  /* flex: 1; Removed */
-  width: 503px; /* Changed width */
-  height: 611px; /* Changed height to match calendar-area */
+  flex: 1; /* Allow to grow and shrink */
+  height: 100%; /* Take full height of parent */
   display: flex;
   flex-direction: column;
-  /* Additional styling for dashboard area if needed */
+  overflow: hidden; /* Contain dashboard content within its height */
 }
 
 /* Add styles for ViewToggle to span all columns */

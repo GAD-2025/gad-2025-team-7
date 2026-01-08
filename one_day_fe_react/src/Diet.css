@@ -15,12 +15,12 @@
 
 .meal-card {
     flex-shrink: 0;
-    width: 250px; /* Slightly larger width */
-    min-height: 160px; /* Slightly larger height */
+    width: 175px; /* Slightly larger width */
+    min-height: 112px; /* Slightly larger height */
     background-color: #fff;
     border-radius: 20px; /* More rounded */
     box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Softer, larger shadow */
-    padding: 20px; /* More padding */
+    padding: 14px; /* More padding */
     position: relative;
     border: 1px solid transparent; /* Default border */
     transition: border-color 0.2s ease-in-out, transform 0.2s ease-in-out;
@@ -38,8 +38,7 @@
 .meal-card-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px; /* More space */
+    margin-bottom: 10px; /* More space */
     height: auto; /* Allow height to adjust */
 }
 
@@ -52,9 +51,9 @@
     background: #e0f2f7; /* Light pastel blue background */
     border: 1px solid #a2d2ff; /* Pastel blue border */
     border-radius: 25px; /* More rounded */
-    padding: 8px 18px; /* More padding */
+    padding: 6px 12px; /* More padding */
     font-family: 'Pretendard', sans-serif;
-    font-size: 15px; /* Slightly larger font */
+    font-size: 13px; /* Slightly larger font */
     font-weight: 600;
     color: #4a4a4a; /* Soft dark grey */
     cursor: pointer;
@@ -123,7 +122,7 @@
     right: 12px; /* Adjusted position */
     background-color: #ffeff1; /* Light pastel pink */
     border: none;
-    font-size: 15px; /* Slightly larger */
+    font-size: 13px; /* Slightly larger */
     color: #ff9aa2; /* Softer pink */
     cursor: pointer;
     padding: 5px 8px; /* More padding for better click area */
@@ -162,8 +161,7 @@
     background-color: #f8fafd; /* Very light pastel blue */
     border: 1px solid #e0e6ed; /* Softer border */
     border-radius: 15px; /* More rounded */
-    padding: 8px 12px; /* More padding */
-    font-size: 13px; /* Slightly larger font */
+    font-size: 11px; /* Slightly larger font */
     color: #5a5a5a;
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.03); /* Subtle inner shadow */
 }
@@ -172,7 +170,7 @@
     flex-grow: 1;
     font-family: 'Pretendard', sans-serif;
     font-weight: 500;
-    font-size: 14px;
+    font-size: 12px;
     color: #4a4a4a;
 }
 
@@ -183,8 +181,7 @@
     border-radius: 8px; /* Rounded corners */
     padding: 5px 8px;
     margin-left: 10px;
-    margin-right: 10px;
-    font-size: 14px;
+    font-size: 12px;
     color: #5a5a5a;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -198,7 +195,7 @@
 .food-cal {
     font-family: 'Pretendard', sans-serif;
     font-weight: 600;
-    font-size: 13px;
+    font-size: 11px;
     color: #8c9eff; /* Pastel accent */
     white-space: nowrap;
 }
@@ -206,8 +203,7 @@
 .remove-food-btn {
     background-color: #ffeff1; /* Light pastel pink */
     border: none;
-    color: #ff9aa2; /* Softer pink */
-    font-size: 14px;
+    font-size: 12px;
     cursor: pointer;
     padding: 3px 8px;
     margin-left: 10px;
@@ -236,9 +232,7 @@
     flex-grow: 1;
     border: none;
     background: none;
-    padding: 5px 15px; /* More padding */
-    font-family: 'Pretendard', sans-serif;
-    font-size: 15px;
+    font-size: 13px;
     color: #5a5a5a;
     outline: none;
     height: 100%; /* Fill wrapper height */
@@ -326,14 +320,14 @@
     margin-top: auto;
     text-align: right;
     font-family: 'Pretendard', sans-serif;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
     color: #5a5a5a;
 }
 
 .meal-card-total-calories {
     font-weight: 700;
-    font-size: 15px;
+    font-size: 13px;
     color: #ff9aa2; /* Pastel accent */
 }
 
@@ -350,7 +344,7 @@
 }
 
 .autocomplete-item {
-    padding: 12px 18px; /* More padding */
+    padding: 8px 12px; /* More padding */
     cursor: pointer;
     font-family: 'Pretendard', sans-serif;
     font-size: 15px;
