@@ -10,4 +10,5 @@ node_modules/
 # Miscellaneous
 .DS_Store
 *.log
+package-lock.json # Ignore root package-lock.json as it's not a root npm project.
 \n# Build artifacts\none_day_fe_react@0.1.0\nreact-scripts

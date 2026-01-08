@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HexColorPicker } from "react-colorful"; // Import HexColorPicker
+import { LuPen, LuEraser, LuType, LuImage, LuUndo, LuRedo } from 'react-icons/lu'; // Import Lucide Icons
 import './Diary.css'; // Import the new CSS file
 
 const Diary = ({ selectedDate, userId }) => {
@@ -402,14 +403,14 @@ const Diary = ({ selectedDate, userId }) => {
                     <div className="diary-toolbar">
                         <div className="drawing-tools">
                             <div className="tool-buttons">
-                                <button className={`tool-btn ${drawingTool === 'pen' ? 'active' : ''}`} onClick={() => setDrawingTool('pen')}>✏️</button>
-                                <button className={`tool-btn ${drawingTool === 'eraser' ? 'active' : ''}`} onClick={() => setDrawingTool('eraser')}>🧼</button>
-                                <button className={`tool-btn ${drawingTool === 'text' ? 'active' : ''}`} onClick={() => setDrawingTool('text')}>T</button>
-                                <label className="tool-btn" htmlFor="image-upload-input">🖼️
+                                <button className={`tool-btn ${drawingTool === 'pen' ? 'active' : ''}`} onClick={() => setDrawingTool('pen')}><LuPen /></button>
+                                <button className={`tool-btn ${drawingTool === 'eraser' ? 'active' : ''}`} onClick={() => setDrawingTool('eraser')}><LuEraser /></button>
+                                <button className={`tool-btn ${drawingTool === 'text' ? 'active' : ''}`} onClick={() => setDrawingTool('text')}><LuType /></button>
+                                <label className="tool-btn" htmlFor="image-upload-input"><LuImage />
                                     <input type="file" id="image-upload-input" accept="image/*" className="hidden-input" onChange={handleImageUpload} />
                                 </label>
-                                <button className="tool-btn" onClick={undo} disabled={historyStep <= 0}>↩️</button>
-                                <button className="tool-btn" onClick={redo} disabled={historyStep >= history.length - 1}>↪️</button>
+                                <button className="tool-btn" onClick={undo} disabled={historyStep <= 0}><LuUndo /></button>
+                                <button className="tool-btn" onClick={redo} disabled={historyStep >= history.length - 1}><LuRedo /></button>
                             </div>
                             <div className="color-palette-wrapper">
                                 <div className="color-palette">

@@ -113,12 +113,20 @@
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
     cursor: pointer;
-    font-size: 16px; /* Keep font size for emoji */
-    color: #6E7279; /* Soft grey */
+    font-size: 16px; /* Keep font size for text elements */
+    color: #8E95A2; /* Soft grey */
     transition: all 0.2s;
     line-height: 1; /* Ensure consistent line height */
     margin: 0; /* Remove default margins */
     padding: 0; /* Remove default padding */
+}
+
+.tool-btn > svg {
+    width: 18px; /* Control SVG size */
+    height: 18px;
+    stroke: currentColor; /* Ensure SVG stroke uses the button's text color */
+    stroke-width: 1.4px; /* For "medium-bold" effect */
+    fill: none; /* Ensure fill is transparent for line icons */
 }
 
 .tool-btn.active, .tool-btn:hover {
