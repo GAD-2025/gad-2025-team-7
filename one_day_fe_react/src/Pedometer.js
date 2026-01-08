@@ -84,36 +84,38 @@ const Pedometer = ({ userId }) => {
                 <h3>섭취 칼로리</h3>
             </div>
             <div className="healthcare-content-box">
-                <div className="pedometer-column weight-column">
-                    <div className="weight-info">
-                        {profileLoading ? (
-                            <p>로딩 중...</p>
-                        ) : isEditingWeight ? (
-                            <input
-                                type="number"
-                                step="0.01"
-                                value={weightInput}
-                                onChange={(e) => setWeightInput(e.target.value)}
-                                onBlur={handleSaveWeight} // Save on blur
-                                onKeyDown={handleWeightInputKeyDown} // Save on Enter
-                                placeholder="kg"
-                                autoFocus
-                            />
-                        ) : (
-                            <div className="weight-display-container" onClick={() => setIsEditingWeight(true)}>
-                                {profile.weight ? (
-                                    <p>{profile.weight} kg</p>
-                                ) : (
-                                    <p>현재 체중</p>
-                                )}
-                            </div>
-                        )}
+                <div className="pedometer-info-wrapper">
+                    <div className="pedometer-column weight-column">
+                        <div className="weight-info">
+                            {profileLoading ? (
+                                <p>로딩 중...</p>
+                            ) : isEditingWeight ? (
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    value={weightInput}
+                                    onChange={(e) => setWeightInput(e.target.value)}
+                                    onBlur={handleSaveWeight} // Save on blur
+                                    onKeyDown={handleWeightInputKeyDown} // Save on Enter
+                                    placeholder="kg"
+                                    autoFocus
+                                />
+                            ) : (
+                                <div className="weight-display-container" onClick={() => setIsEditingWeight(true)}>
+                                    {profile.weight ? (
+                                        <p>{profile.weight} kg</p>
+                                    ) : (
+                                        <p>현재 체중</p>
+                                    )}
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
-                <div className="pedometer-column calorie-column">
-                    <p className="calorie-display-format">
-                        <span className="calorie-value">{Math.round(dietTotals.calories)}kcal</span> / <span className="calorie-goal-value">{dailyCalorieGoal}kcal</span>
-                    </p>
+                    <div className="pedometer-column calorie-column">
+                        <p className="calorie-display-format">
+                            <span className="calorie-value">{Math.round(dietTotals.calories)}kcal</span> / <span className="calorie-goal-value">{dailyCalorieGoal}kcal</span>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

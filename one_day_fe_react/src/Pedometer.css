@@ -1,0 +1,93 @@
+/* one_day_fe_react/src/Pedometer.css */
+
+.pedometer-wrapper {
+    /* Any general styling for the pedometer component */
+}
+
+.healthcare-content-box {
+    /* This class is styled in HealthcareTab.css for overall consistency */
+}
+
+.pedometer-info-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Space between weight and calorie columns */
+    width: 100%; /* Take full width of its parent healthcare-content-box */
+}
+
+.pedometer-column.weight-column,
+.pedometer-column.calorie-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* width: 70px; Removed fixed width */
+    /* height: 70px; Removed fixed height */
+    padding: 5px; /* Adjusted padding */
+    background-color: #f8fafd; /* Consistent background */
+    border-radius: 8px; /* Consistent border-radius */
+    border: 1px solid #e0e6ed; /* Consistent border */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Consistent shadow */
+    flex-shrink: 0; /* Prevent shrinking */
+    flex: 1; /* Allow them to take equal space */
+    height: 70px; /* Consistent height for the columns themselves */
+}
+
+.weight-display-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; /* Take full width of the column */
+    height: 100%; /* Take full height of the column */
+}
+
+.weight-display-container p {
+    font-weight: 700; /* Bolder font for weight info */
+    font-size: 0.8em; /* Adjusted font size */
+    margin: 0; /* Remove default margin */
+}
+
+.calorie-display-format {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px; /* Smaller gap */
+    font-size: 0.8em; /* Adjusted base font size for the container */
+    width: 100%; /* Take full width of the column */
+    height: 100%; /* Take full height of the column */
+    justify-content: center; /* Center vertically */
+}
+
+.calorie-value {
+    font-weight: 700; /* Bold */
+    color: #ff6b7e; /* Pink color */
+    font-size: 1em; /* Relative to parent, so it's smaller overall */
+}
+
+.calorie-goal-value {
+    font-weight: normal; /* Normal weight, or can be lighter if desired */
+    color: #888; /* Gray color */
+    font-size: 0.7em; /* Smaller font size relative to parent */
+    margin-top: 2px; /* Small margin to separate from calorie-value */
+}
+
+
+.pedometer-wrapper .section-header {
+    margin-bottom: 10px; /* Adjust margin if needed */
+}
+
+/* Styles for the input when editing weight */
+.weight-info input {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    width: 80px;
+    text-align: center;
+}
+
+/* Existing styles from HealthcareTab.css that might apply here */
+/* In a real project, these might be global or in a shared stylesheet */
+/* .section-header already handled in HealthcareTab.css */
+/* .healthcare-content-box already handled in HealthcareTab.css */

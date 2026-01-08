@@ -19,35 +19,19 @@ const HealthcareTab = ({ userId }) => {
         <div id="healthcare-tab" className="healthcare-tab-content dash-tab-content active">
             <div className="combined-content-box">
                 <div className="healthcare-row">
-                    <div className="dashboard-section">
-                        <div className="section-header">
-                            <h3>생리 주기 예측</h3>
-                            <i className="fas fa-venus icon"></i> {/* Icon for cycle prediction */}
-                        </div>
+                    <div className="dashboard-section cycle-prediction-section">
                         <CyclePrediction userId={userId} selectedCycleStartDate={selectedCycleStartDate} />
                     </div>
                     <div className="dashboard-section">
-                        <div className="section-header">
-                            <h3>오늘의 건강</h3>
-                            <i className="fas fa-heartbeat icon"></i> {/* Icon for health */}
-                        </div>
                         <Pedometer userId={userId} />
                     </div>
                 </div>
                 
                 <div className="dashboard-section">
-                    <div className="section-header">
-                        <h3>식단 기록</h3>
-                        <i className="fas fa-utensils icon"></i> {/* Icon for diet record */}
-                    </div>
                     <Diet />
                 </div>
 
                 <div className="dashboard-section">
-                    <div className="section-header">
-                        <h3>탄단지 계산</h3>
-                        <i className="fas fa-calculator icon"></i> {/* Icon for macronutrient calculation */}
-                    </div>
                     <div id="macros-content" className="section-content">
                         <div className="total-calorie-display">
                             오늘 먹은 총 칼로리: <span id="total-intake-display">{Math.round(dietTotals.calories)}</span> kcal

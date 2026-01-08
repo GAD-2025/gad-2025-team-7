@@ -34,20 +34,20 @@
 }
 
 .date-label {
-    font-size: 11px; /* Smaller font for the label */
+    font-size: 10px; /* Smaller font for the label */
     color: #777;
     margin: 0; /* Remove default paragraph margin */
 }
 
 .date-box {
     text-align: center;
-    padding: 6px; /* Reduced padding further */
+    padding: 5px;
     background-color: #f8fafd;
     border-radius: 8px;
     border: 1px solid #e0e6ed;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    width: 60px; /* Further reduced width for consistency */
-    height: 60px; /* Adjusted height for consistency */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    width: 40px;
+    height: 70px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -55,20 +55,34 @@
 }
 
 .date-info-box .date-mmdd {
-    font-size: 0.8em; /* Reduced font-size further */
+    font-size: 0.75em; /* Reduced font-size further */
     font-weight: 600;
     color: #4a4a4a;
     display: block;
 }
 
 .date-info-box .date-day {
-    font-size: 0.6em; /* Reduced font-size further */
+    font-size: 0.55em; /* Reduced font-size further */
     color: #888;
     display: block;
 }
 
+.d-day-box {
+    text-align: center;
+    background-color: #ffffff; /* White background */
+    border-radius: 8px; /* Slightly curved square */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Light gray shadow */
+    width: 70px; /* Consistent width */
+    height: 70px; /* Consistent height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
 .d-day-text {
-    font-size: 1em; /* Adjusted font-size */
+    font-size: 0.9em; /* Adjusted font-size to fit */
     font-weight: 700; /* Bold font */
     color: #ff6b7e; /* Bold pink color */
     line-height: 1;
@@ -217,4 +231,52 @@
     border-bottom: none; /* Remove the gray line */
     padding-bottom: 0;   /* Remove padding associated with the line */
     margin-bottom: 0;    /* Remove margin associated with the line */
+}
+
+/* Specific styles that were previously in HealthcareTab.css for CyclePrediction */
+.healthcare-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.prediction-main-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.prediction-main-info p {
+    font-size: 16px;
+    color: #777;
+    margin-bottom: 5px;
+}
+
+.d-day-display {
+    font-size: 4em; /* Very large D-Day */
+    font-weight: 800;
+    color: #ff9aa2; /* Pastel pink accent */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.08);
+    margin-top: 0;
+}
+
+.predicted-dates-grid {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    gap: 15px;
+    padding: 10px 0;
+    border-top: 1px dashed #e0e6ed;
+    border-bottom: 1px dashed #e0e6ed;
+    margin-bottom: 20px;
+}
+
+.predicted-date-item p {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.large-date {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #5a5a5a;
 }
