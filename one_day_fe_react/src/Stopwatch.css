@@ -14,49 +14,47 @@
 .stopwatch-top-section {
     display: flex;
     flex-direction: row; /* Arrange children horizontally */
-    gap: 10px; /* Space between category and main stopwatch sections */
+    gap: 15px; /* Space between category and main stopwatch sections */
     margin-bottom: 20px; /* Space between top section and task lists */
+    background-color: white; /* Combined box background */
+    border-radius: 16px; /* Combined box border-radius */
+    border: 1.2px solid #E1E7EF; /* Combined box border */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06); /* Consistent shadow */
+    padding: 15px; /* Padding for the combined box */
 }
 
 .category-section, .main-stopwatch {
-    background-color: white;
-    border-radius: 16px; /* Consistent border-radius */
-    padding: 10px;
-    border: 1px dashed #E1E7EF; /* Light dashed border */
+    /* These styles are now handled by the parent .stopwatch-top-section */
     flex: 1; /* Make these sections take equal width */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06); /* Consistent shadow */
-}
-
-.task-list-section {
-    background-color: white;
-    border-radius: 16px; /* Consistent border-radius */
-    padding: 20px;
-    border: 1px dashed #E1E7EF; /* Light dashed border */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06); /* Consistent shadow */
+    /* Remove individual box styling */
+    background-color: transparent; /* Make background transparent */
+    border: none; /* Remove border */
+    box-shadow: none; /* Remove shadow */
+    padding: 0; /* Remove individual padding */
 }
 
 h2, h3 {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     color: #4B4B4B;
     margin-top: 0;
-    margin-bottom: 15px;
+    margin-bottom: 10px; /* Reduced margin-bottom */
 }
 
 .category-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 15px;
+    gap: 8px; /* Reduced gap */
+    margin-bottom: 10px; /* Reduced margin-bottom */
 }
 
 .category-chip {
     background-color: rgba(255, 198, 157, 0.5);
     border: 1px solid #FFC69D;
     border-radius: 22px;
-    padding: 5px 15px;
+    padding: 3px 10px; /* Reduced padding */
     cursor: pointer;
-    font-size: 13px;
+    font-size: 12px;
     color: #383838;
 }
 
@@ -71,14 +69,17 @@ h2, h3 {
     align-items: center;
     border: 1px solid #F0F3F6;
     border-radius: 20px;
-    padding: 5px;
+    padding: 3px; /* Reduced padding */
+    max-width: 180px; /* Limit its width */
+    flex-shrink: 0; /* Prevent shrinking too much */
 }
 
 .add-category-wrapper input {
     border: none;
     outline: none;
-    flex-grow: 1;
-    padding: 5px 10px;
+    flex-grow: 0; /* Prevent it from taking all available space */
+    max-width: 120px; /* Reduce its maximum width */
+    padding: 3px 8px; /* Reduced padding */
     background-color: transparent;
 }
 
@@ -86,9 +87,9 @@ h2, h3 {
     background-color: #DDE2E6; /* Lighter pastel grey */
     border: none;
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    font-size: 20px;
+    width: 24px; /* Reduced width */
+    height: 24px; /* Reduced height */
+    font-size: 16px; /* Reduced font size */
     color: #383838;
     cursor: pointer;
 }
@@ -98,16 +99,16 @@ h2, h3 {
 }
 
 .timer-display {
-    font-size: 36px;
+    font-size: 32px;
     font-weight: bold;
     color: #383838;
-    margin: 20px 0;
+    margin: 15px 0; /* Reduced margin */
 }
 
 .main-controls {
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 8px; /* Reduced gap */
 }
 
 .main-controls .start-button {
@@ -115,7 +116,7 @@ h2, h3 {
     color: white;
     border: 1px solid #FFB3C0;
     border-radius: 11px;
-    padding: 10px 20px;
+    padding: 8px 15px; /* Reduced padding */
     cursor: pointer;
     transition: background-color 0.2s, border-color 0.2s;
 }
@@ -125,7 +126,7 @@ h2, h3 {
     color: #6E7279; /* Softer grey text */
     border: 1px solid #E1E7EF; /* Lighter border */
     border-radius: 11px;
-    padding: 10px 20px;
+    padding: 8px 15px; /* Reduced padding */
     cursor: pointer;
     transition: background-color 0.2s, border-color 0.2s, color 0.2s;
 }

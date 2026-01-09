@@ -150,7 +150,7 @@ const Stopwatch = ({ userId, selectedDate }) => {
         <div className="stopwatch-container" data-node-id="661:4003">
             <div className="stopwatch-top-section">
                 <div className="category-section" data-node-id="661:4148">
-                    <h2>카테고리</h2>
+    
                     <div className="category-list">
                         {categories.map(cat => (
                             <div 
