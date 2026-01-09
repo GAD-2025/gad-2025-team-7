@@ -23,14 +23,23 @@
     padding: 15px; /* Padding for the combined box */
 }
 
-.category-section, .main-stopwatch {
-    /* These styles are now handled by the parent .stopwatch-top-section */
-    flex: 1; /* Make these sections take equal width */
-    /* Remove individual box styling */
-    background-color: transparent; /* Make background transparent */
-    border: none; /* Remove border */
-    box-shadow: none; /* Remove shadow */
-    padding: 0; /* Remove individual padding */
+.category-section {
+    flex: 1; /* Make this section take equal width */
+    display: flex; /* Make it a flex container */
+    flex-direction: column; /* Stack its children vertically */
+    background-color: transparent; /* Remove individual box styling */
+    border: none;
+    box-shadow: none;
+    padding: 0;
+}
+
+.main-stopwatch {
+    flex: 1; /* Make this section take equal width */
+    background-color: transparent; /* Remove individual box styling */
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    text-align: center;
 }
 
 h2, h3 {
@@ -72,13 +81,14 @@ h2, h3 {
     padding: 3px; /* Reduced padding */
     max-width: 180px; /* Limit its width */
     flex-shrink: 0; /* Prevent shrinking too much */
+    margin-top: auto; /* Pushes it to the bottom within the flex column parent */
+    align-self: center; /* Centers it horizontally if parent is wider than max-width */
 }
 
 .add-category-wrapper input {
     border: none;
     outline: none;
     flex-grow: 0; /* Prevent it from taking all available space */
-    max-width: 120px; /* Reduce its maximum width */
     padding: 3px 8px; /* Reduced padding */
     background-color: transparent;
 }
