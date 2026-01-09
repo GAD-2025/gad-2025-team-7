@@ -61,7 +61,7 @@
     font-size: 13px; /* Changed from 12px to 13px */
     font-weight: 600;
     color: #383838;
-    background-color: #F8F9FA; /* Light pastel background */
+    background-color: #ffffff; /* Light pastel background */
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
 }

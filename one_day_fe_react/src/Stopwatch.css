@@ -11,18 +11,32 @@
     /* Removed padding as it's handled by dashboard-content-wrapper's padding */
 }
 
-.category-section, .main-stopwatch, .task-list-section {
+.stopwatch-top-section {
+    display: flex;
+    flex-direction: row; /* Arrange children horizontally */
+    gap: 10px; /* Space between category and main stopwatch sections */
+    margin-bottom: 20px; /* Space between top section and task lists */
+}
+
+.category-section, .main-stopwatch {
+    background-color: white;
+    border-radius: 16px; /* Consistent border-radius */
+    padding: 10px;
+    border: 1px dashed #E1E7EF; /* Light dashed border */
+    flex: 1; /* Make these sections take equal width */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06); /* Consistent shadow */
+}
+
+.task-list-section {
     background-color: white;
     border-radius: 16px; /* Consistent border-radius */
     padding: 20px;
     border: 1px dashed #E1E7EF; /* Light dashed border */
-    flex: 1; /* Make all sections take equal width */
-    min-width: 250px; /* Ensure sections don't get too small */
     box-shadow: 0 2px 8px rgba(0,0,0,0.06); /* Consistent shadow */
 }
 
 h2, h3 {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     color: #4B4B4B;
     margin-top: 0;
@@ -84,7 +98,7 @@ h2, h3 {
 }
 
 .timer-display {
-    font-size: 40px;
+    font-size: 36px;
     font-weight: bold;
     color: #383838;
     margin: 20px 0;

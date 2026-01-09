@@ -148,50 +148,52 @@ const Stopwatch = ({ userId, selectedDate }) => {
 
     return (
         <div className="stopwatch-container" data-node-id="661:4003">
-            <div className="category-section" data-node-id="661:4148">
-                <h2>카테고리</h2>
-                <div className="category-list">
-                    {categories.map(cat => (
-                        <div 
-                            key={cat} 
-                            className={`category-chip ${selectedCategory === cat ? 'selected' : ''}`}
-                            onClick={() => selectCategory(cat)}
+            <div className="stopwatch-top-section">
+                <div className="category-section" data-node-id="661:4148">
+                    <h2>카테고리</h2>
+                    <div className="category-list">
+                        {categories.map(cat => (
+                            <div 
+                                key={cat} 
+                                className={`category-chip ${selectedCategory === cat ? 'selected' : ''}`}
+                                onClick={() => selectCategory(cat)}
+                            >
+                                {cat}
+                            </div>
+                        ))}
+                    </div>
+                    <div className="add-category-wrapper">
+                        <input
+                            type="text"
+                            value={newCategory}
+                            onChange={(e) => setNewCategory(e.target.value)}
+                            placeholder="새 카테고리 추가"
+                        />
+                        <button onClick={addNewCategory}>+</button>
+                    </div>
+                </div>
+                
+                <div className="main-stopwatch" data-node-id="661:4191">
+                    <h3>{selectedCategory || '카테고리를 선택하세요'}</h3>
+                    <div className="timer-display" data-node-id="661:4197">
+                        {selectedTask ? formatTime(selectedTask.elapsedTime) : '00:00:00'}
+                    </div>
+                    <div className="main-controls" data-node-id="661:4198">
+                        <button 
+                            onClick={() => selectedTask && (selectedTask.isPaused ? startTask(selectedTask) : pauseTask(selectedTask))}
+                            disabled={!selectedTask}
+                            className="start-button"
                         >
-                            {cat}
-                        </div>
-                    ))}
-                </div>
-                <div className="add-category-wrapper">
-                    <input
-                        type="text"
-                        value={newCategory}
-                        onChange={(e) => setNewCategory(e.target.value)}
-                        placeholder="새 카테고리 추가"
-                    />
-                    <button onClick={addNewCategory}>+</button>
-                </div>
-            </div>
-            
-            <div className="main-stopwatch" data-node-id="661:4191">
-                <h3>{selectedCategory || '카테고리를 선택하세요'}</h3>
-                <div className="timer-display" data-node-id="661:4197">
-                    {selectedTask ? formatTime(selectedTask.elapsedTime) : '00:00:00'}
-                </div>
-                <div className="main-controls" data-node-id="661:4198">
-                    <button 
-                        onClick={() => selectedTask && (selectedTask.isPaused ? startTask(selectedTask) : pauseTask(selectedTask))}
-                        disabled={!selectedTask}
-                        className="start-button"
-                    >
-                        {selectedTask && !selectedTask.isPaused ? '일시정지' : '시작'}
-                    </button>
-                    <button 
-                        onClick={() => resetTask(selectedTask)}
-                        disabled={!selectedTask || !selectedTask.isPaused}
-                        className="reset-button"
-                    >
-                        초기화
-                    </button>
+                            {selectedTask && !selectedTask.isPaused ? '일시정지' : '시작'}
+                        </button>
+                        <button 
+                            onClick={() => resetTask(selectedTask)}
+                            disabled={!selectedTask || !selectedTask.isPaused}
+                            className="reset-button"
+                        >
+                            초기화
+                        </button>
+                    </div>
                 </div>
             </div>
 
