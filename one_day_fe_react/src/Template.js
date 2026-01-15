@@ -37,7 +37,6 @@ const Template = ({ type, onTemplateClick }) => {
 
     return (
         <div className="template-bar">
-            <button className="add-template-btn" onClick={() => setShowTemplateModal(true)}>✏️</button>
             {type === 'schedule' && (
                 <>
                     <button
