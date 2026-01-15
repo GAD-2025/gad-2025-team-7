@@ -315,7 +315,7 @@ const HomeTab = ({
                     <div className="grid-separator"></div>
 
                     {/* 투두리스트 추가 */}
-                    <div className="dashboard-section">
+                    <div className="dashboard-section add-todo-section">
                         <div className="home-card-header">
                             <h3 className="home-card-title">투두리스트 추가</h3>
                         </div>
@@ -327,7 +327,7 @@ const HomeTab = ({
                 </div>
                 
                 {/* 리마인더 */}
-                <div className="dashboard-section">
+                <div className="dashboard-section reminder-section">
                     <div className="home-card-header">
                         <h3 className="home-card-title">리마인더</h3>
                     </div>

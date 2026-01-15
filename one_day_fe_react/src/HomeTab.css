@@ -61,6 +61,8 @@
     transform: translate(-50%, -50%); /* Center the pseudo-element */
 }
 
+
+
 .dashboard-section {
     display: flex;
     flex-direction: column;
@@ -70,6 +72,13 @@
 }
 
 .add-schedule-section {
+    width: 143px;
+    height: 103px;
+    margin-left: 10px;
+}
+
+.add-todo-section {
+    margin-left: -20px;
     width: 143px;
     height: 103px;
 }
@@ -266,7 +275,9 @@
 .tag-orange { border-color: #FFA544 !important; color: #D78B3A !important; }
 
 
-/* Reminder Styles */
+.reminder-section {
+    margin-top: 30px;
+}
 .reminder-body {
     display: flex;
     flex-direction: row;
