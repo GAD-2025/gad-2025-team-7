@@ -41,6 +41,14 @@
     margin-top: -10px;
 }
 
+.schedule-section-grid {
+    margin-top: 10px;
+}
+
+.todo-section-grid {
+    margin-top: 50px;
+}
+
 .home-section-grid > .dashboard-section:first-child::after {
     content: '';
     position: absolute;
@@ -59,6 +67,11 @@
     gap: 5px;
     background-color: transparent !important;
     box-shadow: none !important;
+}
+
+.add-schedule-section {
+    width: 143px;
+    height: 103px;
 }
 
 .home-card-header {

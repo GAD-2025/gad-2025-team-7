@@ -252,7 +252,7 @@ const HomeTab = ({
     return (
         <div className="home-tab-content">
             <div className="combined-content-box"> {/* New wrapper */}
-                <div className="home-section-grid">
+                <div className="home-section-grid schedule-section-grid">
                     {/* 오늘의 일정 */}
                     <div className="dashboard-section">
                         <div className="home-card-header">
@@ -277,7 +277,7 @@ const HomeTab = ({
                     </div>
 
                     {/* 일정 추가 */}
-                    <div className="dashboard-section">
+                    <div className="dashboard-section add-schedule-section">
                         <div className="home-card-header">
                             <h3 className="home-card-title">일정 추가</h3>
                         </div>
@@ -288,7 +288,7 @@ const HomeTab = ({
                     </div>
                 </div>
 
-                <div className="home-section-grid">
+                <div className="home-section-grid todo-section-grid">
                     {/* 투두리스트 */}
                     <div className="dashboard-section">
                         <div className="home-card-header">
