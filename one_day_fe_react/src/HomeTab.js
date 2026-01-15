@@ -125,8 +125,29 @@ const HomeTab = ({
         }
     };
     
-    const handleScheduleTemplateClick = (template) => {
-        setNewScheduleTitle(template.title);
+    const handleScheduleTemplateClick = async (template) => {
+        const body = {
+            userId,
+            title: template.title,
+            time: null, // Default to no specific time
+            setReminder: false, // Default to no reminder
+            startDate: selectedDate, // Default to the currently selected date
+            endDate: null, // Default to no end date
+            selectedDays: [], // Default to no specific days
+        };
+        try {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/events`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+            });
+            if (!res.ok) throw new Error('Failed to save schedule from template');
+            onDataUpdate(); // Refresh data
+            alert(`'${template.title}' 일정이 추가되었습니다.`); // Provide feedback to the user
+        } catch (error) {
+            console.error('Error saving schedule from template:', error);
+            alert(`템플릿 일정 저장에 실패했습니다: ${error.message}`);
+        }
     };
 
     const handleTodoTemplateClick = async (template) => {
