@@ -18,6 +18,7 @@ const Pedometer = ({ userId }) => {
     const [kcalRemaining, setKcalRemaining] = useState(0);
     const [graphProgress, setGraphProgress] = useState(0);
     const graphPathLength = 283;
+    const strokeDashoffset = graphPathLength - (graphPathLength * graphProgress) / 100;
 
     // Sync local input with context profile weight when not editing
     useEffect(() => {
@@ -115,6 +116,23 @@ const Pedometer = ({ userId }) => {
                         <p className="calorie-display-format">
                             <span className="calorie-value">{Math.round(dietTotals.calories)}kcal</span> / <span className="calorie-goal-value">{dailyCalorieGoal}kcal</span>
                         </p>
+                    </div>
+                </div>
+                <div className="pedometer-graph-wrapper">
+                    <svg className="pedometer-graph" viewBox="0 0 100 100">
+                        <circle className="pedometer-graph-background" cx="50" cy="50" r="45"></circle>
+                        <circle
+                            className="pedometer-graph-progress"
+                            cx="50"
+                            cy="50"
+                            r="45"
+                            strokeDasharray={graphPathLength}
+                            strokeDashoffset={strokeDashoffset}
+                        ></circle>
+                    </svg>
+                    <div className="pedometer-graph-text">
+                        <h4>{kcalRemaining}</h4>
+                        <p>kcal 남음</p>
                     </div>
                 </div>
             </div>

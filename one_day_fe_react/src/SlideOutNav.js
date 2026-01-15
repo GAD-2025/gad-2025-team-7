@@ -55,27 +55,94 @@ function Group3({ className, onClick }: { className?: string, onClick: () => voi
   );
 }
 
+// Helper Component for "템플릿" (Template)
+function TemplateGroup1({ className, onClick }: { className?: string, onClick: () => void }) {
+    return (
+        <div className={`collection-item-wrapper ${className}`} onClick={onClick}>
+            <div className="collection-item-content">
+                <div className="collection-item-icon">
+                    <img alt="Template Icon 1" src={imgGroup} />
+                </div>
+                <p className="collection-item-text">
+                    템플릿 1
+                </p>
+            </div>
+        </div>
+    );
+}
 
-const SlideOutNav = ({ isOpen, onClose }) => {
+// Helper Component for "템플릿" (Template)
+function TemplateGroup2({ className, onClick }: { className?: string, onClick: () => void }) {
+    return (
+        <div className={`collection-item-wrapper ${className}`} onClick={onClick}>
+            <div className="collection-item-content">
+                <div className="collection-item-icon">
+                    <img alt="Template Icon 2" src={imgVector1} />
+                </div>
+                <p className="collection-item-text">
+                    템플릿 2
+                </p>
+            </div>
+        </div>
+    );
+}
+
+// Helper Component for "템플릿" (Template)
+function TemplateGroup3({ className, onClick }: { className?: string, onClick: () => void }) {
+    return (
+        <div className={`collection-item-wrapper ${className}`} onClick={onClick}>
+            <div className="collection-item-content">
+                <div className="collection-item-icon">
+                    <img alt="Template Icon 3" src={imgVector} />
+                </div>
+                <p className="collection-item-text">
+                    템플릿 3
+                </p>
+            </div>
+        </div>
+    );
+}
+
+
+
+const SlideOutNav = ({ isOpen, onClose, navType }) => {
+    const isTemplateNav = navType === 'template';
+
     return (
         <>
             <div className={`slide-out-nav-overlay ${isOpen ? 'show' : ''}`} onClick={onClose}></div>
             <div className={`slide-out-nav-container ${isOpen ? 'show' : ''}`}>
                 <div className="slide-out-nav-header">
-                    <h2 data-node-id="661:3800">모아보기</h2>
+                    <h2 data-node-id="661:3800">{isTemplateNav ? "템플릿" : "모아보기"}</h2>
                     <button onClick={onClose} className="close-btn">&times;</button>
                 </div>
                 <div className="slide-out-nav-content">
                     <nav className="collection-nav-grid">
-                        <Link to="/healthcare-collection" onClick={onClose} className="collection-link">
-                            <Group3 />
-                        </Link>
-                        <Link to="/stopwatch-collection" onClick={onClose} className="collection-link">
-                            <Group2 />
-                        </Link>
-                        <Link to="/diary-collection" onClick={onClose} className="collection-link">
-                            <Group1 />
-                        </Link>
+                        {isTemplateNav ? (
+                            <>
+                                <Link to="/template" onClick={onClose} className="collection-link">
+                                    <TemplateGroup1 />
+                                </Link>
+                                <Link to="/template" onClick={onClose} className="collection-link">
+                                    <TemplateGroup2 />
+                                </Link>
+                                <Link to="/template" onClick={onClose} className="collection-link">
+                                    <TemplateGroup3 />
+                                </Link>
+                            </>
+                        ) : (
+                            <>
+                                <Link to="/healthcare-collection" onClick={onClose} className="collection-link">
+                                    <Group3 />
+                                </Link>
+                                <Link to="/stopwatch-collection" onClick={onClose} className="collection-link">
+                                    <Group2 />
+                                </Link>
+                                <Link to="/diary-collection" onClick={onClose} className="collection-link">
+                                    <Group1 />
+                                </Link>
+                            </>
+                        )}
                     </nav>
                 </div>
             </div>

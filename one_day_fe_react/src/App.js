@@ -11,6 +11,7 @@ import Diary from './Diary'; // Import Diary component
 import DiaryView from './DiaryView'; // Import DiaryView component
 import { useProfile } from './ProfileContext'; // Import useProfile
 import SlideOutNav from './SlideOutNav'; // Import SlideOutNav
+import Template from './Template'; // Import Template component
 
 import { DataProvider } from './DataContext'; // Import DataProvider
 import './App.css'; // Ensure App.css is imported
@@ -22,6 +23,7 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [scale, setScale] = useState(1); // Add scale state
   const [isSlideOutNavOpen, setIsSlideOutNavOpen] = useState(false); // Moved here
+  const [isTemplateNavOpen, setIsTemplateNavOpen] = useState(false);
 
   useEffect(() => {
     const checkAuth = () => {
@@ -88,6 +90,8 @@ function App() {
               {/* collection-trigger and SlideOutNav moved here */}
               <div id="collection-trigger" onClick={() => setIsSlideOutNavOpen(true)} className="collection-trigger"></div>
               <SlideOutNav isOpen={isSlideOutNavOpen} onClose={() => setIsSlideOutNavOpen(false)} />
+              <div id="template-trigger" onClick={() => setIsTemplateNavOpen(true)} className="template-trigger"></div>
+              <SlideOutNav isOpen={isTemplateNavOpen} onClose={() => setIsTemplateNavOpen(false)} navType="template" />
               <div className="App">
                 <Routes>
                   <Route path="/login" element={isAuthenticated ? <Navigate to="/home" /> : <Login onLogin={handleLogin} />} />
@@ -101,6 +105,7 @@ function App() {
                     <Route path="/stopwatch-collection" element={<StopwatchCollection />} />
                     <Route path="/healthcare-collection" element={<HealthcareCollection />} />
                     <Route path="/profile" element={<Profile />} />
+                    <Route path="/template" element={<Template />} />
                   </Route>
 
                   <Route path="/" element={<Navigate to="/login" />} />

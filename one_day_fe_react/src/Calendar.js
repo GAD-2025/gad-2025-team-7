@@ -21,6 +21,7 @@ const Calendar = ({
     const [popoverDate, setPopoverDate] = useState(null);
     const [summaryData, setSummaryData] = useState(null);
     const calendarDaysRef = useRef(null);
+    const [clickedCellEl, setClickedCellEl] = useState(null);
     // const [isMonthView, setIsMonthView] = useState(true); // Removed
 
     const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
@@ -30,11 +31,7 @@ const Calendar = ({
         setSelectedDate(dayInfo.dayString);
         sessionStorage.setItem('popoverOpenForDate', dayInfo.dayString); // Save popover state
 
-        const currentTarget = event.currentTarget;
-        setTimeout(() => {
-            const anchor = currentTarget.querySelector('.selected-day-indicator');
-            setPopoverAnchorEl(anchor || currentTarget);
-        }, 0);
+        setClickedCellEl(event.currentTarget);
         setPopoverDate(dayInfo.dayString);
         const todaysEvents = events.filter(e => e.date === dayInfo.dayString);
         const completedEventsCount = todaysEvents.filter(e => e.completed).length;
@@ -51,7 +48,16 @@ const Calendar = ({
         setPopoverAnchorEl(null);
         setPopoverDate(null);
         setSummaryData(null);
+        setClickedCellEl(null);
     };
+
+    // Effect to set the anchor element after the DOM has been updated
+    useEffect(() => {
+        if (clickedCellEl) {
+            const anchor = clickedCellEl.querySelector('.selected-day-indicator');
+            setPopoverAnchorEl(anchor || clickedCellEl);
+        }
+    }, [popoverDate, clickedCellEl]);
 
     // On initial mount, check if a popover should be reopened
     useEffect(() => {

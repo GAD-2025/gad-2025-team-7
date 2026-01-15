@@ -2,14 +2,14 @@ import React from 'react';
 import './DaySummaryPopover.css';
 
 const DaySummaryPopover = ({ date, anchorEl, onClose, summaryData, isLoading }) => {
-    if (!anchorEl) {
+    if (!anchorEl || !date) {
         return null;
     }
 
     const rect = anchorEl.getBoundingClientRect();
     const style = {
-        top: `${rect.bottom + window.scrollY + 6.4}px`, // Position below the pseudo-element line
-        left: `${rect.left + window.scrollX + (rect.width / 2) - 125}px`, // 125 is half of popover width (250px)
+        top: `${rect.bottom + window.scrollY - 40}px`, // -40px distance
+        left: `${rect.left + window.scrollX + (rect.width / 2) - 250}px`, // 125 is half of popover width (250px) - 125px left shift
     };
 
     // Format date to "M/D"

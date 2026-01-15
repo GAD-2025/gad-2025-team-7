@@ -153,17 +153,6 @@
   margin: 2px auto 0;
 }
 
-.selected-day-indicator::after {
-  content: '';
-  position: absolute;
-  top: 100%; /* Position below the indicator */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0.7px;
-  height: 6.4px;
-  background-color: #ff6f61;
-}
-
 .day-cell.selected p {
   font-size: 15px;
   font-weight: bold;
