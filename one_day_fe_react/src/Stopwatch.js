@@ -198,8 +198,8 @@ const Stopwatch = ({ userId, selectedDate }) => {
             </div>
 
             <div className="task-list-section" data-node-id="661:4171">
-                <h3>진행중인 기록</h3>
-                <ul>
+
+                <ul className="stopwatch-task-list">
                     {tasks.filter(t => !t.isComplete).map(task => (
                         <li key={task.id}>
                             <span>{task.category}</span>
@@ -211,8 +211,8 @@ const Stopwatch = ({ userId, selectedDate }) => {
             </div>
 
             <div className="task-list-section" data-node-id="661:4172">
-                <h3>기록 완료</h3>
-                <ul>
+
+                <ul className="stopwatch-task-list">
                     {tasks.filter(t => t.isComplete).map(task => (
                         <li key={task.id}>
                             <span>{task.category}</span>

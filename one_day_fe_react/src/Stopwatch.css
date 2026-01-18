@@ -43,11 +43,11 @@
 }
 
 h2, h3 {
-    font-size: 14px;
+    font-size: 12px; /* Further reduced font size */
     font-weight: 600;
     color: #4B4B4B;
     margin-top: 0;
-    margin-bottom: 10px; /* Reduced margin-bottom */
+    margin-bottom: 8px; /* Further reduced margin-bottom */
 }
 
 .category-list {
@@ -150,33 +150,49 @@ h2, h3 {
     gap: 0; /* No gap between list items, border provides separation */
 }
 
-.task-list-section li {
+.stopwatch-task-list li {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: transparent; /* Remove light gray background */
-    padding: 9px 0; /* Vertical padding 9px, horizontal 0 (content will have its own padding/margin) */
-    border-radius: 0; /* Remove border-radius */
-    border-bottom: 1px solid #F0F3F6; /* Horizontal line */
-    gap: 8px;
+    padding: 0 5px; /* Reduced horizontal padding */
+    gap: 5px; /* Reduced gap */
+    margin-top: 5px; /* Reduced space above each item */
+    padding-top: 5px; /* Reduced space between line and content */
+    border-top: 1px solid #F0F3F6; /* Horizontal line above each item */
 }
 
-.task-list-section li:last-child {
-    border-bottom: none; /* No border for the last item */
+.stopwatch-task-list li:first-child {
+    margin-top: 0; /* No margin-top for the first item */
+    border-top: none; /* No border-top for the first item */
+    padding-top: 0; /* No padding-top for the first item */
 }
+
+.stopwatch-task-list li span {
+    font-size: 12px; /* Reduced font size for task details */
+}
+
+
 
 .task-list-section button {
     background-color: #BFBFBF; /* Lighter grey for completeness */
     color: white;
     border: none;
-    border-radius: 10px;
-    padding: 5px 10px;
-    font-size: 12px;
+    border-radius: 8px; /* Slightly smaller border-radius */
+    padding: 3px 8px; /* Reduced padding */
+    font-size: 10px; /* Reduced font size */
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
 .task-list-section button:hover {
     background-color: #A0A0A0; /* Slightly darker on hover */
+}
+
+.task-list-section:last-child {
+    background-color: #E1E7EF;
+    border: 1px solid #C0C0C0; /* Slightly darker border for definition */
+    border-radius: 20px;
+    padding: 10px; /* Padding inside the box for its content */
 }
 
