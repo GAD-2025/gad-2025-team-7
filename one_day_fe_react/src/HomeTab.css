@@ -114,6 +114,14 @@
     margin-left: 15px;
 }
 
+.add-schedule-section .home-add-btn {
+    margin: auto;
+}
+
+.add-todo-section .home-add-btn {
+    margin: auto;
+}
+
 .home-add-btn:hover {
     background-color: #E9ECEF;
 }
@@ -141,7 +149,7 @@
 .add-schedule-section .home-card-body,
 .add-todo-section .home-card-body {
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
 }
 
 /* --- Rest of the styles are mostly the same, just need to ensure they work with the new structure --- */
