@@ -43,11 +43,23 @@
     font-weight: 700;
     color: #7C8083;
     background-color: white; /* 콘텐츠 영역과 같은 배경색 */
-    border-color: #E9ECEF; /* 구분선과 같은 색의 테두리 */
+    border: 1px solid #E1E7EF; /* Specified border color and thickness */
     border-bottom-color: white; /* 아래쪽 테두리만 없애서 연결된 느낌을 줌 */
     border-radius: 20px 20px 0 0; /* 위쪽 모서리만 둥글게 */
-    position: relative; /* For z-index */
+    position: relative; /* For z-index and indicator line */
     z-index: 1; /* Bring active tab to front */
+}
+
+.dash-tab-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; /* Initial positioning relative to the tab height */
+    left: 50%;
+    transform: translateX(-50%) translateY(7px); /* Reduced vertical offset to 7px */
+    width: 100px; /* Fixed width to 100px */
+    height: 4.5px;
+    background-color: #C1C6CB;
+    border-radius: 4.5px; /* Rounded ends */
 }
 
 .dashboard-content-wrapper {
@@ -71,8 +83,22 @@ div.dashboard-content-wrapper[class*="content-for-"] {
     overflow-y: auto;
     height: 543px; /* Fixed height for tab content */
     width: 470px; /* Fixed width for tab content */
-    border-radius: 20px 20px 20px 20px; /* Apply full border-radius to all corners */
     background-color: white; /* Match background for seamless rounded corners */
+    border: 1px solid #E1E7EF; /* Added border to connect with active tab */
+    box-sizing: border-box;
+}
+
+/* Dynamic border-radius for each tab to connect seamlessly */
+.content-for-home-tab .dash-tab-content.active {
+    border-radius: 0 20px 20px 20px; /* Connects with first tab */
+}
+
+.content-for-records-tab .dash-tab-content.active {
+    border-radius: 20px 20px 20px 20px; /* Standalone look, tab overlaps */
+}
+
+.content-for-healthcare-tab .dash-tab-content.active {
+    border-radius: 20px 0 20px 20px; /* Connects with last tab */
 }
 /* Keep other styles below if they are still needed, but the primary container styles are updated. */
 

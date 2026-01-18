@@ -250,7 +250,7 @@ const HomeTab = ({
     };
 
     return (
-        <div className="home-tab-content">
+        <div className="home-tab-content dash-tab-content active">
             <div className="combined-content-box"> {/* New wrapper */}
                 <div className="home-section-grid schedule-section-grid">
                     {/* 오늘의 일정 */}
