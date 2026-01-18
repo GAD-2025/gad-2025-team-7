@@ -100,8 +100,8 @@ h2, h3 {
 
 .category-name {
     display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    /* overflow: hidden; Removed to rely on JS truncation */
+    /* text-overflow: ellipsis; Removed to rely on JS truncation */
     white-space: nowrap;
     max-width: 100%;
 }
@@ -419,5 +419,27 @@ h2, h3 {
     opacity: 0; /* Fade out effect */
     visibility: hidden; /* Hide completely */
     transition: all 0.3s ease-in-out; /* Smooth transition */
+}
+
+.delete-category-button {
+    width: 18px;
+    height: 18px;
+    background-color: #FF7581; /* Red for delete action */
+    border-radius: 50%;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 2px rgba(0,0,0,0.2);
+    cursor: pointer;
+    z-index: 10; /* Ensure it's above everything */
+    border: none;
+    padding: 0;
+    line-height: 1;
 }
 

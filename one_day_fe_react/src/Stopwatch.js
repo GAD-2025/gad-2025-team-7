@@ -8,7 +8,9 @@ const Stopwatch = ({ userId, selectedDate }) => {
     const [newCategory, setNewCategory] = useState('');
     const [selectedNewCategoryColor, setSelectedNewCategoryColor] = useState('#FFC0CB'); // Default color
     const [isAddCategoryPopupOpen, setIsAddCategoryPopupOpen] = useState(false); // State for popup visibility
+    const [deletableCategory, setDeletableCategory] = useState(null); // State for category showing delete button
     const intervalRef = useRef(null);
+    const longPressTimerRef = useRef(null);
 
     // Predefined colors for new categories
     const predefinedColors = [
@@ -16,6 +18,39 @@ const Stopwatch = ({ userId, selectedDate }) => {
         '#FFDAB9', '#E6E6FA', '#FFFACD', '#E0FFFF', '#F0FFF0',
         '#FFE4E1', '#D3D3D3', '#B0E0E6', '#FFDEAD', '#F5DEB3'
     ];
+
+    // ... (useEffect for data fetching remains same)
+
+    const handleLongPressStart = (categoryName) => {
+        longPressTimerRef.current = setTimeout(() => {
+            setDeletableCategory(categoryName);
+        }, 2000); // 2 seconds long press
+    };
+
+    const handleLongPressEnd = () => {
+        if (longPressTimerRef.current) {
+            clearTimeout(longPressTimerRef.current);
+            longPressTimerRef.current = null;
+        }
+    };
+
+    const handleDeleteCategory = (e, categoryName) => {
+        e.stopPropagation();
+        const updatedCategories = categories.filter(c => c.name !== categoryName);
+        setCategories(updatedCategories);
+        saveStopwatchData(tasks, updatedCategories);
+        setDeletableCategory(null);
+        if (selectedCategory === categoryName) {
+            setSelectedCategory(null);
+        }
+    };
+
+    // Close delete mode when clicking elsewhere
+    useEffect(() => {
+        const handleClickOutside = () => setDeletableCategory(null);
+        window.addEventListener('click', handleClickOutside);
+        return () => window.removeEventListener('click', handleClickOutside);
+    }, []);
 
     useEffect(() => {
         if (!userId || !selectedDate) return;
@@ -184,17 +219,34 @@ const Stopwatch = ({ userId, selectedDate }) => {
                                     backgroundColor: `rgba(${parseInt(cat.color.slice(1,3), 16)}, ${parseInt(cat.color.slice(3,5), 16)}, ${parseInt(cat.color.slice(5,7), 16)}, 0.5)`,
                                     border: `1px solid ${cat.color}`
                                 }}
-                                onClick={() => selectCategory(cat)} // Pass the full object
+                                onClick={(e) => { 
+                                    e.stopPropagation(); 
+                                    if (!deletableCategory) selectCategory(cat); 
+                                }}
+                                onMouseDown={() => handleLongPressStart(cat.name)}
+                                onMouseUp={handleLongPressEnd}
+                                onMouseLeave={handleLongPressEnd}
+                                onTouchStart={() => handleLongPressStart(cat.name)}
+                                onTouchEnd={handleLongPressEnd}
+                                onContextMenu={(e) => e.preventDefault()} // Prevent context menu on long press
                             >
                                 <span className="category-name">
-                                    {cat.name.length > 5 ? `${cat.name.substring(0, 5)}...` : cat.name}
+                                    {cat.name.length > 5 ? `${cat.name.substring(0, 5)}..` : cat.name}
                                 </span>
-                                {cat.name === '공부' && (
+                                {cat.name === '공부' && !deletableCategory && (
                                     <button 
                                         className="add-category-trigger-button"
                                         onClick={(e) => { e.stopPropagation(); setIsAddCategoryPopupOpen(true); }}
                                     >
                                         +
+                                    </button>
+                                )}
+                                {deletableCategory === cat.name && (
+                                    <button 
+                                        className="delete-category-button"
+                                        onClick={(e) => handleDeleteCategory(e, cat.name)}
+                                    >
+                                        ×
                                     </button>
                                 )}
                             </div>
@@ -204,7 +256,11 @@ const Stopwatch = ({ userId, selectedDate }) => {
                 </div>
                 
                 <div className="main-stopwatch" data-node-id="661:4191">
-                    <h3>{selectedCategory || '카테고리를 선택하세요'}</h3>
+                    <h3>
+                        {selectedCategory 
+                            ? (selectedCategory.length > 12 ? `${selectedCategory.substring(0, 12)}...` : selectedCategory)
+                            : '카테고리를 선택하세요'}
+                    </h3>
                     <div className="timer-display" data-node-id="661:4197">
                         {selectedTask ? formatTime(selectedTask.elapsedTime) : '00:00:00'}
                     </div>
@@ -271,7 +327,7 @@ const Stopwatch = ({ userId, selectedDate }) => {
                                         border: `1px solid ${task.color}`
                                     }}
                                 >
-                                    {task.category.length > 14 ? `${task.category.substring(0, 14)}...` : task.category}
+                                    {task.category.length > 11 ? `${task.category.substring(0, 11)}...` : task.category}
                                 </span>
                                 <div className="task-separator-line"></div>
                                 <span>{formatTime(task.elapsedTime)}</span>
