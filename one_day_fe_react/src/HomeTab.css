@@ -101,7 +101,7 @@
 .home-add-btn {
     color: #888;
     background-color: #ffffff;
-    border: none;
+    border: 0.5px solid #ccc;
     outline: none;
     border-radius: 50%;
     width: 24px;
@@ -111,7 +111,8 @@
     text-align: center;
     cursor: pointer;
     transition: background-color 0.2s;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    margin-left: 15px;
 }
 
 .home-add-btn:hover {
@@ -136,6 +137,12 @@
     background-color: #ffffff;
     border-radius: 20px;
     border: 1px solid #E1E7EF;
+}
+
+.add-schedule-section .home-card-body,
+.add-todo-section .home-card-body {
+    flex-direction: row;
+    align-items: center;
 }
 
 /* --- Rest of the styles are mostly the same, just need to ensure they work with the new structure --- */
