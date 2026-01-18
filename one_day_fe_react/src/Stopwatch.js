@@ -207,6 +207,12 @@ const Stopwatch = ({ userId, selectedDate }) => {
                                 <div className="task-separator-line"></div>
                                 <span>{formatTime(task.elapsedTime)}</span>
                             </div>
+                            <button
+                                className="play-pause-button"
+                                onClick={() => task.isPaused ? startTask(task) : pauseTask(task)}
+                            >
+                                {task.isPaused ? '▶' : '⏸'}
+                            </button>
                             <button onClick={() => finishTask(task.id)}>완료</button>
                         </li>
                     ))}

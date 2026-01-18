@@ -170,21 +170,15 @@ h2, h3 {
     justify-content: space-between;
     align-items: center;
     background-color: transparent; /* Remove light gray background */
-    padding: 0 5px; /* Reduced horizontal padding */
-    gap: 5px; /* Reduced gap */
-    margin-top: 5px; /* Reduced space above each item */
-    padding-top: 5px; /* Reduced space between line and content */
+    padding: 9px 5px; /* Vertical padding 9px, horizontal 5px */
     border-top: 1px solid #F0F3F6; /* Horizontal line above each item */
 }
-
-.stopwatch-task-list li:first-child {
-    margin-top: 0; /* No margin-top for the first item */
-    border-top: none; /* No border-top for the first item */
-    padding-top: 0; /* No padding-top for the first item */
-}
-
 .stopwatch-task-list li span {
     font-size: 12px; /* Reduced font size for task details */
+}
+
+.stopwatch-task-list li:last-child {
+    border-bottom: 1px solid #F0F3F6; /* Add bottom border to the last item */
 }
 
 .task-details {
@@ -228,10 +222,29 @@ h2, h3 {
     align-items: center;
     justify-content: center;
     padding: 0; /* Remove padding as width/height are set */
+    margin-left: 12px; /* Gap from play/pause button */
 }
 
 .task-list-section button:hover {
     background-color: #A0A0A0; /* Slightly darker on hover */
+}
+
+.play-pause-button {
+    width: 14px;
+    height: 14px;
+    background: none !important; /* Ensure no background box aggressively */
+    border: none !important; /* Ensure no border aggressively */
+    outline: none; /* Remove default outline */
+    padding: 0;
+    font-size: 14px; /* For the icon/character */
+    color: #6E6E6E; /* Matches "완료" button text color */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0; /* Prevent shrinking */
+    margin-left: 19px; /* Gap from numerical record */
+    box-shadow: none !important; /* Ensure no shadow aggressively */
 }
 
 .delete-button-circle {
