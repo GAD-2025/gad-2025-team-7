@@ -401,10 +401,20 @@
 .schedule-modal-title {
     font-size: 14px;
     color: #4a4a4a;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
     text-align: center;
     font-weight: 500;
     position: relative;
+}
+
+.modal-content h3::after {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 1px;
+    background-color: #EBEEF2;
+    margin: 5px auto 0;
+    border-radius: 2px;
 }
 
 .schedule-modal-date {
