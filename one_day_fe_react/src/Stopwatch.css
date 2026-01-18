@@ -23,7 +23,8 @@
 }
 
 .category-section {
-    flex: 0.7; /* Reduced from 1 to make it narrower */
+    flex: 0.7; /* Changed back to 0.7 */
+    min-width: 0; /* Critical: prevents flex item from overflowing due to content */
     display: flex; /* Make it a flex container */
     flex-direction: column; /* Stack its children vertically */
     background-color: transparent; /* Remove individual box styling */
@@ -65,16 +66,17 @@ h2, h3 {
 .category-list {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* Maintains 2 columns */
-    gap: 8px;
-    max-height: 88px;
+    gap: 6px;
+    max-height: 100px; /* Increased height to ensure 3 rows show fully without scrollbar appearing prematurely */
     overflow-y: auto;
-    padding-right: 4px;
-    margin-bottom: 10px;
+    padding-right: 1px;
+    margin-bottom: 1px;
     justify-items: center; /* Centers the chips within their grid cells to keep their shape */
 }
 
 .category-chip {
     width: auto; /* Allow width to be determined by content */
+    max-width: 100%; /* Prevent exceeding grid cell width */
     min-width: unset; /* Remove min-width if it forces stretching, or set a reasonable small value like 60px */
     justify-self: center; /* Center the chip within the grid cell */
     /* Colors are now dynamic via inline styles */
@@ -88,7 +90,20 @@ h2, h3 {
     align-items: center;
     justify-content: center;
     position: relative;
-    white-space: nowrap; /* Prevent text wrapping */
+    /* white-space: nowrap; Removed here, handled in .category-name */
+}
+
+.category-chip.wide {
+    grid-column: span 2; /* Span across both columns to occupy the full row */
+    /* width: 100% removed to maintain original capsule design */
+}
+
+.category-name {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
 }
 
 .add-category-trigger-button {

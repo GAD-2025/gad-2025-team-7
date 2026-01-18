@@ -179,14 +179,16 @@ const Stopwatch = ({ userId, selectedDate }) => {
                         {categories.map(cat => (
                             <div 
                                 key={cat.name} 
-                                className={`category-chip ${selectedCategory === cat.name ? 'selected' : ''}`}
+                                className={`category-chip ${selectedCategory === cat.name ? 'selected' : ''} ${cat.name.length >= 4 ? 'wide' : ''}`}
                                 style={{
                                     backgroundColor: `rgba(${parseInt(cat.color.slice(1,3), 16)}, ${parseInt(cat.color.slice(3,5), 16)}, ${parseInt(cat.color.slice(5,7), 16)}, 0.5)`,
                                     border: `1px solid ${cat.color}`
                                 }}
                                 onClick={() => selectCategory(cat)} // Pass the full object
                             >
-                                {cat.name}
+                                <span className="category-name">
+                                    {cat.name.length > 5 ? `${cat.name.substring(0, 5)}...` : cat.name}
+                                </span>
                                 {cat.name === '공부' && (
                                     <button 
                                         className="add-category-trigger-button"
@@ -239,7 +241,7 @@ const Stopwatch = ({ userId, selectedDate }) => {
                                     }}
                                     onClick={() => selectCategory({name: task.category, color: task.color})}
                                 >
-                                    {task.category}
+                                    {task.category.length > 14 ? `${task.category.substring(0, 14)}...` : task.category}
                                 </span>
                                 <div className="task-separator-line"></div>
                                 <span>{formatTime(task.elapsedTime)}</span>
@@ -269,7 +271,7 @@ const Stopwatch = ({ userId, selectedDate }) => {
                                         border: `1px solid ${task.color}`
                                     }}
                                 >
-                                    {task.category}
+                                    {task.category.length > 14 ? `${task.category.substring(0, 14)}...` : task.category}
                                 </span>
                                 <div className="task-separator-line"></div>
                                 <span>{formatTime(task.elapsedTime)}</span>
