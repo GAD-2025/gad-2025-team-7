@@ -20,6 +20,7 @@
     border: 1.2px solid #E1E7EF; /* Combined box border */
     box-shadow: 0 2px 8px rgba(0,0,0,0.06); /* Consistent shadow */
     padding: 15px; /* Padding for the combined box */
+    align-items: center; /* Ensure vertical centering of children */
 }
 
 .category-section {
@@ -38,13 +39,13 @@
     background-color: rgba(244, 244, 244, 0.9); /* F4F4F4 with 90% opacity */
     border: 1px solid #E1E7EF;
     border-radius: 15px;
-    height: 96px;
+    height: 100px;
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center; /* Vertical centering */
     align-items: center; /* Horizontal centering */
-    box-sizing: border-box; /* Ensures padding/border don't exceed 96px */
+    box-sizing: border-box; /* Ensures padding/border don't exceed height */
     padding: 10px;
 }
 
@@ -257,17 +258,24 @@ h2, h3 {
     color: white;
     border: 1.1px solid #E1E7EF;
     border-radius: 11px;
-    padding: 0;
+    padding: 0 10px; /* Horizontal padding for text expansion */
     height: 28px;
-    width: 48px;
+    width: auto; /* Allow width to expand with text */
+    min-width: 48px; /* Maintain minimum width */
     cursor: pointer;
-    transition: background-color 0.2s, border-color 0.2s;
+    /* transition: background-color 0.2s, border-color 0.2s; Removed for instant interaction */
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 13px;
     font-weight: 300;
     letter-spacing: 0.02em;
+}
+
+.main-controls .start-button.pause-state {
+    background-color: #BDBDBD; /* Requested gray color */
+    color: white; /* Changed to white for better contrast on darker gray */
+    border: 1.1px solid #E1E7EF; /* Requested border style */
 }
 
 .main-controls .reset-button {

@@ -268,9 +268,9 @@ const Stopwatch = ({ userId, selectedDate }) => {
                         <button 
                             onClick={() => selectedTask && (selectedTask.isPaused ? startTask(selectedTask) : pauseTask(selectedTask))}
                             disabled={!selectedTask}
-                            className="start-button"
+                            className={`start-button ${selectedTask && !selectedTask.isPaused ? 'pause-state' : ''}`}
                         >
-                            {selectedTask && !selectedTask.isPaused ? '일시정지' : '시작'}
+                                                        {selectedTask && !selectedTask.isPaused ? '일시정지' : '시작'}
                         </button>
                         <button 
                             onClick={() => resetTask(selectedTask)}
