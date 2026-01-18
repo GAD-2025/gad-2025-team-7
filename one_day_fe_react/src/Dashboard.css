@@ -334,6 +334,7 @@ div.dashboard-content-wrapper[class*="content-for-"] {
 }
 #diary-canvas.pen-tool { cursor: crosshair; }
 #diary-canvas.eraser-tool { cursor: cell; } /* Using 'cell' as a simple visual alternative for an eraser */
+#diary-canvas.text-tool { cursor: text; }
 
 .diary-actions {
     display: none; /* Hidden by default */

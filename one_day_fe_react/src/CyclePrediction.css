@@ -22,8 +22,25 @@
     display: flex;
     justify-content: space-around; /* Distribute space evenly */
     align-items: center; /* Align items to the center vertically */
-    gap: 10px; /* Adjusted gap */
-    margin-top: 10px;
+    gap: 16px; /* Increased gap */
+    margin-top: 5px; /* Reduced margin */
+    position: relative; /* For positioning the dashed line */
+    z-index: 0;
+}
+
+/* Dashed line connecting the boxes */
+.cycle-dates-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 60%; /* Adjust vertical position to align with the boxes center */
+    left: 60px; /* Shifted left by reducing this value */
+    right: 72px; /* Compensated on the right to keep overall shift */
+    height: 1px;
+    background-image: linear-gradient(to right, #E1E7EF 3px, transparent 3px);
+    background-size: 6px 1px; /* 3px dash + 3px gap */
+    background-repeat: repeat-x;
+    z-index: -1; /* Place behind the boxes */
+    transform: translateY(-50%);
 }
 
 .date-label-wrapper {
@@ -34,20 +51,21 @@
 }
 
 .date-label {
-    font-size: 10px; /* Smaller font for the label */
+    font-size: 12px; /* Increased from 10px */
     color: #777;
     margin: 0; /* Remove default paragraph margin */
+    font-weight: 500; /* Set to medium */
 }
 
 .date-box {
     text-align: center;
-    padding: 5px;
-    background-color: #f8fafd;
-    border-radius: 8px;
+    padding: 0px; /* Changed from 5px to 0px */
+    background-color: #F4F4F4; /* Updated background color */
+    border-radius: 11px; /* Updated border radius */
     border: 1px solid #E1E7EF;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    width: 40px;
-    height: 70px;
+    width: 58px; /* Updated width */
+    height: 66px; /* Updated height */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -69,11 +87,11 @@
 
 .d-day-box {
     text-align: center;
-    background-color: #ffffff; /* White background */
-    border-radius: 8px; /* Slightly curved square */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Light gray shadow */
-    width: 70px; /* Consistent width */
-    height: 70px; /* Consistent height */
+    background-color: #ffffff;
+    border-radius: 3px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 49px;
+    height: 22px;
     display: flex;
     justify-content: center;
     align-items: center;

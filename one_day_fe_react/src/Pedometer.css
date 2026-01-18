@@ -1,8 +1,8 @@
 .pedometer-wrapper {
-    background-color: #ffffff;
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    background-color: transparent;
+    border-radius: 0;
+    padding: 0px;
+    box-shadow: none;
     margin-bottom: 20px;
 }
 

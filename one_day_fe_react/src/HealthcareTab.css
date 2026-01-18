@@ -7,6 +7,14 @@
     border-radius: 20px; /* More rounded overall container */
 }
 
+.healthcare-tab-content h3 {
+    font-size: 17px !important;
+    color: #383838 !important;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
 .healthcare-row {
     display: flex;
     flex-wrap: wrap; /* Allow items to wrap to the next line */
@@ -24,13 +32,12 @@
 
 /* Define a consistent height for the healthcare-content-box */
 .healthcare-content-box {
-
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    height: 100px;
+    background-color: transparent; /* Changed from #ffffff to transparent */
+    border: none; /* Removed border */
+    border-radius: 0;
+    padding: 0; /* Adjusted padding */
+    box-shadow: none; /* Removed shadow */
+    height: auto; /* Changed from fixed height 100px */
     display: flex;
     flex-direction: column;
     justify-content: center;

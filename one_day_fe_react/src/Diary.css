@@ -79,11 +79,11 @@
     display: flex;
     /* flex-wrap: wrap; /* Removed to force single line */
     gap: 5px; /* Reduced gap */
-    padding: 10px 15px; /* Adjusted to match #diary-title horizontal padding */
-    background-color: #F8F9FA; /* Light pastel background */
+    padding: 5px 26px; /* Adjusted to 5px 26px */
+    background-color: #ffffff; /* Changed from #F8F9FA to white */
     border-radius: 12px; /* 동글동글 */
     border: 1px solid #E9ECEF;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 0px 3px rgba(0,0,0,0.05);
     align-items: center;
     box-sizing: border-box; /* Ensure padding is included in the total width */
     overflow-x: auto; /* Enable horizontal scrolling */
@@ -151,20 +151,26 @@
     display: flex;
     gap: 8px; /* Increased gap to prevent overlap */
     margin-left: 2px; /* Reduced margin */
+    align-items: center; /* Vertically center items */
 }
 
 .color-box {
-    width: 20px; /* Reduced Standardized width */
-    height: 20px; /* Reduced Standardized height */
+    width: 20px; /* Restored base size */
+    height: 20px; /* Restored base size */
     border-radius: 50%; /* 동글동글 */
     cursor: pointer;
     border: 2px solid transparent;
     transition: border-color 0.2s;
 }
 
+.color-palette .color-box {
+    width: 16px; /* Only reduce size for palette items */
+    height: 16px;
+}
+
 .color-box.active {
-    border-color: #FF7581; /* Accent color for active */
-    box-shadow: 0 0 0 2px rgba(255,117,129,0.3);
+    border: 1.5px solid #D2D2D2; /* Only border change, no scale */
+    box-shadow: none;
 }
 
 .color-box.more-colors-btn {
@@ -179,10 +185,8 @@
 }
 
 .color-box.current-selected-color-indicator {
-    border: 2px solid #383838; /* Thicker, darker border */
-    box-shadow: 0 0 0 3px rgba(56, 56, 56, 0.4); /* More prominent shadow */
-    transform: scale(1.1); /* Slightly larger */
-    transition: all 0.2s ease-in-out; /* Smooth transition */
+    border: 1.5px solid #D2D2D2;
+    transition: all 0.2s ease-in-out;
 }
 
 /* For the expanded color palette, also increase gap */
@@ -266,14 +270,9 @@
     overflow-y: auto; /* Enable vertical scrolling for the wrapper */
 }
 
-#diary-canvas {
-    width: 100%;
-    height: 310px;
-    border: 0px solid #ddd;
-    border-radius: 5px;
-    display: block; /* Keeping this as it's important for layout */
-    background-color: #ffffff; /* Keeping this as it's important */
-}
+#diary-canvas.pen-tool { cursor: crosshair; }
+#diary-canvas.eraser-tool { cursor: cell; }
+#diary-canvas.text-tool { cursor: text; }
 
 .diary-text-box {
     position: absolute;
@@ -285,12 +284,12 @@
 }
 
 .diary-text-box.selected {
-    border-color: #FF7581; /* Accent for selected text */
+    border-color: transparent; /* Removed accent for selected text */
 }
 
 .diary-text-box.editing {
-    border-color: #383838; /* Darker border when editing */
-    border-style: solid;
+    border-color: transparent; /* Removed border when editing */
+    border-style: none;
 }
 
 .diary-text-box textarea {

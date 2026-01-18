@@ -41,6 +41,15 @@ const Diary = ({ selectedDate, userId }) => {
     const [texts, setTexts] = useState([]);
     const textRefs = useRef({});
     const [editingText, setEditingText] = useState(null);
+    const textareaRef = useRef(null); // Ref for the active textarea
+
+    useEffect(() => {
+        if (editingText && textareaRef.current) {
+            setTimeout(() => {
+                textareaRef.current.focus();
+            }, 0);
+        }
+    }, [editingText]);
     
     const [images, setImages] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null); // { type: 'text' | 'image', id }
@@ -79,7 +88,7 @@ const Diary = ({ selectedDate, userId }) => {
         return () => {
             window.removeEventListener('resize', adjustCanvasSize);
         };
-    }, [historyStep, history]); // Depend on history to restore state after resize
+    }, []); // Removed history dependencies to prevent canvas reset on every history change
 
     const pushToHistory = (currentState = { texts, images, canvasData: canvasRef.current.toDataURL() }) => {
         const newHistory = history.slice(0, historyStep + 1);
@@ -232,7 +241,15 @@ const Diary = ({ selectedDate, userId }) => {
         if (drawingTool === 'text') {
             if(editingText) {
                 setEditingText(null);
+                return;
             }
+            // Add text on single click
+            const { offsetX, offsetY } = nativeEvent;
+            const newText = { id: Date.now(), x: offsetX, y: offsetY, value: '', color: penColor, size: textSize };
+            const newTexts = [...texts, newText];
+            setTexts(newTexts);
+            startEditingText(newText.id);
+            pushToHistory({ texts: newTexts, images, canvasData: canvasRef.current.toDataURL() });
             return;
         }
         const { offsetX, offsetY } = nativeEvent;
@@ -243,14 +260,7 @@ const Diary = ({ selectedDate, userId }) => {
     };
 
     const handleCanvasDoubleClick = ({ nativeEvent }) => {
-        if (drawingTool === 'text') {
-            const { offsetX, offsetY } = nativeEvent;
-            const newText = { id: Date.now(), x: offsetX, y: offsetY, value: 'New Text', color: penColor, size: textSize };
-            const newTexts = [...texts, newText];
-            setTexts(newTexts);
-            startEditingText(newText.id);
-            pushToHistory({ texts: newTexts, images, canvasData: canvasRef.current.toDataURL() });
-        }
+        // Double-click text addition removed as it's now handled by single-click in handleCanvasMouseDown
     };
     
     const draw = (e) => {
@@ -415,7 +425,7 @@ const Diary = ({ selectedDate, userId }) => {
                             <div className="color-palette-wrapper">
                                 <div className="color-palette">
                                     <div className={`color-box ${penColor === 'black' ? 'active' : ''}`} style={{backgroundColor: 'black'}} data-color="black" onClick={() => setPenColor('black')}></div>
-                                    <div className={`color-box ${penColor === 'blue' ? 'active' : ''}`} style={{backgroundColor: 'blue'}} data-color="blue" onClick={() => setPenColor('blue')}></div>
+                                    <div className={`color-box ${penColor === '#3D5BDF' ? 'active' : ''}`} style={{backgroundColor: '#3D5BDF'}} data-color="#3D5BDF" onClick={() => setPenColor('#3D5BDF')}></div>
                                     <div className="color-box current-selected-color-indicator" style={{backgroundColor: penColor}} onClick={() => setShowMoreColors(true)}></div>
                                     <div ref={moreColorsBtnRef} className="color-box more-colors-btn" onClick={() => setShowMoreColors(!showMoreColors)}>+</div>
                                 </div>
@@ -455,12 +465,12 @@ const Diary = ({ selectedDate, userId }) => {
                             <HexColorPicker color={penColor} onChange={setPenColor} />
                         </div>
                     )}
-                    {drawingTool === 'text' && ( <div className="text-tool-message"> Double-click on the canvas to add text. </div> )}
                     <div ref={containerRef} className="canvas-wrapper">
                         <button className="save-btn" onClick={saveDiary}>저장</button> {/* Moved save button here */}
                         <canvas
                             id="diary-canvas"
                             ref={canvasRef}
+                            className={`${drawingTool}-tool`} // Add tool-specific class
                             // width and height are now managed by useEffect
                             onMouseDown={handleCanvasMouseDown}
                             onDoubleClick={handleCanvasDoubleClick}
@@ -508,10 +518,10 @@ const Diary = ({ selectedDate, userId }) => {
                                     )}
                                     {editingText === text.id ? (
                                         <textarea
+                                            ref={textareaRef}
                                             value={text.value}
                                             onChange={(e) => handleTextChange(text.id, e.target.value)}
                                             onBlur={handleTextBlur}
-                                            autoFocus
                                             className="diary-textarea-input"
                                             style={{ color: text.color || 'black', fontSize: `${text.size}px` }} // Use text.size
                                         />

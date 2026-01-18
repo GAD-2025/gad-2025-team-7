@@ -22,6 +22,7 @@ const Stopwatch = ({ userId, selectedDate }) => {
     // ... (useEffect for data fetching remains same)
 
     const handleLongPressStart = (categoryName) => {
+        if (categoryName === '공부') return; // Prevent deletion of '공부' category
         longPressTimerRef.current = setTimeout(() => {
             setDeletableCategory(categoryName);
         }, 400); // 0.4 second long press
