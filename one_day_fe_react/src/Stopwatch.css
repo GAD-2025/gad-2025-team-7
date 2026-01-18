@@ -190,7 +190,7 @@ h2, h3 {
 }
 
 .task-list-section:last-child {
-    background-color: #E1E7EF;
+    background-color: transparent; /* Make interior uncolored */
     border: 1px solid #C0C0C0; /* Slightly darker border for definition */
     border-radius: 20px;
     padding: 10px; /* Padding inside the box for its content */
