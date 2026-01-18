@@ -23,7 +23,7 @@
 }
 
 .category-section {
-    flex: 1; /* Make this section take equal width */
+    flex: 0.7; /* Reduced from 1 to make it narrower */
     display: flex; /* Make it a flex container */
     flex-direction: column; /* Stack its children vertically */
     background-color: transparent; /* Remove individual box styling */
@@ -33,42 +33,62 @@
 }
 
 .main-stopwatch {
-    flex: 1; /* Make this section take equal width */
-    background-color: transparent; /* Remove individual box styling */
-    border: none;
-    box-shadow: none;
-    padding: 0;
+    flex: 1.3;
+    background-color: rgba(244, 244, 244, 0.9); /* F4F4F4 with 90% opacity */
+    border: 1px solid #E1E7EF;
+    border-radius: 15px;
+    height: 96px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Vertical centering */
+    align-items: center; /* Horizontal centering */
+    box-sizing: border-box; /* Ensures padding/border don't exceed 96px */
+    padding: 10px;
 }
 
 h2, h3 {
-    font-size: 12px; /* Further reduced font size */
+    font-size: 11px;
     font-weight: 600;
     color: #4B4B4B;
     margin-top: 0;
-    margin-bottom: 8px; /* Further reduced margin-bottom */
+    margin-bottom: 2px; /* Reduced margin to fit in 96px */
+}
+
+.timer-display {
+    font-size: 25px;
+    font-weight: bold;
+    color: #383838;
+    margin: 1px 0;
 }
 
 .category-list {
-    display: flex; /* Allow flexible layout for category chips */
-    flex-wrap: wrap; /* Wrap items if necessary */
-    gap: 8px; /* Spacing between capsules */
-    margin-bottom: 10px; /* Reduced margin-bottom */
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Maintains 2 columns */
+    gap: 8px;
+    max-height: 88px;
+    overflow-y: auto;
+    padding-right: 4px;
+    margin-bottom: 10px;
+    justify-items: center; /* Centers the chips within their grid cells to keep their shape */
 }
 
 .category-chip {
+    width: auto; /* Allow width to be determined by content */
+    min-width: unset; /* Remove min-width if it forces stretching, or set a reasonable small value like 60px */
+    justify-self: center; /* Center the chip within the grid cell */
     /* Colors are now dynamic via inline styles */
-    /* Remove fixed width to allow content to dictate width */
-    border-radius: 20px; /* Perfectly rounded capsule shape */
-    height: 24px; /* Capsule height */
-    padding: 1px 13.5px; /* Adjusted padding */
+    border-radius: 20px;
+    height: 24px;
+    padding: 1px 13.5px;
     cursor: pointer;
-    font-size: 13px; /* Category name font size */
+    font-size: 13px;
     color: #383838;
-    display: flex; /* Use flex to center text */
+    display: flex;
     align-items: center;
     justify-content: center;
-    position: relative; /* For absolute positioning of trigger button */
+    position: relative;
+    white-space: nowrap; /* Prevent text wrapping */
 }
 
 .add-category-trigger-button {
@@ -210,41 +230,47 @@ h2, h3 {
     color: #4B4B4B;
 }
 
-.main-stopwatch {
-    text-align: center;
-}
-
-.timer-display {
-    font-size: 32px;
-    font-weight: bold;
-    color: #383838;
-    margin: 15px 0; /* Reduced margin */
-}
-
 .main-controls {
     display: flex;
     justify-content: center;
     gap: 8px; /* Reduced gap */
+    margin-top: 5px; /* Push the buttons down slightly */
 }
 
 .main-controls .start-button {
-    background-color: #FFB3C0; /* Pastel pink */
+    background-color: #FF7581;
     color: white;
-    border: 1px solid #FFB3C0;
+    border: 1.1px solid #E1E7EF;
     border-radius: 11px;
-    padding: 8px 15px; /* Reduced padding */
+    padding: 0;
+    height: 28px;
+    width: 48px;
     cursor: pointer;
     transition: background-color 0.2s, border-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 0.02em;
 }
 
 .main-controls .reset-button {
     background-color: white;
-    color: #6E7279; /* Softer grey text */
-    border: 1px solid #E1E7EF; /* Lighter border */
+    color: #6E7279;
+    border: 1.1px solid #E1E7EF;
     border-radius: 11px;
-    padding: 8px 15px; /* Reduced padding */
+    width: 55px;
+    height: 28px;
+    padding: 0;
     cursor: pointer;
     transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+    font-size: 13px;
+    font-weight: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.02em;
 }
 
 .task-list-section {
