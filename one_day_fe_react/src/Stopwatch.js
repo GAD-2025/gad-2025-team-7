@@ -202,7 +202,7 @@ const Stopwatch = ({ userId, selectedDate }) => {
                 <ul className="stopwatch-task-list">
                     {tasks.filter(t => !t.isComplete).map(task => (
                         <li key={task.id}>
-                            <span>{task.category}</span>
+                            <span className="task-category-chip" onClick={() => selectCategory(task.category)}>{task.category}</span>
                             <span>{formatTime(task.elapsedTime)}</span>
                             <button onClick={() => finishTask(task.id)}>완료</button>
                         </li>
@@ -215,9 +215,9 @@ const Stopwatch = ({ userId, selectedDate }) => {
                 <ul className="stopwatch-task-list">
                     {tasks.filter(t => t.isComplete).map(task => (
                         <li key={task.id}>
-                            <span>{task.category}</span>
+                            <span className="task-category-chip">{task.category}</span>
                             <span>{formatTime(task.elapsedTime)}</span>
-                            <button onClick={() => deleteTask(task.id)}>삭제</button>
+                            <button className="delete-button-circle" onClick={() => deleteTask(task.id)}>-</button>
                         </li>
                     ))}
                 </ul>

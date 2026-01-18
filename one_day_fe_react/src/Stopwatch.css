@@ -73,6 +73,17 @@ h2, h3 {
     border-color: #FFB3C0;
 }
 
+.task-category-chip {
+    background-color: rgba(255, 198, 157, 0.5); /* Same as category-chip */
+    border: 1px solid #FFC69D; /* Same as category-chip */
+    border-radius: 22px; /* Same as category-chip */
+    padding: 2px 8px; /* Slightly reduced padding for a smaller capsule */
+    font-size: 11px; /* Slightly reduced font size for a smaller capsule */
+    color: #383838;
+    cursor: pointer; /* Indicate clickable */
+    white-space: nowrap; /* Prevent wrapping */
+}
+
 .add-category-wrapper {
     display: flex;
     align-items: center;
@@ -187,6 +198,24 @@ h2, h3 {
 
 .task-list-section button:hover {
     background-color: #A0A0A0; /* Slightly darker on hover */
+}
+
+.delete-button-circle {
+    background-color: white; /* Button background is white */
+    border: 1px solid white; /* Make border white */
+    border-radius: 50%; /* Make it a circle */
+    width: 18px; /* Adjusted size */
+    height: 18px; /* Adjusted size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #383838; /* Minus sign color changed to #383838 */
+    font-size: 14px; /* Size for the minus sign */
+    cursor: pointer;
+    line-height: 1; /* Ensure vertical centering of text */
+    padding: 0; /* Remove default button padding */
+    flex-shrink: 0; /* Prevent shrinking when space is tight */
+    box-shadow: 0 0 2.3px rgba(0, 0, 0, 0.1); /* Light gray shadow with blur 2.3px */
 }
 
 .task-list-section:last-child {
