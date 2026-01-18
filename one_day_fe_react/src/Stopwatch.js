@@ -204,6 +204,7 @@ const Stopwatch = ({ userId, selectedDate }) => {
                         <li key={task.id}>
                             <div className="task-details">
                                 <span className="task-category-chip" onClick={() => selectCategory(task.category)}>{task.category}</span>
+                                <div className="task-separator-line"></div>
                                 <span>{formatTime(task.elapsedTime)}</span>
                             </div>
                             <button onClick={() => finishTask(task.id)}>완료</button>
@@ -219,6 +220,7 @@ const Stopwatch = ({ userId, selectedDate }) => {
                         <li key={task.id}>
                             <div className="task-details">
                                 <span className="task-category-chip">{task.category}</span>
+                                <div className="task-separator-line"></div>
                                 <span>{formatTime(task.elapsedTime)}</span>
                             </div>
                             <button className="delete-button-circle" onClick={() => deleteTask(task.id)}>-</button>

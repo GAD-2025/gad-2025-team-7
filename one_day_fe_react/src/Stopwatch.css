@@ -190,8 +190,18 @@ h2, h3 {
 .task-details {
     display: flex;
     align-items: center;
-    gap: 180px; /* Specific gap between category and time */
+    justify-content: flex-start; /* Align to start, separator fills space */
+    gap: 0; /* No gap as separator handles it */
     flex-grow: 1; /* Allow details to take up space */
+}
+
+.task-separator-line {
+    flex-grow: 1; /* Fill available space */
+    height: 1px;
+    background-image: linear-gradient(to right, #EEEEEE 4px, transparent 4px, transparent 11px);
+    background-size: 11px 1px;
+    background-repeat: repeat-x;
+    margin: 0 19px; /* 19px gap on both sides of the line */
 }
 
 
