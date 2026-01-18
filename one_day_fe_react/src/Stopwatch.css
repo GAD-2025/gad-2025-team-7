@@ -195,6 +195,13 @@ h2, h3 {
     flex-grow: 1; /* Allow details to take up space */
 }
 
+.task-details span:last-of-type {
+    font-size: 14.85px;
+    color: #404040;
+    font-weight: 400;
+    letter-spacing: 0.05em; /* 5% of font size */
+}
+
 .task-separator-line {
     flex-grow: 1; /* Fill available space */
     height: 1px;
