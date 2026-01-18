@@ -12,7 +12,9 @@ const Stopwatch = ({ userId, selectedDate }) => {
 
     // Predefined colors for new categories
     const predefinedColors = [
-        '#FFC0CB', '#FFD700', '#ADD8E6', '#90EE90', '#FFB6C1', '#FFDAB9', '#E6E6FA', '#FFFACD',
+        '#FFC0CB', '#FFD700', '#ADD8E6', '#90EE90', '#FFB6C1', 
+        '#FFDAB9', '#E6E6FA', '#FFFACD', '#E0FFFF', '#F0FFF0',
+        '#FFE4E1', '#D3D3D3', '#B0E0E6', '#FFDEAD', '#F5DEB3'
     ];
 
     useEffect(() => {

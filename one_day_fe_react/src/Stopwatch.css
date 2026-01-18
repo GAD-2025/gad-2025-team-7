@@ -132,17 +132,18 @@ h2, h3 {
 }
 
 .color-picker-palette {
-    display: grid; /* Use grid for 2x3 layout */
-    grid-template-columns: repeat(2, 49px); /* 2 columns, 49px wide each */
-    grid-template-rows: repeat(3, 24px); /* 3 rows, 24px high each */
-    gap: 8px; /* Spacing between capsules */
+    display: grid; /* Use grid for 5x3 layout */
+    grid-template-columns: repeat(5, 1fr); /* 5 columns */
+    grid-template-rows: repeat(3, auto); /* 3 rows */
+    gap: 10px; /* Spacing between circles */
     margin-top: 10px;
+    justify-items: center; /* Center items in their grid cells */
 }
 
 .color-swatch {
-    width: 49px; /* Capsule width */
-    height: 24px; /* Capsule height */
-    border-radius: 8px; /* Capsule shape */
+    width: 30px; /* Circle width */
+    height: 30px; /* Circle height */
+    border-radius: 50%; /* Circle shape */
     cursor: pointer;
     border: 2px solid transparent; /* Border for selection feedback */
     transition: all 0.2s; /* Smooth transitions */
