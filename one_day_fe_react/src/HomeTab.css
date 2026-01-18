@@ -148,6 +148,11 @@
 
 .add-schedule-section .home-card-body,
 .add-todo-section .home-card-body {
+    padding-top: 5px;
+}
+
+.add-schedule-section .home-card-body,
+.add-todo-section .home-card-body {
     flex-direction: row;
     align-items: flex-start;
 }
