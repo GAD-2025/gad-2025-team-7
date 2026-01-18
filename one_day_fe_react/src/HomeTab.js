@@ -419,11 +419,6 @@ const HomeTab = ({
                     <span className="schedule-modal-date">{new Date(selectedDate).getMonth() + 1}월 {new Date(selectedDate).getDate()}일</span>
                     <button className="modal-close-btn" onClick={resetScheduleForm}>x</button>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
-                    <Template type="schedule" onTemplateClick={handleScheduleTemplateClick} />
-                    <button className="home-add-btn" onClick={() => setShowCreateScheduleTemplateModal(true)}>+</button>
-                </div>
-                <input type="text" className="schedule-title-input" placeholder="일정명을 입력해주세요" value={newScheduleTitle} onChange={(e) => setNewScheduleTitle(e.target.value)} />
                 {showScheduleTimePicker && (
                     <input type="time" value={newScheduleTime} onChange={(e) => setNewScheduleTime(e.target.value)} />
                 )}
@@ -439,6 +434,11 @@ const HomeTab = ({
                         <div><label>종료일: <input type="date" value={newScheduleEndDate} onChange={(e) => setNewScheduleEndDate(e.target.value)} /></label></div>
                     </>
                 )}
+                <input type="text" className="schedule-title-input" placeholder="일정명을 입력해주세요" value={newScheduleTitle} onChange={(e) => setNewScheduleTitle(e.target.value)} />
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginBottom: '10px' }}>
+                    <Template type="schedule" onTemplateClick={handleScheduleTemplateClick} />
+                    <button className="home-add-btn" onClick={() => setShowCreateScheduleTemplateModal(true)}>+</button>
+                </div>
                 <div className="modal-actions"><button onClick={handleSaveSchedule}>저장</button></div>
             </Modal>
             <ConfirmationModal
