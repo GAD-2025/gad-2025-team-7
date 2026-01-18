@@ -186,8 +186,8 @@ h2, h3 {
 
 
 .task-list-section button {
-    background-color: #BFBFBF; /* Lighter grey for completeness */
-    color: white;
+    background-color: #FFFFFF; /* Changed to white background */
+    color: #383838; /* Changed to dark gray text */
     border: none;
     border-radius: 8px; /* Slightly smaller border-radius */
     padding: 3px 8px; /* Reduced padding */
