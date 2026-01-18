@@ -10,7 +10,7 @@
 
 .combined-content-box {
     background-color: #ffffff;
-    border: 0.9px solid #E1E7EF;
+    border: 0px solid #E1E7EF;
     border-top: none;
     /* border-radius is now dynamic based on active tab */
     padding: 20px; /* Overall padding for the combined box */
