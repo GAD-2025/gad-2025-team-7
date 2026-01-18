@@ -201,17 +201,29 @@
     display: flex;
     flex-wrap: wrap;
     gap: 8px; /* Increased gap to prevent overlap */
-    padding: 5px;
+    padding: 10px; /* Increased padding */
     margin-top: 5px;
-    background-color: #F8F9FA;
-    border-radius: 8px;
+    background-color: #ffffff; /* Changed to white */
+    border-radius: 12px; /* 동글동글 */
     border: 1px solid #E9ECEF;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* More prominent shadow for the popup */
     position: absolute; /* Position relative to its parent container */
-    z-index: 10; /* Ensure it appears above other elements */
-    top: 80px; /* Position below the toolbar */
-    right: 15px; /* Align with the right side of the toolbar's padding */
+    z-index: 100; /* Ensure it appears above other elements */
+    top: 45px; /* Adjusted position to be closer to the toolbar */
+    right: 0; /* Align with the right side of the toolbar */
     width: auto; /* Allow content to dictate width */
+}
+
+/* Resize the color picker library component */
+.expanded-color-palette .react-colorful {
+    width: 160px;
+    height: 160px;
+}
+
+/* Reduce pointer size */
+.expanded-color-palette .react-colorful__pointer {
+    width: 16px;
+    height: 16px;
 }
 
 .size-controls {
