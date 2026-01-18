@@ -225,3 +225,8 @@ h2, h3 {
     padding: 10px; /* Padding inside the box for its content */
 }
 
+.task-list-section.hide-border {
+    border: none;
+    padding: 0;
+}
+

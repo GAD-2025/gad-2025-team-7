@@ -210,7 +210,7 @@ const Stopwatch = ({ userId, selectedDate }) => {
                 </ul>
             </div>
 
-            <div className="task-list-section" data-node-id="661:4172">
+            <div className={`task-list-section ${tasks.filter(t => t.isComplete).length === 0 ? 'hide-border' : ''}`} data-node-id="661:4172">
 
                 <ul className="stopwatch-task-list">
                     {tasks.filter(t => t.isComplete).map(task => (
