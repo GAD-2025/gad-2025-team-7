@@ -50,21 +50,47 @@ h2, h3 {
 }
 
 .category-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px; /* Reduced gap */
+    display: flex; /* Allow flexible layout for category chips */
+    flex-wrap: wrap; /* Wrap items if necessary */
+    gap: 8px; /* Spacing between capsules */
     margin-bottom: 10px; /* Reduced margin-bottom */
 }
 
 .category-chip {
     /* Colors are now dynamic via inline styles */
-    border-radius: 22px;
+    /* Removed fixed width to allow content to dictate width */
+    border-radius: 8px; /* Capsule shape */
+    height: 24px; /* Capsule height */
     padding: 3px 10px; /* Reduced padding */
     cursor: pointer;
-    font-size: 12px;
+    font-size: 13px; /* Category name font size */
     color: #383838;
+    display: flex; /* Use flex to center text */
+    align-items: center;
+    justify-content: center;
+    position: relative; /* For absolute positioning of trigger button */
 }
 
+.add-category-trigger-button {
+    width: 18px;
+    height: 18px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    color: #383838;
+    font-size: 12px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 2px rgba(0,0,0,0.2);
+    cursor: pointer;
+    z-index: 1;
+    border: none; /* Ensure no default button border */
+    padding: 0; /* Remove default button padding */
+}
 .category-chip.selected {
     background-color: #FFB3C0; /* Softer pastel pink */
     color: white;
@@ -102,24 +128,28 @@ h2, h3 {
 }
 
 .color-picker-palette {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
+    display: grid; /* Use grid for 2x3 layout */
+    grid-template-columns: repeat(2, 49px); /* 2 columns, 49px wide each */
+    grid-template-rows: repeat(3, 24px); /* 3 rows, 24px high each */
+    gap: 8px; /* Spacing between capsules */
     margin-top: 10px;
 }
 
 .color-swatch {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
+    width: 49px; /* Capsule width */
+    height: 24px; /* Capsule height */
+    border-radius: 8px; /* Capsule shape */
     cursor: pointer;
-    border: 2px solid transparent;
-    transition: border-color 0.2s;
+    border: 2px solid transparent; /* Border for selection feedback */
+    transition: all 0.2s; /* Smooth transitions */
+    display: flex; /* For centering content if needed */
+    align-items: center;
+    justify-content: center;
 }
 
 .color-swatch.selected {
     border-color: #383838; /* Highlight selected color */
-    transform: scale(1.1);
+    transform: scale(1.05); /* Slightly smaller scale for capsule */
 }
 
 .add-category-wrapper button {
@@ -131,6 +161,48 @@ h2, h3 {
     font-size: 16px; /* Reduced font size */
     color: #383838;
     cursor: pointer;
+}
+
+.add-category-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5); /* Dimming background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.add-category-popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative; /* For close button positioning */
+    width: 300px;
+    max-width: 90%;
+}
+
+.add-category-popup-close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #383838;
+    padding: 0;
+}
+
+.add-category-popup-content h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #4B4B4B;
 }
 
 .main-stopwatch {
@@ -189,6 +261,7 @@ h2, h3 {
     align-items: center;
     background-color: transparent; /* Remove light gray background */
     padding: 9px 5px; /* Vertical padding 9px, horizontal 5px */
+    gap: 12px; /* Consistent gap between elements */
     border-top: 1px solid #F0F3F6; /* Horizontal line above each item */
 }
 .stopwatch-task-list li span {
@@ -240,7 +313,6 @@ h2, h3 {
     align-items: center;
     justify-content: center;
     padding: 0; /* Remove padding as width/height are set */
-    margin-left: 12px; /* Gap from play/pause button */
 }
 
 .task-list-section button:hover {
@@ -261,7 +333,6 @@ h2, h3 {
     align-items: center;
     justify-content: center;
     flex-shrink: 0; /* Prevent shrinking */
-    margin-left: 19px; /* Gap from numerical record */
     box-shadow: none !important; /* Ensure no shadow aggressively */
 }
 

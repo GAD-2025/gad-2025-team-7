@@ -7,6 +7,7 @@ const Stopwatch = ({ userId, selectedDate }) => {
     const [categories, setCategories] = useState([]);
     const [newCategory, setNewCategory] = useState('');
     const [selectedNewCategoryColor, setSelectedNewCategoryColor] = useState('#FFC0CB'); // Default color
+    const [isAddCategoryPopupOpen, setIsAddCategoryPopupOpen] = useState(false); // State for popup visibility
     const intervalRef = useRef(null);
 
     // Predefined colors for new categories
@@ -161,6 +162,7 @@ const Stopwatch = ({ userId, selectedDate }) => {
             setCategories(updatedCategories);
             setNewCategory('');
             saveStopwatchData(tasks, updatedCategories);
+            setIsAddCategoryPopupOpen(false); // Close the popup after adding category
         }
     };
     
@@ -183,28 +185,18 @@ const Stopwatch = ({ userId, selectedDate }) => {
                                 onClick={() => selectCategory(cat)} // Pass the full object
                             >
                                 {cat.name}
+                                {cat.name === '공부' && (
+                                    <button 
+                                        className="add-category-trigger-button"
+                                        onClick={(e) => { e.stopPropagation(); setIsAddCategoryPopupOpen(true); }}
+                                    >
+                                        +
+                                    </button>
+                                )}
                             </div>
                         ))}
                     </div>
-                    <div className="add-category-wrapper">
-                        <input
-                            type="text"
-                            value={newCategory}
-                            onChange={(e) => setNewCategory(e.target.value)}
-                            placeholder="새 카테고리 추가"
-                        />
-                        <button onClick={addNewCategory}>+</button>
-                    </div>
-                    <div className="color-picker-palette">
-                        {predefinedColors.map(color => (
-                            <div
-                                key={color}
-                                className={`color-swatch ${selectedNewCategoryColor === color ? 'selected' : ''}`}
-                                style={{ backgroundColor: color }}
-                                onClick={() => setSelectedNewCategoryColor(color)}
-                            ></div>
-                        ))}
-                    </div>
+
                 </div>
                 
                 <div className="main-stopwatch" data-node-id="661:4191">
@@ -285,6 +277,33 @@ const Stopwatch = ({ userId, selectedDate }) => {
                     ))}
                 </ul>
             </div>
+            {isAddCategoryPopupOpen && (
+                <div className="add-category-popup-overlay">
+                    <div className="add-category-popup-content">
+                        <button className="add-category-popup-close-button" onClick={() => setIsAddCategoryPopupOpen(false)}>X</button>
+                        <h4>새 카테고리 추가</h4>
+                        <div className="add-category-wrapper">
+                            <input
+                                type="text"
+                                value={newCategory}
+                                onChange={(e) => setNewCategory(e.target.value)}
+                                placeholder="새 카테고리 추가"
+                            />
+                            <button onClick={addNewCategory}>+</button>
+                        </div>
+                        <div className="color-picker-palette">
+                            {predefinedColors.map(color => (
+                                <div
+                                    key={color}
+                                    className={`color-swatch ${selectedNewCategoryColor === color ? 'selected' : ''}`}
+                                    style={{ backgroundColor: color }}
+                                    onClick={() => setSelectedNewCategoryColor(color)}
+                                ></div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
