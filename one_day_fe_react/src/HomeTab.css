@@ -115,11 +115,13 @@
 }
 
 .add-schedule-section .home-add-btn {
-    margin: auto;
+    margin-left: auto;
+    margin-right: -5px;
 }
 
 .add-todo-section .home-add-btn {
-    margin: auto;
+    margin-left: auto;
+    margin-right: -5px;
 }
 
 .home-add-btn:hover {

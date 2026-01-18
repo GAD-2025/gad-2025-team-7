@@ -40,7 +40,9 @@ const HomeTab = ({
     initialScheduleEndDate,
 }) => {
     const [showTodoModal, setShowTodoModal] = useState(false);
+    const [showCreateScheduleTemplateModal, setShowCreateScheduleTemplateModal] = useState(false);
     const [newScheduleTitle, setNewScheduleTitle] = useState('');
+    const [newScheduleTemplateTitle, setNewScheduleTemplateTitle] = useState('');
     const [newScheduleTime, setNewScheduleTime] = useState('');
     const [newScheduleStartDate, setNewScheduleStartDate] = useState(selectedDate);
     const [newScheduleEndDate, setNewScheduleEndDate] = useState('');
@@ -211,6 +213,25 @@ const HomeTab = ({
         setNewScheduleSelectedDays([]);
         setShowScheduleDayPicker(false);
         setShowScheduleModal(false);
+    };
+
+    const handleCreateScheduleTemplate = async () => {
+        if (!newScheduleTemplateTitle) return;
+        const body = { userId, title: newScheduleTemplateTitle, type: 'schedule' }; // Assuming a 'type' field for templates
+        try {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/templates`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+            });
+            if (!res.ok) throw new Error('Failed to save schedule template');
+            onDataUpdate(); // Refresh data
+            setShowCreateScheduleTemplateModal(false);
+            setNewScheduleTemplateTitle('');
+        } catch (error) {
+            console.error('Error saving schedule template:', error);
+            alert(`일정 템플릿 저장에 실패했습니다: ${error.message}`);
+        }
     };
 
     const handleSaveSchedule = async () => {
@@ -398,7 +419,10 @@ const HomeTab = ({
                     <span className="schedule-modal-date">{new Date(selectedDate).getMonth() + 1}월 {new Date(selectedDate).getDate()}일</span>
                     <button className="modal-close-btn" onClick={resetScheduleForm}>x</button>
                 </div>
-                <Template type="schedule" onTemplateClick={handleScheduleTemplateClick} />
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+                    <Template type="schedule" onTemplateClick={handleScheduleTemplateClick} />
+                    <button className="home-add-btn" onClick={() => setShowCreateScheduleTemplateModal(true)}>+</button>
+                </div>
                 <input type="text" className="schedule-title-input" placeholder="일정명을 입력해주세요" value={newScheduleTitle} onChange={(e) => setNewScheduleTitle(e.target.value)} />
                 {showScheduleTimePicker && (
                     <input type="time" value={newScheduleTime} onChange={(e) => setNewScheduleTime(e.target.value)} />
@@ -423,6 +447,20 @@ const HomeTab = ({
                 onConfirm={confirmationModalProps.onConfirm}
                 message={confirmationModalProps.message}
             />
+
+            <Modal show={showCreateScheduleTemplateModal} onClose={() => setShowCreateScheduleTemplateModal(false)}>
+                <h3>새 일정 템플릿 추가</h3>
+                <input
+                    type="text"
+                    placeholder="템플릿 이름"
+                    value={newScheduleTemplateTitle}
+                    onChange={(e) => setNewScheduleTemplateTitle(e.target.value)}
+                />
+                <div className="modal-actions">
+                    <button onClick={handleCreateScheduleTemplate}>저장</button>
+                    <button onClick={() => setShowCreateScheduleTemplateModal(false)}>취소</button>
+                </div>
+            </Modal>
         </div>
     );
 };
