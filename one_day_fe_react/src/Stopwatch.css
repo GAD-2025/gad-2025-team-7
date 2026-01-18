@@ -197,14 +197,20 @@ h2, h3 {
 
 
 .task-list-section button {
-    background-color: #FFFFFF; /* Changed to white background */
-    color: #383838; /* Changed to dark gray text */
-    border: none;
-    border-radius: 8px; /* Slightly smaller border-radius */
-    padding: 3px 8px; /* Reduced padding */
-    font-size: 10px; /* Reduced font size */
+    background-color: transparent; /* Interior is transparent */
+    color: #6E6E6E; /* Text color */
+    border: 0.7px solid #BFBFBF; /* Border color and thickness */
+    border-radius: 10px; /* Curve radius */
+    width: 55px; /* Fixed width */
+    height: 26px; /* Fixed height */
+    font-size: 12px; /* Font size */
+    font-weight: 300; /* Light font weight */
     cursor: pointer;
     transition: background-color 0.2s;
+    display: flex; /* Use flex to center text */
+    align-items: center;
+    justify-content: center;
+    padding: 0; /* Remove padding as width/height are set */
 }
 
 .task-list-section button:hover {
@@ -215,8 +221,8 @@ h2, h3 {
     background-color: white; /* Button background is white */
     border: 1px solid white; /* Make border white */
     border-radius: 50%; /* Make it a circle */
-    width: 18px; /* Adjusted size */
-    height: 18px; /* Adjusted size */
+    width: 18px !important; /* Adjusted size - aggressive debugging */
+    height: 18px !important; /* Adjusted size - aggressive debugging */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -228,6 +234,8 @@ h2, h3 {
     flex-shrink: 0; /* Prevent shrinking when space is tight */
     box-shadow: 0 0 2.3px rgba(0, 0, 0, 0.1); /* Light gray shadow with blur 2.3px */
 }
+
+
 
 .task-list-section:last-child {
     background-color: transparent; /* Make interior uncolored */
