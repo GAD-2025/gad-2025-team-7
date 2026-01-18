@@ -58,10 +58,10 @@ h2, h3 {
 
 .category-chip {
     /* Colors are now dynamic via inline styles */
-    /* Removed fixed width to allow content to dictate width */
-    border-radius: 8px; /* Capsule shape */
+    /* Remove fixed width to allow content to dictate width */
+    border-radius: 20px; /* Perfectly rounded capsule shape */
     height: 24px; /* Capsule height */
-    padding: 3px 10px; /* Reduced padding */
+    padding: 1px 13.5px; /* Adjusted padding */
     cursor: pointer;
     font-size: 13px; /* Category name font size */
     color: #383838;
@@ -99,12 +99,16 @@ h2, h3 {
 
 .task-category-chip {
     /* Colors are now dynamic via inline styles */
-    border-radius: 22px; /* Same as category-chip */
-    padding: 2px 8px; /* Slightly reduced padding for a smaller capsule */
-    font-size: 11px; /* Slightly reduced font size for a smaller capsule */
+    border-radius: 20px; /* Perfectly rounded capsule shape */
+    height: 24px; /* Capsule height */
+    padding: 1px 13.5px; /* Adjusted padding */
+    font-size: 13px; /* Category name font size */
     color: #383838;
     cursor: pointer; /* Indicate clickable */
     white-space: nowrap; /* Prevent wrapping */
+    display: flex; /* Use flex to center text */
+    align-items: center;
+    justify-content: center;
 }
 
 .add-category-wrapper {
