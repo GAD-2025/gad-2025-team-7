@@ -152,6 +152,10 @@ h2, h3 {
     transition: background-color 0.2s, border-color 0.2s, color 0.2s;
 }
 
+.task-list-section {
+    padding: 10px; /* Consistent padding for all task list sections */
+}
+
 .task-list-section ul {
     list-style: none;
     padding: 0;
@@ -181,6 +185,13 @@ h2, h3 {
 
 .stopwatch-task-list li span {
     font-size: 12px; /* Reduced font size for task details */
+}
+
+.task-details {
+    display: flex;
+    align-items: center;
+    gap: 180px; /* Specific gap between category and time */
+    flex-grow: 1; /* Allow details to take up space */
 }
 
 
@@ -222,11 +233,18 @@ h2, h3 {
     background-color: transparent; /* Make interior uncolored */
     border: 1px solid #E1E7EF; /* Changed border color to #E1E7EF */
     border-radius: 20px;
-    padding: 10px; /* Padding inside the box for its content */
+    /* Padding is now handled by the general .task-list-section rule */
 }
 
 .task-list-section.hide-border {
     border: none;
     padding: 0;
+    height: 0;
+    overflow: hidden;
+    margin-top: 0; /* Also remove top margin if present */
+    margin-bottom: 0; /* Also remove bottom margin if present */
+    opacity: 0; /* Fade out effect */
+    visibility: hidden; /* Hide completely */
+    transition: all 0.3s ease-in-out; /* Smooth transition */
 }
 
