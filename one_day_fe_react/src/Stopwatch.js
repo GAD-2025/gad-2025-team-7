@@ -24,7 +24,7 @@ const Stopwatch = ({ userId, selectedDate }) => {
     const handleLongPressStart = (categoryName) => {
         longPressTimerRef.current = setTimeout(() => {
             setDeletableCategory(categoryName);
-        }, 2000); // 2 seconds long press
+        }, 400); // 0.4 second long press
     };
 
     const handleLongPressEnd = () => {
