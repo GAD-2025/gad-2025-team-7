@@ -147,17 +147,22 @@ h2, h3 {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 0; /* No gap between list items, border provides separation */
 }
 
 .task-list-section li {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #F8F9FA;
-    padding: 10px;
-    border-radius: 5px;
-    gap: 8px; /* Add 8px gap here */
+    background-color: transparent; /* Remove light gray background */
+    padding: 9px 0; /* Vertical padding 9px, horizontal 0 (content will have its own padding/margin) */
+    border-radius: 0; /* Remove border-radius */
+    border-bottom: 1px solid #F0F3F6; /* Horizontal line */
+    gap: 8px;
+}
+
+.task-list-section li:last-child {
+    border-bottom: none; /* No border for the last item */
 }
 
 .task-list-section button {
