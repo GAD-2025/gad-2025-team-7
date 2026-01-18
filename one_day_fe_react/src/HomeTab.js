@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './HomeTab.css';
 import Modal from './Modal';
 import Template from './Template';
+import ConfirmationModal from './ConfirmationModal';
 
 const getUrgencyClass = (eventDate, selectedDate) => {
     const today = new Date(selectedDate);
@@ -53,6 +54,11 @@ const HomeTab = ({
     const [showScheduleDayPicker, setShowScheduleDayPicker] = useState(false);
     const [upcomingEvents, setUpcomingEvents] = useState([]);
     const [isLoadingEvents, setIsLoadingEvents] = useState(true);
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+    const [confirmationModalProps, setConfirmationModalProps] = useState({
+        message: '',
+        onConfirm: () => {},
+    });
 
     useEffect(() => {
         setNewScheduleStartDate(selectedDate);
@@ -111,18 +117,50 @@ const HomeTab = ({
         }
     };
 
-    const handleDeleteSchedule = async (eventId) => {
-        if (!window.confirm('일정을 삭제하시겠습니까?')) return;
-        try {
-            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/events/${eventId}`, {
-                method: 'DELETE',
-            });
-            if (!res.ok) throw new Error('Failed to delete schedule');
-            onDataUpdate();
-        } catch (error) {
-            console.error('Error deleting schedule:', error);
-            alert(`일정 삭제 중 오류가 발생했습니다: ${error.message}`);
-        }
+    const handleDeleteSchedule = (eventId) => {
+        setConfirmationModalProps({
+            message: '일정을 삭제하시겠습니까?',
+            onConfirm: () => {
+                (async () => {
+                    try {
+                        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/events/${eventId}`, {
+                            method: 'DELETE',
+                        });
+                        if (!res.ok) throw new Error('Failed to delete schedule');
+                        onDataUpdate();
+                    } catch (error) {
+                        console.error('Error deleting schedule:', error);
+                        alert(`일정 삭제 중 오류가 발생했습니다: ${error.message}`);
+                    } finally {
+                        setShowConfirmationModal(false);
+                    }
+                })();
+            },
+        });
+        setShowConfirmationModal(true);
+    };
+
+    const handleDeleteTodo = (todoId) => {
+        setConfirmationModalProps({
+            message: '투두를 삭제하시겠습니까?',
+            onConfirm: () => {
+                (async () => {
+                    try {
+                        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/todos/${todoId}`, {
+                            method: 'DELETE',
+                        });
+                        if (!res.ok) throw new Error('Failed to delete todo');
+                        onDataUpdate();
+                    } catch (error) {
+                        console.error('Error deleting todo:', error);
+                        alert(`투두 삭제 중 오류가 발생했습니다: ${error.message}`);
+                    } finally {
+                        setShowConfirmationModal(false);
+                    }
+                })();
+            },
+        });
+        setShowConfirmationModal(true);
     };
     
     const handleScheduleTemplateClick = async (template) => {
@@ -143,7 +181,6 @@ const HomeTab = ({
             });
             if (!res.ok) throw new Error('Failed to save schedule from template');
             onDataUpdate(); // Refresh data
-            alert(`'${template.title}' 일정이 추가되었습니다.`); // Provide feedback to the user
         } catch (error) {
             console.error('Error saving schedule from template:', error);
             alert(`템플릿 일정 저장에 실패했습니다: ${error.message}`);
@@ -297,13 +334,14 @@ const HomeTab = ({
                         <div className="home-card-body">
                             {todos.length > 0 ? (
                                 todos.map(todo => (
-                                    <div key={todo.id} className="todo-item" onClick={() => handleToggleTodo(todo.id, todo.completed)}>
-                                         <div className="item-checkbox-container">
+                                    <div key={todo.id} className="todo-item" >
+                                         <div className="item-checkbox-container" onClick={() => handleToggleTodo(todo.id, todo.completed)}>
                                             <div className={`item-checkbox square ${todo.completed ? 'completed' : ''}`}>
                                                 {todo.completed && <span className="checkmark">✔</span>}
                                             </div>
                                         </div>
                                         <span className={`item-title ${todo.completed ? 'completed' : ''}`}>{todo.title}</span>
+                                        <button className="delete-todo-btn" onClick={(e) => { e.stopPropagation(); handleDeleteTodo(todo.id); }}>x</button>
                                     </div>
                                 ))
                             ) : (
@@ -379,6 +417,12 @@ const HomeTab = ({
                 )}
                 <div className="modal-actions"><button onClick={handleSaveSchedule}>저장</button></div>
             </Modal>
+            <ConfirmationModal
+                show={showConfirmationModal}
+                onClose={() => setShowConfirmationModal(false)}
+                onConfirm={confirmationModalProps.onConfirm}
+                message={confirmationModalProps.message}
+            />
         </div>
     );
 };

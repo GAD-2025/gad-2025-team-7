@@ -248,12 +248,19 @@
     color: #C0C0C0;
     font-size: 16px;
     cursor: pointer;
-    opacity: 0;
+    opacity: 1;
     transition: opacity 0.2s;
 }
 
-.schedule-item:hover .delete-schedule-btn {
+.delete-todo-btn {
+    background: none;
+    border: none;
+    color: #C0C0C0;
+    font-size: 16px;
+    cursor: pointer;
     opacity: 1;
+    transition: opacity 0.2s;
+    margin-left: auto;
 }
 
 
