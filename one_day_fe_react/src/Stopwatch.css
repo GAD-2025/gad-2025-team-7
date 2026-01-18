@@ -57,8 +57,7 @@ h2, h3 {
 }
 
 .category-chip {
-    background-color: rgba(255, 198, 157, 0.5);
-    border: 1px solid #FFC69D;
+    /* Colors are now dynamic via inline styles */
     border-radius: 22px;
     padding: 3px 10px; /* Reduced padding */
     cursor: pointer;
@@ -73,8 +72,7 @@ h2, h3 {
 }
 
 .task-category-chip {
-    background-color: rgba(255, 198, 157, 0.5); /* Same as category-chip */
-    border: 1px solid #FFC69D; /* Same as category-chip */
+    /* Colors are now dynamic via inline styles */
     border-radius: 22px; /* Same as category-chip */
     padding: 2px 8px; /* Slightly reduced padding for a smaller capsule */
     font-size: 11px; /* Slightly reduced font size for a smaller capsule */
@@ -101,6 +99,27 @@ h2, h3 {
     flex-grow: 0; /* Prevent it from taking all available space */
     padding: 3px 8px; /* Reduced padding */
     background-color: transparent;
+}
+
+.color-picker-palette {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.color-swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.2s;
+}
+
+.color-swatch.selected {
+    border-color: #383838; /* Highlight selected color */
+    transform: scale(1.1);
 }
 
 .add-category-wrapper button {

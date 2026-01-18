@@ -6,25 +6,40 @@ const Stopwatch = ({ userId, selectedDate }) => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [categories, setCategories] = useState([]);
     const [newCategory, setNewCategory] = useState('');
+    const [selectedNewCategoryColor, setSelectedNewCategoryColor] = useState('#FFC0CB'); // Default color
     const intervalRef = useRef(null);
+
+    // Predefined colors for new categories
+    const predefinedColors = [
+        '#FFC0CB', '#FFD700', '#ADD8E6', '#90EE90', '#FFB6C1', '#FFDAB9', '#E6E6FA', '#FFFACD',
+    ];
 
     useEffect(() => {
         if (!userId || !selectedDate) return;
 
         const fetchData = async () => {
-            const baseCategories = ['공부', '운동', '취미', '알바'];
+            const baseColors = ['#FFC0CB', '#FFD700', '#ADD8E6', '#90EE90']; // Corresponding colors for base categories
+            const baseCategories = ['공부', '운동', '취미', '알바'].map((name, index) => ({
+                name,
+                color: baseColors[index] || '#FFC0CB' // Assign a default if no specific color
+            }));
             try {
                 const res = await fetch(`${process.env.REACT_APP_API_URL}/api/stopwatch/${userId}/${selectedDate}`);
                 if (res.ok) {
                     const data = await res.json();
                     let fetchedCategories = [];
                     if (data && data.categories_data && Array.isArray(data.categories_data)) {
-                        // 1. Filter out "???" categories
-                        fetchedCategories = data.categories_data.filter(cat => cat !== '???');
+                        // Ensure fetched categories have a color, default if missing
+                        fetchedCategories = data.categories_data
+                            .filter(cat => cat.name !== '???') // Filter out "???" categories
+                            .map(cat => ({ name: cat.name, color: cat.color || '#FFC0CB' }));
                     }
 
-                    // 2. Ensure base categories are present and remove duplicates
-                    const combinedCategories = [...new Set([...baseCategories, ...fetchedCategories])];
+                    // Combine base and fetched, ensuring unique names
+                    const combinedCategoriesMap = new Map();
+                    baseCategories.forEach(cat => combinedCategoriesMap.set(cat.name, cat));
+                    fetchedCategories.forEach(cat => combinedCategoriesMap.set(cat.name, cat));
+                    const combinedCategories = Array.from(combinedCategoriesMap.values());
                     
                     setTasks(data?.tasks_data || []);
                     setCategories(combinedCategories);
@@ -54,6 +69,9 @@ const Stopwatch = ({ userId, selectedDate }) => {
                     userId,
                     date: selectedDate,
                     tasksData: currentTasks,
+                    // Convert category objects back to a simpler format for storage if needed,
+                    // or ensure backend can handle objects directly.
+                    // For now, assume backend can handle objects {name, color}
                     categoriesData: currentCategories,
                 }),
             });
@@ -87,12 +105,13 @@ const Stopwatch = ({ userId, selectedDate }) => {
         return `${hours}:${minutes}:${seconds}`;
     };
 
-    const selectCategory = (categoryName) => {
-        setSelectedCategory(categoryName);
-        if (!tasks.some(task => task.category === categoryName && !task.isComplete)) {
+    const selectCategory = (categoryObject) => { // Accept category object
+        setSelectedCategory(categoryObject.name); // Set selected category name
+        if (!tasks.some(task => task.category === categoryObject.name && !task.isComplete)) {
             const newTask = {
                 id: Date.now(),
-                category: categoryName,
+                category: categoryObject.name,
+                color: categoryObject.color, // Include color in the new task
                 elapsedTime: 0,
                 isPaused: true,
                 isComplete: false,
@@ -136,8 +155,9 @@ const Stopwatch = ({ userId, selectedDate }) => {
     };
 
     const addNewCategory = () => {
-        if (newCategory && !categories.includes(newCategory)) {
-            const updatedCategories = [...categories, newCategory];
+        if (newCategory && !categories.some(cat => cat.name === newCategory)) {
+            const newCatObject = { name: newCategory, color: selectedNewCategoryColor };
+            const updatedCategories = [...categories, newCatObject];
             setCategories(updatedCategories);
             setNewCategory('');
             saveStopwatchData(tasks, updatedCategories);
@@ -154,11 +174,15 @@ const Stopwatch = ({ userId, selectedDate }) => {
                     <div className="category-list">
                         {categories.map(cat => (
                             <div 
-                                key={cat} 
-                                className={`category-chip ${selectedCategory === cat ? 'selected' : ''}`}
-                                onClick={() => selectCategory(cat)}
+                                key={cat.name} 
+                                className={`category-chip ${selectedCategory === cat.name ? 'selected' : ''}`}
+                                style={{
+                                    backgroundColor: `rgba(${parseInt(cat.color.slice(1,3), 16)}, ${parseInt(cat.color.slice(3,5), 16)}, ${parseInt(cat.color.slice(5,7), 16)}, 0.5)`,
+                                    border: `1px solid ${cat.color}`
+                                }}
+                                onClick={() => selectCategory(cat)} // Pass the full object
                             >
-                                {cat}
+                                {cat.name}
                             </div>
                         ))}
                     </div>
@@ -170,6 +194,16 @@ const Stopwatch = ({ userId, selectedDate }) => {
                             placeholder="새 카테고리 추가"
                         />
                         <button onClick={addNewCategory}>+</button>
+                    </div>
+                    <div className="color-picker-palette">
+                        {predefinedColors.map(color => (
+                            <div
+                                key={color}
+                                className={`color-swatch ${selectedNewCategoryColor === color ? 'selected' : ''}`}
+                                style={{ backgroundColor: color }}
+                                onClick={() => setSelectedNewCategoryColor(color)}
+                            ></div>
+                        ))}
                     </div>
                 </div>
                 
@@ -203,7 +237,16 @@ const Stopwatch = ({ userId, selectedDate }) => {
                     {tasks.filter(t => !t.isComplete).map(task => (
                         <li key={task.id}>
                             <div className="task-details">
-                                <span className="task-category-chip" onClick={() => selectCategory(task.category)}>{task.category}</span>
+                                <span 
+                                    className="task-category-chip" 
+                                    style={{
+                                        backgroundColor: `rgba(${parseInt(task.color?.slice(1,3), 16)}, ${parseInt(task.color?.slice(3,5), 16)}, ${parseInt(task.color?.slice(5,7), 16)}, 0.5)`,
+                                        border: `1px solid ${task.color}`
+                                    }}
+                                    onClick={() => selectCategory({name: task.category, color: task.color})}
+                                >
+                                    {task.category}
+                                </span>
                                 <div className="task-separator-line"></div>
                                 <span>{formatTime(task.elapsedTime)}</span>
                             </div>
@@ -225,7 +268,15 @@ const Stopwatch = ({ userId, selectedDate }) => {
                     {tasks.filter(t => t.isComplete).map(task => (
                         <li key={task.id}>
                             <div className="task-details">
-                                <span className="task-category-chip">{task.category}</span>
+                                <span 
+                                    className="task-category-chip" 
+                                    style={{
+                                        backgroundColor: `rgba(${parseInt(task.color?.slice(1,3), 16)}, ${parseInt(task.color?.slice(3,5), 16)}, ${parseInt(task.color?.slice(5,7), 16)}, 0.5)`,
+                                        border: `1px solid ${task.color}`
+                                    }}
+                                >
+                                    {task.category}
+                                </span>
                                 <div className="task-separator-line"></div>
                                 <span>{formatTime(task.elapsedTime)}</span>
                             </div>
