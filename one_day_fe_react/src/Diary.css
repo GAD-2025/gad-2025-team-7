@@ -1,12 +1,13 @@
 /* Styles for Diary.js */
 
 .diary-page-container {
-    padding: 10px; /* Reduced from 15px */
+    padding: 0 10px 10px 10px; /* Reduced top padding from 10px to 0px */
     font-family: 'Pretendard', sans-serif;
     background-color: transparent; /* Changed to transparent */
     height: 100%; /* Changed from min-height */
     display: flex; /* Added for flex layout */
     flex-direction: column; /* Arrange children vertically */
+    align-items: center; /* Center children horizontally */
 }
 
 .dashboard-section { /* Reusing existing dashboard-section style */
@@ -50,10 +51,13 @@
     display: flex;
     flex-direction: column;
     gap: 0px; /* Further reduced gap */
+    align-items: center; /* Center title, toolbar, and canvas */
 }
 
 #diary-title {
-    width: 100%;
+    width: 418.84px; /* Strictly fixed width */
+    min-width: 418.84px;
+    max-width: 418.84px;
     padding: 10px 15px;
     box-sizing: border-box;
     border: 1px solid #E9ECEF; /* Soft border */
@@ -88,6 +92,9 @@
     box-sizing: border-box; /* Ensure padding is included in the total width */
     overflow-x: auto; /* Enable horizontal scrolling */
     white-space: nowrap; /* Prevent items from wrapping */
+    width: 418.84px; /* Strictly fixed width */
+    min-width: 418.84px;
+    max-width: 418.84px;
 }
 
 .drawing-tools {
@@ -258,15 +265,16 @@
 
 .canvas-wrapper {
     position: relative;
-    width: 100%;
-    max-width: 900px; /* Increased from 800px */
-    margin: 0 auto; /* Center the canvas */
+    width: 418.84px; /* Strictly fixed width */
+    min-width: 418.84px;
+    max-width: 418.84px;
+    margin: 0; /* Align left or adjust as needed, removed auto centering */
     border: 1px solid #E9ECEF; /* Soft border */
     border-radius: 12px; /* 동글동글 */
     background-color: #ffffff; /* White canvas background */
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     overflow: hidden; /* Ensure content stays within bounds */
-    flex-grow: 1; /* Allow canvas-wrapper to grow */
+    /* flex-grow: 1; Removed to keep width constant */
     overflow-y: auto; /* Enable vertical scrolling for the wrapper */
 }
 
