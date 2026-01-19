@@ -394,7 +394,7 @@
     display: flex;
     align-items: baseline; /* Align text baselines */
     gap: 5px; /* Space between title and date */
-    margin-bottom: 20px; /* Space below the header */
+    margin-bottom: 10px; /* Space below the header */
     position: relative; /* To position the close button absolutely */
 }
 
@@ -410,7 +410,7 @@
 .modal-content h3::after {
     content: '';
     display: block;
-    width: 100px;
+    width: 70px;
     height: 1px;
     background-color: #EBEEF2;
     margin: 5px auto 0;

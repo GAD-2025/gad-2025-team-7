@@ -86,7 +86,7 @@
 .modal-content h3 {
     font-size: 14px;
     color: #4a4a4a;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
     text-align: center;
     font-weight: 700;
     position: relative;
@@ -95,10 +95,10 @@
 .modal-content h3::after {
     content: '';
     display: block;
-    width: 50px;
-    height: 3px;
-    background-color: #ff9aa2;
-    margin: 10px auto 0;
+    width: 70px;
+    height: 1px;
+    background-color: #EBEEF2;
+    margin: 5px auto 0;
     border-radius: 2px;
 }
 

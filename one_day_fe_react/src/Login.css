@@ -261,45 +261,45 @@ button[type="submit"]:hover,
     }
 
     .info-panel {
-        flex-basis: 40%; /* Give more space to the form */
+        flex-basis: 50%; /* Equal distribution */
         padding: 30px;
     }
 
     .info-panel h2 {
-        font-size: 38px;
+        font-size: 36px; /* Slightly reduced */
     }
 
     .info-panel p {
-        font-size: 18px;
+        font-size: 16px; /* Slightly reduced */
     }
 
     .form-wrapper {
-        flex-basis: 60%;
+        flex-basis: 50%; /* Equal distribution */
     }
 
     .form-container {
-        width: 500px; /* Increase form width */
-        padding: 50px; /* Increase padding */
+        width: 380px; /* Reduced form width */
+        padding: 40px; /* Reduced padding */
     }
 
     .form-container h1 {
-        font-size: 40px;
+        font-size: 36px; /* Reduced */
     }
 
     input[type="email"],
     input[type="password"],
     #nickname-input {
-        padding: 18px;
-        font-size: 18px;
+        padding: 16px; /* Reduced padding */
+        font-size: 16px; /* Reduced font size */
     }
 
     button[type="submit"],
     #save-profile {
-        padding: 18px;
-        font-size: 20px;
+        padding: 16px; /* Reduced padding */
+        font-size: 18px; /* Reduced font size */
     }
 
     .social-login p, .toggle-form {
-        font-size: 16px;
+        font-size: 14px; /* Reduced font size */
     }
 }
