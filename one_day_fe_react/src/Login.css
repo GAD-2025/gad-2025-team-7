@@ -253,3 +253,53 @@ button[type="submit"]:hover,
         padding: 30px 20px;
     }
 }
+
+/* Media Query for iPad Pro 11" and similar tablets */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .main-wrapper {
+        flex-direction: row; /* Ensure side-by-side layout */
+    }
+
+    .info-panel {
+        flex-basis: 40%; /* Give more space to the form */
+        padding: 30px;
+    }
+
+    .info-panel h2 {
+        font-size: 38px;
+    }
+
+    .info-panel p {
+        font-size: 18px;
+    }
+
+    .form-wrapper {
+        flex-basis: 60%;
+    }
+
+    .form-container {
+        width: 500px; /* Increase form width */
+        padding: 50px; /* Increase padding */
+    }
+
+    .form-container h1 {
+        font-size: 40px;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    #nickname-input {
+        padding: 18px;
+        font-size: 18px;
+    }
+
+    button[type="submit"],
+    #save-profile {
+        padding: 18px;
+        font-size: 20px;
+    }
+
+    .social-login p, .toggle-form {
+        font-size: 16px;
+    }
+}
