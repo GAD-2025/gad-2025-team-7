@@ -135,7 +135,7 @@
 .modal-actions button {
     background-color: #ffffff;
     color: #6E6E6E;
-    border: none;
+    border: 0.7px solid #BFBFBF;
     padding: 6px 12px;
     border-radius: 10px;
     cursor: pointer;
