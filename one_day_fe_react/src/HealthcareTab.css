@@ -68,13 +68,14 @@
 
 .modal-content {
     background-color: #ffffff;
-    padding: 30px;
-    border-radius: 25px;
+    padding: 20px;
+    border-radius: 20px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-    width: 90%;
-    max-width: 500px;
+    width: 342px;
+    height: 178px;
     opacity: 0; /* Start with opacity 0 */
     animation: fadeIn 0.3s ease-out forwards; /* Apply animation and keep final state */
+    border: 1px solid #E1E7EF;
 }
 
 @keyframes fadeIn {
