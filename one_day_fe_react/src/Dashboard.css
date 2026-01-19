@@ -218,13 +218,14 @@ div.dashboard-content-wrapper[class*="content-for-"] {
 .modal-content h3 {
     margin-top: 0;
     margin-bottom: 20px;
+    font-size: 14px;
 }
 .modal-content input[type="text"] {
     width: 100%;
-    padding: 10px;
+    padding: 20px;
     box-sizing: border-box;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 20px;
     margin-bottom: 15px;
 }
 .modal-content p {
