@@ -139,7 +139,7 @@ div.dashboard-content-wrapper[class*="content-for-"] {
     width: 12px;
     height: 12px;
 }
-.template-bar { margin-top: 10px; font-size: 13px; color: var(--light-text-color); display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
+.template-bar { margin-top: 0px; font-size: 13px; color: #CEEDFF; display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
 .template-btn {
     border-radius: 15px;
     padding: 5px 10px;
@@ -213,7 +213,7 @@ div.dashboard-content-wrapper[class*="content-for-"] {
     padding: 20px;
     border-radius: 20px;
     width: 342px;
-    height: 178px;
+    height: auto;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     border: 1px solid #E1E7EF;
 }
@@ -243,12 +243,17 @@ div.dashboard-content-wrapper[class*="content-for-"] {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
+    margin-top: -20px;
 }
 .modal-actions button {
-    padding: 8px 15px;
-    border-radius: 5px;
-    border: 1px solid transparent;
+    background-color: #ffffff;
+    color: #6E6E6E;
+    border: 0.7px solid #BFBFBF;
+    padding: 6px 12px;
+    border-radius: 10px;
     cursor: pointer;
+    font-size: 12px;
+    font-weight: 400;
 }
 #save-template-btn, #save-cycle-record-btn {
     background-color: var(--primary-color);
