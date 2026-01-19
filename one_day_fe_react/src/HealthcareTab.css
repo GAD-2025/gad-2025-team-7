@@ -133,14 +133,14 @@
 .cycle-input-form button,
 .record-actions button,
 .modal-actions button {
-    background-color: #baffc9; /* Pastel green */
-    color: #383838;
+    background-color: #ffffff;
+    color: #6E6E6E;
     border: none;
-    padding: 10px 15px;
+    padding: 6px 12px;
     border-radius: 10px;
     cursor: pointer;
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 400;
     transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
 }
 
