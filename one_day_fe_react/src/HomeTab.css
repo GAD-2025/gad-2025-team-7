@@ -463,6 +463,7 @@
     font-size: 12px;
     cursor: pointer;
     transition: background-color 0.2s;
+    border: 0.7px solid #BFBFBF; /* Added border */
     /* margin-right: 8px; */
 }
 
