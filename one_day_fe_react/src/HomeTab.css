@@ -389,10 +389,17 @@
 
 
 
-.reminder-card.urgency-medium .reminder-dday-badge,
-.reminder-card.urgency-low .reminder-dday-badge {
-    background-color: #D2D2D2;
-    color: #6E6E6E;
+.reminder-card.urgency-high {
+    background-color: #FF7581; /* 카드 배경색을 키 컬러로 변경 */
+}
+
+.reminder-card.urgency-high .reminder-dday-badge {
+    background-color: white; /* 뱃지 배경색을 흰색으로 변경 */
+    color: #FF7581; /* 뱃지 텍스트 색상을 키 컬러로 변경 */
+}
+
+.reminder-card.urgency-high .reminder-title {
+    color: white; /* 리마인더 제목 텍스트를 흰색으로 변경 */
 }
 
 .reminder-card.urgency-medium .reminder-title,
