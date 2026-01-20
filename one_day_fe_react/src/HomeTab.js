@@ -57,6 +57,31 @@ const HomeTab = ({
     const [newScheduleSelectedDays, setNewScheduleSelectedDays] = useState([]);
     const [showTodoDayPicker, setShowTodoDayPicker] = useState(false);
     const [showScheduleDayPicker, setShowScheduleDayPicker] = useState(false);
+    const [newTodoColor, setNewTodoColor] = useState('#FFE79D'); // Default color for todo
+    const [showTodoColorPicker, setShowTodoColorPicker] = useState(false); // For todo custom color picker
+    const todoColorPickerBtnRef = useRef(null); // Ref for the todo custom color button
+    const todoColorPickerPaletteRef = useRef(null); // Ref for the todo color picker palette
+
+    // Effect to close todo color picker on outside click
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                showTodoColorPicker &&
+                todoColorPickerPaletteRef.current &&
+                !todoColorPickerPaletteRef.current.contains(event.target) &&
+                todoColorPickerBtnRef.current &&
+                !todoColorPickerBtnRef.current.contains(event.target)
+            ) {
+                setShowTodoColorPicker(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showTodoColorPicker]);
+
     const [upcomingEvents, setUpcomingEvents] = useState([]);
     const [isLoadingEvents, setIsLoadingEvents] = useState(true);
     const [showColorPicker, setShowColorPicker] = useState(false); // For custom color picker
@@ -242,6 +267,14 @@ const HomeTab = ({
         setShowScheduleModal(false);
     };
 
+    const resetTodoForm = () => {
+        setNewTodoTitle('');
+        setNewTodoSelectedDays([]);
+        setShowTodoDayPicker(false);
+        setNewTodoColor('#FFE79D'); // Reset todo color
+        setShowTodoModal(false);
+    };
+
     const handleCreateScheduleTemplate = async () => {
         if (!newScheduleTemplateTitle) return;
         const body = { userId, title: newScheduleTemplateTitle, type: 'schedule', color: newScheduleTemplateColor }; // Add color
@@ -281,7 +314,7 @@ const HomeTab = ({
 
     const handleSaveTodo = async () => {
         if (!newTodoTitle) return;
-        const body = { userId, title: newTodoTitle, date: selectedDate, selectedDays: newTodoSelectedDays };
+        const body = { userId, title: newTodoTitle, date: selectedDate, selectedDays: newTodoSelectedDays, color: newTodoColor }; // Add color
         try {
             const res = await fetch(`${process.env.REACT_APP_API_URL}/api/todos`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
             if (!res.ok) throw new Error('Failed to save todo');
@@ -290,6 +323,7 @@ const HomeTab = ({
             setNewTodoTitle('');
             setNewTodoSelectedDays([]);
             setShowTodoDayPicker(false);
+            setNewTodoColor('#FFE79D'); // Reset color
         } catch (error) {
             console.error('Error saving todo:', error);
             alert(`투두리스트 저장에 실패했습니다: ${error.message}`);
@@ -436,14 +470,63 @@ const HomeTab = ({
                 </div>
             </div> {/* End of combined-content-box */}
 
-            <Modal show={showTodoModal} onClose={() => setShowTodoModal(false)}>
-                <h3>새 투두리스트 추가</h3>
-                <input type="text" placeholder="새로운 할 일" value={newTodoTitle} onChange={(e) => setNewTodoTitle(e.target.value)} />
-                <div><label><input type="checkbox" checked={showTodoDayPicker} onChange={handleShowTodoDayPickerChange} /> 요일</label></div>
+            <Modal show={showTodoModal} onClose={resetTodoForm}>
+                <div className="schedule-modal-header">
+                    <h3 className="schedule-modal-title">새 투두리스트 추가</h3>
+                    <span className="schedule-modal-date">{new Date(selectedDate).getMonth() + 1}월 {new Date(selectedDate).getDate()}일</span>
+                    <button className="modal-close-btn" onClick={resetTodoForm}>x</button>
+                </div>
+                <input type="text" className="schedule-title-input" placeholder="새로운 할 일" value={newTodoTitle} onChange={(e) => setNewTodoTitle(e.target.value)} />
+                <div className="chip-container">
+                    <div><label className="chip-checkbox-label"><input type="checkbox" checked={showTodoDayPicker} onChange={handleShowTodoDayPickerChange} /><span> 요일</span></label></div>
+                </div>
                 {showTodoDayPicker && (
-                    <div className="days-of-week">{['일', '월', '화', '수', '목', '금', '토'].map((day, index) => (<label key={day}><input type="checkbox" value={index} onChange={handleDayOfWeekChange} checked={newTodoSelectedDays.includes(index)} />{day}</label>))}</div>
+                    <div className="schedule-option-box">
+                        <div className="days-of-week-container">{['일', '월', '화', '수', '목', '금', '토'].map((day, index) => (<label key={day}><input type="checkbox" value={index} onChange={handleDayOfWeekChange} checked={newTodoSelectedDays.includes(index)} />{day}</label>))}</div>
+                    </div>
                 )}
-                <div className="modal-actions"><button onClick={handleSaveTodo}>저장</button><button onClick={() => setShowTodoModal(false)}>취소</button></div>
+                <div className="template-color-picker">
+                    {defaultColors.map(color => {
+                        const isSelected = newTodoColor === color;
+                        const style = isSelected
+                            ? {
+                                borderColor: color,
+                                backgroundColor: hexToRgba(color, 0.5),
+                                border: '2px solid #d3d3d3',
+                              }
+                            : { backgroundColor: color, border: '1px solid transparent' };
+
+                        return (
+                            <div
+                                key={color}
+                                className={`color-circle ${isSelected ? 'selected' : ''}`}
+                                style={style}
+                                onClick={() => setNewTodoColor(color)}
+                            ></div>
+                        );
+                    })}
+                    {/* Custom Color Circle for Todo */}
+                    <div
+                        ref={todoColorPickerBtnRef}
+                        className={`color-circle custom-color-circle ${newTodoColor && !defaultColors.includes(newTodoColor) ? 'selected' : ''}`}
+                        style={{
+                            backgroundColor: newTodoColor,
+                            borderColor: newTodoColor,
+                            borderStyle: 'solid',
+                        }}
+                        onClick={() => setShowTodoColorPicker(!showTodoColorPicker)}
+                    >
+                        {defaultColors.includes(newTodoColor) && (
+                            <div className="plus-icon"></div>
+                        )}
+                    </div>
+                </div>
+                {showTodoColorPicker && (
+                    <div ref={todoColorPickerPaletteRef} className="expanded-color-palette">
+                        <HexColorPicker color={newTodoColor} onChange={setNewTodoColor} />
+                    </div>
+                )}
+                <div className="modal-actions"><button onClick={handleSaveTodo}>저장</button><button onClick={resetTodoForm}>취소</button></div>
             </Modal>
             <Modal show={showScheduleModal} onClose={resetScheduleForm}>
                 <div className="schedule-modal-header">
@@ -473,7 +556,7 @@ const HomeTab = ({
                     <Template type="schedule" onTemplateClick={handleScheduleTemplateClick} />
                     <button className="home-add-btn" onClick={handleOpenCreateTemplateModal}>+</button>
                 </div>
-                <div className="modal-actions"><button onClick={handleSaveSchedule}>저장</button></div>
+                <div className="modal-actions"><button onClick={handleSaveSchedule}>저장</button><button onClick={resetScheduleForm}>취소</button></div>
             </Modal>
             <ConfirmationModal
                 show={showConfirmationModal}
