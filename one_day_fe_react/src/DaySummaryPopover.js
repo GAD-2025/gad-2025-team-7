@@ -8,8 +8,8 @@ const DaySummaryPopover = ({ date, anchorEl, onClose, summaryData, isLoading }) 
 
     const rect = anchorEl.getBoundingClientRect();
     const style = {
-        top: `${rect.bottom + window.scrollY - 40}px`, // -40px distance
-        left: `${rect.left + window.scrollX + (rect.width / 2) - 250}px`, // 125 is half of popover width (250px) - 125px left shift
+        top: `${rect.bottom + 20}px`, // 20px distance below the anchor
+        left: `${rect.left + (rect.width / 2) - 125}px`, // 125 is half of popover width (250px) - 125px left shift
     };
 
     // Format date to "M/D"
@@ -20,7 +20,7 @@ const DaySummaryPopover = ({ date, anchorEl, onClose, summaryData, isLoading }) 
         <div className="day-summary-popover-overlay" onClick={onClose}>
             <div className="day-summary-popover" style={style} onClick={(e) => e.stopPropagation()}>
                 <div className="day-summary-header">
-                    <h3>하루 요약 ({formattedDate})</h3>
+                    <h3>하루 요약 <span className="popover-date-text">{formattedDate}</span></h3>
                     <button onClick={onClose} className="close-btn">&times;</button>
                 </div>
                 <div className="day-summary-content">
@@ -29,12 +29,12 @@ const DaySummaryPopover = ({ date, anchorEl, onClose, summaryData, isLoading }) 
                     ) : summaryData ? (
                         <div className="summary-grid">
                             <div className="summary-item">
-                                <span className="summary-label">👟 걸음수</span>
-                                <span className="summary-value">{summaryData.steps.toLocaleString()}</span>
-                            </div>
-                            <div className="summary-item">
                                 <span className="summary-label">✅ 일정 완료</span>
                                 <span className="summary-value">{summaryData.completedEvents} / {summaryData.totalEvents}</span>
+                            </div>
+                            <div className="summary-item">
+                                <span className="summary-label">🔥 칼로리</span>
+                                <span className="summary-value">{summaryData.consumedCalories} / {summaryData.targetCalories}</span>
                             </div>
                         </div>
                     ) : (

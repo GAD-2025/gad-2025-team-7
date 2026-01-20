@@ -22,24 +22,62 @@ const Calendar = ({
     const [summaryData, setSummaryData] = useState(null);
     const calendarDaysRef = useRef(null);
     const [clickedCellEl, setClickedCellEl] = useState(null);
-    // const [isMonthView, setIsMonthView] = useState(true); // Removed
+    const [userProfile, setUserProfile] = useState(null); // New state for user profile
 
     const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-    const handleDateClick = (event, dayInfo) => {
+    const userId = localStorage.getItem('userId'); // Get userId
+
+    // Fetch user profile on component mount
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            if (!userId) return;
+            try {
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/profile/${userId}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    setUserProfile(data);
+                } else {
+                    console.error("Failed to fetch user profile:", await res.text());
+                }
+            } catch (error) {
+                console.error("Error fetching user profile:", error);
+            }
+        };
+        fetchUserProfile();
+    }, [userId]);
+
+    const handleDateClick = async (event, dayInfo) => {
         setSelectedDate(dayInfo.dayString);
         sessionStorage.setItem('popoverOpenForDate', dayInfo.dayString); // Save popover state
 
         setClickedCellEl(event.currentTarget);
         setPopoverDate(dayInfo.dayString);
-        const todaysEvents = events.filter(e => e.date === dayInfo.dayString);
+
+        // Fetch consumed calories
+        let consumedCalories = 0;
+        try {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/meals/today_calories/${userId}/${dayInfo.dayString}`);
+            if (res.ok) {
+                const data = await res.json();
+                consumedCalories = data.totalCalories;
+            } else {
+                console.error("Failed to fetch consumed calories:", await res.text());
+            }
+        } catch (error) {
+            console.error("Error fetching consumed calories:", error);
+        }
+
+        const todaysEvents = events.filter(e => e.date.split('T')[0] === dayInfo.dayString);
         const completedEventsCount = todaysEvents.filter(e => e.completed).length;
         const steps = pedometerDataByDate[dayInfo.dayString]?.steps || 0;
         setSummaryData({
             steps: steps,
             completedEvents: completedEventsCount,
             totalEvents: todaysEvents.length,
+            targetCalories: userProfile?.target_calories || 0, // Add target calories
+            consumedCalories: consumedCalories, // Add consumed calories
         });
     };
 
