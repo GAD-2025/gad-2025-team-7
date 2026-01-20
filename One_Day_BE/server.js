@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
-const db = require('./db');
+const db = require('./config/db');
 
 const app = express();
 const port = 3001;
@@ -31,6 +31,7 @@ const eventRoutes = require('./routes/events');
 const todoRoutes = require('./routes/todos');
 const stopwatchRoutes = require('./routes/stopwatch');
 const foodRoutes = require('./routes/foods');
+const templateRoutes = require('./routes/templates');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/diaries', diaryRoutes);
@@ -40,6 +41,7 @@ app.use('/api/events', eventRoutes);
 app.use('/api/todos', todoRoutes);
 app.use('/api/stopwatch', stopwatchRoutes);
 app.use('/api/foods', foodRoutes);
+app.use('/api/templates', templateRoutes);
 
 // Global error handler
 app.use((err, req, res, next) => {

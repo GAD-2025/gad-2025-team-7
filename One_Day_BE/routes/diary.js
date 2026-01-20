@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 router.use(express.json({ limit: '50mb' })); // Apply JSON parser to this router
-const db = require('../db');
+const db = require('../config/db');
 const fs = require('fs');
 const path = require('path');
 

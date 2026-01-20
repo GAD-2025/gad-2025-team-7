@@ -94,9 +94,7 @@ const Calendar = ({
             days.push({
                 day: i,
                 dayString,
-                isToday: new Date().getFullYear() === year && new Date().getMonth() === month && new Date().getDate() === i,
-                isSelected: dayString === selectedDate,
-                events: events.filter(e => e.date === dayString),
+                events: events.filter(e => e.date.split('T')[0] === dayString),
             });
         }
 
@@ -120,7 +118,7 @@ const Calendar = ({
                 dayString,
                 isToday: new Date().getFullYear() === day.getFullYear() && new Date().getMonth() === day.getMonth() && new Date().getDate() === day.getDate(),
                 isSelected: dayString === selectedDate,
-                events: events.filter(e => e.date === dayString),
+                events: events.filter(e => e.date.split('T')[0] === dayString),
             });
         }
     }

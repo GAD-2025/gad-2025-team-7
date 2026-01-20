@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 router.use(express.json());
-const db = require('../db');
+const db = require('../config/db');
 
 // @route   GET /api/todos/:userId/:date
 // @desc    Get all todos for a user on a specific date

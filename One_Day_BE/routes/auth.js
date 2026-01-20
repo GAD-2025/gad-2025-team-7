@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const db = require('../db'); // Use db.js for consistency
+const db = require('../config/db'); // Use db.js for consistency
 
 // Create a JSON parsing middleware that will be used for specific routes
 const jsonParser = express.json();
