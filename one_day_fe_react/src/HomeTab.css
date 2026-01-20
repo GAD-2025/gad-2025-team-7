@@ -310,7 +310,7 @@
 .reminder-body {
     display: flex;
     flex-direction: row;
-    gap: 15px;
+    gap: 9px; /* 카드 사이의 간격을 9px로 변경 */
     flex-wrap: nowrap;
     overflow-x: auto;
     overflow-y: hidden;
@@ -319,6 +319,14 @@
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     white-space: nowrap;
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 0px;
+    border-left-width: 0px;
+    padding-top: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
 }
 
 /* Hide scrollbar for Webkit browsers */
@@ -328,10 +336,11 @@
 
 .reminder-card {
     flex-shrink: 0;
-    min-width: 120px;
-    max-width: 150px;
+    width: 133px; /* 가로 133px로 변경 */
+    height: 85px; /* 세로 85px */
     padding: 15px;
-    border-radius: 12px;
+    border: 1px solid #E1E7EF; /* 테두리 색상 변경 */
+    border-radius: 20px; /* round를 20으로 변경 */
     text-align: center;
     display: flex;
     flex-direction: column;
