@@ -16,7 +16,7 @@
     border-radius: 15px; /* More rounded */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     z-index: 1000;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Pretendard', sans-serif; /* Pretendard 폰트 적용 */
     margin: 0; /* Explicitly remove margin */
 }
 
@@ -81,8 +81,17 @@
 
 .summary-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr; /* 2단 레이아웃 */
     gap: 12px;
+    margin-top: -5px; /* 위로 5px 올림 */
+    align-items: stretch; /* 그리드 아이템 높이 맞춤 */
+}
+
+.summary-items-left {
+    display: flex;
+    flex-direction: column; /* 위아래로 배치 */
+    gap: 12px; /* 아이템 간 간격 */
+    align-items: center; /* 내부 아이템 중앙 정렬 */
 }
 
 .summary-item {
@@ -92,6 +101,17 @@
     padding: 8px;
     background-color: #f9f9f9;
     border-radius: 6px;
+    width: 100%; /* 부모 너비에 맞춤 */
+    height: 100%; /* 부모 높이에 맞춤 */
+    max-width: calc(100% - 10px); /* 너비를 10px 줄임 */
+}
+
+.summary-item.pedometer-graph-wrapper {
+    grid-column: 2; /* 두 번째 컬럼에 배치 */
+    height: 100%; /* 부모 높이에 맞춤 */
+    width: 100%; /* 부모 너비에 맞춤 */
+    background-color: transparent; /* 배경색 제거 */
+    margin-top: -10px; /* 위로 10px 이동 */
 }
 
 .summary-label {
@@ -104,4 +124,51 @@
     font-size: 16px;
     font-weight: bold;
     color: #333;
+}
+
+/* Pedometer.css styles for calorie graph */
+.pedometer-graph-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.pedometer-graph {
+    width: 100px;
+    height: 100px;
+    transform: rotate(-90deg);
+}
+
+.pedometer-graph-background {
+    fill: none;
+    stroke: #f0f0f0;
+    stroke-width: 10;
+}
+
+.pedometer-graph-progress {
+    fill: none;
+    stroke: #ff6347;
+    stroke-width: 10;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.5s ease-in-out;
+}
+
+.pedometer-graph-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.pedometer-graph-text p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #777;
+}
+
+.calorie-value {
+    font-weight: 600;
+    color: #ff6347;
 }

@@ -28,13 +28,31 @@ const DaySummaryPopover = ({ date, anchorEl, onClose, summaryData, isLoading }) 
                         <p>로딩 중...</p>
                     ) : summaryData ? (
                         <div className="summary-grid">
-                            <div className="summary-item">
-                                <span className="summary-label">✅ 일정 완료</span>
-                                <span className="summary-value">{summaryData.completedEvents} / {summaryData.totalEvents}</span>
+                            <div className="summary-items-left"> {/* New container for stacked items */}
+                                <div className="summary-item">
+                                    <span className="summary-label">일정 완료</span>
+                                    <span className="summary-value">{summaryData.completedEvents} / {summaryData.totalEvents}</span>
+                                </div>
+                                <div className="summary-item">
+                                    <span className="summary-label">투두 완료</span>
+                                    <span className="summary-value">{summaryData.completedTodos} / {summaryData.totalTodos}</span>
+                                </div>
                             </div>
-                            <div className="summary-item">
-                                <span className="summary-label">🔥 칼로리</span>
-                                <span className="summary-value">{summaryData.consumedCalories} / {summaryData.targetCalories}</span>
+                            <div className="summary-item pedometer-graph-wrapper"> {/* Use pedometer-graph-wrapper for styling */}
+                                <svg className="pedometer-graph" viewBox="0 0 100 100">
+                                    <circle className="pedometer-graph-background" cx="50" cy="50" r="45"></circle>
+                                    <circle
+                                        className="pedometer-graph-progress"
+                                        cx="50"
+                                        cy="50"
+                                        r="45"
+                                        strokeDasharray={summaryData.calorieGraphPathLength}
+                                        strokeDashoffset={summaryData.calorieStrokeDashoffset}
+                                    ></circle>
+                                </svg>
+                                <div className="pedometer-graph-text">
+                                    <p><span className="calorie-value">{summaryData.consumedCalories}</span> / {summaryData.targetCalories} kcal</p>
+                                </div>
                             </div>
                         </div>
                     ) : (

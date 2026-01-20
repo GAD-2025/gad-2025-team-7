@@ -23,6 +23,7 @@ const Calendar = ({
     const calendarDaysRef = useRef(null);
     const [clickedCellEl, setClickedCellEl] = useState(null);
     const [userProfile, setUserProfile] = useState(null); // New state for user profile
+    const [dailyCalorieGoal, setDailyCalorieGoal] = useState(0); // New state for daily calorie goal
 
     const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -38,6 +39,8 @@ const Calendar = ({
                 if (res.ok) {
                     const data = await res.json();
                     setUserProfile(data);
+                    // Set daily calorie goal from profile or default
+                    setDailyCalorieGoal(data.target_calories || 2000); // Use target_calories from profile
                 } else {
                     console.error("Failed to fetch user profile:", await res.text());
                 }
@@ -72,12 +75,40 @@ const Calendar = ({
         const todaysEvents = events.filter(e => e.date.split('T')[0] === dayInfo.dayString);
         const completedEventsCount = todaysEvents.filter(e => e.completed).length;
         const steps = pedometerDataByDate[dayInfo.dayString]?.steps || 0;
+
+        // Calculate graph progress for calories
+        const graphPathLength = 283; // From Pedometer.js
+        let progressPercent = (consumedCalories / dailyCalorieGoal) * 100;
+        progressPercent = Math.min(100, Math.max(0, progressPercent));
+        const strokeDashoffset = graphPathLength - (graphPathLength * progressPercent) / 100;
+
+        // Fetch todos for the day
+        let completedTodosCount = 0;
+        let totalTodos = 0;
+        try {
+            const todosRes = await fetch(`${process.env.REACT_APP_API_URL}/api/todos/${userId}/${dayInfo.dayString}`);
+            if (todosRes.ok) {
+                const todosData = await todosRes.json();
+                totalTodos = todosData.length;
+                completedTodosCount = todosData.filter(todo => todo.completed).length;
+            } else {
+                console.error("Failed to fetch todos:", await todosRes.text());
+            }
+        } catch (error) {
+            console.error("Error fetching todos:", error);
+        }
+
         setSummaryData({
             steps: steps,
             completedEvents: completedEventsCount,
             totalEvents: todaysEvents.length,
-            targetCalories: userProfile?.target_calories || 0, // Add target calories
-            consumedCalories: consumedCalories, // Add consumed calories
+            completedTodos: completedTodosCount, // New
+            totalTodos: totalTodos, // New
+            targetCalories: dailyCalorieGoal, // Use the state for target calories
+            consumedCalories: consumedCalories,
+            calorieGraphProgress: progressPercent, // New
+            calorieStrokeDashoffset: strokeDashoffset, // New
+            calorieGraphPathLength: graphPathLength, // New
         });
     };
 
