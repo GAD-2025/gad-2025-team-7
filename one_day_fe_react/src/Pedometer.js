@@ -63,27 +63,21 @@ const Pedometer = ({ userId }) => {
 
     // --- Graph Calculation ---
     useEffect(() => {
-        const caloriesBurned = steps * 0.04;
-        const initialExcess = dietTotals.calories - dailyCalorieGoal;
-        const kcalToBurn = Math.max(0, initialExcess - caloriesBurned);
-        setKcalRemaining(Math.round(kcalToBurn));
-
-        const totalExcessToBurn = Math.max(0, initialExcess);
-        let progressPercent = 0;
-        if (totalExcessToBurn > 0) {
-            const burnedAmount = totalExcessToBurn - kcalToBurn;
-            progressPercent = Math.min(100, (burnedAmount / totalExcessToBurn) * 100);
-        } else {
-            progressPercent = 100;
-        }
+        // Calculate progress based on consumed calories vs daily calorie goal
+        let progressPercent = (dietTotals.calories / dailyCalorieGoal) * 100;
+        // Ensure progressPercent does not exceed 100% or go below 0%
+        progressPercent = Math.min(100, Math.max(0, progressPercent));
         setGraphProgress(progressPercent);
-    }, [steps, dietTotals, dailyCalorieGoal]);
+
+        // kcalRemaining is no longer relevant for the graph's center text as per user's request
+        // However, the component still uses it in other places, so let's keep a placeholder or re-evaluate its use.
+        // For now, I'll set it to 0 as it's not being displayed in the graph center.
+        setKcalRemaining(0); // This was previously displayed in the center, now replaced by consumed/target calories.
+    }, [dietTotals, dailyCalorieGoal]); // Dependencies changed as steps are no longer directly used for this graph progress
 
     return (
         <div className="pedometer-wrapper">
-            <div className="section-header">
-                <h3>섭취 칼로리</h3>
-            </div>
+
             <div className="healthcare-content-box">
                 <div className="pedometer-info-wrapper">
                     <div className="pedometer-column weight-column">
@@ -103,6 +97,12 @@ const Pedometer = ({ userId }) => {
                                 />
                             ) : (
                                 <div className="weight-display-container" onClick={() => setIsEditingWeight(true)}>
+                                    <span className="weight-scale-icon">
+                                        <svg width="41" height="41" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                          <rect x="4" y="6" width="16" height="14" rx="1.5" stroke="#4F5355" strokeWidth="2"/>
+                                          <rect x="8" y="10" width="8" height="4" rx="0.5" fill="#4F5355"/>
+                                        </svg>
+                                    </span>
                                     {profile.weight ? (
                                         <p>{profile.weight} kg</p>
                                     ) : (
@@ -112,11 +112,7 @@ const Pedometer = ({ userId }) => {
                             )}
                         </div>
                     </div>
-                    <div className="pedometer-column calorie-column">
-                        <p className="calorie-display-format">
-                            <span className="calorie-value">{Math.round(dietTotals.calories)}kcal</span> / <span className="calorie-goal-value">{dailyCalorieGoal}kcal</span>
-                        </p>
-                    </div>
+
                 </div>
                 <div className="pedometer-graph-wrapper">
                     <svg className="pedometer-graph" viewBox="0 0 100 100">
@@ -131,8 +127,7 @@ const Pedometer = ({ userId }) => {
                         ></circle>
                     </svg>
                     <div className="pedometer-graph-text">
-                        <h4>{kcalRemaining}</h4>
-                        <p>kcal 남음</p>
+                        <p><span className="calorie-value">{Math.round(dietTotals.calories)}</span> / {dailyCalorieGoal} kcal</p>
                     </div>
                 </div>
             </div>

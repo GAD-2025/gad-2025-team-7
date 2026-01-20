@@ -216,8 +216,8 @@
     background-color: #ffffff;
     border: none; /* No border for the button itself */
     border-radius: 50%; /* Make it a circle */
-    width: 28px;   /* Fixed width for the circle */
-    height: 28px;  /* Fixed height for the circle */
+    width: 20px;   /* Fixed width for the circle */
+    height: 20px;  /* Fixed height for the circle */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -232,8 +232,8 @@
 }
 
 .edit-btn > svg {
-    width: 14px; /* Slightly smaller than button size to fit nicely */
-    height: 14px;
+    width: 10px; /* Slightly smaller than button size to fit nicely */
+    height: 10px;
     stroke: #FF7581; /* The requested pink color */
     stroke-width: 1.4px; /* The requested line thickness */
     fill: none; /* Ensure fill is transparent for line icons */

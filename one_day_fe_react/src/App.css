@@ -121,3 +121,7 @@ body {
   box-shadow: -4px 0 12px rgba(0,0,0,0.2); /* Enhanced shadow on hover */
   transform: translateY(-50%) translateX(-3px); /* Subtle push effect */
 }
+
+.section-header {
+    margin-bottom: 0px;
+}

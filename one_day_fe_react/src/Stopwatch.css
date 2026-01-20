@@ -220,8 +220,9 @@ h2, h3 {
 .add-category-popup-content {
     background-color: white;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border-radius: 20px;
+    border: 1px solid #E1E7EF;
+    /* box-shadow removed as border is added */
     position: relative; /* For close button positioning */
     width: 300px;
     max-width: 90%;
@@ -229,8 +230,8 @@ h2, h3 {
 
 .add-category-popup-close-button {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 20px;
+    right: 16px;
     background: none;
     border: none;
     font-size: 16px;
@@ -242,7 +243,7 @@ h2, h3 {
 .add-category-popup-content h4 {
     margin-top: 0;
     margin-bottom: 15px;
-    font-size: 18px;
+    font-size: 14px;
     color: #4B4B4B;
 }
 

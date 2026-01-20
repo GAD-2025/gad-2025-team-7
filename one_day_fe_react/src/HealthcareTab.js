@@ -22,57 +22,55 @@ const HealthcareTab = ({ userId }) => {
                     <div className="dashboard-section cycle-prediction-section">
                         <CyclePrediction userId={userId} selectedCycleStartDate={selectedCycleStartDate} />
                     </div>
-                    <div className="dashboard-section">
-                        <Pedometer userId={userId} />
+                                        <div className="dashboard-section calorie-intake-section">
+                                            <h3 className="macro-title">섭취 칼로리</h3>
+                                            <Pedometer userId={userId} />
                     </div>
                 </div>
                 
                 <div className="dashboard-section">
                     <Diet />
                 </div>
-
-                <div className="dashboard-section">
-                    <div id="macros-content" className="section-content">
-                        <div className="total-calorie-display">
-                            오늘 먹은 총 칼로리: <span id="total-intake-display">{Math.round(dietTotals.calories)}</span> kcal
+                        <div id="macros-content" className="section-content">
+                            <div className="total-calorie-display">
+                                오늘 먹은 총 칼로리: <span id="total-intake-display">{Math.round(dietTotals.calories)}</span> kcal
+                            </div>
+                            <div className="macro-bars-container">
+                                <div className="macro-item">
+                                    <label>탄수화물</label>
+                                    <div className="macro-bar">
+                                        <div 
+                                            id="carb-bar" 
+                                            className="macro-bar-progress" 
+                                            style={{ width: `${Math.min(100, (dietTotals.carbs / recommendedCarbs) * 100)}%` }}
+                                        ></div>
+                                    </div>
+                                    <span id="carb-amount">{Math.round(dietTotals.carbs)}g</span>
+                                </div>
+                                <div className="macro-item">
+                                    <label>단백질</label>
+                                    <div className="macro-bar">
+                                        <div 
+                                            id="protein-bar" 
+                                            className="macro-bar-progress"
+                                            style={{ width: `${Math.min(100, (dietTotals.protein / recommendedProtein) * 100)}%` }}
+                                        ></div>
+                                    </div>
+                                    <span id="protein-amount">{Math.round(dietTotals.protein)}g</span>
+                                </div>
+                                <div className="macro-item">
+                                    <label>지방</label>
+                                    <div className="macro-bar">
+                                        <div 
+                                            id="fat-bar" 
+                                            className="macro-bar-progress"
+                                            style={{ width: `${Math.min(100, (dietTotals.fat / recommendedFat) * 100)}%` }}
+                                        ></div>
+                                    </div>
+                                    <span id="fat-amount">{Math.round(dietTotals.fat)}g</span>
+                                </div>
+                            </div>
                         </div>
-                        <div className="macro-bars-container">
-                            <div className="macro-item">
-                                <label>탄수화물</label>
-                                <div className="macro-bar">
-                                    <div 
-                                        id="carb-bar" 
-                                        className="macro-bar-progress" 
-                                        style={{ width: `${Math.min(100, (dietTotals.carbs / recommendedCarbs) * 100)}%` }}
-                                    ></div>
-                                </div>
-                                <span id="carb-amount">{Math.round(dietTotals.carbs)}g</span>
-                            </div>
-                            <div className="macro-item">
-                                <label>단백질</label>
-                                <div className="macro-bar">
-                                    <div 
-                                        id="protein-bar" 
-                                        className="macro-bar-progress"
-                                        style={{ width: `${Math.min(100, (dietTotals.protein / recommendedProtein) * 100)}%` }}
-                                    ></div>
-                                </div>
-                                <span id="protein-amount">{Math.round(dietTotals.protein)}g</span>
-                            </div>
-                            <div className="macro-item">
-                                <label>지방</label>
-                                <div className="macro-bar">
-                                    <div 
-                                        id="fat-bar" 
-                                        className="macro-bar-progress"
-                                        style={{ width: `${Math.min(100, (dietTotals.fat / recommendedFat) * 100)}%` }}
-                                    ></div>
-                                </div>
-                                <span id="fat-amount">{Math.round(dietTotals.fat)}g</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     );

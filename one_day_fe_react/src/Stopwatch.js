@@ -348,7 +348,7 @@ const Stopwatch = ({ userId, selectedDate }) => {
                                 type="text"
                                 value={newCategory}
                                 onChange={(e) => setNewCategory(e.target.value)}
-                                placeholder="새 카테고리 추가"
+                                placeholder="카테고리 이름 "
                             />
                             <button onClick={addNewCategory}>+</button>
                         </div>
