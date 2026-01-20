@@ -24,7 +24,7 @@
 }
 
 .category-section {
-    flex: 0.7; /* Changed back to 0.7 */
+    flex: 0.8;
     min-width: 0; /* Critical: prevents flex item from overflowing due to content */
     display: flex; /* Make it a flex container */
     flex-direction: column; /* Stack its children vertically */
