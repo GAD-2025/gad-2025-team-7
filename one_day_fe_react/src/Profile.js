@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom'; // Removed
 import './Profile.css';
 import ImageUploader from './ImageUploader';
 import Modal from './Modal';
 import { useProfile } from './ProfileContext'; // Import the context hook
 
-const Profile = () => {
+const Profile = ({ show, onClose }) => { // Accept show and onClose props
     const { profile, updateProfileContext } = useProfile(); // Use the context
-    const navigate = useNavigate();
+    // const navigate = useNavigate(); // Removed
 
     const [username, setUsername] = useState('');
     const [profileImage, setProfileImage] = useState(null); // This is for the new file to be uploaded
@@ -32,11 +32,10 @@ const Profile = () => {
     useEffect(() => {
         // Populate form with data from context
         if (profile) {
-            setUsername(profile.nickname || '');
-            setPreviewImage(profile.profileImage || '');
+            setUsername(profile.username || ''); // Use profile.username
+            setPreviewImage(profile.profile_image_url || ''); // Use profile.profile_image_url
+            setEmail(profile.email || ''); // Set email from profile
         }
-        // You might need a separate fetch for the user's email if it's not in the profile context
-        // For now, let's assume it's not displayed or fetched from another source.
     }, [profile]);
 
     const handleImageUpload = (file, dataUrl) => {
@@ -63,7 +62,7 @@ const Profile = () => {
                 const updatedProfileData = await res.json();
                 alert('프로필이 성공적으로 업데이트되었습니다.');
                 updateProfileContext(updatedProfileData); // Update the global context
-                navigate('/home'); // Navigate to home after save
+                onClose(); // Close modal after save
             } else {
                 const errorData = await res.json();
                 alert(`프로필 업데이트 실패: ${errorData.msg}`);
@@ -148,13 +147,13 @@ const Profile = () => {
 
 
     return (
-        <>
+        <Modal show={show} onClose={onClose}> {/* Wrap content in Modal */}
             <div className="profile-container">
                 <h1>프로필 설정</h1>
 
                 <div className="profile-form-group">
                     <label>프로필 사진:</label>
-                    <ImageUploader onImageUpload={handleImageUpload} />
+                    <ImageUploader onImageUpload={handleImageUpload} currentImageUrl={previewImage} /> {/* Pass currentImageUrl */}
                     {previewImage && <img src={previewImage} alt="Profile Preview" className="profile-picture-preview" />}
                 </div>
 
@@ -174,7 +173,7 @@ const Profile = () => {
                     <input
                         type="email"
                         id="email"
-                        value={email} // This might be empty now
+                        value={profile.email || ''} // Use profile.email directly
                         disabled
                         placeholder="이메일 정보는 수정할 수 없습니다"
                     />
@@ -182,7 +181,7 @@ const Profile = () => {
 
                 <div className="profile-actions">
                     <button onClick={handleSave} className="save-button">저장</button>
-                    <button onClick={() => navigate(-1)} className="back-button">뒤로</button>
+                    <button onClick={onClose} className="back-button">뒤로</button> {/* Close modal */}
                 </div>
 
                 <div className="profile-settings-options">
@@ -251,7 +250,7 @@ const Profile = () => {
                     <button onClick={() => setShowChangeEmailModal(false)}>취소</button>
                 </div>
             </Modal>
-        </>
+        </Modal>
     );
 };
 

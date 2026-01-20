@@ -53,6 +53,7 @@ const Calendar = ({
 
     const handleDateClick = async (event, dayInfo) => {
         setSelectedDate(dayInfo.dayString);
+        console.log('Calendar.js - selectedDate after click:', dayInfo.dayString); // Debug log
         sessionStorage.setItem('popoverOpenForDate', dayInfo.dayString); // Save popover state
 
         setClickedCellEl(event.currentTarget);

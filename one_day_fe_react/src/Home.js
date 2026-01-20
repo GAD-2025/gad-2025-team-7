@@ -29,10 +29,16 @@ const Home = () => {
 
     useEffect(() => {
         if (!userId || !selectedDate) return;
+        console.log('Home.js - userId for dashboardEvents:', userId); // Debug log
+        console.log('Home.js - selectedDate for dashboardEvents:', selectedDate); // Debug log
+        console.log('Home.js - selectedDate:', selectedDate); // Debug log
         
         fetch(`${process.env.REACT_APP_API_URL}/api/events/${userId}/${selectedDate}`, { cache: 'no-cache' })
             .then(res => res.ok ? res.json() : Promise.reject(new Error('Failed to fetch day events')))
-            .then(setDashboardEvents)
+            .then(data => {
+                setDashboardEvents(data);
+                console.log('Home.js - dashboardEvents:', data); // Debug log
+            })
             .catch(console.error);
 
         fetch(`${process.env.REACT_APP_API_URL}/api/todos/${userId}/${selectedDate}`, { cache: 'no-cache' })

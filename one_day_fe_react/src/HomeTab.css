@@ -120,7 +120,7 @@
 }
 
 .add-todo-section .home-add-btn {
-    margin-left: auto;
+    margin-left: 20px; /* 20px로 변경 */
     margin-right: 3px;
     margin-top: 28px;
 }
