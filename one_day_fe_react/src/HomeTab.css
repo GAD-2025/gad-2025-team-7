@@ -548,8 +548,7 @@
 }
 
 .color-circle.selected {
-    box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--selected-color, #000); /* Outer ring to indicate selection */
-    border-width: 2px;
+    border: 2px solid #d3d3d3; /* Light gray border for selected state */
 }
 
 .custom-color-circle {
@@ -609,6 +608,7 @@
     font-size: 13px;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
+    vertical-align: middle; /* Added for better vertical alignment */
 }
 
 .schedule-option-box input[type="time"]:focus,
@@ -624,4 +624,11 @@
 .schedule-option-box > div > label {
     color: #5a5a5a;
     font-size: 13px;
+}
+
+.end-date-container label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap; /* Prevent wrapping */
 }

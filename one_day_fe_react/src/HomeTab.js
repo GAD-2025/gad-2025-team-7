@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react'; // Import useRef
+import { HexColorPicker } from "react-colorful"; // Import HexColorPicker
 import './HomeTab.css';
 import Modal from './Modal';
 import Template from './Template';
@@ -58,6 +59,30 @@ const HomeTab = ({
     const [showScheduleDayPicker, setShowScheduleDayPicker] = useState(false);
     const [upcomingEvents, setUpcomingEvents] = useState([]);
     const [isLoadingEvents, setIsLoadingEvents] = useState(true);
+    const [showColorPicker, setShowColorPicker] = useState(false); // For custom color picker
+    const colorPickerBtnRef = useRef(null); // Ref for the custom color button
+    const colorPickerPaletteRef = useRef(null); // Ref for the color picker palette
+
+    // Effect to close color picker on outside click
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                showColorPicker &&
+                colorPickerPaletteRef.current &&
+                !colorPickerPaletteRef.current.contains(event.target) &&
+                colorPickerBtnRef.current &&
+                !colorPickerBtnRef.current.contains(event.target)
+            ) {
+                setShowColorPicker(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showColorPicker]);
+
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const [confirmationModalProps, setConfirmationModalProps] = useState({
         message: '',
@@ -440,7 +465,7 @@ const HomeTab = ({
                 {showScheduleRepeat && showScheduleDayPicker && (
                     <div className="schedule-option-box">
                         <div className="days-of-week-container">{['일', '월', '화', '수', '목', '금', '토'].map((day, index) => (<label key={day}><input type="checkbox" value={index} onChange={handleScheduleDayOfWeekChange} checked={newScheduleSelectedDays.includes(index)} />{day}</label>))}</div>
-                        <div><label>종료일: <input type="date" value={newScheduleEndDate} onChange={(e) => setNewScheduleEndDate(e.target.value)} /></label></div>
+                        <div className="end-date-container"><label>종료일: <input type="date" value={newScheduleEndDate} onChange={(e) => setNewScheduleEndDate(e.target.value)} /></label></div>
                     </div>
                 )}
                 <input type="text" className="schedule-title-input" placeholder="일정명을 입력해주세요" value={newScheduleTitle} onChange={(e) => setNewScheduleTitle(e.target.value)} />
@@ -467,15 +492,14 @@ const HomeTab = ({
                 />
                 <div className="template-color-picker">
                     {defaultColors.map(color => {
-                        const isSelected = newScheduleTemplateColor === color;
-                        const style = isSelected
-                            ? {
-                                borderColor: color,
-                                backgroundColor: hexToRgba(color, 0.5),
-                                boxShadow: `0 0 0 2px #fff, 0 0 0 4px ${color}`
-                            }
-                            : { backgroundColor: color, border: '1px solid transparent' };
-
+                                                const isSelected = newScheduleTemplateColor === color;
+                                                const style = isSelected
+                                                    ? {
+                                                        borderColor: color,
+                                                        backgroundColor: hexToRgba(color, 0.5),
+                                                        border: '2px solid #d3d3d3', // Light gray border for selected
+                                                      }
+                                                    : { backgroundColor: color, border: '1px solid transparent' };
                         return (
                             <div
                                 key={color}
@@ -487,29 +511,25 @@ const HomeTab = ({
                     })}
                     {/* Custom Color Circle */}
                     <div
-                        className="color-circle custom-color-circle"
+                        ref={colorPickerBtnRef}
+                        className={`color-circle custom-color-circle ${newScheduleTemplateColor && !defaultColors.includes(newScheduleTemplateColor) ? 'selected' : ''}`}
                         style={{
-                            backgroundColor: defaultColors.includes(newScheduleTemplateColor) ? 'white' : newScheduleTemplateColor,
-                            borderColor: defaultColors.includes(newScheduleTemplateColor) ? '#ccc' : newScheduleTemplateColor,
-                            borderStyle: defaultColors.includes(newScheduleTemplateColor) ? 'dashed' : 'solid',
-                            boxShadow: defaultColors.includes(newScheduleTemplateColor) 
-                                ? 'none' // No boxShadow for the default dashed circle
-                                : `0 0 0 2px #fff, 0 0 0 4px ${newScheduleTemplateColor}` // Shadow for custom selected color
+                            backgroundColor: newScheduleTemplateColor,
+                            borderColor: newScheduleTemplateColor,
+                            borderStyle: 'solid',
                         }}
-                        onClick={() => document.getElementById('color-picker-input').click()}
+                        onClick={() => setShowColorPicker(!showColorPicker)}
                     >
                         {defaultColors.includes(newScheduleTemplateColor) && (
                             <div className="plus-icon"></div>
                         )}
-                        <input
-                            type="color"
-                            id="color-picker-input"
-                            value={newScheduleTemplateColor}
-                            style={{ display: 'none' }}
-                            onChange={(e) => setNewScheduleTemplateColor(e.target.value)}
-                        />
                     </div>
                 </div>
+                {showColorPicker && (
+                    <div ref={colorPickerPaletteRef} className="expanded-color-palette">
+                        <HexColorPicker color={newScheduleTemplateColor} onChange={setNewScheduleTemplateColor} />
+                    </div>
+                )}
                 <div className="modal-actions">
                     <button onClick={handleCreateScheduleTemplate}>저장</button>
                     <button onClick={() => setShowCreateScheduleTemplateModal(false)}>취소</button>
