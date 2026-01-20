@@ -486,7 +486,7 @@
 .chip-checkbox-label span {
     display: flex;
     align-items: center;
-    padding: 6px 12px;
+    padding: 5px 12px;
     border-radius: 20px;
     background-color: #ECECEC;
     color: #515151;
@@ -525,4 +525,103 @@
     flex-wrap: wrap; /* Allow chips to wrap to the next line if space is limited */
     gap: 13px;
     margin-bottom: 10px; /* Space below the chip container */
+}
+
+.template-color-picker {
+    display: flex;
+    gap: 10px;
+    margin-top: 1px;
+    margin-bottom: 10px;
+}
+
+.color-circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid transparent;
+}
+
+.color-circle:hover {
+    transform: scale(1.1);
+}
+
+.color-circle.selected {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--selected-color, #000); /* Outer ring to indicate selection */
+    border-width: 2px;
+}
+
+.custom-color-circle {
+    border: 1px dashed #ccc;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.plus-icon {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #f0f0f0; /* Default background for the plus button itself */
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    line-height: 12px;
+    color: #888;
+    border: 1px solid #ccc;
+}
+.plus-icon::before {
+    content: '+';
+}
+
+/* New styles for schedule option boxes */
+.schedule-option-box {
+    background-color: white;
+    border: 1px solid #E1E7EF;
+    border-radius: 20px;
+    padding: 10px; /* Add some padding inside the box */
+    margin-bottom: 10px; /* Add margin to create gap between boxes */
+    display: flex; /* Use flex to arrange content inside */
+    flex-direction: column; /* Stack content vertically */
+    gap: 10px; /* Gap between children inside the box */
+}
+
+.days-of-week-container {
+    display: flex;
+    flex-wrap: wrap; /* Allow days to wrap */
+    gap: 8px; /* Gap between day labels */
+}
+
+.schedule-option-box input[type="time"], .schedule-option-box input[type="date"] {
+    width: 100%;
+    padding: 1px 15px;
+    box-sizing: border-box;
+    border: 0px solid #E1E7EF;
+    border-radius: 10px;
+    background-color: #ffffff;
+    color: #5a5a5a;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.schedule-option-box input[type="time"]:focus,
+.schedule-option-box input[type="date"]:focus {
+    border-color: #a2d2ff; /* Highlight on focus */
+    box-shadow: 0 0 0 3px rgba(162, 210, 255, 0.3);
+}
+
+.days-of-week-container label {
+    color: #5a5a5a;
+}
+
+.schedule-option-box > div > label {
+    color: #5a5a5a;
+    font-size: 13px;
 }

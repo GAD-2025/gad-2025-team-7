@@ -43,6 +43,8 @@ const HomeTab = ({
     const [showCreateScheduleTemplateModal, setShowCreateScheduleTemplateModal] = useState(false);
     const [newScheduleTitle, setNewScheduleTitle] = useState('');
     const [newScheduleTemplateTitle, setNewScheduleTemplateTitle] = useState('');
+    const [newScheduleTemplateColor, setNewScheduleTemplateColor] = useState('#FFE79D'); // Default color
+    const defaultColors = ['#FFE79D', '#9DDBFF', '#A5A5A5', '#9DFFA7', '#FFA544'];
     const [newScheduleTime, setNewScheduleTime] = useState('');
     const [newScheduleStartDate, setNewScheduleStartDate] = useState(selectedDate);
     const [newScheduleEndDate, setNewScheduleEndDate] = useState('');
@@ -217,7 +219,7 @@ const HomeTab = ({
 
     const handleCreateScheduleTemplate = async () => {
         if (!newScheduleTemplateTitle) return;
-        const body = { userId, title: newScheduleTemplateTitle, type: 'schedule' }; // Assuming a 'type' field for templates
+        const body = { userId, title: newScheduleTemplateTitle, type: 'schedule', color: newScheduleTemplateColor }; // Add color
         try {
             const res = await fetch(`${process.env.REACT_APP_API_URL}/api/templates`, {
                 method: 'POST',
@@ -305,6 +307,11 @@ const HomeTab = ({
             setNewScheduleSelectedDays([]); // Clear selected days
             setNewScheduleEndDate(''); // Clear end date
         }
+    };
+
+    const handleOpenCreateTemplateModal = () => {
+        setNewScheduleTemplateColor('#FFE79D'); // Reset to default color
+        setShowCreateScheduleTemplateModal(true);
     };
 
     return (
@@ -420,7 +427,9 @@ const HomeTab = ({
                     <button className="modal-close-btn" onClick={resetScheduleForm}>x</button>
                 </div>
                 {showScheduleTimePicker && (
-                    <input type="time" value={newScheduleTime} onChange={(e) => setNewScheduleTime(e.target.value)} />
+                    <div className="schedule-option-box">
+                        <input type="time" value={newScheduleTime} onChange={(e) => setNewScheduleTime(e.target.value)} />
+                    </div>
                 )}
                 <div className="chip-container">
                     <div><label className="chip-checkbox-label"><input type="checkbox" checked={showScheduleTimePicker} onChange={handleShowScheduleTimePickerChange} /><span> 시간</span></label></div>
@@ -429,15 +438,15 @@ const HomeTab = ({
                     <div><label className="chip-checkbox-label"><input type="checkbox" checked={newScheduleSetReminder} onChange={() => setNewScheduleSetReminder(!newScheduleSetReminder)} /><span> 리마인더</span></label></div>
                 </div>
                 {showScheduleRepeat && showScheduleDayPicker && (
-                    <>
-                        <div className="days-of-week">{['일', '월', '화', '수', '목', '금', '토'].map((day, index) => (<label key={day}><input type="checkbox" value={index} onChange={handleScheduleDayOfWeekChange} checked={newScheduleSelectedDays.includes(index)} />{day}</label>))}</div>
+                    <div className="schedule-option-box">
+                        <div className="days-of-week-container">{['일', '월', '화', '수', '목', '금', '토'].map((day, index) => (<label key={day}><input type="checkbox" value={index} onChange={handleScheduleDayOfWeekChange} checked={newScheduleSelectedDays.includes(index)} />{day}</label>))}</div>
                         <div><label>종료일: <input type="date" value={newScheduleEndDate} onChange={(e) => setNewScheduleEndDate(e.target.value)} /></label></div>
-                    </>
+                    </div>
                 )}
                 <input type="text" className="schedule-title-input" placeholder="일정명을 입력해주세요" value={newScheduleTitle} onChange={(e) => setNewScheduleTitle(e.target.value)} />
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginBottom: '10px' }}>
                     <Template type="schedule" onTemplateClick={handleScheduleTemplateClick} />
-                    <button className="home-add-btn" onClick={() => setShowCreateScheduleTemplateModal(true)}>+</button>
+                    <button className="home-add-btn" onClick={handleOpenCreateTemplateModal}>+</button>
                 </div>
                 <div className="modal-actions"><button onClick={handleSaveSchedule}>저장</button></div>
             </Modal>
@@ -449,13 +458,58 @@ const HomeTab = ({
             />
 
             <Modal show={showCreateScheduleTemplateModal} onClose={() => setShowCreateScheduleTemplateModal(false)}>
-                <h3>새 일정 템플릿 추가</h3>
+                
                 <input
                     type="text"
-                    placeholder="템플릿 이름"
+                    placeholder="템플릿명을 입력하세요."
                     value={newScheduleTemplateTitle}
                     onChange={(e) => setNewScheduleTemplateTitle(e.target.value)}
                 />
+                <div className="template-color-picker">
+                    {defaultColors.map(color => {
+                        const isSelected = newScheduleTemplateColor === color;
+                        const style = isSelected
+                            ? {
+                                borderColor: color,
+                                backgroundColor: hexToRgba(color, 0.5),
+                                boxShadow: `0 0 0 2px #fff, 0 0 0 4px ${color}`
+                            }
+                            : { backgroundColor: color, border: '1px solid transparent' };
+
+                        return (
+                            <div
+                                key={color}
+                                className={`color-circle ${isSelected ? 'selected' : ''}`}
+                                style={style}
+                                onClick={() => setNewScheduleTemplateColor(color)}
+                            ></div>
+                        );
+                    })}
+                    {/* Custom Color Circle */}
+                    <div
+                        className="color-circle custom-color-circle"
+                        style={{
+                            backgroundColor: defaultColors.includes(newScheduleTemplateColor) ? 'white' : newScheduleTemplateColor,
+                            borderColor: defaultColors.includes(newScheduleTemplateColor) ? '#ccc' : newScheduleTemplateColor,
+                            borderStyle: defaultColors.includes(newScheduleTemplateColor) ? 'dashed' : 'solid',
+                            boxShadow: defaultColors.includes(newScheduleTemplateColor) 
+                                ? 'none' // No boxShadow for the default dashed circle
+                                : `0 0 0 2px #fff, 0 0 0 4px ${newScheduleTemplateColor}` // Shadow for custom selected color
+                        }}
+                        onClick={() => document.getElementById('color-picker-input').click()}
+                    >
+                        {defaultColors.includes(newScheduleTemplateColor) && (
+                            <div className="plus-icon"></div>
+                        )}
+                        <input
+                            type="color"
+                            id="color-picker-input"
+                            value={newScheduleTemplateColor}
+                            style={{ display: 'none' }}
+                            onChange={(e) => setNewScheduleTemplateColor(e.target.value)}
+                        />
+                    </div>
+                </div>
                 <div className="modal-actions">
                     <button onClick={handleCreateScheduleTemplate}>저장</button>
                     <button onClick={() => setShowCreateScheduleTemplateModal(false)}>취소</button>
@@ -463,6 +517,14 @@ const HomeTab = ({
             </Modal>
         </div>
     );
+};
+
+// Helper function to convert hex to RGBA
+const hexToRgba = (hex, alpha) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
 export default HomeTab;
