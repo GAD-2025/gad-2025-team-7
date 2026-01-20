@@ -456,20 +456,15 @@
 .chip-checkbox-label {
     display: inline-flex;
     align-items: center;
-    padding: 6px 12px;
-    border-radius: 20px;
-    background-color: #ECECEC;
-    color: #515151;
-    font-size: 12px;
+    font-size: 0;
+    vertical-align: middle;
     cursor: pointer;
-    transition: background-color 0.2s;
-    border: 0.7px solid #BFBFBF; /* Added border */
+    outline: none; /* Remove outline on focus */
+    -webkit-tap-highlight-color: transparent; /* Prevent gray background on mobile taps */
     /* margin-right: 8px; */
 }
 
-.chip-checkbox-label:hover {
-    background-color: #d0d0d0;
-}
+
 
 .chip-checkbox-label input[type="checkbox"] {
     /* Hide default checkbox */
@@ -488,10 +483,41 @@
     clip-path: inset(50%);
 }
 
+.chip-checkbox-label span {
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background-color: #ECECEC;
+    color: #515151;
+    border: 0.7px solid #BFBFBF;
+    font-size: 12px;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s, padding-left 0.2s;
+    position: relative;
+}
+
+.chip-checkbox-label:hover span {
+    background-color: #dcdcdc; /* Darken the background on hover */
+}
+
 /* Style for when checkbox is checked */
 .chip-checkbox-label input[type="checkbox"]:checked + span {
-    background-color: #FFE1E3; /* Key color when checked */
-    color: white;
+    background-color: #FFE1E3;
+    color: #FF7581;
+    border-color: #FF7581; /* New border color when checked */
+    padding-left: 20px; /* Make space for the circle */
+}
+
+.chip-checkbox-label input[type="checkbox"]:checked + span::before {
+    content: '';
+    position: absolute;
+    left: 8px; /* Position the circle to the left */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px; /* Size of the circle */
+    height: 6px; /* Size of the circle */
+    border-radius: 50%;
+    background-color: #FF7581; /* Requested circle color */
 }
 
 .chip-container {
