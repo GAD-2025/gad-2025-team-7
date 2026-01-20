@@ -127,7 +127,7 @@ const Pedometer = ({ userId }) => {
                         ></circle>
                     </svg>
                     <div className="pedometer-graph-text">
-                        <p><span className="calorie-value">{Math.round(dietTotals.calories)}</span> / {dailyCalorieGoal} kcal</p>
+                        <p><span className="calorie-value">{Math.round(dietTotals.calories)}</span> / {dailyCalorieGoal} <br /> kcal</p>
                     </div>
                 </div>
             </div>

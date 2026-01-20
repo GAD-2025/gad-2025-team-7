@@ -70,7 +70,7 @@
 }
 
 .day-summary-content {
-    padding: 12px;
+    padding: 12px 12px 12px 17px; /* 왼쪽 패딩 5px 증가 */
     font-size: 13px;
     color: #555;
 }
@@ -90,7 +90,7 @@
 .summary-items-left {
     display: flex;
     flex-direction: column; /* 위아래로 배치 */
-    gap: 12px; /* 아이템 간 간격 */
+    gap: 10px; /* 아이템 간 간격 2px 줄임 */
     align-items: center; /* 내부 아이템 중앙 정렬 */
 }
 
@@ -115,13 +115,13 @@
 }
 
 .summary-label {
-    font-size: 12px;
+    font-size: 10px; /* 2px 더 줄임 */
     color: #666;
     margin-bottom: 4px;
 }
 
 .summary-value {
-    font-size: 16px;
+    font-size: 14px; /* 2px 줄임 */
     font-weight: bold;
     color: #333;
 }
@@ -155,10 +155,12 @@
 }
 
 .pedometer-graph-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: absolute; /* 부모에 대해 절대 위치 */
+    width: 100%; /* 부모 너비에 맞춤 */
+    height: 100%; /* 부모 높이에 맞춤 */
+    display: flex; /* Flexbox를 사용하여 내부 텍스트 중앙 정렬 */
+    justify-content: center;
+    align-items: center;
     text-align: center;
 }
 
@@ -166,6 +168,7 @@
     margin: 0;
     font-size: 0.8rem;
     color: #777;
+    padding-top: 10px; /* 텍스트를 좀 더 아래로 내림 */
 }
 
 .calorie-value {

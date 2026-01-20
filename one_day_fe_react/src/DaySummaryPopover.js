@@ -39,6 +39,7 @@ const DaySummaryPopover = ({ date, anchorEl, onClose, summaryData, isLoading }) 
                                 </div>
                             </div>
                             <div className="summary-item pedometer-graph-wrapper"> {/* Use pedometer-graph-wrapper for styling */}
+                                <span className="summary-label">섭취 칼로리</span> {/* 섭취 칼로리 텍스트 추가 */}
                                 <svg className="pedometer-graph" viewBox="0 0 100 100">
                                     <circle className="pedometer-graph-background" cx="50" cy="50" r="45"></circle>
                                     <circle
@@ -51,7 +52,7 @@ const DaySummaryPopover = ({ date, anchorEl, onClose, summaryData, isLoading }) 
                                     ></circle>
                                 </svg>
                                 <div className="pedometer-graph-text">
-                                    <p><span className="calorie-value">{summaryData.consumedCalories}</span> / {summaryData.targetCalories} kcal</p>
+                                    <p><span className="calorie-value">{summaryData.consumedCalories}</span> / {summaryData.targetCalories} <br /> kcal</p>
                                 </div>
                             </div>
                         </div>
