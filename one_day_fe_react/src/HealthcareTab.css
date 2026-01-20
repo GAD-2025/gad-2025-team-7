@@ -68,13 +68,14 @@
 
 .modal-content {
     background-color: #ffffff;
-    padding: 30px;
-    border-radius: 25px;
+    padding: 20px;
+    border-radius: 20px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-    width: 90%;
-    max-width: 500px;
+    width: 342px;
+    height: auto;
     opacity: 0; /* Start with opacity 0 */
     animation: fadeIn 0.3s ease-out forwards; /* Apply animation and keep final state */
+    border: 1px solid #E1E7EF;
 }
 
 @keyframes fadeIn {
@@ -83,9 +84,9 @@
 }
 
 .modal-content h3 {
-    font-size: 22px;
+    font-size: 14px;
     color: #4a4a4a;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
     text-align: center;
     font-weight: 700;
     position: relative;
@@ -94,10 +95,10 @@
 .modal-content h3::after {
     content: '';
     display: block;
-    width: 50px;
-    height: 3px;
-    background-color: #ff9aa2;
-    margin: 10px auto 0;
+    width: 70px;
+    height: 1px;
+    background-color: #EBEEF2;
+    margin: 5px auto 0;
     border-radius: 2px;
 }
 
@@ -132,14 +133,14 @@
 .cycle-input-form button,
 .record-actions button,
 .modal-actions button {
-    background-color: #baffc9; /* Pastel green */
-    color: #383838;
-    border: none;
-    padding: 10px 15px;
+    background-color: #ffffff;
+    color: #6E6E6E;
+    border: 0.7px solid #BFBFBF;
+    padding: 6px 12px;
     border-radius: 10px;
     cursor: pointer;
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 400;
     transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
 }
 
