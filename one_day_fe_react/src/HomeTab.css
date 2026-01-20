@@ -54,8 +54,7 @@
     width: 4px;
     height: 4px;
     background-color: #8A8A8A;
-    border-radius: 50%;
-    top: 50%;
+    top: 8%;
     left: calc(100% + 5px); /* 100% of the element width + half the gap */
     transform: translate(-50%, -50%); /* Center the pseudo-element */
 }
@@ -116,12 +115,14 @@
 
 .add-schedule-section .home-add-btn {
     margin-left: auto;
-    margin-right: -5px;
+    margin-right: 3px; /* 3px로 변경 */
+    margin-top: 28px; /* 2px 위로 이동 */
 }
 
 .add-todo-section .home-add-btn {
     margin-left: auto;
-    margin-right: -5px;
+    margin-right: 3px;
+    margin-top: 28px;
 }
 
 .home-add-btn:hover {
@@ -150,7 +151,7 @@
 
 .add-schedule-section .home-card-body,
 .add-todo-section .home-card-body {
-    padding-top: 5px;
+    padding-top: 10px;
 }
 
 .add-schedule-section .home-card-body,
