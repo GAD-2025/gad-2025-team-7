@@ -22,13 +22,13 @@
     position: absolute;
     top: 0;
     left: -350px;
-    width: 350px;
+    width: 150px;
     height: 100%;
     background-color: #fff;
     box-shadow: 2px 0 5px rgba(0,0,0,0.2);
-    transition: left 0.3s ease-in-out;
+    transition: left 0.3s ease-in-out, visibility 0.3s ease;
     z-index: 1300;
-    display: none; /* Added for forceful hiding */
+    visibility: hidden; /* Added for controlling visibility */
     flex-direction: column;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
@@ -36,7 +36,7 @@
 
 .slide-out-nav-container.show {
     left: 0;
-    display: flex; /* Override display: none */
+    visibility: visible; /* Override visibility: hidden */
 }
 
 .slide-out-nav-header {
@@ -66,18 +66,7 @@
     flex-grow: 1; /* Allow it to take space */
 }
 
-.close-btn {
-    background: none;
-    border: none;
-    font-size: 2rem;
-    cursor: pointer;
-    padding: 0;
-    line-height: 1;
-    position: absolute; /* Position relative to sidebar container */
-    right: 15px;
-    top: 15px;
-    z-index: 10;
-}
+
 
 .slide-out-nav-content {
     flex-grow: 1; /* Take remaining space */
@@ -110,13 +99,14 @@
 /* Base style for collection items wrapper */
 .collection-item-wrapper {
     width: 150px; /* Wider for better appearance */
-    height: 60px; /* Taller for better appearance */
+    height: 50px; /* Taller for better appearance */
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: #f8fafd; /* Light pastel background */
-    border-radius: 15px; /* More rounded */
+    border-radius: 45px; /* More rounded */
+    border: 1px solid #E1E7EF;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Softer, larger shadow */
     margin-bottom: 10px; /* More spacing between items */
     transition: all 0.2s ease-in-out; /* Smooth transitions */
@@ -136,29 +126,13 @@
     white-space: nowrap;
 }
 
-.collection-item-icon {
-    width: 28px; /* Slightly larger icon */
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 10px; /* More space between icon and text */
-}
 
-.collection-item-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    /* Apply a subtle filter to make icons more pastel-like, if they are originally strong colors */
-    /* This might need adjustment based on the actual icon colors */
-    filter: sepia(0.2) hue-rotate(180deg) saturate(1.5) brightness(0.9);
-}
 
 .collection-item-text {
     font-family: 'Pretendard', sans-serif;
-    font-size: 17px; /* Slightly larger font */
+    font-size: 15px; /* Slightly larger font */
     font-weight: 600; /* Semi-bold */
-    color: #8c9eff; /* Pastel purple/blue */
+    color: #383838; /* Pastel purple/blue */
     margin: 0;
     letter-spacing: -0.3px;
 }

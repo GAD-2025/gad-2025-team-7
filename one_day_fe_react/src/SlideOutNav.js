@@ -12,9 +12,6 @@ function Group1({ className, onClick }: { className?: string, onClick: () => voi
   return (
     <div className={`collection-item-wrapper ${className}`} onClick={onClick} data-node-id="763:2372">
         <div className="collection-item-content">
-            <div className="collection-item-icon" data-name="Group" data-node-id="661:3806">
-                <img alt="Diary Icon" src={imgGroup} />
-            </div>
             <p className="collection-item-text" data-node-id="661:3809">
                 다이어리
             </p>
@@ -28,9 +25,6 @@ function Group2({ className, onClick }: { className?: string, onClick: () => voi
   return (
     <div className={`collection-item-wrapper ${className}`} onClick={onClick} data-node-id="763:2373">
         <div className="collection-item-content">
-            <div className="collection-item-icon" data-name="Vector" data-node-id="661:3804">
-                <img alt="Stopwatch Icon" src={imgVector1} />
-            </div>
             <p className="collection-item-text" data-node-id="661:3810">
                 스톱워치
             </p>
@@ -44,9 +38,6 @@ function Group3({ className, onClick }: { className?: string, onClick: () => voi
   return (
     <div className={`collection-item-wrapper ${className}`} onClick={onClick} data-node-id="763:2375">
         <div className="collection-item-content">
-            <div className="collection-item-icon" data-name="Vector" data-node-id="661:3803">
-                <img alt="Healthcare Icon" src={imgVector} />
-            </div>
             <p className="collection-item-text" data-node-id="661:3811">
                 헬스케어
             </p>
@@ -60,9 +51,6 @@ function TemplateGroup1({ className, onClick }: { className?: string, onClick: (
     return (
         <div className={`collection-item-wrapper ${className}`} onClick={onClick}>
             <div className="collection-item-content">
-                <div className="collection-item-icon">
-                    <img alt="Template Icon 1" src={imgGroup} />
-                </div>
                 <p className="collection-item-text">
                     템플릿 1
                 </p>
@@ -76,9 +64,6 @@ function TemplateGroup2({ className, onClick }: { className?: string, onClick: (
     return (
         <div className={`collection-item-wrapper ${className}`} onClick={onClick}>
             <div className="collection-item-content">
-                <div className="collection-item-icon">
-                    <img alt="Template Icon 2" src={imgVector1} />
-                </div>
                 <p className="collection-item-text">
                     템플릿 2
                 </p>
@@ -92,9 +77,6 @@ function TemplateGroup3({ className, onClick }: { className?: string, onClick: (
     return (
         <div className={`collection-item-wrapper ${className}`} onClick={onClick}>
             <div className="collection-item-content">
-                <div className="collection-item-icon">
-                    <img alt="Template Icon 3" src={imgVector} />
-                </div>
                 <p className="collection-item-text">
                     템플릿 3
                 </p>
@@ -114,7 +96,6 @@ const SlideOutNav = ({ isOpen, onClose, navType }) => {
             <div className={`slide-out-nav-container ${isOpen ? 'show' : ''}`}>
                 <div className="slide-out-nav-header">
                     <h2 data-node-id="661:3800">{isTemplateNav ? "템플릿" : "모아보기"}</h2>
-                    <button onClick={onClose} className="close-btn">&times;</button>
                 </div>
                 <div className="slide-out-nav-content">
                     <nav className="collection-nav-grid">
