@@ -528,7 +528,7 @@ const HomeTab = ({
                 )}
                 <div className="modal-actions"><button onClick={handleSaveTodo}>저장</button><button onClick={resetTodoForm}>취소</button></div>
             </Modal>
-            <Modal show={showScheduleModal} onClose={resetScheduleForm}>
+            <Modal show={showScheduleModal} onClose={resetScheduleForm} contentClassName="add-schedule-modal-content">
                 <div className="schedule-modal-header">
                     <h3 className="schedule-modal-title">새 일정 추가</h3>
                     <span className="schedule-modal-date">{new Date(selectedDate).getMonth() + 1}월 {new Date(selectedDate).getDate()}일</span>

@@ -424,6 +424,11 @@
     position: relative;
 }
 
+.modal-content.add-schedule-modal-content {
+    width: 342px !important;
+    height: 178px !important;
+}
+
 .modal-content h3::after {
     content: '';
     display: block;
