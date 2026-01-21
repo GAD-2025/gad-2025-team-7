@@ -14,7 +14,7 @@
 .close-profile-modal-button {
     position: absolute;
     top: 10px; /* Adjusted top */
-    right: 10px; /* Adjusted right */
+    right: 30px; /* Adjusted right */
     background-color: white;
     border: none;
     border-radius: 50%;
