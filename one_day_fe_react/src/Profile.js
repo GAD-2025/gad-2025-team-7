@@ -185,8 +185,9 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
 
 
     return (
-        <Modal show={show} onClose={onClose}> {/* Wrap content in Modal */}
+        <Modal show={show} onClose={onClose} contentClassName="profile-modal-content"> {/* Wrap content in Modal */}
             <div className="profile-container">
+                <button className="close-profile-button" onClick={onClose}>x</button> {/* Added close button */}
                 <h1>My Profile</h1>
                 <div className="profile-image-and-name">
                     <span className="profile-nickname-display">{username}</span>

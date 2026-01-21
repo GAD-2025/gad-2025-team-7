@@ -3,12 +3,36 @@
     flex-direction: column;
     align-items: center;
     background-color: white; /* White box */
-    padding: 0;
-    box-sizing: border-box;
+    padding: 20px 20px 20px 20px;
+    /* box-sizing: border-box; */
     position: relative;
     border-radius: 20px; /* More rounded */
-    max-width: 500px; /* Constrain width for better look */
-    margin: 30px auto; /* Center the container with margin */
+    width: 342px; /* Constrain width for better look */
+    /* margin: 20px; */
+    transform: translate(-20px, -200px);
+}
+
+.close-profile-button {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    background-color: white;
+    border: 1px solid #E1E7EF; /* Add a subtle border */
+    border-radius: 50%;
+    width: 28px; /* Slightly larger for better tap target */
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px; /* Adjust font size for 'x' */
+    cursor: pointer;
+    color: #383838; /* Darker color for 'x' */
+    z-index: 10; /* Ensure it's above other content */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
+}
+
+.close-profile-button:hover {
+    background-color: #f0f0f0; /* Slight change on hover */
 }
 
 .close-profile-modal-button {
@@ -334,4 +358,15 @@
     background-color: #FF7581;
     color: white;
     border-color: #FF7581;
+}
+
+.modal-content.profile-modal-content {
+    background-color: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    /* Ensure it doesn't take up extra space */
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
 }
