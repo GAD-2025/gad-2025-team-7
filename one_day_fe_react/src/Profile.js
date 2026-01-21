@@ -203,10 +203,26 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
 
 
                 <div className="profile-settings-options">
+                    <div style={{
+                        height: '1px',
+                        width: '272px',
+                        margin: '10px auto',
+                        backgroundImage: 'repeating-linear-gradient(to right, #EBEEF2 0, #EBEEF2 3.5px, transparent 3.5px, transparent 9px)', // 3.5px dash + 5.5px gap = 9px total
+                        backgroundSize: '100% 1px',
+                        backgroundRepeat: 'no-repeat'
+                    }}></div>
                     <button onClick={() => setShowChangeUsernameModal(true)} className="settings-button">닉네임 변경하기</button>
                     <button onClick={() => setShowChangeEmailModal(true)} className="settings-button" style={{ backgroundColor: '#E9E9E9' }}>아이디 변경하기</button>
                     <button onClick={() => setShowChangePasswordModal(true)} className="settings-button" style={{ backgroundColor: '#E9E9E9' }}>비밀번호 변경하기</button>
-                    <button onClick={handleLogout} className="settings-button">로그아웃</button>
+                    <div style={{
+                        height: '1px',
+                        width: '272px',
+                        margin: '10px auto',
+                        backgroundImage: 'repeating-linear-gradient(to right, #EBEEF2 0, #EBEEF2 3.5px, transparent 3.5px, transparent 9px)', // 3.5px dash + 5.5px gap = 9px total
+                        backgroundSize: '100% 1px',
+                        backgroundRepeat: 'no-repeat'
+                    }}></div>
+                    <button onClick={handleLogout} className="settings-button" style={{ backgroundColor: '#FF5C5C', borderRadius: '10px', color: '#ffffff' }}>로그아웃</button>
                 </div>
             </div>
 

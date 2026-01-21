@@ -162,7 +162,8 @@
 .profile-settings-options {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Increased gap */
+    align-items: center; /* Center items horizontally */
+    gap: 14px; /* Increased gap */
     margin-top: 30px; /* Increased margin */
     width: 100%;
     max-width: 400px;
