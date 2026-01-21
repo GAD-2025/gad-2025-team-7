@@ -93,34 +93,7 @@ body {
   transform: translateY(-50%) translateX(3px); /* Subtle push effect */
 }
 
-/* New styles for template-trigger */
-.template-trigger {
-  position: absolute;
-  right: 0;
-  top: 31.5px; /* Aligned with the center of "OneDay" text */
-  transform: translateY(-50%); /* Adjust for perfect centering */
-  background: #a2ffb7; /* Pastel green */
-  color: #fff; /* White text for contrast */
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  padding: 30px 10px; /* Increased padding for 50% more height */
-  border-radius: 15px 0 0 15px; /* More rounded corners */
-  cursor: pointer;
-  z-index: 998;
-  font-family: 'Pretendard', sans-serif;
-  font-size: 15px; /* Slightly larger font */
-  font-weight: 600; /* Semi-bold */
-  line-height: 1.2;
-  border: none;
-  box-shadow: -3px 0 10px rgba(0,0,0,0.1); /* Softer, larger shadow */
-  transition: all 0.3s ease-in-out;
-}
 
-.template-trigger:hover {
-  background-color: #7dcf9f; /* Darker pastel green on hover */
-  box-shadow: -4px 0 12px rgba(0,0,0,0.2); /* Enhanced shadow on hover */
-  transform: translateY(-50%) translateX(-3px); /* Subtle push effect */
-}
 
 .section-header {
 

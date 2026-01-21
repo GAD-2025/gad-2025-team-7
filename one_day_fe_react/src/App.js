@@ -90,7 +90,6 @@ function App() {
               {/* collection-trigger and SlideOutNav moved here */}
               <div id="collection-trigger" onClick={() => setIsSlideOutNavOpen(true)} className="collection-trigger"></div>
               <SlideOutNav isOpen={isSlideOutNavOpen} onClose={() => setIsSlideOutNavOpen(false)} />
-              <div id="template-trigger" onClick={() => setIsTemplateNavOpen(true)} className="template-trigger"></div>
               <SlideOutNav isOpen={isTemplateNavOpen} onClose={() => setIsTemplateNavOpen(false)} navType="template" />
               <div className="App">
                 <Routes>
