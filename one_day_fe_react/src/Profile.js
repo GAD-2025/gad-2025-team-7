@@ -204,8 +204,9 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
 
                 <div className="profile-settings-options">
                     <button onClick={() => setShowChangeUsernameModal(true)} className="settings-button">닉네임 변경하기</button>
-                    <button onClick={() => setShowChangeEmailModal(true)} className="settings-button">아이디 변경하기</button>
-                    <button onClick={() => setShowChangePasswordModal(true)} className="settings-button">비밀번호 변경하기</button>
+                    <button onClick={() => setShowChangeEmailModal(true)} className="settings-button" style={{ backgroundColor: '#E9E9E9' }}>아이디 변경하기</button>
+                    <button onClick={() => setShowChangePasswordModal(true)} className="settings-button" style={{ backgroundColor: '#E9E9E9' }}>비밀번호 변경하기</button>
+                    <button onClick={handleLogout} className="settings-button">로그아웃</button>
                 </div>
             </div>
 

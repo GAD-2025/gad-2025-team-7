@@ -170,11 +170,13 @@
 
 .settings-button {
     background-color: white; /* White box */
-    color: #FF7581; /* Pink accent */
-    padding: 12px 15px; /* Adjusted padding */
-    border: 1px solid #FFC0CB; /* Pink border */
-    border-radius: 15px; /* More rounded */
-    font-size: 1em; /* Adjusted font size */
+    color: #8E95A2; /* Pink accent */
+    width: 272px;
+    height: 36px;
+    border: 1px solid #F0F3F6; /* Pink border */
+    border-radius: 20px; /* More rounded */
+    font-size: 14px; /* Adjusted font size */
+    font-weight: normal;
     cursor: pointer;
     transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.2s;
     text-align: center; /* Center text */
@@ -313,24 +315,4 @@
     background-color: #FF7581;
     color: white;
     border-color: #FF7581;
-}
-
-.logout-button {
-    background-color: #f44336; /* Red color for logout */
-    color: white;
-    border: none;
-    border-radius: 15px; /* More rounded */
-    padding: 12px 25px;
-    font-size: 1em;
-    cursor: pointer;
-    margin-top: 40px; /* More space from other options */
-    width: 100%;
-    max-width: 400px;
-    transition: background-color 0.3s ease, box-shadow 0.2s;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Subtle shadow */
-}
-
-.logout-button:hover {
-    background-color: #d32f2f;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
