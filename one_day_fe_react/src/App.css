@@ -76,7 +76,7 @@ body {
   writing-mode: vertical-rl;
   text-orientation: mixed;
   padding: 30px 10px; /* Increased padding for 50% more height */
-  border-radius: 0 15px 15px 0; /* More rounded corners */
+  border-radius: 0 40px 40px 0; /* More rounded corners */
   cursor: pointer;
   z-index: 998;
   font-family: 'Pretendard', sans-serif;
