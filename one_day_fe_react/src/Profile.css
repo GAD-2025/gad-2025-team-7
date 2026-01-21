@@ -13,14 +13,21 @@
 
 .close-profile-modal-button {
     position: absolute;
-    top: 5px; /* Adjusted top */
-    right: 5px; /* Adjusted right */
-    background: none;
+    top: 10px; /* Adjusted top */
+    right: 10px; /* Adjusted right */
+    background-color: white;
     border: none;
-    font-size: 1.2em; /* Slightly smaller font size */
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2em;
     cursor: pointer;
-    color: #888;
+    color: #383838;
     z-index: 10;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1); /* Add a subtle shadow */
 }
 
 .close-profile-modal-button:hover {

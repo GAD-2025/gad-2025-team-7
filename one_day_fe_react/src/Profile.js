@@ -150,6 +150,7 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
         <Modal show={show} onClose={onClose}> {/* Wrap content in Modal */}
             <div className="profile-container">
                 <h1>My Profile</h1>
+                <button className="close-profile-modal-button" onClick={onClose}>X</button>
                 <div
                     className="profile-picture-container"
                     style={{ backgroundImage: previewImage ? `url(${previewImage})` : 'none' }}
