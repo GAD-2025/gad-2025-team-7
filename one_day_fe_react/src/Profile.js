@@ -27,6 +27,12 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
     const [passwordForEmailChange, setPasswordForEmailChange] = useState('');
     const [emailError, setEmailError] = useState('');
 
+    // State for Change Username Modal
+    const [showChangeUsernameModal, setShowChangeUsernameModal] = useState(false);
+    const [newUsername, setNewUsername] = useState('');
+    const [passwordForUsernameChange, setPasswordForUsernameChange] = useState('');
+    const [usernameError, setUsernameError] = useState('');
+
     const userId = localStorage.getItem('userId');
 
     useEffect(() => {
@@ -140,6 +146,38 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
         }
     };
 
+    const handleChangeUsername = async () => {
+        setUsernameError('');
+        if (!newUsername || !passwordForUsernameChange) {
+            setUsernameError('모든 필드를 입력해주세요.');
+            return;
+        }
+
+        try {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/change-username/${userId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ newUsername, password: passwordForUsernameChange }),
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                alert(data.msg);
+                setShowChangeUsernameModal(false);
+                setNewUsername('');
+                setPasswordForUsernameChange('');
+                // Update the username in the profile context
+                updateProfileContext({ ...profile, username: newUsername });
+            } else {
+                setUsernameError(data.msg);
+            }
+        } catch (error) {
+            console.error('Failed to change username:', error);
+            setUsernameError(`닉네임 변경 중 오류가 발생했습니다: ${error.message}`);
+        }
+    };
+
     const handleLogout = () => {
         localStorage.clear();
         window.location.href = '/login';
@@ -174,11 +212,10 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
 
 
                 <div className="profile-settings-options">
+                    <button onClick={() => setShowChangeUsernameModal(true)} className="settings-button">닉네임 변경하기</button>
                     <button onClick={() => setShowChangeEmailModal(true)} className="settings-button">아이디 변경하기</button>
                     <button onClick={() => setShowChangePasswordModal(true)} className="settings-button">비밀번호 변경하기</button>
                 </div>
-
-                <button onClick={handleLogout} className="logout-button">로그아웃</button>
             </div>
 
             {/* Modals remain the same */}
@@ -237,6 +274,32 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                 <div className="modal-actions">
                     <button onClick={handleChangeEmail}>변경하기</button>
                     <button onClick={() => setShowChangeEmailModal(false)}>취소</button>
+                </div>
+            </Modal>
+
+            {/* Change Username Modal */}
+            <Modal show={showChangeUsernameModal} onClose={() => setShowChangeUsernameModal(false)}>
+                <h3>닉네임 변경</h3>
+                <div className="profile-form-group">
+                    <input
+                        type="text"
+                        placeholder="새 닉네임"
+                        value={newUsername}
+                        onChange={(e) => setNewUsername(e.target.value)}
+                    />
+                </div>
+                <div className="profile-form-group">
+                    <input
+                        type="password"
+                        placeholder="현재 비밀번호"
+                        value={passwordForUsernameChange}
+                        onChange={(e) => setPasswordForUsernameChange(e.target.value)}
+                    />
+                </div>
+                {usernameError && <p className="error-message">{usernameError}</p>}
+                <div className="modal-actions">
+                    <button onClick={handleChangeUsername}>변경하기</button>
+                    <button onClick={() => setShowChangeUsernameModal(false)}>취소</button>
                 </div>
             </Modal>
         </Modal>
