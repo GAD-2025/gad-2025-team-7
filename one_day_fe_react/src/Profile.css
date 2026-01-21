@@ -7,7 +7,6 @@
     box-sizing: border-box;
     position: relative;
     border-radius: 20px; /* More rounded */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Subtle shadow */
     max-width: 500px; /* Constrain width for better look */
     margin: 30px auto; /* Center the container with margin */
 }
