@@ -69,7 +69,7 @@ body {
   position: absolute;
   left: 0;
   top: 35px; /* Aligned with the center of "OneDay" text */
-  height: 49px;
+  height: 30px;
   transform: translateY(-50%); /* Adjust for perfect centering */
   background: #a2d2ff; /* Pastel blue */
   color: #fff; /* White text for contrast */
