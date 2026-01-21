@@ -188,13 +188,15 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
         <Modal show={show} onClose={onClose}> {/* Wrap content in Modal */}
             <div className="profile-container">
                 <h1>My Profile</h1>
-                <button className="close-profile-modal-button" onClick={onClose}>X</button>
-                <div
-                    className="profile-picture-container"
-                    style={{ backgroundImage: previewImage ? `url(${previewImage})` : 'none' }}
-                >
-                    <ImageUploader onImageUpload={handleImageUpload} currentImageUrl={previewImage} />
-                                </div>
+                <div className="profile-image-and-name">
+                    <span className="profile-nickname-display">{username}</span>
+                    <div
+                        className="profile-picture-container"
+                        style={{ border: '1px solid #E1E7EF', backgroundImage: previewImage ? `url(${previewImage})` : 'none' }}
+                    >
+                        <ImageUploader onImageUpload={handleImageUpload} currentImageUrl={previewImage} />
+                    </div>
+                </div>
                 
                 
                 
@@ -224,7 +226,7 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
             </div>
 
             {/* Modals remain the same */}
-            <Modal show={showChangePasswordModal} onClose={() => setShowChangePasswordModal(false)}>
+            <Modal show={showChangePasswordModal} onClose={() => setShowChangePasswordModal(false)} contentClassName="change-password-modal-content">
                 <h3>비밀번호 변경</h3>
                 <div className="profile-form-group">
                     <input

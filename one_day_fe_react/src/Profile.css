@@ -49,6 +49,7 @@
     background-size: cover;
     background-position: center;
     margin: 15px auto 20px auto;
+    border: 1px solid #E1E7EF;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     cursor: pointer;
     display: flex;
@@ -56,6 +57,19 @@
     align-items: center;
     overflow: hidden;
     position: relative; /* For absolute positioning of input */
+}
+
+.profile-image-and-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.profile-nickname-display {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
 }
 
 .profile-picture-container input[type="file"] {
@@ -246,6 +260,10 @@
     color: #FF7581;
     font-size: 1.5em;
     text-align: center;
+}
+
+.modal-content.change-password-modal-content {
+    height: 198px !important;
 }
 
 .dday-item {
