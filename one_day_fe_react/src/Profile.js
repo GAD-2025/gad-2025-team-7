@@ -196,16 +196,7 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                     <ImageUploader onImageUpload={handleImageUpload} currentImageUrl={previewImage} />
                 </div>
 
-                <div className="profile-form-group">
-                    <label htmlFor="username">닉네임:</label>
-                    <input
-                        type="text"
-                        id="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        placeholder="닉네임을 입력하세요"
-                    />
-                </div>
+
                 
 
 
