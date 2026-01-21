@@ -150,11 +150,11 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
         <Modal show={show} onClose={onClose}> {/* Wrap content in Modal */}
             <div className="profile-container">
                 <h1>프로필 설정</h1>
-
-                <div className="profile-form-group">
-                    <label>프로필 사진:</label>
-                    <ImageUploader onImageUpload={handleImageUpload} currentImageUrl={previewImage} /> {/* Pass currentImageUrl */}
-                    {previewImage && <img src={previewImage} alt="Profile Preview" className="profile-picture-preview" />}
+                <div
+                    className="profile-picture-container"
+                    style={{ backgroundImage: previewImage ? `url(${previewImage})` : 'none' }}
+                >
+                    <ImageUploader onImageUpload={handleImageUpload} currentImageUrl={previewImage} />
                 </div>
 
                 <div className="profile-form-group">
