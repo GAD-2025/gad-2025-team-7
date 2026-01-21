@@ -68,7 +68,8 @@ body {
 .collection-trigger {
   position: absolute;
   left: 0;
-  top: 31.5px; /* Aligned with the center of "OneDay" text */
+  top: 35px; /* Aligned with the center of "OneDay" text */
+  height: 49px;
   transform: translateY(-50%); /* Adjust for perfect centering */
   background: #a2d2ff; /* Pastel blue */
   color: #fff; /* White text for contrast */
