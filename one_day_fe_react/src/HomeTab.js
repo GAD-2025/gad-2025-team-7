@@ -477,14 +477,16 @@ const HomeTab = ({
                     <button className="modal-close-btn" onClick={resetTodoForm}>x</button>
                 </div>
                 <input type="text" className="schedule-title-input" placeholder="새로운 할 일" value={newTodoTitle} onChange={(e) => setNewTodoTitle(e.target.value)} />
-                <div className="chip-container">
-                    <div><label className="chip-checkbox-label"><input type="checkbox" checked={showTodoDayPicker} onChange={handleShowTodoDayPickerChange} /><span> 요일</span></label></div>
-                </div>
-                {showTodoDayPicker && (
-                    <div className="schedule-option-box">
-                        <div className="days-of-week-container">{['일', '월', '화', '수', '목', '금', '토'].map((day, index) => (<label key={day}><input type="checkbox" value={index} onChange={handleDayOfWeekChange} checked={newTodoSelectedDays.includes(index)} />{day}</label>))}</div>
+                <div className="todo-day-picker-wrapper">
+                    <div className="chip-container">
+                        <div><label className="chip-checkbox-label"><input type="checkbox" checked={showTodoDayPicker} onChange={handleShowTodoDayPickerChange} /><span> 요일</span></label></div>
                     </div>
-                )}
+                    {showTodoDayPicker && (
+                        <div className="schedule-option-box">
+                            <div className="days-of-week-container">{['일', '월', '화', '수', '목', '금', '토'].map((day, index) => (<label key={day}><input type="checkbox" value={index} onChange={handleDayOfWeekChange} checked={newTodoSelectedDays.includes(index)} />{day}</label>))}</div>
+                        </div>
+                    )}
+                </div>
                 <div className="template-color-picker">
                     {defaultColors.map(color => {
                         const isSelected = newTodoColor === color;
