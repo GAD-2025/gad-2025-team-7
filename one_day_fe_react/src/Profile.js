@@ -169,21 +169,9 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                     />
                 </div>
                 
-                <div className="profile-form-group">
-                    <label htmlFor="email">이메일 (아이디):</label>
-                    <input
-                        type="email"
-                        id="email"
-                        value={profile.email || ''} // Use profile.email directly
-                        disabled
-                        placeholder="이메일 정보는 수정할 수 없습니다"
-                    />
-                </div>
 
-                <div className="profile-actions">
-                    <button onClick={handleSave} className="save-button">저장</button>
-                    <button onClick={onClose} className="back-button">뒤로</button> {/* Close modal */}
-                </div>
+
+
 
                 <div className="profile-settings-options">
                     <button onClick={() => setShowChangeEmailModal(true)} className="settings-button">아이디 변경하기</button>
