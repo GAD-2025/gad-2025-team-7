@@ -28,10 +28,10 @@
 }
 
 .profile-container h1 {
-    color: gray;
+    color: #C1C4CA;
     margin-bottom: 15px; /* Reduced margin */
     font-size: 15px;
-    font-weight: normal;
+    font-weight: 300;
 }
 
 .profile-picture-container {
@@ -42,7 +42,6 @@
     background-size: cover;
     background-position: center;
     margin: 15px auto 20px auto;
-    border: 3px solid #FF7581;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     cursor: pointer;
     display: flex;
