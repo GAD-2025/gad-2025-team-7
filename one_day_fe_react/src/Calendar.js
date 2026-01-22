@@ -161,9 +161,12 @@ const Calendar = ({
         // Current month's days
         for (let i = 1; i <= daysInMonth; i++) {
             const dayString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+            const today = new Date();
             days.push({
                 day: i,
                 dayString,
+                isToday: today.getFullYear() === year && today.getMonth() === month && today.getDate() === i,
+                isSelected: dayString === selectedDate,
                 events: events.filter(e => e.date.split('T')[0] === dayString),
             });
         }
