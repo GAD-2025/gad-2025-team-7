@@ -1,11 +1,7 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useData } from './DataContext';
 import './Diet.css'; // Import the new CSS file
-
-const imgPolygon4 = "https://www.figma.com/api/mcp/asset/c6b7ce0f-1bfa-4f5d-9227-19fb806c34bd";
-const imgEllipse7 = "https://www.figma.com/api/mcp/asset/4906b425-206e-4d9e-9e41-81728c38cb87";
-const imgRectangle240653668 = "https://www.figma.com/api/mcp/asset/6414e675-9fdd-4f75-a751-39ac75aaa291";
 
 function X({ onClick }) {
     return (
@@ -14,40 +10,6 @@ function X({ onClick }) {
         </button>
     );
 }
-
-function Polygon() {
-    return (
-        <span className="meal-card-title-icon" data-node-id="771:2403">
-            <img alt="" src={imgPolygon4} />
-        </span>
-    );
-}
-
-// Reverted Component back to its structural form from Figma output,
-// without an onClick prop directly on its root div.
-function Component() {
-    return (
-        <div className="add-food-icon" data-name="Component 3" data-node-id="771:2404">
-            <div className="add-food-icon-plus-bg" data-node-id="771:2386">
-                <div className="add-food-icon-ellipse" data-node-id="771:2387">
-                    <img alt="" src={imgEllipse7} />
-                </div>
-                <p className="add-food-icon-plus-text" data-node-id="771:2388">
-                    +
-                </p>
-            </div>
-            <div className="add-food-icon-plus-bg bottom" data-node-id="771:2390">
-                <div className="add-food-icon-ellipse" data-node-id="771:2391">
-                    <img alt="" src={imgEllipse7} />
-                </div>
-                <p className="add-food-icon-plus-text" data-node-id="771:2392">
-                    +
-                </p>
-            </div>
-        </div>
-    );
-}
-
 
 const AutocompletePortal = ({ results, position, onSelect }) => {
     if (!results || results.length === 0 || !position) {
@@ -74,33 +36,6 @@ const AutocompletePortal = ({ results, position, onSelect }) => {
     );
 };
 
-const CategoryMenu = ({ cardId, onSelect, onClose }) => {
-    const categories = ['아침', '점심', '저녁', '간식'];
-    const menuRef = useRef(null);
-
-    React.useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (menuRef.current && !menuRef.current.contains(event.target)) {
-                onClose();
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [onClose]);
-
-    return (
-        <div className="category-select-menu" ref={menuRef}>
-            {categories.map(category => (
-                <button key={category} onClick={() => onSelect(cardId, category)}>
-                    {category}
-                </button>
-            ))}
-        </div>
-    );
-};
-
 const Diet = () => {
     const { 
         mealCards,
@@ -113,13 +48,32 @@ const Diet = () => {
         setSearchQuery
     } = useData();
 
-    const [openMenuCardId, setOpenMenuCardId] = useState(null);
     const [portalResults, setPortalResults] = useState([]);
     const [portalPosition, setPortalPosition] = useState(null);
     const [activeCardId, setActiveCardId] = useState(null);
     
     const activeSearchInputRef = useRef(null);
     const containerRef = useRef(null);
+
+    // Effect to scroll to the end when a new card is added
+    useEffect(() => {
+        if (containerRef.current && mealCards.length > 0) {
+            const newCardElement = containerRef.current.lastChild;
+            if (newCardElement) {
+                const containerWidth = containerRef.current.offsetWidth;
+                const cardWidth = newCardElement.offsetWidth;
+                const cardLeft = newCardElement.offsetLeft;
+
+                const scrollLeft = cardLeft - (containerWidth / 2) + (cardWidth / 2);
+
+                containerRef.current.scrollTo({
+                    left: scrollLeft,
+                    behavior: 'smooth'
+                });
+            }
+        }
+    }, [mealCards.length]);
+
 
     function debounce(func, delay) {
         let timeout;
@@ -180,9 +134,7 @@ const Diet = () => {
     
     const handleAddMealCard = () => {
         addMealCard();
-        setTimeout(() => {
-            containerRef.current?.scrollTo({ left: containerRef.current.scrollWidth, behavior: 'smooth' });
-        }, 100);
+        // The useEffect will handle scrolling
     };
 
     return (
@@ -192,7 +144,7 @@ const Diet = () => {
                 position={portalPosition} 
                 onSelect={handleAddFood}
             />
-            <div className="dashboard-section">
+            <div className="dashboard-section diet-dashboard-section">
                 <div className="section-header">
                     <h3>식단 기록</h3>
                     <div className="header-actions">
@@ -207,18 +159,20 @@ const Diet = () => {
                             className="meal-card"
                             data-node-id="661:2905" // Overall meal card div
                         >
-                             <div className="meal-card-header">
-                                 <div className="meal-card-title-container" onClick={(e) => e.stopPropagation()} data-node-id="661:2907">
-                                    <button className="meal-card-title-btn" onClick={() => setOpenMenuCardId(card.id)} data-node-id="661:2908">
-                                        {card.category} <Polygon />
-                                    </button>
-                                    {openMenuCardId === card.id && (
-                                        <CategoryMenu 
-                                            cardId={card.id}
-                                            onSelect={handleCategoryChange}
-                                            onClose={() => setOpenMenuCardId(null)}
-                                        />
-                                    )}
+                            <div className="meal-card-header">
+                                <div className="meal-category-selector">
+                                    <div className="meal-category-background"></div>
+                                    <div className="meal-category-options">
+                                        {['아침', '점심', '저녁', '간식'].map(category => (
+                                            <span
+                                                key={category}
+                                                className={`meal-category-option ${card.category === category ? 'selected' : ''}`}
+                                                onClick={() => handleCategoryChange(card.id, category)}
+                                            >
+                                                {category}
+                                            </span>
+                                        ))}
+                                    </div>
                                 </div>
                                 <X onClick={(e) => { e.stopPropagation(); deleteMealCard(card.id); }} />
                             </div>
@@ -247,9 +201,6 @@ const Diet = () => {
                                         onChange={(e) => handleSearchChange(card.id, e.target.value)}
                                         onClick={(e) => e.stopPropagation()}
                                     />
-                                    {/* The Figma design's plus icon is part of the search input area to add a food item */}
-                                    {/* Wrapping Component in a button to handle clicks for adding food. */}
-
                                 </div>
                             </div>
                             <div className="meal-card-footer">
@@ -262,5 +213,6 @@ const Diet = () => {
         </>
     );
 };
+
 
 export default Diet;

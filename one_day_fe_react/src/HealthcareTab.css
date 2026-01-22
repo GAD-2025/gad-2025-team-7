@@ -489,3 +489,8 @@
     /* flex: 1 1 calc(50% - 5px); flex-grow, flex-shrink, flex-basis */
     /* min-width: 0; Prevent content from forcing a minimum width */
 }
+
+.healthcare-row .dashboard-section.diet-section {
+    flex: none; /* Prevent diet section from growing or shrinking */
+    width: 428.0px; /* Set explicit width */
+}

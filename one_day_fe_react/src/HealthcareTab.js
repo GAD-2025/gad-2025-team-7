@@ -22,14 +22,13 @@ const HealthcareTab = ({ userId }) => {
                     <div className="dashboard-section cycle-prediction-section">
                         <CyclePrediction userId={userId} selectedCycleStartDate={selectedCycleStartDate} />
                     </div>
-                                        <div className="dashboard-section calorie-intake-section">
-                                            <h3 className="macro-title">섭취 칼로리</h3>
-                                            <Pedometer userId={userId} />
+                    <div className="dashboard-section calorie-intake-section">
+                        <h3 className="macro-title">섭취 칼로리</h3>
+                        <Pedometer userId={userId} />
                     </div>
-                </div>
-                
-                <div className="dashboard-section">
-                    <Diet />
+                    <div className="dashboard-section diet-section"> {/* Added diet-section class for specific styling */}
+                        <Diet />
+                    </div>
                 </div>
                         <div id="macros-content" className="section-content">
                             <div className="total-calorie-display">
