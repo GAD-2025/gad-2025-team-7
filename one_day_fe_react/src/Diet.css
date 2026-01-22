@@ -328,9 +328,9 @@
 .autocomplete-results {
     background-color: #ffffff;
     border: 1px solid #e0e6ed;
-    border-radius: 12px; /* More rounded */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    max-height: 200px;
+    border-radius: 15px; /* Updated border-radius as per user request */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-height: 80px; /* Updated max-height as per user request */
     overflow-y: auto;
     z-index: 1100;
 }
@@ -339,7 +339,7 @@
     padding: 8px 12px; /* More padding */
     cursor: pointer;
     font-family: 'Pretendard', sans-serif;
-    font-size: 15px;
+    font-size: 11px; /* Updated font-size as per user request */
     color: #5a5a5a;
     transition: background-color 0.2s;
 }

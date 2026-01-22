@@ -178,7 +178,7 @@ const Diet = () => {
                             </div>
                             <div className="meal-card-body" onClick={(e) => e.stopPropagation()}>
                                 <ul className="food-list">
-                                    {card.foods.map((food) => (
+                                    {(card.foods || []).map((food) => (
                                         <li key={food.id} data-node-id="661:2912">
                                             <span className="food-name">{food.name}</span>
                                             <input 
@@ -204,7 +204,7 @@ const Diet = () => {
                                 </div>
                             </div>
                             <div className="meal-card-footer">
-                                <span>총: <span className="meal-card-total-calories" data-node-id="771:2385">{Math.round(card.foods.reduce((acc, food) => acc + (food.calories || 0) * (food.qty || 1), 0))}</span> kcal</span>
+                                <span>총: <span className="meal-card-total-calories" data-node-id="771:2385">{Math.round((card.foods || []).reduce((acc, food) => acc + (food.calories || 0) * (food.qty || 1), 0))}</span> kcal</span>
                             </div>
                         </div>
                     ))}

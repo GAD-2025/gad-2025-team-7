@@ -494,3 +494,107 @@
     flex: none; /* Prevent diet section from growing or shrinking */
     width: 428.0px; /* Set explicit width */
 }
+
+/* Styles for new Macros section */
+.macros-section {
+    margin-top: 20px;
+}
+
+.macros-box {
+    margin-top: 14px;
+    border: 1px solid #E1E7EF;
+    border-radius: 20px;
+    height: 130px; /* Updated height as per user request */
+    background-color: white;
+    padding: 10px; /* Updated padding as per user request */
+    display: flex; /* Make macros-box a flex container */
+    justify-content: space-between; /* Space out summary and bars */
+    align-items: center; /* Center items vertically */
+}
+
+.macros-summary {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start; /* Align text to the left */
+}
+
+.total-calories-label {
+    color: #7E7E7E;
+    font-size: 11px;
+    margin-bottom: 0px; /* Remove default paragraph margin */
+}
+
+.total-calories-value {
+    display: flex;
+    align-items: baseline; /* Align kcal to baseline of number */
+    margin-top: 5px; /* Space below label */
+}
+
+.calorie-number {
+    color: #383838;
+    font-size: 25px;
+    font-weight: bold;
+    margin-right: 5px; /* Space before kcal */
+}
+
+.calorie-unit {
+    color: #7E7E7E;
+    font-size: 11px;
+}
+
+.macro-bars-container {
+    display: flex;
+    flex-direction: column;
+    gap: 18px; /* Gap between bars */
+    width: 285px; /* Updated width as per user request */
+}
+
+.macro-item {
+    display: flex; /* Make macro-item a flex container for label, bar, and amount */
+    align-items: center; /* Vertically center items in macro-item */
+    gap: 10px; /* Space between label, bar, and amount */
+}
+
+.macro-item label {
+    font-size: 13px; /* Updated font size as per user request */
+    color: #7D8084; /* Updated color as per user request */
+    flex-shrink: 0; /* Keep existing flex-shrink */
+    width: 55px; /* Updated width as per user request */
+}
+
+.macro-bar {
+    width: 230px; /* Bar background width */
+    height: 15.99px; /* Bar background height */
+    background-color: #F3F3F3; /* Bar background color */
+    border-radius: 10px; /* Keep existing border-radius */
+    overflow: hidden; /* Ensure progress bar is clipped */
+    flex-grow: 1; /* Allow bar to grow */
+}
+
+.macro-bar-progress {
+    height: 100%;
+    background-color: #FF7581; /* Pink progress bar color */
+    border-radius: 10px; /* Keep existing border-radius */
+    transition: width 0.5s ease-in-out;
+    box-shadow: 0px 4px 4px rgba(255, 117, 129, 0.29); /* Added box-shadow */
+}
+
+.macro-item span {
+    font-size: 11px; /* Smaller font size for amount */
+    color: #7E7E7E; /* Gray color for amount */
+    flex-shrink: 0; /* Prevent amount from shrinking */
+    width: 35px; /* Fixed width for amount for alignment */
+    text-align: right;
+}
+
+/* Override existing macro-item styles if necessary */
+.macro-bars-container .macro-item {
+    /* Reset any conflicting styles from parent .macro-bars-container if needed */
+    margin-bottom: 0; /* No bottom margin on individual items here */
+}
+
+/* Remove or adjust old .total-calorie-display if necessary */
+.total-calorie-display {
+    display: none; /* Hide old total-calorie-display */
+}

@@ -134,7 +134,7 @@ export const DataProvider = ({ children }) => {
         const currentMealCards = mealsByDate[selectedDate] || [];
         const totals = { calories: 0, carbs: 0, protein: 0, fat: 0 };
         currentMealCards.forEach(card => {
-            card.foods.forEach(food => {
+            (card.foods || []).forEach(food => {
                 totals.calories += (food.calories || 0) * (food.qty || 1);
                 totals.carbs += (food.carbs || 0) * (food.qty || 1);
                 totals.protein += (food.protein || 0) * (food.qty || 1);
