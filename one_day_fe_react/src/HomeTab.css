@@ -424,10 +424,7 @@
     position: relative;
 }
 
-.modal-content.add-schedule-modal-content {
-    width: 342px !important;
-    height: 178px !important;
-}
+
 
 
 
@@ -614,6 +611,7 @@
     display: flex; /* Use flex to arrange content inside */
     flex-direction: column; /* Stack content vertically */
     gap: 10px; /* Gap between children inside the box */
+    margin-top: 10px;
 }
 
 .days-of-week-container {

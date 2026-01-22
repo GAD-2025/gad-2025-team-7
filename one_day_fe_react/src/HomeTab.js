@@ -4,6 +4,7 @@ import './HomeTab.css';
 import Modal from './Modal';
 import Template from './Template';
 import ConfirmationModal from './ConfirmationModal';
+import MiniCalendar from './MiniCalendar'; // Import MiniCalendar
 
 const getUrgencyClass = (eventDate, selectedDate) => {
     const today = new Date(selectedDate);
@@ -52,11 +53,18 @@ const HomeTab = ({
     const [newScheduleSetReminder, setNewScheduleSetReminder] = useState(false);
     const [showScheduleTimePicker, setShowScheduleTimePicker] = useState(false); // New state for time chip
     const [showScheduleRepeat, setShowScheduleRepeat] = useState(false); // New state for repeat chip
+    const [newScheduleRepeatSelectedDays, setNewScheduleRepeatSelectedDays] = useState([]);
+    const [showScheduleRepeatDayPicker, setShowScheduleRepeatDayPicker] = useState(false);
+
+
+
+    // New states for irregular dates (new "요일" functionality)
+    const [showScheduleIrregularDatesPicker, setShowScheduleIrregularDatesPicker] = useState(false);
+    const [newScheduleIrregularSelectedDates, setNewScheduleIrregularSelectedDates] = useState([]);
+
     const [newTodoTitle, setNewTodoTitle] = useState('');
     const [newTodoSelectedDays, setNewTodoSelectedDays] = useState([]);
-    const [newScheduleSelectedDays, setNewScheduleSelectedDays] = useState([]);
     const [showTodoDayPicker, setShowTodoDayPicker] = useState(false);
-    const [showScheduleDayPicker, setShowScheduleDayPicker] = useState(false);
     const [newTodoColor, setNewTodoColor] = useState('#FFE79D'); // Default color for todo
     const [showTodoColorPicker, setShowTodoColorPicker] = useState(false); // For todo custom color picker
     const todoColorPickerBtnRef = useRef(null); // Ref for the todo custom color button
@@ -262,8 +270,10 @@ const HomeTab = ({
         setNewScheduleStartDate(selectedDate);
         setNewScheduleEndDate('');
         setNewScheduleSetReminder(false);
-        setNewScheduleSelectedDays([]);
-        setShowScheduleDayPicker(false);
+        setNewScheduleRepeatSelectedDays([]); // Renamed
+        setShowScheduleRepeatDayPicker(false); // Renamed
+        setShowScheduleIrregularDatesPicker(false); // New
+        setNewScheduleIrregularSelectedDates([]); // New
         setShowScheduleModal(false);
     };
 
@@ -296,11 +306,33 @@ const HomeTab = ({
 
     const handleSaveSchedule = async () => {
         if (!newScheduleTitle) return;
-        if (showScheduleDayPicker && !newScheduleEndDate) {
+
+        // Validation for repeating schedules
+        if (showScheduleRepeat && showScheduleRepeatDayPicker && !newScheduleEndDate) {
             alert('요일 반복 일정은 종료일을 반드시 지정해야 합니다.');
             return;
         }
-        const body = { userId, title: newScheduleTitle, time: newScheduleTime || null, setReminder: newScheduleSetReminder, startDate: newScheduleStartDate, endDate: newScheduleEndDate, selectedDays: newScheduleSelectedDays };
+
+        let selectedDaysToSend = [];
+        let selectedDatesToSend = [];
+
+        if (showScheduleRepeat && showScheduleRepeatDayPicker) {
+            selectedDaysToSend = newScheduleRepeatSelectedDays;
+        } else if (showScheduleIrregularDatesPicker) {
+            selectedDatesToSend = newScheduleIrregularSelectedDates;
+        }
+
+        const body = {
+            userId,
+            title: newScheduleTitle,
+            time: newScheduleTime || null,
+            setReminder: newScheduleSetReminder,
+            startDate: newScheduleStartDate,
+            endDate: newScheduleEndDate,
+            selectedDays: selectedDaysToSend, // For repeating schedules
+            selectedDates: selectedDatesToSend, // For irregular dates
+        };
+
         try {
             const res = await fetch(`${process.env.REACT_APP_API_URL}/api/events`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
             if (!res.ok) throw new Error('Failed to save schedule');
@@ -342,16 +374,32 @@ const HomeTab = ({
         else setNewTodoSelectedDays(newTodoSelectedDays.filter(d => d !== dayIndex));
     };
     
-    const handleShowScheduleDayPickerChange = (e) => {
+    const handleShowScheduleRepeatDayPickerChange = (e) => {
         const isChecked = e.target.checked;
-        setShowScheduleDayPicker(isChecked);
-        if (!isChecked) setNewScheduleSelectedDays([]);
+        setShowScheduleRepeatDayPicker(isChecked);
+        if (!isChecked) setNewScheduleRepeatSelectedDays([]);
     };
 
-    const handleScheduleDayOfWeekChange = (e) => {
+    const handleScheduleRepeatDayOfWeekChange = (e) => {
         const dayIndex = parseInt(e.target.value, 10);
-        if (e.target.checked) setNewScheduleSelectedDays([...newScheduleSelectedDays, dayIndex]);
-        else setNewScheduleSelectedDays(newScheduleSelectedDays.filter(d => d !== dayIndex));
+        if (e.target.checked) setNewScheduleRepeatSelectedDays([...newScheduleRepeatSelectedDays, dayIndex]);
+        else setNewScheduleRepeatSelectedDays(newScheduleRepeatSelectedDays.filter(d => d !== dayIndex));
+    };
+
+    const handleShowScheduleIrregularDatesPickerChange = (e) => {
+        const isChecked = e.target.checked;
+        setShowScheduleIrregularDatesPicker(isChecked);
+        if (!isChecked) setNewScheduleIrregularSelectedDates([]);
+    };
+
+    const handleScheduleIrregularDateChange = (dateString) => {
+        setNewScheduleIrregularSelectedDates(prevDates => {
+            if (prevDates.includes(dateString)) {
+                return prevDates.filter(d => d !== dateString);
+            } else {
+                return [...prevDates, dateString];
+            }
+        });
     };
 
     const handleShowScheduleTimePickerChange = (e) => {
@@ -360,10 +408,11 @@ const HomeTab = ({
     };
 
     const handleShowScheduleRepeatChange = (e) => {
-        setShowScheduleRepeat(e.target.checked);
-        if (!e.target.checked) {
-            setShowScheduleDayPicker(false); // Hide day picker if repeat is unchecked
-            setNewScheduleSelectedDays([]); // Clear selected days
+        const isChecked = e.target.checked;
+        setShowScheduleRepeat(isChecked);
+        setShowScheduleRepeatDayPicker(isChecked); // Automatically show/hide day picker
+        if (!isChecked) {
+            setNewScheduleRepeatSelectedDays([]); // Clear selected days
             setNewScheduleEndDate(''); // Clear end date
         }
     };
@@ -536,20 +585,28 @@ const HomeTab = ({
                     <span className="schedule-modal-date">{new Date(selectedDate).getMonth() + 1}월 {new Date(selectedDate).getDate()}일</span>
                     <button className="modal-close-btn" onClick={resetScheduleForm}>x</button>
                 </div>
+                <div className="chip-container">
+                    <div><label className="chip-checkbox-label"><input type="checkbox" checked={showScheduleTimePicker} onChange={handleShowScheduleTimePickerChange} /><span> 시간</span></label></div>
+                    <div><label className="chip-checkbox-label"><input type="checkbox" checked={showScheduleRepeat} onChange={handleShowScheduleRepeatChange} /><span> 반복</span></label></div>
+                    <div><label className="chip-checkbox-label"><input type="checkbox" checked={showScheduleIrregularDatesPicker} onChange={handleShowScheduleIrregularDatesPickerChange} /><span> 요일</span></label></div>
+                    <div><label className="chip-checkbox-label"><input type="checkbox" checked={newScheduleSetReminder} onChange={() => setNewScheduleSetReminder(!newScheduleSetReminder)} /><span> 리마인더</span></label></div>
+                </div>
                 {showScheduleTimePicker && (
                     <div className="schedule-option-box">
                         <input type="time" value={newScheduleTime} onChange={(e) => setNewScheduleTime(e.target.value)} />
                     </div>
                 )}
-                <div className="chip-container">
-                    <div><label className="chip-checkbox-label"><input type="checkbox" checked={showScheduleTimePicker} onChange={handleShowScheduleTimePickerChange} /><span> 시간</span></label></div>
-                    <div><label className="chip-checkbox-label"><input type="checkbox" checked={showScheduleRepeat} onChange={handleShowScheduleRepeatChange} /><span> 반복</span></label></div>
-                    <div><label className="chip-checkbox-label"><input type="checkbox" checked={showScheduleDayPicker} onChange={handleShowScheduleDayPickerChange} /><span> 요일</span></label></div>
-                    <div><label className="chip-checkbox-label"><input type="checkbox" checked={newScheduleSetReminder} onChange={() => setNewScheduleSetReminder(!newScheduleSetReminder)} /><span> 리마인더</span></label></div>
-                </div>
-                {showScheduleRepeat && showScheduleDayPicker && (
+                {showScheduleIrregularDatesPicker && (
                     <div className="schedule-option-box">
-                        <div className="days-of-week-container">{['일', '월', '화', '수', '목', '금', '토'].map((day, index) => (<label key={day}><input type="checkbox" value={index} onChange={handleScheduleDayOfWeekChange} checked={newScheduleSelectedDays.includes(index)} />{day}</label>))}</div>
+                        <MiniCalendar
+                            selectedDates={newScheduleIrregularSelectedDates}
+                            onDateChange={handleScheduleIrregularDateChange}
+                        />
+                    </div>
+                )}
+                {showScheduleRepeat && (
+                    <div className="schedule-option-box">
+                        <div className="days-of-week-container">{['일', '월', '화', '수', '목', '금', '토'].map((day, index) => (<label key={day}><input type="checkbox" value={index} onChange={handleScheduleRepeatDayOfWeekChange} checked={newScheduleRepeatSelectedDays.includes(index)} />{day}</label>))}</div>
                         <div className="end-date-container"><label>종료일: <input type="date" value={newScheduleEndDate} onChange={(e) => setNewScheduleEndDate(e.target.value)} /></label></div>
                     </div>
                 )}
