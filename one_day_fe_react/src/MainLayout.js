@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
 import ProfileHeader from './ProfileHeader';
 import MainBackground from './components/MainBackground';
 import './MainLayout.css';
@@ -9,10 +9,10 @@ const MainLayout = ({ setIsSlideOutNavOpen }) => { // Accept setIsSlideOutNavOpe
         <MainBackground>
             <div className="main-layout">
                 <header className="main-header">
-                    <div className="logo-container">
+                    <Link to="/home" className="logo-container">
                         <h1>OneDay</h1>
                         <p>하루를 하나로 관리하다.</p>
-                    </div>
+                    </Link>
                     <ProfileHeader />
                 </header>
                 <main className="main-content">

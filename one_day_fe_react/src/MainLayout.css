@@ -21,8 +21,9 @@
     height: auto; /* Auto height for the header */
 }
 
-.logo-container {
-    /* Removed margin-bottom */
+.logo-container, .logo-container:visited {
+    text-decoration: none;
+    color: inherit;
 }
 
 .main-header .logo-container h1 {
