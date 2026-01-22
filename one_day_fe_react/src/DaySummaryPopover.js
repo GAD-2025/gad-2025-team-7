@@ -8,8 +8,8 @@ const DaySummaryPopover = ({ date, anchorEl, onClose, summaryData, isLoading }) 
 
     const rect = anchorEl.getBoundingClientRect();
     const style = {
-        top: `${rect.bottom + 20}px`, // 20px distance below the anchor
-        left: `${rect.left + (rect.width / 2) - 125}px`, // 125 is half of popover width (250px) - 125px left shift
+        top: `${rect.bottom - 10}px`, // 20px distance below the anchor
+        left: `${rect.left + (rect.width / 2) - 155}px`, // 125 is half of popover width (250px) - 125px left shift
     };
 
     // Format date to "M/D"

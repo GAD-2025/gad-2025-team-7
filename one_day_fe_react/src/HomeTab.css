@@ -411,7 +411,7 @@
     display: flex;
     align-items: baseline; /* Align text baselines */
     gap: 5px; /* Space between title and date */
-    margin-bottom: 10px; /* Space below the header */
+    margin-bottom: 0px; /* Space below the header */
     position: relative; /* To position the close button absolutely */
 }
 
@@ -439,19 +439,28 @@
 
 .modal-close-btn {
     position: absolute;
-    top: 0;
-    right: 0;
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: #888;
-    padding: 0;
-    line-height: 1;
+    top: 0; /* Adjusted */
+    right: 0; /* Adjusted */
+    background-color: white; /* From .close-profile-button */
+    border: 1px solid #E1E7EF; /* From .close-profile-button */
+    border-radius: 50%; /* From .close-profile-button */
+    width: 28px; /* From .close-profile-button */
+    height: 28px; /* From .close-profile-button */
+    display: flex; /* From .close-profile-button */
+    justify-content: center; /* From .close-profile-button */
+    align-items: center; /* From .close-profile-button */
+    font-size: 16px; /* From .close-profile-button */
+    cursor: pointer; /* Already present */
+    color: #383838; /* From .close-profile-button */
+    z-index: 10; /* From .close-profile-button */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* From .close-profile-button */
+    padding: 0; /* Already present */
+    line-height: 1; /* Already present */
 }
 
 .modal-close-btn:hover {
-    color: #000;
+    background-color: #f0f0f0; /* From .close-profile-button:hover */
+    color: #383838; /* Keep the color consistent with the normal state */
 }
 
 .schedule-title-input {
@@ -540,6 +549,7 @@
     flex-wrap: wrap; /* Allow chips to wrap to the next line if space is limited */
     gap: 13px;
     margin-bottom: 3px; /* Space below the chip container */
+    margin-top: 15px;
 }
 
 .template-color-picker {
