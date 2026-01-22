@@ -9,7 +9,7 @@
     border-radius: 20px; /* More rounded */
     width: 342px; /* Constrain width for better look */
     /* margin: 20px; */
-    transform: translate(-21px, -200px);
+    transform: translate(-21px, 0px);
     border: 1px solid #C1C4CA;
 }
 

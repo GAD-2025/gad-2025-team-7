@@ -5,6 +5,7 @@
     padding: 10px;
     box-sizing: border-box;
     background-color: white;
+    transform: translate(-21px, 0px);
 }
 
 .mini-calendar-header {
