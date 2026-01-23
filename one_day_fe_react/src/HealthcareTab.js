@@ -40,6 +40,8 @@ const HealthcareTab = ({ userId }) => {
                                 <span className="calorie-unit">kcal</span>
                             </p>
                         </div>
+                        {/* New divider element */}
+                        <div className="macro-divider"></div>
                         <div className="macro-bars-container">
                             <div className="macro-item">
                                 <label>탄수화물</label>

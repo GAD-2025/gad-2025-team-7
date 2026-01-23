@@ -11,6 +11,7 @@
     scrollbar-width: none; /* Firefox */
     flex-wrap: nowrap; /* Prevent wrapping */
     width: 100%; /* Ensure it does not overflow its parent */
+    align-items: flex-start; /* Prevent cards from stretching to match height */
 }
 
 /* Hide scrollbar for Webkit browsers */

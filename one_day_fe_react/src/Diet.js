@@ -45,7 +45,8 @@ const Diet = () => {
         addFoodToCard,
         removeFoodFromCard,
         updateFoodQty,
-        setSearchQuery
+        setSearchQuery,
+        setMealCards // Import setMealCards
     } = useData();
 
     const [portalResults, setPortalResults] = useState([]);
@@ -133,8 +134,26 @@ const Diet = () => {
     };
     
     const handleAddMealCard = () => {
+        const emptyCards = mealCards.filter(card => !card.foods || card.foods.length === 0);
+        
+        if (emptyCards.length >= 2) {
+            const firstEmptyCardId = emptyCards[0].id;
+            const cardsToKeep = mealCards.filter(card => {
+                const isEmpty = !card.foods || card.foods.length === 0;
+                return !isEmpty || card.id === firstEmptyCardId;
+            });
+            setMealCards(cardsToKeep);
+            alert("비어있는 카드가 여러 개 있어 하나만 남기고 정리했습니다.");
+            return;
+        }
+
+        const lastCard = mealCards[mealCards.length - 1];
+        if (lastCard && (!lastCard.foods || lastCard.foods.length === 0)) {
+            alert("현재 식단에 음식을 추가한 후 새 카드를 생성해주세요.");
+            return;
+        }
+
         addMealCard();
-        // The useEffect will handle scrolling
     };
 
     return (

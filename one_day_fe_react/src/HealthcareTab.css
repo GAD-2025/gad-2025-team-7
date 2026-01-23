@@ -504,12 +504,12 @@
     margin-top: 14px;
     border: 1px solid #E1E7EF;
     border-radius: 20px;
-    height: 130px; /* Updated height as per user request */
+    height: 115px;
     background-color: white;
-    padding: 10px; /* Updated padding as per user request */
-    display: flex; /* Make macros-box a flex container */
-    justify-content: space-between; /* Space out summary and bars */
-    align-items: center; /* Center items vertically */
+    padding: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .macros-summary {
@@ -517,6 +517,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start; /* Align text to the left */
+    transform: translateY(-15px) translateX(5px);
 }
 
 .total-calories-label {
@@ -548,12 +549,13 @@
     flex-direction: column;
     gap: 18px; /* Gap between bars */
     width: 285px; /* Updated width as per user request */
+    /* Removed padding-top: 20px; */
 }
 
 .macro-item {
-    display: flex; /* Make macro-item a flex container for label, bar, and amount */
-    align-items: center; /* Vertically center items in macro-item */
-    gap: 10px; /* Space between label, bar, and amount */
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Reverted gap */
 }
 
 .macro-item label {
@@ -564,12 +566,13 @@
 }
 
 .macro-bar {
-    width: 230px; /* Bar background width */
+    width: 230px; /* Reverted bar background width */
     height: 15.99px; /* Bar background height */
     background-color: #F3F3F3; /* Bar background color */
     border-radius: 10px; /* Keep existing border-radius */
     overflow: hidden; /* Ensure progress bar is clipped */
-    flex-grow: 1; /* Allow bar to grow */
+    /* Removed flex-grow: 1; */
+    /* Removed position: relative; */
 }
 
 .macro-bar-progress {
@@ -577,16 +580,28 @@
     background-color: #FF7581; /* Pink progress bar color */
     border-radius: 10px; /* Keep existing border-radius */
     transition: width 0.5s ease-in-out;
-    box-shadow: 0px 4px 4px rgba(255, 117, 129, 0.29); /* Added box-shadow */
+    box-shadow: 1px 1px 4px rgba(255, 117, 129, 0.29); /* Updated box-shadow */
 }
 
 .macro-item span {
-    font-size: 11px; /* Smaller font size for amount */
-    color: #7E7E7E; /* Gray color for amount */
-    flex-shrink: 0; /* Prevent amount from shrinking */
-    width: 35px; /* Fixed width for amount for alignment */
+    font-size: 11px;
+    color: #7D8084;
     text-align: right;
+    flex-shrink: 0;
+    width: 24px;
 }
+
+.macro-divider {
+    width: 1px; /* Thickness of the line */
+    height: 100px; /* Length of the line */
+    background-color: transparent; /* Start with transparent background */
+    /* border-left: 1px dashed #EEEEEE; /* Dashed line properties */
+    background-image: linear-gradient(to bottom, #EEEEEE 4px, transparent 0); /* Dash and gap */
+    background-size: 1px 11px; /* 1px width, 4px dash + 7px gap = 11px */
+    background-repeat: repeat-y;
+}
+
+
 
 /* Override existing macro-item styles if necessary */
 .macro-bars-container .macro-item {
