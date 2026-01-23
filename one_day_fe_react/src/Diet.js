@@ -164,7 +164,7 @@ const Diet = () => {
                 onSelect={handleAddFood}
             />
             <div className="dashboard-section diet-dashboard-section">
-                <div className="section-header">
+                <div className="diet-section-header">
                     <h3>식단 기록</h3>
                     <div className="header-actions">
 

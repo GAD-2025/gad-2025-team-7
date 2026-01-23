@@ -5,13 +5,14 @@
     gap: 20px; /* Increased gap */
     overflow-x: auto;
     overflow-y: visible; /* Allow content to be visible on y-axis */
-    padding-top: 20px; /* Add padding to prevent clipping of selector */
+    padding-top: 25px; /* Add padding to prevent clipping of selector */
     padding-bottom: 10px; /* Space for scrollbar */
     -webkit-overflow-scrolling: touch; /* For smoother scrolling on iOS */
     scrollbar-width: none; /* Firefox */
     flex-wrap: nowrap; /* Prevent wrapping */
     width: 100%; /* Ensure it does not overflow its parent */
     align-items: flex-start; /* Prevent cards from stretching to match height */
+
 }
 
 /* Hide scrollbar for Webkit browsers */
@@ -40,6 +41,7 @@
 .meal-card.selected {
     border-color: #a2d2ff; /* Pastel blue border */
     transform: translateY(-3px); /* Lift on selection */
+    z-index: 10; /* Ensure selected card is above others */
 }
 
 .meal-card-header {
@@ -350,5 +352,19 @@
 }
 
 .diet-dashboard-section {
-    /* width: 354.52px; Removed as per new strategy */
+    gap: 0px; /* Gap between header and meal cards */
+}
+
+.diet-section-header {
+    margin-bottom: 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0px;
+}
+
+.diet-section-header h3 {
+    margin-bottom: 0px;
+    padding: 0;
+    line-height: 1;
 }
