@@ -173,7 +173,7 @@ export const DataProvider = ({ children }) => {
         steps: pedometerDataByDate[selectedDate]?.steps || 0,
         updateSteps,
         addMealCard, deleteMealCard, handleCategoryChange,
-        addFoodToCard, removeFoodFromCard, updateFoodQty, setSearchQuery
+        addFoodToCard, removeFoodFromCard, updateFoodQty, setSearchQuery, setMealCards: setMealsByDate
     };
 
     return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
