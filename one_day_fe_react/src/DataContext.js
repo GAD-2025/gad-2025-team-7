@@ -155,7 +155,7 @@ export const DataProvider = ({ children }) => {
     // --- HANDLER FUNCTIONS ---
     const updateCurrentMeals = (updateFn) => setMealsByDate(prev => ({ ...prev, [selectedDate]: updateFn(prev[selectedDate] || []) }));
     const updateSteps = (newSteps) => setPedometerDataByDate(prev => ({ ...prev, [selectedDate]: { steps: newSteps } }));
-    const addMealCard = () => updateCurrentMeals(cards => [...cards, { id: Date.now(), category: '점심', foods: [], searchQuery: '' }]);
+    const addMealCard = () => updateCurrentMeals(cards => [...cards, { id: Date.now(), category: '', foods: [], searchQuery: '' }]);
     const handleCategoryChange = (cardId, newCategory) => updateCurrentMeals(cards => cards.map(card => card.id === cardId ? { ...card, category: newCategory } : card));
     const deleteMealCard = (cardId) => updateCurrentMeals(cards => cards.filter(card => card.id !== cardId));
     const removeFoodFromCard = (cardId, foodId) => updateCurrentMeals(cards => cards.map(card => card.id === cardId ? { ...card, foods: card.foods.filter(f => f.id !== foodId) } : card));
