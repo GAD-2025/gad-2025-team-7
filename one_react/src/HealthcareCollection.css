@@ -37,14 +37,7 @@
     color: #383838;
 }
 
-.hc-subtitle {
-    font-size: 14px;
-    color: #6E7279;
-    margin-top: -10px; /* Pull up subtitle */
-    margin-bottom: 20px;
-}
-
-/* Styles for Header Right Side and Filters */
+/* Grid for weekly summary cards */
 .hc-header-right {
     display: flex;
     align-items: center;

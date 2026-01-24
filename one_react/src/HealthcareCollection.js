@@ -112,9 +112,7 @@ const HealthcareCollection = () => {
                         <button onClick={handleClearFilter}>×</button>
                     </p>
                 </div>
-            ) : (
-                <p className="hc-subtitle">지난 7일간의 건강 기록입니다.</p>
-            )}
+            ) : null}
 
             <div className="weekly-summary-grid">
                 {sortedData.length === 0 ? (
