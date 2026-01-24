@@ -74,8 +74,8 @@ body {
 .form-container h1 {
     font-size: 20px;
     color: #8E95A2;
-    /* margin-bottom: 10px; // Removed */
-    font-weight: 300;
+    margin-bottom: 10px; /* Reduced margin */
+    font-weight: 400; /* Changed to regular */
     text-align: center;
 }
 
@@ -100,6 +100,7 @@ input[type="password"],
     font-size: 17px;
     color: #8E95A2;
     padding-left: 20px; /* Add left padding */
+    font-weight: 400; /* Regular font weight */
 }
 
 .options, .terms {
@@ -108,10 +109,11 @@ input[type="password"],
     /* margin-bottom: 20px; // Removed */
     font-size: 14px;
     color: #8E95A2; /* Change text color */
+    font-weight: 400; /* Regular font weight */
 }
 
 .options input[type="checkbox"] {
-    border: 1px solid #8E95A2; /* Checkbox stroke color */
+    border: 1px solid #CCCCCC; /* Checkbox stroke color changed to light gray */
     margin-right: 5px; /* Add some space between checkbox and text */
 }
 
@@ -129,7 +131,7 @@ button[type="submit"],
     border-radius: 15px;
     color: #fff; /* Text color to white */
     font-size: 17px;
-    font-weight: 300; /* Light weight to match inputs */
+    font-weight: 400; /* Changed to regular */
     cursor: pointer;
     transition: background-color 0.3s;
 }
@@ -163,6 +165,7 @@ button[type="submit"]:hover,
     margin-top: 15px; /* Move up by 15px */
     font-size: 14px;
     color: #8E95A2; /* Change text color */
+    font-weight: 400; /* Regular font weight */
 }
 
 .toggle-form a {

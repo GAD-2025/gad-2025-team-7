@@ -10,18 +10,21 @@ const Login = ({ onLogin }) => {
     const { refreshProfile } = useProfile(); // Get the refresh function
 
     const handleResponse = (data) => {
+        console.log('handleResponse data:', data); // Log data
         if (data.userId) {
             localStorage.setItem('userId', data.userId);
             refreshProfile(); // Trigger profile refetch after setting userId
             onLogin(); // Call onLogin to update isAuthenticated state in App.js
         } else {
             setError(data.msg || data.message || '오류가 발생했습니다.');
+            console.log('Login failed, no userId in response:', data.msg || data.message); // Log specific failure
         }
     };
 
     const handleLogin = async (e) => {
         e.preventDefault();
         setError('');
+        console.log('Attempting login with email:', email, 'password:', password); // Log attempt
         try {
             const res = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
                 method: 'POST',
@@ -29,9 +32,14 @@ const Login = ({ onLogin }) => {
                 body: JSON.stringify({ email, password }),
             });
             const data = await res.json();
-            if (!res.ok) throw new Error(data.msg || '로그인 실패');
+            console.log('Login API response:', data); // Log API response
+            if (!res.ok) {
+                console.error('Login API error response:', data); // Log error response
+                throw new Error(data.msg || '로그인 실패');
+            }
             handleResponse(data);
         } catch (err) {
+            console.error('Login fetch error:', err); // Log fetch error
             setError(err.message);
         }
     };
@@ -88,7 +96,7 @@ const Login = ({ onLogin }) => {
                     </div>
                 ) : (
                     <div className="form-container" id="signup-form">
-                        <h1>LOGIN</h1>
+                        <h1>SIGN UP</h1>
                         <form onSubmit={handleSignup}>
                             <input type="email" placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} required />
                             <input type="password" placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} required />
