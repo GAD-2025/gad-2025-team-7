@@ -229,7 +229,7 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
             {/* Modals remain the same */}
             <Modal show={showChangePasswordModal} onClose={() => setShowChangePasswordModal(false)} contentClassName="change-password-modal-content">
                 <h3>비밀번호 변경</h3>
-                <div className="profile-form-group" style={{ marginTop: '15px' }}>
+                <div className="profile-form-group">
                     <input
                         type="password"
                         placeholder="현재 비밀번호"
@@ -237,7 +237,7 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                         onChange={(e) => setCurrentPassword(e.target.value)}
                     />
                 </div>
-                <div className="profile-form-group" style={{ marginTop: '5px' }}>
+                <div className="profile-form-group">
                     <input
                         type="password"
                         placeholder="새 비밀번호"
@@ -245,7 +245,7 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                         onChange={(e) => setNewPassword(e.target.value)}
                     />
                 </div>
-                <div className="profile-form-group" style={{ marginTop: '5px' }}>
+                <div className="profile-form-group">
                     <input
                         type="password"
                         placeholder="새 비밀번호 확인"
@@ -254,15 +254,15 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                     />
                 </div>
                 {passwordError && <p className="error-message">{passwordError}</p>}
-                <div className="modal-actions" style={{ marginTop: '6px' }}>
+                <div className="modal-actions">
                     <button onClick={handleChangePassword}>변경하기</button>
                     <button onClick={() => setShowChangePasswordModal(false)}>취소</button>
                 </div>
             </Modal>
 
             <Modal show={showChangeEmailModal} onClose={() => setShowChangeEmailModal(false)}>
-                <h3>아이디 변경</h3>
-                <div className="profile-form-group" style={{ marginTop: '15px' }}>
+                <h3>아이디(이메일) 변경</h3>
+                <div className="profile-form-group">
                     <input
                         type="email"
                         placeholder="새 이메일"
@@ -270,7 +270,7 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                         onChange={(e) => setNewEmail(e.target.value)}
                     />
                 </div>
-                <div className="profile-form-group" style={{ marginTop: '5px' }}>
+                <div className="profile-form-group">
                     <input
                         type="password"
                         placeholder="현재 비밀번호"
@@ -279,7 +279,7 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                     />
                 </div>
                 {emailError && <p className="error-message">{emailError}</p>}
-                <div className="modal-actions" style={{ marginTop: '6px' }}>
+                <div className="modal-actions">
                     <button onClick={handleChangeEmail}>변경하기</button>
                     <button onClick={() => setShowChangeEmailModal(false)}>취소</button>
                 </div>
@@ -288,7 +288,7 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
             {/* Change Username Modal */}
             <Modal show={showChangeUsernameModal} onClose={() => setShowChangeUsernameModal(false)}>
                 <h3>닉네임 변경</h3>
-                <div className="profile-form-group" style={{ marginTop: '15px' }}>
+                <div className="profile-form-group">
                     <input
                         type="text"
                         placeholder="새 닉네임"
@@ -296,7 +296,7 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                         onChange={(e) => setNewUsername(e.target.value)}
                     />
                 </div>
-                <div className="profile-form-group" style={{ marginTop: '5px' }}>
+                <div className="profile-form-group">
                     <input
                         type="password"
                         placeholder="현재 비밀번호"
@@ -305,7 +305,7 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                     />
                 </div>
                 {usernameError && <p className="error-message">{usernameError}</p>}
-                <div className="modal-actions" style={{ marginTop: '6px' }}>
+                <div className="modal-actions">
                     <button onClick={handleChangeUsername}>변경하기</button>
                     <button onClick={() => setShowChangeUsernameModal(false)}>취소</button>
                 </div>

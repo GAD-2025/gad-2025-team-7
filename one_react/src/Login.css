@@ -1,9 +1,8 @@
-@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
 
 :root {
     --primary-color: #FF7581;
-    --background-color: #F7F9FA;
+    --background-color: #f0f2f5;
     --container-bg: #ffffff;
     --text-color: #333;
     --light-text-color: #888;
@@ -18,13 +17,13 @@ body {
 
 .main-wrapper {
     display: flex;
-    width: 100%; /* Changed from 100vw to 100% */
-    height: 100%; /* Changed from 100vh to 100% */
+    width: 100vw;
+    height: 100vh;
 }
 
 .info-panel {
     flex-basis: 50%;
-    background: linear-gradient(to right, #F8A5AC, #F7F9FA);
+    background: linear-gradient(135deg, var(--primary-color), #ff9a8b);
     color: white;
     display: flex;
     flex-direction: column;
@@ -35,23 +34,16 @@ body {
     box-sizing: border-box;
 }
 
-.info-panel h2 .one-day-title {
+.info-panel h2 {
     font-size: 48px;
     font-weight: 700;
+    margin-bottom: 20px;
     line-height: 1.4;
-    color: var(--primary-color); /* Key color */
-    -webkit-text-stroke: 0.5px #AEAEAE; /* Text stroke for Webkit browsers */
-    text-stroke: 0.5px #AEAEAE; /* Standard text stroke */
-    font-family: 'Pretendard', sans-serif; /* Add Pretendard font */
-    text-shadow: 0px 0px 8px rgba(255, 96, 96, 0.25); /* Add drop shadow */
 }
 
-.info-panel h2 .one-day-subtitle {
+.info-panel p {
     font-size: 20px;
     line-height: 1.6;
-    color: #F7F9FA;
-    font-weight: 300; /* Light weight */
-    font-family: 'Pretendard', sans-serif; /* Apply Pretendard font */
 }
 
 .form-wrapper {
@@ -64,57 +56,34 @@ body {
 .form-container {
     width: 420px;
     padding: 40px;
-    background-color: transparent;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px; /* Set vertical gap between children */
-}
-
-.form-container h1 {
-    font-size: 20px;
-    color: #8E95A2;
-    margin-bottom: 10px; /* Reduced margin */
-    font-weight: 400; /* Changed to regular */
+    background-color: transparent; /* No separate background needed */
     text-align: center;
 }
 
-.form-container form {
-    /* margin-top: 10px; // Removed */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px; /* Set vertical gap between children */
+.form-container h1 {
+    font-size: 36px;
+    color: var(--primary-color);
+    margin-bottom: 30px;
+    font-weight: 700;
 }
 
 input[type="email"],
 input[type="password"],
 #nickname-input {
-    width: 327px;
-    height: 43px;
-    background-color: #ffffff;
-    border: 1px solid #cccccc;
-    /* margin-bottom: 15px; // Removed */
-    border-radius: 15px;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
     box-sizing: border-box;
-    font-size: 17px;
-    color: #8E95A2;
-    padding-left: 20px; /* Add left padding */
-    font-weight: 400; /* Regular font weight */
+    font-size: 16px;
 }
 
 .options, .terms {
-    width: 327px; /* Match input/button width */
     text-align: left;
-    /* margin-bottom: 20px; // Removed */
+    margin-bottom: 20px;
     font-size: 14px;
-    color: #8E95A2; /* Change text color */
-    font-weight: 400; /* Regular font weight */
-}
-
-.options input[type="checkbox"] {
-    border: 1px solid #CCCCCC; /* Checkbox stroke color changed to light gray */
-    margin-right: 5px; /* Add some space between checkbox and text */
+    color: #555;
 }
 
 .options label, .terms label {
@@ -124,14 +93,14 @@ input[type="password"],
 
 button[type="submit"],
 #save-profile {
-    width: 327px;
-    height: 43px;
-    background-color: var(--primary-color); /* Fill with key color */
-    border: 1px solid #cccccc;
-    border-radius: 15px;
-    color: #fff; /* Text color to white */
-    font-size: 17px;
-    font-weight: 400; /* Changed to regular */
+    width: 100%;
+    padding: 15px;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
     cursor: pointer;
     transition: background-color 0.3s;
 }
@@ -162,10 +131,9 @@ button[type="submit"]:hover,
 }
 
 .toggle-form {
-    margin-top: 15px; /* Move up by 15px */
+    margin-top: 30px;
     font-size: 14px;
-    color: #8E95A2; /* Change text color */
-    font-weight: 400; /* Regular font weight */
+    color: #555;
 }
 
 .toggle-form a {

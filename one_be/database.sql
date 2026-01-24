@@ -297,7 +297,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'김제니s','yns2017@naver.com','$2b$10$EaKhjnIwzIXWKzFiDeIm4.eeAcAe59AsvcK6BS0I3IXho49lqOVkW','/uploads/1765543842915.jpeg','2025-12-11 04:51:55',47.00,NULL);
+INSERT INTO `users` VALUES (1,'김제니s','yns2017@naver.com','$2b$10$EaKhjnIwzIXWKzFiDeIm4.eeAcAe59AsvcK6BS0I3IXho49lqOVkW','/uploads/1765543842915.jpeg','2025-12-11 04:51:55',47.00);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 

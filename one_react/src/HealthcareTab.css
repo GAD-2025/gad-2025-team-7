@@ -517,7 +517,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start; /* Align text to the left */
-    transform: translateY(-15px) translateX(5px);
+
 }
 
 .total-calories-label {

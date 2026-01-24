@@ -1,6 +1,7 @@
 /* DiaryCollection.css (New Design) */
 
 .diary-collection-container {
+    width: 100%;
     padding: 20px;
     background-color: #ffffff; /* Light pastel background */
     min-height: 100vh; /* Ensure it takes full height */

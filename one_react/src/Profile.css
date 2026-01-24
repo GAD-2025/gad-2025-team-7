@@ -9,7 +9,7 @@
     border-radius: 20px; /* More rounded */
     width: 342px; /* Constrain width for better look */
     /* margin: 20px; */
-    transform: translate(0, 0);
+    transform: translate(-21px, 0px);
     border: 1px solid #C1C4CA;
 }
 
@@ -121,7 +121,7 @@
 .profile-form-group input[type="text"],
 .profile-form-group input[type="email"],
 .profile-form-group input[type="password"] {
-    width: 327px; /* Fixed width to match login inputs */
+    width: 100%;
     padding: 9px 15px; /* Adjusted padding */
     border: 1px solid #E9ECEF; /* Soft border color */
     border-radius: 12px; /* More rounded */

@@ -1,5 +1,6 @@
 /* StopwatchCollection.css (New Design) */
 .stopwatch-collection-container {
+    width: 100%;
     padding: 20px;
     background-color: #F8F9FA; /* Light background for pastel feel */
     font-family: 'Pretendard', sans-serif;
