@@ -26,9 +26,9 @@
 }
 
 .dc-back-icon, .dc-filter-icon {
-    font-size: 24px;
+    font-size: 30px;
     cursor: pointer;
-    color: #FFC0CB; /* Soft grey */
+    color: #A5A5A5;
 }
 
 .dc-title {

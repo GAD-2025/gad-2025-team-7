@@ -1,7 +1,21 @@
-import React, { useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from './DataContext';
 import './HealthcareCollection.css'; // Import the new CSS file
+import DateFilter from './DateFilter'; // Import DateFilter
+import IllustratedCalendarIcon from './IllustratedCalendarIcon'; // Import IllustratedCalendarIcon
+
+// Helper function to get dates between a range
+const getDatesInRange = (startDate, endDate) => {
+    const dates = [];
+    let currentDate = new Date(startDate);
+    const end = new Date(endDate);
+    while (currentDate <= end) {
+        dates.push(currentDate.toISOString().split('T')[0]);
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return dates;
+};
 
 // Helper function to get the last 7 days
 const getLastSevenDays = () => {
@@ -18,15 +32,17 @@ const HealthcareCollection = () => {
     const navigate = useNavigate();
     const { mealsByDate, pedometerDataByDate } = useData();
 
-    // useMemo will recalculate the weekly summary only when the underlying data changes
+    const [sortOrder, setSortOrder] = useState('desc'); // 'desc' for high, 'asc' for low
+    const [isFilterVisible, setIsFilterVisible] = useState(false);
+    const [filterRange, setFilterRange] = useState({ startDate: '', endDate: '' });
+
     const weeklyData = useMemo(() => {
-        const lastSevenDays = getLastSevenDays();
+        const datesToProcess = filterRange.startDate && filterRange.endDate
+            ? getDatesInRange(filterRange.startDate, filterRange.endDate)
+            : getLastSevenDays();
 
-        return lastSevenDays.map(date => {
-            // Get steps for the day
+        return datesToProcess.map(date => {
             const steps = pedometerDataByDate[date]?.steps || 0;
-
-            // Calculate total consumed calories for the day
             const mealCards = mealsByDate[date] || [];
             const totalConsumedCalories = mealCards.reduce((total, card) => {
                 return total + card.foods.reduce((cardTotal, food) => {
@@ -37,32 +53,73 @@ const HealthcareCollection = () => {
             return {
                 date: date,
                 steps: steps,
-                caloriesBurned: Math.round(steps * 0.04), // 1 step = 0.04 kcal
+                caloriesBurned: Math.round(steps * 0.04),
                 totalConsumedCalories: Math.round(totalConsumedCalories)
             };
         });
-    }, [mealsByDate, pedometerDataByDate]);
+    }, [mealsByDate, pedometerDataByDate, filterRange]);
 
-    // Figma shows max values for progress bars
+    const sortedData = useMemo(() => {
+        return [...weeklyData].sort((a, b) => {
+            return sortOrder === 'desc' 
+                ? b.totalConsumedCalories - a.totalConsumedCalories 
+                : a.totalConsumedCalories - b.totalConsumedCalories;
+        });
+    }, [weeklyData, sortOrder]);
+
+    const handleApplyFilter = (range) => {
+        setFilterRange(range);
+        setIsFilterVisible(false);
+    };
+
+    const handleClearFilter = () => {
+        setFilterRange({ startDate: '', endDate: '' });
+    };
+
     const maxSteps = 10000;
     const maxConsumedCalories = 2500;
     const maxCaloriesBurned = 500;
     
     return (
         <div className="healthcare-container">
-            <button onClick={() => navigate('/home')} className="healthcare-back-button">
-                &larr; 홈으로 돌아가기
-            </button>
-            <div className="healthcare-header">
-                <h1>헬스케어 모아보기 (주간 요약)</h1>
-                <p>지난 7일간의 건강 기록입니다.</p>
-            </div>
+            {isFilterVisible && (
+                <DateFilter 
+                    onApply={handleApplyFilter}
+                    onCancel={() => setIsFilterVisible(false)}
+                />
+            )}
+            <header className="hc-header">
+                <div className="hc-header-left">
+                    <span className="hc-back-icon" onClick={() => navigate('/home')}>&larr;</span>
+                    <h1 className="hc-title">헬스케어 모아보기</h1>
+                </div>
+                <div className="hc-header-right">
+                    <div className="hc-filters">
+                        <div className="filter-toggle">
+                            <button className={sortOrder === 'desc' ? 'active' : ''} onClick={() => setSortOrder('desc')}>높은 순</button>
+                            <button className={sortOrder === 'asc' ? 'active' : ''} onClick={() => setSortOrder('asc')}>낮은 순</button>
+                        </div>
+                    </div>
+                    <IllustratedCalendarIcon onClick={() => setIsFilterVisible(true)} />
+                </div>
+            </header>
+            
+            {filterRange.startDate && filterRange.endDate ? (
+                <div className="filter-status">
+                    <p>
+                        {`${filterRange.startDate} ~ ${filterRange.endDate}`}
+                        <button onClick={handleClearFilter}>×</button>
+                    </p>
+                </div>
+            ) : (
+                <p className="hc-subtitle">지난 7일간의 건강 기록입니다.</p>
+            )}
 
             <div className="weekly-summary-grid">
-                {weeklyData.length === 0 ? (
+                {sortedData.length === 0 ? (
                     <p className="empty-weekly-data">표시할 주간 기록이 없습니다.</p>
                 ) : (
-                    weeklyData.map(day => (
+                    sortedData.map(day => (
                         <div key={day.date} className="healthcare-daily-card">
                             <div className="daily-card-header">
                                 <h3>{day.date}</h3>

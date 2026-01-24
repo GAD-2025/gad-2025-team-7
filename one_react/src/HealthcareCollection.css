@@ -10,37 +10,38 @@
     font-family: 'Pretendard', sans-serif;
 }
 
-.healthcare-back-button {
-    margin-bottom: 20px;
-    padding: 10px 15px;
+/* New Header Styles */
+.hc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px; /* Reduced margin */
+    padding: 10px 0;
+}
+
+.hc-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hc-back-icon {
+    font-size: 30px;
     cursor: pointer;
-    background-color: #FFC0CB; /* Pink */
-    color: #FFFFFF; /* White text */
-    border: 1px solid #FFC0CB; /* Pink border */
-    border-radius: 8px;
-    font-size: 14px;
-    transition: background-color 0.2s, border-color 0.2s;
+    color: #A5A5A5;
 }
 
-.healthcare-back-button:hover {
-    background-color: #FFB6C1; /* Lighter pink on hover */
-    border-color: #FFB6C1;
-}
-
-.healthcare-header {
-    margin-bottom: 20px;
-}
-
-.healthcare-header h1 {
-    font-size: 24px;
+.hc-title {
+    font-size: 22px;
     font-weight: 700;
     color: #383838;
-    margin-bottom: 5px;
 }
 
-.healthcare-header p {
+.hc-subtitle {
     font-size: 14px;
     color: #6E7279;
+    margin-top: -10px; /* Pull up subtitle */
+    margin-bottom: 20px;
 }
 
 /* Grid for weekly summary cards */
@@ -191,4 +192,67 @@
     background-color: #ffffff;
     border-radius: 16px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* Styles for Header Right Side and Filters */
+.hc-header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.hc-filters .filter-toggle {
+    background-color: #ffffff;
+    border: 1px solid #E9ECEF;
+    padding: 6px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    display: flex;
+    gap: 5px;
+}
+
+.hc-filters .filter-toggle button {
+    background: none;
+    border: none;
+    font-weight: 500;
+    color: #9a9a9a;
+    padding: 4px 10px;
+    cursor: pointer;
+    border-radius: 15px;
+    transition: all 0.2s;
+}
+
+.hc-filters .filter-toggle button.active {
+    color: #FF7581;
+    font-weight: 700;
+    background-color: #FFE1E3;
+}
+
+.filter-status {
+    background-color: #FFE1E3;
+    padding: 8px 15px;
+    border-radius: 20px;
+    margin: -10px auto 15px;
+    display: inline-block;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.filter-status p {
+    margin: 0;
+    font-size: 14px;
+    color: #FF7581;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-status button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #FF7581;
+    padding: 0;
+    line-height: 1;
 }
