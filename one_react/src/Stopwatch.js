@@ -1,23 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Stopwatch.css';
+import { PREDEFINED_COLORS, BASE_CATEGORY_NAMES, BASE_CATEGORY_COLORS_MAP } from './constants/categoryColors';
 
 const Stopwatch = ({ userId, selectedDate }) => {
     const [tasks, setTasks] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [categories, setCategories] = useState([]);
     const [newCategory, setNewCategory] = useState('');
-    const [selectedNewCategoryColor, setSelectedNewCategoryColor] = useState('#FFC0CB'); // Default color
+    const [selectedNewCategoryColor, setSelectedNewCategoryColor] = useState(PREDEFINED_COLORS[0]); // Default color from constants
     const [isAddCategoryPopupOpen, setIsAddCategoryPopupOpen] = useState(false); // State for popup visibility
     const [deletableCategory, setDeletableCategory] = useState(null); // State for category showing delete button
     const intervalRef = useRef(null);
     const longPressTimerRef = useRef(null);
-
-    // Predefined colors for new categories
-    const predefinedColors = [
-        '#FFC0CB', '#FFD700', '#ADD8E6', '#90EE90', '#FFB6C1', 
-        '#FFDAB9', '#E6E6FA', '#FFFACD', '#E0FFFF', '#F0FFF0',
-        '#FFE4E1', '#D3D3D3', '#B0E0E6', '#FFDEAD', '#F5DEB3'
-    ];
 
     // ... (useEffect for data fetching remains same)
 
@@ -57,10 +51,9 @@ const Stopwatch = ({ userId, selectedDate }) => {
         if (!userId || !selectedDate) return;
 
         const fetchData = async () => {
-            const baseColors = ['#FFC0CB', '#FFD700', '#ADD8E6', '#90EE90']; // Corresponding colors for base categories
-            const baseCategories = ['공부', '운동', '취미', '알바'].map((name, index) => ({
+            const baseCategories = BASE_CATEGORY_NAMES.map(name => ({
                 name,
-                color: baseColors[index] || '#FFC0CB' // Assign a default if no specific color
+                color: BASE_CATEGORY_COLORS_MAP[name]
             }));
             try {
                 const res = await fetch(`${process.env.REACT_APP_API_URL}/api/stopwatch/${userId}/${selectedDate}`);
@@ -353,7 +346,7 @@ const Stopwatch = ({ userId, selectedDate }) => {
                             <button onClick={addNewCategory}>+</button>
                         </div>
                         <div className="color-picker-palette">
-                            {predefinedColors.map(color => (
+                            {PREDEFINED_COLORS.map(color => (
                                 <div
                                     key={color}
                                     className={`color-swatch ${selectedNewCategoryColor === color ? 'selected' : ''}`}

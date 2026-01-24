@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import './StopwatchCollection.css'; // Import new CSS
 import DateFilter from './DateFilter'; // Reuse DateFilter component
 import IllustratedCalendarIcon from './IllustratedCalendarIcon';
+import { BASE_CATEGORY_COLORS_MAP, PREDEFINED_COLORS } from './constants/categoryColors';
 
 // Helper to format seconds to HH:MM:SS
 const formatTime = (totalSeconds) => {
@@ -16,16 +17,6 @@ const formatTime = (totalSeconds) => {
         .map(v => v.toString().padStart(2, '0'))
         .join(':');
 };
-
-// Pre-defined category colors
-const categoryColors = {
-    '공부': '#ffc4d5', // Pink
-    '운동': '#ffeca9', // Yellow
-    '알바': '#ffdcaa', // Orange
-    '취미': '#c4f5d2', // Mint
-    '기타': '#e9ecef',
-};
-const fallbackColors = Object.values(categoryColors);
 
 const StopwatchCollection = () => {
     const [allRecords, setAllRecords] = useState([]);
@@ -81,7 +72,7 @@ const StopwatchCollection = () => {
         return Object.entries(dataByCategory).map(([category, totalTimeMs], index) => ({
             category,
             totalTime: Math.floor(totalTimeMs / 1000), // Convert ms to seconds
-            color: categoryColors[category] || fallbackColors[index % fallbackColors.length]
+            color: BASE_CATEGORY_COLORS_MAP[category] || PREDEFINED_COLORS[index % PREDEFINED_COLORS.length]
         }));
     }, [allRecords, filterRange]);
 
@@ -133,19 +124,23 @@ const StopwatchCollection = () => {
                 <div className="sc-bar-chart-list">
                     {sortedData.map(({ category, totalTime, color }) => (
                         <div key={category} className="sc-category-item">
-                            <div className="sc-category-label" style={{ backgroundColor: color }}>
+                            <div className="sc-category-label" 
+                                style={{
+                                    backgroundColor: `rgba(${parseInt(color.slice(1,3), 16)}, ${parseInt(color.slice(3,5), 16)}, ${parseInt(color.slice(5,7), 16)}, 0.5)`,
+                                    border: `1px solid ${color}`
+                                }}>
                                 {category}
                             </div>
                             <div className="sc-bar-wrapper">
                                 <div className="sc-bar">
-                                    <div 
-                                        className="sc-bar-fill" 
-                                        style={{ 
-                                            width: `${maxTime > 0 ? (totalTime / maxTime) * 100 : 0}%`,
-                                            backgroundColor: color 
-                                        }}
-                                    ></div>
-                                </div>
+                                                                        <div
+                                                                            className="sc-bar-fill"
+                                                                            style={{
+                                                                                width: `${maxTime > 0 ? (totalTime / maxTime) * 100 : 0}%`,
+                                                                                backgroundColor: `rgba(${parseInt(color.slice(1,3), 16)}, ${parseInt(color.slice(3,5), 16)}, ${parseInt(color.slice(5,7), 16)}, 0.5)`,
+                                                                                border: `1px solid ${color}`
+                                                                            }}
+                                                                        ></div>                                </div>
                                 <div className="sc-time">{formatTime(totalTime)}</div>
                             </div>
                         </div>
