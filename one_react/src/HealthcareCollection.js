@@ -1,11 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from './DataContext';
-import './HealthcareCollection.css'; // Import the new CSS file
-import DateFilter from './DateFilter'; // Import DateFilter
-import IllustratedCalendarIcon from './IllustratedCalendarIcon'; // Import IllustratedCalendarIcon
+import './HealthcareCollection.css';
+import DateFilter from './DateFilter';
+import IllustratedCalendarIcon from './IllustratedCalendarIcon';
 
-// Helper function to get dates between a range
 const getDatesInRange = (startDate, endDate) => {
     const dates = [];
     let currentDate = new Date(startDate);
@@ -17,7 +16,6 @@ const getDatesInRange = (startDate, endDate) => {
     return dates;
 };
 
-// Helper function to get the last 7 days
 const getLastSevenDays = () => {
     const dates = [];
     for (let i = 0; i < 7; i++) {
@@ -25,47 +23,54 @@ const getLastSevenDays = () => {
         d.setDate(d.getDate() - i);
         dates.push(d.toISOString().split('T')[0]);
     }
-    return dates.reverse(); // Return in chronological order
+    return dates.reverse();
 };
 
 const HealthcareCollection = () => {
     const navigate = useNavigate();
     const { mealsByDate, pedometerDataByDate } = useData();
 
-    const [sortOrder, setSortOrder] = useState('desc'); // 'desc' for high, 'asc' for low
+    const [sortOrder, setSortOrder] = useState('desc');
     const [isFilterVisible, setIsFilterVisible] = useState(false);
     const [filterRange, setFilterRange] = useState({ startDate: '', endDate: '' });
 
-    const weeklyData = useMemo(() => {
+    const processedData = useMemo(() => {
         const datesToProcess = filterRange.startDate && filterRange.endDate
             ? getDatesInRange(filterRange.startDate, filterRange.endDate)
             : getLastSevenDays();
 
         return datesToProcess.map(date => {
-            const steps = pedometerDataByDate[date]?.steps || 0;
+            const weight = pedometerDataByDate[date]?.weight || 0;
             const mealCards = mealsByDate[date] || [];
-            const totalConsumedCalories = mealCards.reduce((total, card) => {
-                return total + card.foods.reduce((cardTotal, food) => {
-                    return cardTotal + (food.calories || 0) * (food.qty || 1);
-                }, 0);
-            }, 0);
+            
+            const macros = { calories: 0, carbs: 0, protein: 0, fat: 0 };
+            mealCards.forEach(card => {
+                card.foods.forEach(food => {
+                    macros.calories += (food.calories || 0) * (food.qty || 1);
+                    macros.carbs += (food.carbs || 0) * (food.qty || 1);
+                    macros.protein += (food.protein || 0) * (food.qty || 1);
+                    macros.fat += (food.fat || 0) * (food.qty || 1);
+                });
+            });
             
             return {
                 date: date,
-                steps: steps,
-                caloriesBurned: Math.round(steps * 0.04),
-                totalConsumedCalories: Math.round(totalConsumedCalories)
+                weight: weight,
+                totalConsumedCalories: Math.round(macros.calories),
+                carbs: Math.round(macros.carbs),
+                protein: Math.round(macros.protein),
+                fat: Math.round(macros.fat)
             };
         });
     }, [mealsByDate, pedometerDataByDate, filterRange]);
 
     const sortedData = useMemo(() => {
-        return [...weeklyData].sort((a, b) => {
+        return [...processedData].sort((a, b) => {
             return sortOrder === 'desc' 
                 ? b.totalConsumedCalories - a.totalConsumedCalories 
                 : a.totalConsumedCalories - b.totalConsumedCalories;
         });
-    }, [weeklyData, sortOrder]);
+    }, [processedData, sortOrder]);
 
     const handleApplyFilter = (range) => {
         setFilterRange(range);
@@ -76,10 +81,6 @@ const HealthcareCollection = () => {
         setFilterRange({ startDate: '', endDate: '' });
     };
 
-    const maxSteps = 10000;
-    const maxConsumedCalories = 2500;
-    const maxCaloriesBurned = 500;
-    
     return (
         <div className="healthcare-container">
             {isFilterVisible && (
@@ -127,52 +128,19 @@ const HealthcareCollection = () => {
                             
                             <div className="daily-card-metrics">
                                 <div className="metric-item">
-                                    <span className="metric-item-label">걸음 수</span>
-                                    <span className="metric-item-value">{day.steps}</span>
-                                    <span className="metric-item-unit">걸음</span>
-                                </div>
-                                <div className="metric-item">
-                                    <span className="metric-item-label">소모 칼로리</span>
-                                    <span className="metric-item-value">{day.caloriesBurned}</span>
-                                    <span className="metric-item-unit">kcal</span>
+                                    <span className="metric-item-label">체중</span>
+                                    <span className="metric-item-value">{day.weight}</span>
+                                    <span className="metric-item-unit">kg</span>
                                 </div>
                                 <div className="metric-item">
                                     <span className="metric-item-label">총 섭취 칼로리</span>
                                     <span className="metric-item-value">{day.totalConsumedCalories}</span>
                                     <span className="metric-item-unit">kcal</span>
                                 </div>
-                            </div>
-                            
-                            <div className="daily-chart-container">
-                                {/* Steps Bar */}
-                                <div className="chart-bar-wrapper">
-                                    <div 
-                                        className="chart-bar chart-bar-steps" 
-                                        style={{ height: `${Math.min(100, (day.steps / maxSteps) * 100)}%` }}
-                                    ></div>
-                                    <span className="bar-value">{day.steps}</span>
+                                <div className="metric-item metric-item-macros">
+                                    <span className="metric-item-label">탄/단/지</span>
+                                    <span className="metric-item-value-small">{day.carbs}g / {day.protein}g / {day.fat}g</span>
                                 </div>
-                                {/* Consumed Calories Bar */}
-                                <div className="chart-bar-wrapper">
-                                    <div 
-                                        className="chart-bar chart-bar-consumed" 
-                                        style={{ height: `${Math.min(100, (day.totalConsumedCalories / maxConsumedCalories) * 100)}%` }}
-                                    ></div>
-                                    <span className="bar-value">{Math.round(day.totalConsumedCalories)}</span>
-                                </div>
-                                {/* Burned Calories Bar */}
-                                <div className="chart-bar-wrapper">
-                                    <div 
-                                        className="chart-bar chart-bar-burned" 
-                                        style={{ height: `${Math.min(100, (day.caloriesBurned / maxCaloriesBurned) * 100)}%` }}
-                                    ></div>
-                                    <span className="bar-value">{day.caloriesBurned}</span>
-                                </div>
-                            </div>
-                            <div className="chart-labels">
-                                <span className="chart-label-item">걸음</span>
-                                <span className="chart-label-item">섭취</span>
-                                <span className="chart-label-item">소모</span>
                             </div>
                         </div>
                     ))

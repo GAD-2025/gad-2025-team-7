@@ -54,7 +54,7 @@ export const DataProvider = ({ children }) => {
     
     // --- DEBOUNCED SAVE FUNCTIONS ---
     const debouncedSaveApiMealsRef = useRef(debounce((date, cards) => saveMeals(date, cards), 1500));
-    const debouncedSaveApiStepsRef = useRef(debounce((date, steps) => saveSteps(date, steps), 1500));
+    const debouncedSaveApiPedometerRef = useRef(debounce((date, pData) => savePedometerData(date, pData), 1500));
     const debouncedSaveToStorageRef = useRef(debounce((data) => {
         try {
             sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -85,15 +85,15 @@ export const DataProvider = ({ children }) => {
         } catch (error) { console.error(`Error saving meals for date ${dateToSave}:`, error); }
     }
 
-    async function saveSteps(dateToSave, stepsToSave) {
-        if (!userId || !dateToSave || stepsToSave === undefined) return;
+    async function savePedometerData(dateToSave, pedometerData) {
+        if (!userId || !dateToSave || pedometerData === undefined) return;
         try {
-            await fetch(`${process.env.REACT_APP_API_URL}/api/healthcare/steps`, {
+            await fetch(`${process.env.REACT_APP_API_URL}/api/healthcare/pedometer`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId, date: dateToSave, steps: stepsToSave }),
+                body: JSON.stringify({ userId, date: dateToSave, ...pedometerData }),
             });
-        } catch (error) { console.error(`Error saving steps for date ${dateToSave}:`, error); }
+        } catch (error) { console.error(`Error saving pedometer data for date ${dateToSave}:`, error); }
     }
 
     // --- DATA FETCHING EFFECT ---
@@ -111,12 +111,12 @@ export const DataProvider = ({ children }) => {
         }
 
         if (pedometerDataByDate[selectedDate] === undefined) {
-            fetch(`${process.env.REACT_APP_API_URL}/api/healthcare/steps/${userId}/${selectedDate}`)
+            fetch(`${process.env.REACT_APP_API_URL}/api/healthcare/pedometer/${userId}/${selectedDate}`)
                 .then(res => res.json())
-                .then(data => setPedometerDataByDate(prev => ({ ...prev, [selectedDate]: { steps: data.steps || 0 } })))
+                .then(data => setPedometerDataByDate(prev => ({ ...prev, [selectedDate]: { steps: data.steps || 0, weight: data.weight || 0 } })))
                 .catch(error => {
-                    console.error("Error fetching steps:", error);
-                    setPedometerDataByDate(prev => ({ ...prev, [selectedDate]: { steps: 0 } }));
+                    console.error("Error fetching pedometer data:", error);
+                    setPedometerDataByDate(prev => ({ ...prev, [selectedDate]: { steps: 0, weight: 0 } }));
                 });
         }
     }, [userId, selectedDate, mealsByDate, pedometerDataByDate]);
@@ -146,15 +146,16 @@ export const DataProvider = ({ children }) => {
     }, [mealsByDate, selectedDate]);
 
     useEffect(() => {
-        const currentSteps = pedometerDataByDate[selectedDate]?.steps;
-        if (currentSteps !== undefined) {
-            debouncedSaveApiStepsRef.current(selectedDate, currentSteps);
+        const currentPedometerData = pedometerDataByDate[selectedDate];
+        if (currentPedometerData !== undefined) {
+            debouncedSaveApiPedometerRef.current(selectedDate, currentPedometerData);
         }
     }, [pedometerDataByDate, selectedDate]);
 
     // --- HANDLER FUNCTIONS ---
     const updateCurrentMeals = (updateFn) => setMealsByDate(prev => ({ ...prev, [selectedDate]: updateFn(prev[selectedDate] || []) }));
-    const updateSteps = (newSteps) => setPedometerDataByDate(prev => ({ ...prev, [selectedDate]: { steps: newSteps } }));
+    const updateSteps = (newSteps) => setPedometerDataByDate(prev => ({ ...prev, [selectedDate]: { ...prev[selectedDate], steps: newSteps } }));
+    const updateWeight = (newWeight) => setPedometerDataByDate(prev => ({ ...prev, [selectedDate]: { ...prev[selectedDate], weight: newWeight } }));
     const addMealCard = () => updateCurrentMeals(cards => [...cards, { id: Date.now(), category: '', foods: [], searchQuery: '' }]);
     const handleCategoryChange = (cardId, newCategory) => updateCurrentMeals(cards => cards.map(card => card.id === cardId ? { ...card, category: newCategory } : card));
     const deleteMealCard = (cardId) => updateCurrentMeals(cards => cards.filter(card => card.id !== cardId));
@@ -166,12 +167,14 @@ export const DataProvider = ({ children }) => {
     // --- CONTEXT VALUE ---
     const value = {
         selectedDate, setSelectedDate,
-        mealsByDate, // Expose full cache
-        pedometerDataByDate, // Expose full cache
+        mealsByDate,
+        pedometerDataByDate,
         mealCards: mealsByDate[selectedDate] || [],
         dietTotals,
         steps: pedometerDataByDate[selectedDate]?.steps || 0,
+        weight: pedometerDataByDate[selectedDate]?.weight || 0,
         updateSteps,
+        updateWeight,
         addMealCard, deleteMealCard, handleCategoryChange,
         addFoodToCard, removeFoodFromCard, updateFoodQty, setSearchQuery, setMealCards: setMealsByDate
     };
