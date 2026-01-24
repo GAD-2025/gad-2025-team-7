@@ -484,15 +484,19 @@
 }
 
 /* Specific styling for horizontally aligned dashboard sections */
-.healthcare-row .dashboard-section.cycle-prediction-section,
+.healthcare-row .dashboard-section.cycle-prediction-section {
+    flex: 1.2;
+    min-width: 0;
+}
+
 .healthcare-row .dashboard-section.calorie-intake-section {
-    /* flex: 1 1 calc(50% - 5px); flex-grow, flex-shrink, flex-basis */
-    /* min-width: 0; Prevent content from forcing a minimum width */
+    flex: 1;
+    min-width: 0;
 }
 
 .healthcare-row .dashboard-section.diet-section {
-    flex: none; /* Prevent diet section from growing or shrinking */
-    width: 428.0px; /* Set explicit width */
+    flex: none;
+    width: 428px;
 }
 
 /* Styles for new Macros section */
