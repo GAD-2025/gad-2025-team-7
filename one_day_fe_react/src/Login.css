@@ -1,8 +1,9 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
 
 :root {
     --primary-color: #FF7581;
-    --background-color: #f0f2f5;
+    --background-color: #F7F9FA;
     --container-bg: #ffffff;
     --text-color: #333;
     --light-text-color: #888;
@@ -23,7 +24,7 @@ body {
 
 .info-panel {
     flex-basis: 50%;
-    background: linear-gradient(135deg, var(--primary-color), #ff9a8b);
+    background: linear-gradient(to right, #F8A5AC, #F7F9FA);
     color: white;
     display: flex;
     flex-direction: column;
@@ -34,16 +35,23 @@ body {
     box-sizing: border-box;
 }
 
-.info-panel h2 {
+.info-panel h2 .one-day-title {
     font-size: 48px;
     font-weight: 700;
-    margin-bottom: 20px;
     line-height: 1.4;
+    color: var(--primary-color); /* Key color */
+    -webkit-text-stroke: 0.5px #AEAEAE; /* Text stroke for Webkit browsers */
+    text-stroke: 0.5px #AEAEAE; /* Standard text stroke */
+    font-family: 'Pretendard', sans-serif; /* Add Pretendard font */
+    text-shadow: 0px 0px 8px rgba(255, 96, 96, 0.25); /* Add drop shadow */
 }
 
-.info-panel p {
+.info-panel h2 .one-day-subtitle {
     font-size: 20px;
     line-height: 1.6;
+    color: #F7F9FA;
+    font-weight: 300; /* Light weight */
+    font-family: 'Pretendard', sans-serif; /* Apply Pretendard font */
 }
 
 .form-wrapper {
@@ -56,27 +64,34 @@ body {
 .form-container {
     width: 420px;
     padding: 40px;
-    background-color: transparent; /* No separate background needed */
-    text-align: center;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .form-container h1 {
-    font-size: 36px;
-    color: var(--primary-color);
+    font-size: 20px;
+    color: #8E95A2;
     margin-bottom: 30px;
-    font-weight: 700;
+    font-weight: 300;
+    text-align: center;
 }
 
 input[type="email"],
 input[type="password"],
 #nickname-input {
-    width: 100%;
-    padding: 15px;
+    width: 327px;
+    height: 43px;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
     margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 15px; /* Changed from 5px to 15px */
     box-sizing: border-box;
-    font-size: 16px;
+    font-size: 17px; /* Changed from 16px to 17px */
+    color: #8E95A2; /* Added text color */
+    text-align: center; /* Center text within input */
 }
 
 .options, .terms {
@@ -93,14 +108,14 @@ input[type="password"],
 
 button[type="submit"],
 #save-profile {
-    width: 100%;
-    padding: 15px;
-    background-color: var(--primary-color);
-    border: none;
-    border-radius: 5px;
-    color: #fff;
-    font-size: 18px;
-    font-weight: 700;
+    width: 327px;
+    height: 43px;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border-radius: 15px;
+    color: #8E95A2;
+    font-size: 17px;
+    font-weight: 300; /* Light weight to match inputs */
     cursor: pointer;
     transition: background-color 0.3s;
 }

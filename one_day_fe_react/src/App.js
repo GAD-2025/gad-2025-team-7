@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useParams, useLocation } from 'react-router-dom';
 import Home from './Home';
 import Login from './Login';
 import DiaryCollection from './DiaryCollection';
@@ -19,43 +19,11 @@ import './App.css'; // Ensure App.css is imported
 const BASE_WIDTH = 1194; // New base width
 const BASE_HEIGHT = 834; // New base height
 
-function App() {
+function MainAppContent() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [scale, setScale] = useState(1); // Add scale state
-  const [isSlideOutNavOpen, setIsSlideOutNavOpen] = useState(false); // Moved here
+  const [isSlideOutNavOpen, setIsSlideOutNavOpen] = useState(false);
   const [isTemplateNavOpen, setIsTemplateNavOpen] = useState(false);
-
-  useEffect(() => {
-    const checkAuth = () => {
-      const userId = localStorage.getItem('userId');
-      setIsAuthenticated(!!userId);
-    };
-
-    checkAuth(); // Check on initial load
-    window.addEventListener('storage', checkAuth); // Check on storage change
-    return () => {
-      window.removeEventListener('storage', checkAuth);
-    };
-  }, []);
-
-  // Scaling logic
-  useEffect(() => {
-    const calculateScale = () => {
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-
-      const widthScale = viewportWidth / BASE_WIDTH;
-      const heightScale = viewportHeight / BASE_HEIGHT;
-
-      const newScale = Math.min(widthScale, heightScale);
-      setScale(newScale);
-    };
-
-    calculateScale();
-    window.addEventListener('resize', calculateScale);
-
-    return () => window.removeEventListener('resize', calculateScale);
-  }, []);
+  const location = useLocation();
 
   const handleLogin = () => {
     setIsAuthenticated(true);
@@ -74,42 +42,75 @@ function App() {
   };
 
   return (
+    <>
+      {location.pathname !== '/login' && (
+        <>
+          <div id="collection-trigger" onClick={() => setIsSlideOutNavOpen(true)} className="collection-trigger"></div>
+          <SlideOutNav isOpen={isSlideOutNavOpen} onClose={() => setIsSlideOutNavOpen(false)} />
+          <SlideOutNav isOpen={isTemplateNavOpen} onClose={() => setIsTemplateNavOpen(false)} navType="template" />
+        </>
+      )}
+      <div className="App">
+        <Routes>
+          <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          
+          <Route element={isAuthenticated ? <DataProvider><MainLayout setIsSlideOutNavOpen={setIsSlideOutNavOpen} /></DataProvider> : <Navigate to="/login" />} >
+            <Route path="/home" element={<Home />} />
+            <Route path="/diary-collection" element={<DiaryCollection />} />
+            <Route path="/diary" element={<DiaryWrapper />} />
+            <Route path="/diary/:date" element={<DiaryWrapper />} />
+            <Route path="/diary-view/id/:id" element={<DiaryViewWrapper />} />
+            <Route path="/stopwatch-collection" element={<StopwatchCollection />} />
+            <Route path="/healthcare-collection" element={<HealthcareCollection />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/template" element={<Template />} />
+          </Route>
+
+          <Route path="/" element={<Navigate to="/login" />} />
+        </Routes>
+      </div>
+    </>
+  );
+}
+
+function App() {
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const calculateScale = () => {
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      const widthScale = viewportWidth / BASE_WIDTH;
+      const heightScale = viewportHeight / BASE_HEIGHT;
+
+      const newScale = Math.min(widthScale, heightScale);
+      setScale(newScale);
+    };
+
+    calculateScale();
+    window.addEventListener('resize', calculateScale);
+
+    return () => window.removeEventListener('resize', calculateScale);
+  }, []);
+
+  return (
     <div id="scale-wrapper">
       <div
         id="ipad-root"
         style={{
-          transform: `scale(${scale})`,
-          transformOrigin: 'top left',
-          // To center the scaled content horizontally
-          marginLeft: scale < 1 ? `${(window.innerWidth - BASE_WIDTH * scale) / 2}px` : 'auto',
-          marginRight: scale < 1 ? `${(window.innerWidth - BASE_WIDTH * scale) / 2}px` : 'auto',
+          width: BASE_WIDTH, // Explicitly set width
+          height: BASE_HEIGHT, // Explicitly set height
+          transformOrigin: 'center center', // Change origin to center
+          position: 'absolute', // Add absolute positioning
+          left: '50%', // Center horizontally
+          top: '50%', // Center vertically
+          transform: `translate(-50%, -50%) scale(${scale})`, // Adjust transform for centering
         }}
       >
           <div id="content-frame">
             <Router>
-              {/* collection-trigger and SlideOutNav moved here */}
-              <div id="collection-trigger" onClick={() => setIsSlideOutNavOpen(true)} className="collection-trigger"></div>
-              <SlideOutNav isOpen={isSlideOutNavOpen} onClose={() => setIsSlideOutNavOpen(false)} />
-              <SlideOutNav isOpen={isTemplateNavOpen} onClose={() => setIsTemplateNavOpen(false)} navType="template" />
-              <div className="App">
-                <Routes>
-                  <Route path="/login" element={isAuthenticated ? <Navigate to="/home" /> : <Login onLogin={handleLogin} />} />
-                  
-                  <Route element={isAuthenticated ? <DataProvider><MainLayout setIsSlideOutNavOpen={setIsSlideOutNavOpen} /></DataProvider> : <Navigate to="/login" />} >
-                    <Route path="/home" element={<Home />} />
-                    <Route path="/diary-collection" element={<DiaryCollection />} />
-                    <Route path="/diary" element={<DiaryWrapper />} />
-                    <Route path="/diary/:date" element={<DiaryWrapper />} />
-                    <Route path="/diary-view/id/:id" element={<DiaryViewWrapper />} />
-                    <Route path="/stopwatch-collection" element={<StopwatchCollection />} />
-                    <Route path="/healthcare-collection" element={<HealthcareCollection />} />
-                    <Route path="/profile" element={<Profile />} />
-                    <Route path="/template" element={<Template />} />
-                  </Route>
-
-                  <Route path="/" element={<Navigate to="/login" />} />
-                </Routes>
-              </div>
+              <MainAppContent />
             </Router>
           </div>
       </div>
