@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL,
     profile_image_url VARCHAR(255) NULL,
     weight DECIMAL(5, 2) NULL,
+    target_calories INT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
