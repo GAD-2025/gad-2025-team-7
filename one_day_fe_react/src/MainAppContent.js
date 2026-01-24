@@ -17,16 +17,31 @@ import { DataProvider } from './DataContext'; // Import DataProvider
 
 function MainAppContent() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true); // Add loading state
+  console.log('MainAppContent: Initial isAuthenticated:', isAuthenticated); // Log initial state
   const [isSlideOutNavOpen, setIsSlideOutNavOpen] = useState(false);
   const [isTemplateNavOpen, setIsTemplateNavOpen] = useState(false); // Corrected state setter name
   const location = useLocation();
   const navigate = useNavigate(); // Initialize useNavigate
 
+  // Add useEffect to check authentication status from localStorage on initial load
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    console.log('MainAppContent useEffect: userId from localStorage:', userId); // Log userId
+    if (userId) {
+      setIsAuthenticated(true);
+      console.log('MainAppContent useEffect: isAuthenticated set to true.'); // Log state change
+    }
+    setLoading(false); // Set loading to false after check
+  }, []); // Empty dependency array means this runs once on mount
+
   const handleLogin = () => {
     setIsAuthenticated(true);
+    console.log('MainAppContent handleLogin: isAuthenticated set to true, navigating to /home.'); // Log handleLogin
     navigate('/home'); // Navigate to home after successful login
   };
 
+  // Define DiaryWrapper and DiaryViewWrapper here
   const DiaryWrapper = () => {
     const { date } = useParams();
     const { profile } = useProfile();
@@ -38,6 +53,13 @@ function MainAppContent() {
     const { id } = useParams();
     return <DiaryView id={id} />;
   };
+
+  console.log('MainAppContent render: Current isAuthenticated:', isAuthenticated); // Log render state
+
+  // If loading, render nothing or a loading spinner
+  if (loading) {
+    return <div>Loading authentication...</div>; // Or a proper spinner
+  }
 
   return (
     <>

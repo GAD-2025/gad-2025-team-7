@@ -121,7 +121,7 @@
 .profile-form-group input[type="text"],
 .profile-form-group input[type="email"],
 .profile-form-group input[type="password"] {
-    width: 100%;
+    width: 327px; /* Fixed width to match login inputs */
     padding: 9px 15px; /* Adjusted padding */
     border: 1px solid #E9ECEF; /* Soft border color */
     border-radius: 12px; /* More rounded */
