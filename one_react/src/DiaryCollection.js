@@ -3,6 +3,7 @@ import './DiaryCollection.css';
 import { useNavigate } from 'react-router-dom';
 import DateFilter from './DateFilter'; // Import the new component
 import { useProfile } from './ProfileContext'; // Import useProfile
+import IllustratedCalendarIcon from './IllustratedCalendarIcon';
 
 const DiaryCollection = () => {
     const [allDiaries, setAllDiaries] = useState([]);
@@ -112,7 +113,7 @@ const DiaryCollection = () => {
                     <span className="dc-back-icon" onClick={handleGoBack}>←</span>
                     <h1 className="dc-title">다이어리 모아보기</h1>
                 </div>
-                <span className="dc-filter-icon" onClick={() => setIsFilterVisible(true)}>📅</span>
+                <IllustratedCalendarIcon onClick={() => setIsFilterVisible(true)} />
             </header>
 
             {filterRange.startDate && filterRange.endDate && (

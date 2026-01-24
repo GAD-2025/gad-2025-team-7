@@ -4,6 +4,8 @@
     width: 100%;
     padding: 20px;
     background-color: #ffffff; /* Light pastel background */
+    border-radius: 20px; /* 곡률 20px */
+    border: 1px solid #E1E7EF; /* 테두리 굵기 1, 색상 E1E7EF */
     min-height: 100vh; /* Ensure it takes full height */
     box-sizing: border-box;
     font-family: 'Pretendard', sans-serif;

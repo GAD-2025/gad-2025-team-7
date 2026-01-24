@@ -1,8 +1,10 @@
 /* StopwatchCollection.css (New Design) */
 .stopwatch-collection-container {
     width: 100%;
+    background-color: #ffffff; /* 흰색 */
+    border-radius: 20px; /* 곡률 20px */
+    border: 1px solid #E1E7EF; /* 테두리 굵기 1, 색상 E1E7EF */
     padding: 20px;
-    background-color: #F8F9FA; /* Light background for pastel feel */
     font-family: 'Pretendard', sans-serif;
     min-height: 100vh; /* Ensure it takes full height */
 }

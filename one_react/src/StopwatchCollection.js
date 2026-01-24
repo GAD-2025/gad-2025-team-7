@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import './StopwatchCollection.css'; // Import new CSS
 import DateFilter from './DateFilter'; // Reuse DateFilter component
+import IllustratedCalendarIcon from './IllustratedCalendarIcon';
 
 // Helper to format seconds to HH:MM:SS
 const formatTime = (totalSeconds) => {
@@ -124,7 +125,7 @@ const StopwatchCollection = () => {
                             <button className={sortOrder === 'asc' ? 'active' : ''} onClick={() => setSortOrder('asc')}>낮은 순</button>
                         </div>
                     </div>
-                    <span className="sc-calendar-icon" onClick={() => setIsFilterVisible(true)}>📅</span>
+                    <IllustratedCalendarIcon onClick={() => setIsFilterVisible(true)} />
                 </div>
             </header>
 
