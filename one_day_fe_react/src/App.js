@@ -108,7 +108,7 @@ function App() {
           transform: `translate(-50%, -50%) scale(${scale})`, // Adjust transform for centering
         }}
       >
-          <div id="content-frame">
+          <div id="content-frame" style={{ height: '100%' }}>
             <Router>
               <MainAppContent />
             </Router>

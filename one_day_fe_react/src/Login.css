@@ -19,7 +19,7 @@ body {
 .main-wrapper {
     display: flex;
     width: 100vw;
-    height: 100vh;
+    height: 100%; /* Changed from 100vh to 100% */
 }
 
 .info-panel {
@@ -68,15 +68,23 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    gap: 14px; /* Set vertical gap between children */
 }
 
 .form-container h1 {
     font-size: 20px;
     color: #8E95A2;
-    margin-bottom: 30px;
+    /* margin-bottom: 10px; // Removed */
     font-weight: 300;
     text-align: center;
+}
+
+.form-container form {
+    /* margin-top: 10px; // Removed */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px; /* Set vertical gap between children */
 }
 
 input[type="email"],
@@ -86,19 +94,25 @@ input[type="password"],
     height: 43px;
     background-color: #ffffff;
     border: 1px solid #cccccc;
-    margin-bottom: 15px;
-    border-radius: 15px; /* Changed from 5px to 15px */
+    /* margin-bottom: 15px; // Removed */
+    border-radius: 15px;
     box-sizing: border-box;
-    font-size: 17px; /* Changed from 16px to 17px */
-    color: #8E95A2; /* Added text color */
-    text-align: center; /* Center text within input */
+    font-size: 17px;
+    color: #8E95A2;
+    padding-left: 20px; /* Add left padding */
 }
 
 .options, .terms {
+    width: 327px; /* Match input/button width */
     text-align: left;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; // Removed */
     font-size: 14px;
-    color: #555;
+    color: #8E95A2; /* Change text color */
+}
+
+.options input[type="checkbox"] {
+    border: 1px solid #8E95A2; /* Checkbox stroke color */
+    margin-right: 5px; /* Add some space between checkbox and text */
 }
 
 .options label, .terms label {
@@ -110,10 +124,10 @@ button[type="submit"],
 #save-profile {
     width: 327px;
     height: 43px;
-    background-color: #ffffff;
+    background-color: var(--primary-color); /* Fill with key color */
     border: 1px solid #cccccc;
     border-radius: 15px;
-    color: #8E95A2;
+    color: #fff; /* Text color to white */
     font-size: 17px;
     font-weight: 300; /* Light weight to match inputs */
     cursor: pointer;
@@ -146,9 +160,9 @@ button[type="submit"]:hover,
 }
 
 .toggle-form {
-    margin-top: 30px;
+    margin-top: 15px; /* Move up by 15px */
     font-size: 14px;
-    color: #555;
+    color: #8E95A2; /* Change text color */
 }
 
 .toggle-form a {
