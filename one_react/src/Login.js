@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Login.css';
 import { useProfile } from './ProfileContext'; // Import the context hook
 
@@ -6,18 +6,39 @@ const Login = ({ onLogin }) => {
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [nickname, setNickname] = useState(''); // New state for nickname
+    const [confirmPassword, setConfirmPassword] = useState(''); // New state for confirm password
     const [error, setError] = useState('');
+    const [isAutoLogin, setIsAutoLogin] = useState(false); // New state for auto-login
     const { refreshProfile } = useProfile(); // Get the refresh function
 
     const handleResponse = (data) => {
         if (data.userId) {
             localStorage.setItem('userId', data.userId);
+            if (isAutoLogin) {
+                localStorage.setItem('autoLoginEmail', email);
+                localStorage.setItem('isAutoLogin', 'true');
+            } else {
+                localStorage.removeItem('autoLoginEmail');
+                localStorage.removeItem('isAutoLogin');
+            }
             refreshProfile(); // Trigger profile refetch after setting userId
             onLogin(); // Call onLogin to update isAuthenticated state in App.js
         } else {
             setError(data.msg || data.message || '오류가 발생했습니다.');
         }
     };
+
+    useEffect(() => {
+        const savedEmail = localStorage.getItem('autoLoginEmail');
+        const savedIsAutoLogin = localStorage.getItem('isAutoLogin') === 'true';
+
+        if (savedIsAutoLogin && savedEmail) {
+            setEmail(savedEmail);
+            setIsAutoLogin(true);
+            // App.js's routing handles actual auto-login (navigating to home) based on userId.
+        }
+    }, []); // Run once on mount
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -39,11 +60,15 @@ const Login = ({ onLogin }) => {
     const handleSignup = async (e) => {
         e.preventDefault();
         setError('');
+        if (password !== confirmPassword) {
+            setError('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+            return;
+        }
         try {
             const res = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email, password, nickname }), // Include nickname
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.msg || '회원가입 실패');
@@ -81,7 +106,7 @@ const Login = ({ onLogin }) => {
                             <input type="password" placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} required />
                             {error && <p className="error-message">{error}</p>}
                             <div className="options">
-                                <label><input type="checkbox" /> 자동 로그인</label>
+                                <label><input type="checkbox" checked={isAutoLogin} onChange={(e) => setIsAutoLogin(e.target.checked)} /> 자동 로그인</label>
                             </div>
                             <button type="submit">로그인</button>
                         </form>
@@ -92,7 +117,9 @@ const Login = ({ onLogin }) => {
                         <h1>SIGN UP</h1>
                         <form onSubmit={handleSignup}>
                             <input type="email" placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                            <input type="text" placeholder="닉네임" value={nickname} onChange={(e) => setNickname(e.target.value)} required className="login-input" />
                             <input type="password" placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                            <input type="password" placeholder="비밀번호 확인" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
                             {error && <p className="error-message">{error}</p>}
                             <div className="terms">
                                 <label><input type="checkbox" required /> 이용약관 동의 (필수)</label>

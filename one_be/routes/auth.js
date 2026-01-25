@@ -10,10 +10,10 @@ const jsonParser = express.json();
 // @desc    Register a new user
 // @access  Public
 router.post('/register', jsonParser, async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, nickname } = req.body;
 
-    if (!email || !password) {
-        return res.status(400).json({ msg: '이메일과 비밀번호를 모두 입력해주세요.' });
+    if (!email || !password || !nickname) {
+        return res.status(400).json({ msg: '이메일, 비밀번호, 닉네임을 모두 입력해주세요.' });
     }
 
     try {
@@ -29,6 +29,7 @@ router.post('/register', jsonParser, async (req, res) => {
         const newUser = {
             email,
             password: hashedPassword,
+            username: nickname, // Assuming 'username' is the column for nickname
         };
 
         const [result] = await db.query('INSERT INTO users SET ?', newUser);

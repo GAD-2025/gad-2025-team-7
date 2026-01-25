@@ -28,7 +28,9 @@ function App() {
   useEffect(() => {
     const checkAuth = () => {
       const userId = localStorage.getItem('userId');
-      setIsAuthenticated(!!userId);
+      const authStatus = !!userId;
+      setIsAuthenticated(authStatus);
+      console.log('App.js - Initial isAuthenticated status:', authStatus); // Debug log
     };
 
     checkAuth(); // Check on initial load

@@ -194,13 +194,13 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                 <button className="close-profile-button" onClick={onClose}>x</button> {/* Added close button */}
                 <h1>My Profile</h1>
                 <div className="profile-image-and-name">
-                    <span className="profile-nickname-display">{username}</span>
                     <div
                         className="profile-picture-container"
-                        style={{ border: '1px solid #E1E7EF', backgroundImage: previewImage ? `url(${previewImage})` : 'none' }}
+                        style={{ border: '1px solid #E1E7EF', backgroundImage: previewImage ? `url(${process.env.REACT_APP_API_URL}${previewImage})` : 'none' }}
                     >
                         <ImageUploader onImageUpload={handleImageUpload} currentImageUrl={previewImage} />
                     </div>
+                    <span className="profile-nickname-display-popup">{username}</span>
                 </div>
                 
                 

@@ -84,14 +84,18 @@ body {
     font-weight: normal; /* Changed from bold to normal */
 }
 
-input[type="email"]::placeholder,
-input[type="password"]::placeholder,
+input[type="email"],
+input[type="password"],
+.login-input, /* Added for nickname input */
 #nickname-input::placeholder {
     color: #8E95A2;
     font-size: 15px;
 }
 
-input[type="email"] {
+input[type="email"],
+input[type="password"],
+.login-input, /* Added for nickname input */
+#nickname-input {
     width: 327px; /* Changed from 100% */
     height: 43px; /* New height */
     padding: 0 15px; /* Adjusted padding for new height */
@@ -99,7 +103,7 @@ input[type="email"] {
     border: 1px solid #CCCCCC; /* Changed border color */
     border-radius: 15px; /* Changed border-radius */
     box-sizing: border-box;
-    font-size: 17px; /* Changed font size to 17px (approx 17pt) */
+    font-size: 13px; /* Changed font size to 13px */
     color: #8E95A2; /* Changed text color */
     background-color: #ffffff; /* New background color */
 }

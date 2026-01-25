@@ -91,6 +91,13 @@
     margin-bottom: 20px;
 }
 
+.profile-nickname-display-popup {
+    font-size: 28px;
+    color: #373737;
+    font-weight: bold; /* Assuming bold is desired for a prominent display */
+    margin-top: 10px; /* Add some space below the image */
+}
+
 .profile-nickname-display {
     font-size: 1.2em;
     font-weight: bold;
