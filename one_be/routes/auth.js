@@ -308,5 +308,30 @@ router.put('/change-email/:userId', jsonParser, async (req, res) => {
     }
 });
 
+// @route   DELETE /api/auth/withdraw/:userId
+// @desc    Delete user account
+// @access  Private
+router.delete('/withdraw/:userId', async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        // Optional: Delete associated data from other tables first
+        // await db.query('DELETE FROM menstrual_cycles WHERE user_id = ?', [userId]);
+        // await db.query('DELETE FROM daily_steps WHERE user_id = ?', [userId]);
+        // ... and so on for other tables like meals, todos, events
+
+        const [result] = await db.query('DELETE FROM users WHERE id = ?', [userId]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ msg: '사용자를 찾을 수 없습니다.' });
+        }
+
+        res.status(200).json({ msg: '회원 탈퇴가 성공적으로 처리되었습니다.' });
+    } catch (error) {
+        console.error('Withdraw account error:', error);
+        res.status(500).json({ msg: `Database error: ${error.message}` });
+    }
+});
+
 
 module.exports = router;

@@ -32,6 +32,7 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
     const [newUsername, setNewUsername] = useState('');
     const [passwordForUsernameChange, setPasswordForUsernameChange] = useState('');
     const [usernameError, setUsernameError] = useState('');
+    const [showWithdrawModal, setShowWithdrawModal] = useState(false); // New state for withdraw modal
 
     const userId = localStorage.getItem('userId');
 
@@ -209,6 +210,30 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
         window.location.href = '/login';
     };
 
+    const handleWithdraw = async () => {
+        if (!userId) return;
+
+        try {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/withdraw/${userId}`, {
+                method: 'DELETE',
+            });
+
+            if (res.ok) {
+                alert('회원 탈퇴가 성공적으로 처리되었습니다.');
+                localStorage.clear(); // Clear all local storage data
+                window.location.href = '/login'; // Redirect to login page
+            } else {
+                const errorData = await res.json();
+                alert(`회원 탈퇴 실패: ${errorData.msg}`);
+            }
+        } catch (error) {
+            console.error('Failed to withdraw account:', error);
+            alert(`회원 탈퇴 중 오류가 발생했습니다: ${error.message}`);
+        } finally {
+            setShowWithdrawModal(false); // Close modal regardless of success/failure
+        }
+    };
+
 
     return (
         <Modal show={show} onClose={onClose} contentClassName="profile-modal-content"> {/* Wrap content in Modal */}
@@ -249,17 +274,12 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                         backgroundRepeat: 'no-repeat'
                     }}></div>
                     <button onClick={handleLogout} className="settings-button" style={{ backgroundColor: '#FF5C5C', borderRadius: '10px', color: '#ffffff' }}>로그아웃</button>
+                    <span className="withdraw-text" onClick={() => setShowWithdrawModal(true)}>탈퇴</span>
                 </div>
             </div>
 
             {/* Modals remain the same */}
-            <Modal show={showChangePasswordModal} onClose={() => {
-                setShowChangePasswordModal(false);
-                setCurrentPassword('');
-                setNewPassword('');
-                setConfirmPassword('');
-                setPasswordError('');
-            }} contentClassName="change-password-modal-content">
+            <Modal show={showChangePasswordModal} onClose={handleCancelPasswordChange} contentClassName="change-password-modal-content">
                 <h3>비밀번호 변경</h3>
                 <div className="profile-form-group">
                     <input
@@ -323,12 +343,7 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
             </Modal>
 
             {/* Change Username Modal */}
-            <Modal show={showChangeUsernameModal} onClose={() => {
-                setShowChangeUsernameModal(false);
-                setNewUsername('');
-                setPasswordForUsernameChange('');
-                setUsernameError('');
-            }}>
+            <Modal show={showChangeUsernameModal} onClose={handleCancelUsernameChange}>
                 <h3>닉네임 변경</h3>
                 <div className="profile-form-group">
                     <input
@@ -350,6 +365,17 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                 <div className="modal-actions">
                     <button onClick={handleChangeUsername}>변경하기</button>
                     <button onClick={handleCancelUsernameChange}>취소</button>
+                </div>
+            </Modal>
+
+            {/* Withdrawal Confirmation Modal */}
+            <Modal show={showWithdrawModal} onClose={() => setShowWithdrawModal(false)}>
+                <h3>회원 탈퇴</h3>
+                <p>정말 탈퇴하시겠습니까?</p>
+                <p>저장된 정보가 영구적으로 사라집니다.</p>
+                <div className="modal-actions">
+                    <button onClick={handleWithdraw} style={{ backgroundColor: '#FF5C5C', color: 'white' }}>확인</button>
+                    <button onClick={() => setShowWithdrawModal(false)}>취소</button>
                 </div>
             </Modal>
         </Modal>

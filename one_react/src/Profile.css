@@ -3,7 +3,7 @@
     flex-direction: column;
     align-items: center;
     background-color: white;
-    padding: 20px 20px 20px 20px;
+    padding: 10px 20px 10px 20px; /* Reduced top and bottom padding */
     /* box-sizing: border-box; */
     position: relative;
     border-radius: 20px;
@@ -60,7 +60,7 @@
 }
 
 .profile-container h1 {
-    color: #C1C4CA;
+    color: #8E95A2; /* Changed color */
     margin-bottom: 15px; /* Reduced margin */
     font-size: 15px;
     font-weight: 300;
@@ -225,7 +225,7 @@
     flex-direction: column;
     align-items: center; /* Center items horizontally */
     gap: 14px; /* Increased gap */
-    margin-top: 30px; /* Increased margin */
+    margin-top: 22px; /* Adjusted margin-top for 24px gap */
     width: 100%;
     max-width: 400px;
 }
@@ -249,6 +249,14 @@
     background-color: #FFE1E3; /* Lighter pink on hover */
     border-color: #FF7581; /* Darker pink border on hover */
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.withdraw-text {
+    color: #8E95A2;
+    font-size: 14px;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-top: 10px; /* Space below logout button */
 }
 
 .personal-info-edit-form {
