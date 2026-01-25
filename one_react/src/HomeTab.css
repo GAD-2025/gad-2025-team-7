@@ -242,8 +242,8 @@
 }
 
 .item-time {
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 14px; /* Changed font size */
+    font-weight: 400; /* Changed to regular */
     color: #FFA3A3;
 }
 

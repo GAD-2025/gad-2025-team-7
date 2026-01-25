@@ -274,6 +274,8 @@ const HomeTab = ({
         setShowScheduleRepeatDayPicker(false); // Renamed
         setShowScheduleIrregularDatesPicker(false); // New
         setNewScheduleIrregularSelectedDates([]); // New
+        setShowScheduleTimePicker(false); // Reset time picker visibility
+        setShowScheduleRepeat(false); // Reset repeat chip visibility
         setShowScheduleModal(false);
     };
 
@@ -634,15 +636,12 @@ const HomeTab = ({
                 />
                 <div className="template-color-picker">
                     {defaultColors.map(color => {
-                                                const isSelected = newScheduleTemplateColor === color;
-                                                const style = isSelected
-                                                    ? {
-                                                        borderColor: color,
-                                                        backgroundColor: hexToRgba(color, 0.5),
-                                                        border: '2px solid #d3d3d3', // Light gray border for selected
-                                                      }
-                                                    : { backgroundColor: color, border: '1px solid transparent' };
-                        return (
+                                                                        const isSelected = newScheduleTemplateColor === color;
+                                                                        const style = {
+                                                                            borderColor: color,
+                                                                            backgroundColor: hexToRgba(color, 0.5),
+                                                                            border: isSelected ? '2px solid #d3d3d3' : '1px solid transparent', // Light gray border for selected
+                                                                        };                        return (
                             <div
                                 key={color}
                                 className={`color-circle ${isSelected ? 'selected' : ''}`}

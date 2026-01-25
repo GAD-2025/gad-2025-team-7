@@ -37,6 +37,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 120px; /* Adjust as needed */
+    margin-top: 5px; /* Move text down by 5px */
 }
 
 /* Skeleton loader style */
