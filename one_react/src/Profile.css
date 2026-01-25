@@ -166,11 +166,11 @@
     height: 32px;
 }
 
-.profile-actions {
+.modal-actions {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
-    margin-top: 5px;
+    margin-top: 20px; /* Moved down by 15px */
     width: 100%;
     max-width: 400px;
 }
