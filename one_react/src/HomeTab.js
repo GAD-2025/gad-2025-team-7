@@ -69,6 +69,10 @@ const HomeTab = ({
     const [showTodoColorPicker, setShowTodoColorPicker] = useState(false); // For todo custom color picker
     const todoColorPickerBtnRef = useRef(null); // Ref for the todo custom color button
     const todoColorPickerPaletteRef = useRef(null); // Ref for the todo color picker palette
+    const [todoTemplates, setTodoTemplates] = useState([]); // New state for todo templates
+    const [showCreateTodoTemplateModal, setShowCreateTodoTemplateModal] = useState(false); // New state for todo template modal
+    const [newTodoTemplateTitle, setNewTodoTemplateTitle] = useState(''); // New state for new todo template title
+    const [newTodoTemplateColor, setNewTodoTemplateColor] = useState('#FFE79D'); // New state for new todo template color
 
     // Effect to close todo color picker on outside click
     useEffect(() => {
@@ -151,6 +155,21 @@ const HomeTab = ({
             }
         };
         fetchUpcomingEvents();
+
+        const fetchTodoTemplates = async () => {
+            try {
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/templates/${userId}?type=todo`);
+                const data = await res.json();
+                if (res.ok) {
+                    setTodoTemplates(data);
+                } else {
+                    console.error("Failed to fetch todo templates:", data.msg);
+                }
+            } catch (error) {
+                console.error("Error fetching todo templates:", error);
+            }
+        };
+        fetchTodoTemplates();
     }, [userId, selectedDate, onDataUpdate]);
 
     const handleToggleTodo = async (todoId, currentStatus) => {
@@ -303,6 +322,25 @@ const HomeTab = ({
         } catch (error) {
             console.error('Error saving schedule template:', error);
             alert(`일정 템플릿 저장에 실패했습니다: ${error.message}`);
+        }
+    };
+
+    const handleCreateTodoTemplate = async () => {
+        if (!newTodoTemplateTitle) return;
+        const body = { userId, title: newTodoTemplateTitle, type: 'todo', color: newTodoTemplateColor }; // Add color
+        try {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/templates`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+            });
+            if (!res.ok) throw new Error('Failed to save todo template');
+            onDataUpdate(); // Refresh data
+            setShowCreateTodoTemplateModal(false);
+            setNewTodoTemplateTitle('');
+        } catch (error) {
+            console.error('Error saving todo template:', error);
+            alert(`투두 템플릿 저장에 실패했습니다: ${error.message}`);
         }
     };
 
@@ -527,58 +565,30 @@ const HomeTab = ({
                     <span className="schedule-modal-date">{new Date(selectedDate).getMonth() + 1}월 {new Date(selectedDate).getDate()}일</span>
                     <button className="modal-close-btn" onClick={resetTodoForm}>x</button>
                 </div>
-                <input type="text" className="schedule-title-input" placeholder="새로운 할 일" value={newTodoTitle} onChange={(e) => setNewTodoTitle(e.target.value)} />
                 <div className="todo-day-picker-wrapper">
                     <div className="chip-container">
                         <div><label className="chip-checkbox-label"><input type="checkbox" checked={showTodoDayPicker} onChange={handleShowTodoDayPickerChange} /><span> 요일</span></label></div>
                     </div>
                     {showTodoDayPicker && (
-                        <div className="schedule-option-box">
+                        <div className="schedule-option-box todo-day-picker-option-box">
                             <div className="days-of-week-container">{['일', '월', '화', '수', '목', '금', '토'].map((day, index) => (<label key={day}><input type="checkbox" value={index} onChange={handleDayOfWeekChange} checked={newTodoSelectedDays.includes(index)} />{day}</label>))}</div>
                         </div>
                     )}
                 </div>
-                <div className="template-color-picker">
-                    {defaultColors.map(color => {
-                        const isSelected = newTodoColor === color;
-                        const style = isSelected
-                            ? {
-                                borderColor: color,
-                                backgroundColor: hexToRgba(color, 0.5),
-                                border: '2px solid #d3d3d3',
-                              }
-                            : { backgroundColor: color, border: '1px solid transparent' };
-
-                        return (
-                            <div
-                                key={color}
-                                className={`color-circle ${isSelected ? 'selected' : ''}`}
-                                style={style}
-                                onClick={() => setNewTodoColor(color)}
-                            ></div>
-                        );
-                    })}
-                    {/* Custom Color Circle for Todo */}
-                    <div
-                        ref={todoColorPickerBtnRef}
-                        className={`color-circle custom-color-circle ${newTodoColor && !defaultColors.includes(newTodoColor) ? 'selected' : ''}`}
-                        style={{
-                            backgroundColor: newTodoColor,
-                            borderColor: newTodoColor,
-                            borderStyle: 'solid',
-                        }}
-                        onClick={() => setShowTodoColorPicker(!showTodoColorPicker)}
-                    >
-                        {defaultColors.includes(newTodoColor) && (
-                            <div className="plus-icon"></div>
-                        )}
-                    </div>
+                <input type="text" className="schedule-title-input" placeholder="새로운 할 일" value={newTodoTitle} onChange={(e) => setNewTodoTitle(e.target.value)} />
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginBottom: '10px' }}>
+                    {todoTemplates.map(template => (
+                        <button
+                            key={template.id}
+                            className="template-tag"
+                            style={{ borderColor: template.color, color: template.color }}
+                            onClick={() => handleTodoTemplateClick(template)}
+                        >
+                            {template.title}
+                        </button>
+                    ))}
+                    <button className="home-add-btn" onClick={() => setShowCreateTodoTemplateModal(true)}>+</button>
                 </div>
-                {showTodoColorPicker && (
-                    <div ref={todoColorPickerPaletteRef} className="expanded-color-palette">
-                        <HexColorPicker color={newTodoColor} onChange={setNewTodoColor} />
-                    </div>
-                )}
                 <div className="modal-actions"><button onClick={handleSaveTodo}>저장</button><button onClick={resetTodoForm}>취소</button></div>
             </Modal>
             <Modal show={showScheduleModal} onClose={resetScheduleForm} contentClassName="add-schedule-modal-content">
@@ -626,59 +636,219 @@ const HomeTab = ({
                 message={confirmationModalProps.message}
             />
 
-            <Modal show={showCreateScheduleTemplateModal} onClose={() => setShowCreateScheduleTemplateModal(false)}>
-                
-                <input
-                    type="text"
-                    placeholder="템플릿명을 입력하세요."
-                    value={newScheduleTemplateTitle}
-                    onChange={(e) => setNewScheduleTemplateTitle(e.target.value)}
-                />
-                <div className="template-color-picker">
-                    {defaultColors.map(color => {
-                                                                        const isSelected = newScheduleTemplateColor === color;
-                                                                        const style = {
-                                                                            borderColor: color,
-                                                                            backgroundColor: hexToRgba(color, 0.5),
-                                                                            border: isSelected ? '2px solid #d3d3d3' : '1px solid transparent', // Light gray border for selected
-                                                                        };                        return (
-                            <div
-                                key={color}
-                                className={`color-circle ${isSelected ? 'selected' : ''}`}
-                                style={style}
-                                onClick={() => setNewScheduleTemplateColor(color)}
-                            ></div>
-                        );
-                    })}
-                    {/* Custom Color Circle */}
-                    <div
-                        ref={colorPickerBtnRef}
-                        className={`color-circle custom-color-circle ${newScheduleTemplateColor && !defaultColors.includes(newScheduleTemplateColor) ? 'selected' : ''}`}
-                        style={{
-                            backgroundColor: newScheduleTemplateColor,
-                            borderColor: newScheduleTemplateColor,
-                            borderStyle: 'solid',
-                        }}
-                        onClick={() => setShowColorPicker(!showColorPicker)}
-                    >
-                        {defaultColors.includes(newScheduleTemplateColor) && (
-                            <div className="plus-icon"></div>
-                        )}
+                        <Modal show={showCreateScheduleTemplateModal} onClose={() => setShowCreateScheduleTemplateModal(false)}>
+
+                            
+
+                            <input
+
+                                type="text"
+
+                                placeholder="템플릿명을 입력하세요."
+
+                                value={newScheduleTemplateTitle}
+
+                                onChange={(e) => setNewScheduleTemplateTitle(e.target.value)}
+
+                            />
+
+                            <div className="template-color-picker">
+
+                                {defaultColors.map(color => {
+
+                                                            const isSelected = newScheduleTemplateColor === color;
+
+                                                            const style = {
+
+                                                                borderColor: color,
+
+                                                                backgroundColor: hexToRgba(color, 0.5),
+
+                                                                border: isSelected ? '2px solid #d3d3d3' : '1px solid transparent', // Light gray border for selected
+
+                                                            };
+
+                                    return (
+
+                                        <div
+
+                                            key={color}
+
+                                            className={`color-circle ${isSelected ? 'selected' : ''}`}
+
+                                            style={style}
+
+                                            onClick={() => setNewScheduleTemplateColor(color)}
+
+                                        ></div>
+
+                                    );
+
+                                })}
+
+                                {/* Custom Color Circle */}
+
+                                <div
+
+                                    ref={colorPickerBtnRef}
+
+                                    className={`color-circle custom-color-circle ${newScheduleTemplateColor && !defaultColors.includes(newScheduleTemplateColor) ? 'selected' : ''}`}
+
+                                    style={{
+
+                                        backgroundColor: newScheduleTemplateColor,
+
+                                        borderColor: newScheduleTemplateColor,
+
+                                        borderStyle: 'solid',
+
+                                    }}
+
+                                    onClick={() => setShowColorPicker(!showColorPicker)}
+
+                                >
+
+                                    {defaultColors.includes(newScheduleTemplateColor) && (
+
+                                        <div className="plus-icon"></div>
+
+                                    )}
+
+                                </div>
+
+                            </div>
+
+                            {showColorPicker && (
+
+                                <div ref={colorPickerPaletteRef} className="expanded-color-palette">
+
+                                    <HexColorPicker color={newScheduleTemplateColor} onChange={setNewScheduleTemplateColor} />
+
+                                </div>
+
+                            )}
+
+                            <div className="modal-actions">
+
+                                <button onClick={handleCreateScheduleTemplate}>저장</button>
+
+                                <button onClick={() => setShowCreateScheduleTemplateModal(false)}>취소</button>
+
+                            </div>
+
+                        </Modal>
+
+            
+
+                        {/* Create Todo Template Modal */}
+
+                        <Modal show={showCreateTodoTemplateModal} onClose={() => setShowCreateTodoTemplateModal(false)}>
+
+                            
+
+                            <input
+
+                                type="text"
+
+                                placeholder="템플릿명을 입력하세요."
+
+                                value={newTodoTemplateTitle}
+
+                                onChange={(e) => setNewTodoTemplateTitle(e.target.value)}
+
+                            />
+
+                            <div className="template-color-picker">
+
+                                {defaultColors.map(color => {
+
+                                                            const isSelected = newTodoTemplateColor === color;
+
+                                                            const style = {
+
+                                                                borderColor: color,
+
+                                                                backgroundColor: hexToRgba(color, 0.5),
+
+                                                                border: isSelected ? '2px solid #d3d3d3' : '1px solid transparent', // Light gray border for selected
+
+                                                            };
+
+                                    return (
+
+                                        <div
+
+                                            key={color}
+
+                                            className={`color-circle ${isSelected ? 'selected' : ''}`}
+
+                                            style={style}
+
+                                            onClick={() => setNewTodoTemplateColor(color)}
+
+                                        ></div>
+
+                                    );
+
+                                })}
+
+                                {/* Custom Color Circle */}
+
+                                <div
+
+                                    ref={todoColorPickerBtnRef}
+
+                                    className={`color-circle custom-color-circle ${newTodoTemplateColor && !defaultColors.includes(newTodoTemplateColor) ? 'selected' : ''}`}
+
+                                    style={{
+
+                                        backgroundColor: newTodoTemplateColor,
+
+                                        borderColor: newTodoTemplateColor,
+
+                                        borderStyle: 'solid',
+
+                                    }}
+
+                                    onClick={() => setShowTodoColorPicker(!showTodoColorPicker)}
+
+                                >
+
+                                    {defaultColors.includes(newTodoTemplateColor) && (
+
+                                        <div className="plus-icon"></div>
+
+                                    )}
+
+                                </div>
+
+                            </div>
+
+                            {showTodoColorPicker && (
+
+                                <div ref={todoColorPickerPaletteRef} className="expanded-color-palette">
+
+                                    <HexColorPicker color={newTodoTemplateColor} onChange={setNewTodoTemplateColor} />
+
+                                </div>
+
+                            )}
+
+                            <div className="modal-actions">
+
+                                <button onClick={handleCreateTodoTemplate}>저장</button>
+
+                                <button onClick={() => setShowCreateTodoTemplateModal(false)}>취소</button>
+
+                            </div>
+
+                        </Modal>
+
                     </div>
-                </div>
-                {showColorPicker && (
-                    <div ref={colorPickerPaletteRef} className="expanded-color-palette">
-                        <HexColorPicker color={newScheduleTemplateColor} onChange={setNewScheduleTemplateColor} />
-                    </div>
-                )}
-                <div className="modal-actions">
-                    <button onClick={handleCreateScheduleTemplate}>저장</button>
-                    <button onClick={() => setShowCreateScheduleTemplateModal(false)}>취소</button>
-                </div>
-            </Modal>
-        </div>
-    );
-};
+
+                );
+
+            };
 
 // Helper function to convert hex to RGBA
 const hexToRgba = (hex, alpha) => {

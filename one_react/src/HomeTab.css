@@ -612,6 +612,11 @@
     flex-direction: column; /* Stack content vertically */
     gap: 10px; /* Gap between children inside the box */
     margin-top: 10px;
+    /* Removed margin-left */
+}
+
+.todo-day-picker-option-box {
+    /* Removed margin-left */
 }
 
 .days-of-week-container {
@@ -661,11 +666,8 @@
 
 .todo-day-picker-wrapper {
     display: flex;
-    align-items: flex-start; /* Align items to the top */
+    align-items: center; /* Align items to the center vertically */
     gap: 10px; /* Space between the chip and the option box */
-    margin-bottom: 10px; /* Maintain spacing below */
-}
-
-.mini-calendar-option-box {
-    margin-left: 10px; /* Move calendar to the right */
+    margin-bottom: 0px; /* Reduced spacing by 10px */
+    flex-wrap: nowrap; /* Ensure children stay on one line */
 }

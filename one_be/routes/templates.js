@@ -26,4 +26,28 @@ router.post('/', async (req, res) => {
     }
 });
 
+// @route   GET /api/templates/:userId
+// @desc    Get templates for a specific user, optionally filtered by type
+// @access  Private
+router.get('/:userId', async (req, res) => {
+    const { userId } = req.params;
+    const { type } = req.query; // Optional filter by type
+
+    try {
+        let query = 'SELECT id, title, type, color FROM templates WHERE user_id = ?';
+        let params = [userId];
+
+        if (type) {
+            query += ' AND type = ?';
+            params.push(type);
+        }
+
+        const [templates] = await db.query(query, params);
+        res.json(templates);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: `Database error: ${err.message}` });
+    }
+});
+
 module.exports = router;
