@@ -84,6 +84,14 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
     };
 
     // ... (handleChangePassword, handleChangeEmail, handleLogout functions remain largely the same)
+    const handleCancelPasswordChange = () => {
+        setShowChangePasswordModal(false);
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+        setPasswordError('');
+    };
+
     const handleChangePassword = async () => {
         setPasswordError('');
         if (newPassword !== confirmPassword) {
@@ -119,6 +127,13 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
         }
     };
 
+    const handleCancelEmailChange = () => {
+        setShowChangeEmailModal(false);
+        setNewEmail('');
+        setPasswordForEmailChange('');
+        setEmailError('');
+    };
+
     const handleChangeEmail = async () => {
         setEmailError('');
         if (!newEmail || !passwordForEmailChange) {
@@ -148,6 +163,13 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
             console.error('Failed to change email:', error);
             setEmailError(`이메일 변경 중 오류가 발생했습니다: ${error.message}`);
         }
+    };
+
+    const handleCancelUsernameChange = () => {
+        setShowChangeUsernameModal(false);
+        setNewUsername('');
+        setPasswordForUsernameChange('');
+        setUsernameError('');
     };
 
     const handleChangeUsername = async () => {
@@ -196,11 +218,11 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                 <div className="profile-image-and-name">
                     <div
                         className="profile-picture-container"
-                        style={{ border: '1px solid #E1E7EF', backgroundImage: previewImage ? `url(${process.env.REACT_APP_API_URL}${previewImage})` : 'none' }}
+                        style={{ border: '1px solid #E1E7EF', backgroundImage: previewImage ? `url(${previewImage.startsWith('data:') ? '' : process.env.REACT_APP_API_URL}${previewImage})` : 'none' }}
                     >
                         <ImageUploader onImageUpload={handleImageUpload} currentImageUrl={previewImage} />
                     </div>
-                    <span className="profile-nickname-display-popup">{username}</span>
+                    <span className="profile-nickname-display-popup">{profile.nickname || 'Guest'}</span>
                 </div>
                 
                 
@@ -210,7 +232,7 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                                     <div style={{
                                         height: '1px',
                                         width: '272px',
-                                        margin: '10px auto',
+                                        margin: '2px auto', /* Reduced margin-top */
                                         backgroundImage: 'repeating-linear-gradient(to right, #C1C4CA 0, #C1C4CA 3.5px, transparent 3.5px, transparent 9px)', // 3.5px dash + 5.5px gap = 9px total
                                         backgroundSize: '100% 1px',
                                         backgroundRepeat: 'no-repeat'
@@ -231,7 +253,13 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
             </div>
 
             {/* Modals remain the same */}
-            <Modal show={showChangePasswordModal} onClose={() => setShowChangePasswordModal(false)} contentClassName="change-password-modal-content">
+            <Modal show={showChangePasswordModal} onClose={() => {
+                setShowChangePasswordModal(false);
+                setCurrentPassword('');
+                setNewPassword('');
+                setConfirmPassword('');
+                setPasswordError('');
+            }} contentClassName="change-password-modal-content">
                 <h3>비밀번호 변경</h3>
                 <div className="profile-form-group">
                     <input
@@ -260,11 +288,16 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                 {passwordError && <p className="error-message">{passwordError}</p>}
                 <div className="modal-actions">
                     <button onClick={handleChangePassword}>변경하기</button>
-                    <button onClick={() => setShowChangePasswordModal(false)}>취소</button>
+                    <button onClick={handleCancelPasswordChange}>취소</button>
                 </div>
             </Modal>
 
-            <Modal show={showChangeEmailModal} onClose={() => setShowChangeEmailModal(false)}>
+            <Modal show={showChangeEmailModal} onClose={() => {
+                setShowChangeEmailModal(false);
+                setNewEmail('');
+                setPasswordForEmailChange('');
+                setEmailError('');
+            }}>
                 <h3>아이디(이메일) 변경</h3>
                 <div className="profile-form-group">
                     <input
@@ -285,12 +318,17 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                 {emailError && <p className="error-message">{emailError}</p>}
                 <div className="modal-actions">
                     <button onClick={handleChangeEmail}>변경하기</button>
-                    <button onClick={() => setShowChangeEmailModal(false)}>취소</button>
+                    <button onClick={handleCancelEmailChange}>취소</button>
                 </div>
             </Modal>
 
             {/* Change Username Modal */}
-            <Modal show={showChangeUsernameModal} onClose={() => setShowChangeUsernameModal(false)}>
+            <Modal show={showChangeUsernameModal} onClose={() => {
+                setShowChangeUsernameModal(false);
+                setNewUsername('');
+                setPasswordForUsernameChange('');
+                setUsernameError('');
+            }}>
                 <h3>닉네임 변경</h3>
                 <div className="profile-form-group">
                     <input
@@ -311,7 +349,7 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                 {usernameError && <p className="error-message">{usernameError}</p>}
                 <div className="modal-actions">
                     <button onClick={handleChangeUsername}>변경하기</button>
-                    <button onClick={() => setShowChangeUsernameModal(false)}>취소</button>
+                    <button onClick={handleCancelUsernameChange}>취소</button>
                 </div>
             </Modal>
         </Modal>

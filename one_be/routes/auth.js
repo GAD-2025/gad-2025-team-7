@@ -11,6 +11,7 @@ const jsonParser = express.json();
 // @access  Public
 router.post('/register', jsonParser, async (req, res) => {
     const { email, password, nickname } = req.body;
+    console.log('Backend Register - req.body:', req.body); // Debug log
 
     if (!email || !password || !nickname) {
         return res.status(400).json({ msg: '이메일, 비밀번호, 닉네임을 모두 입력해주세요.' });
@@ -31,8 +32,10 @@ router.post('/register', jsonParser, async (req, res) => {
             password: hashedPassword,
             username: nickname, // Assuming 'username' is the column for nickname
         };
+        console.log('Backend Register - newUser object:', newUser); // Debug log
 
         const [result] = await db.query('INSERT INTO users SET ?', newUser);
+        console.log('Backend Register - INSERT query result:', result); // Debug log
 
         res.status(201).json({
             msg: '회원가입이 완료되었습니다.',
@@ -101,6 +104,7 @@ const uploadMiddleware = multer({ storage: storage }).single('profileImage');
 // IMPORTANT: This route uses multer for multipart/form-data, so it does NOT use the jsonParser.
 router.post('/profile/:userId', (req, res, next) => {
     uploadMiddleware(req, res, function (err) {
+        console.log('Backend - req.file:', req.file); // Debug log
         if (err instanceof multer.MulterError) {
             // A Multer error occurred when uploading.
             console.error("Multer error:", err);
@@ -125,6 +129,7 @@ router.post('/profile/:userId', (req, res, next) => {
 
         if (req.file) {
             profileImageUrl = `/uploads/${req.file.filename}`;
+            console.log('Backend - Generated profileImageUrl:', profileImageUrl); // Debug log
         }
 
         const updates = [];
@@ -146,6 +151,8 @@ router.post('/profile/:userId', (req, res, next) => {
         params.push(userId); // for the WHERE clause
 
         const sql = `UPDATE users SET ${updates.join(', ')} WHERE id = ?`;
+        console.log('Backend - SQL Query:', sql); // Debug log
+        console.log('Backend - SQL Params:', params); // Debug log
 
         const [result] = await connection.query(sql, params);
 
@@ -160,6 +167,7 @@ router.post('/profile/:userId', (req, res, next) => {
         );
         
         await connection.commit();
+        console.log('Backend - Updated user data before response:', updatedUsers[0]); // Debug log
 
         res.json(updatedUsers[0]);
 

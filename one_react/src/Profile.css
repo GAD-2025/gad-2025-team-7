@@ -86,16 +86,17 @@
 
 .profile-image-and-name {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
+    flex-direction: column; /* Changed to column to stack image and nickname */
+    align-items: center; /* Center items horizontally */
+    gap: 0px; /* Remove gap between image and nickname as margin-top handles it */
+    margin-bottom: 5px; /* Reduced margin-bottom by half */
 }
 
 .profile-nickname-display-popup {
     font-size: 28px;
-    color: #373737;
+    color: #424242; /* Changed color */
     font-weight: bold; /* Assuming bold is desired for a prominent display */
-    margin-top: 10px; /* Add some space below the image */
+    margin-top: 8px; /* Reduced margin-top by half */
 }
 
 .profile-nickname-display {
@@ -113,6 +114,7 @@
 }
 
 .profile-form-group {
+    margin-top: 10px; /* Spacing from header */
     margin-bottom: -10px; /* Reduced margin */
     width: 100%;
     max-width: 400px;
@@ -150,6 +152,18 @@
     background-color: #F8F9FA; /* Slightly different background for disabled */
     color: #9a9a9a;
     cursor: not-allowed;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="email"],
+.modal-content input[type="password"] {
+    width: 340px;
+    padding: 20px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    margin-bottom: 15px;
+    height: 32px;
 }
 
 .profile-actions {

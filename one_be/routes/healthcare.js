@@ -133,25 +133,25 @@ router.get('/steps/:userId/:date', async (req, res) => {
     }
 });
 
-// @route   POST /api/healthcare/steps
-// @desc    Save/update steps for a user and date
+// @route   POST /api/healthcare/pedometer
+// @desc    Save/update pedometer data (steps and weight) for a user and date
 // @access  Private
-router.post('/steps', async (req, res) => {
-    const { userId, date, steps } = req.body;
-    if (userId === undefined || date === undefined || steps === undefined) {
-        return res.status(400).json({ msg: 'userId, date, and steps are required.' });
+router.post('/pedometer', async (req, res) => {
+    const { userId, date, steps, weight } = req.body;
+    if (userId === undefined || date === undefined || steps === undefined || weight === undefined) {
+        return res.status(400).json({ msg: 'userId, date, steps, and weight are required.' });
     }
 
     try {
         const sql = `
-            INSERT INTO daily_steps (user_id, \`date\`, steps)
-            VALUES (?, ?, ?)
-            ON DUPLICATE KEY UPDATE steps = VALUES(steps);
+            INSERT INTO daily_steps (user_id, \`date\`, steps, weight)
+            VALUES (?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE steps = VALUES(steps), weight = VALUES(weight);
         `;
-        await pool.query(sql, [userId, date, steps]);
-        res.status(200).json({ msg: 'Steps saved successfully.' });
+        await pool.query(sql, [userId, date, steps, weight]);
+        res.status(200).json({ msg: 'Pedometer data saved successfully.' });
     } catch (err) {
-        console.error('Save steps error:', err.message);
+        console.error('Save pedometer data error:', err.message);
         res.status(500).send('Server Error');
     }
 });

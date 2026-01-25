@@ -58,11 +58,16 @@ export const ProfileProvider = ({ children }) => {
     const updateProfileContext = (newProfileData) => {
         const { id, username, profile_image_url, weight } = newProfileData;
         
+        let finalProfileImageUrl = profile_image_url;
+        if (profile_image_url && !profile_image_url.startsWith('http') && !profile_image_url.startsWith('data:')) {
+            finalProfileImageUrl = `${process.env.REACT_APP_API_URL}${profile_image_url}`;
+        }
+
         setProfile(prev => ({
             ...prev,
             userId: id || prev.userId,
             nickname: username || prev.nickname,
-            profileImage: profile_image_url ? `${process.env.REACT_APP_API_URL}${profile_image_url}` : prev.profileImage,
+            profileImage: finalProfileImageUrl || prev.profileImage,
             weight: weight !== undefined ? weight : prev.weight
         }));
     };
