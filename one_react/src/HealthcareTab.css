@@ -504,8 +504,12 @@
     margin-top: 20px;
 }
 
+.macros-section h3 {
+    margin-top: 8px; /* Further adjusting the top margin to move the heading down */
+}
+
 .macros-box {
-    margin-top: 14px;
+    margin-top: 5px;
     border: 1px solid #E1E7EF;
     border-radius: 20px;
     height: 115px;

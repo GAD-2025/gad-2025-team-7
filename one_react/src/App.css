@@ -147,3 +147,16 @@ body {
     border: 1px solid #E1E7EF;
 
 }
+
+.modal-content p {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-weight: 400;
+}
+
+.modal-content h4 {
+    font-size: 15px;
+    color: #4a4a4a;
+    margin-bottom: 15px;
+    font-weight: 700;
+}

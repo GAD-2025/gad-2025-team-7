@@ -210,7 +210,10 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
                 <div id="cycle-edit-modal">
                     <div className="modal-overlay">
                         <div className="modal-content">
-                            <h3>생리 주기 기록</h3>
+                            <div className="schedule-modal-header">
+                                <h3 className="schedule-modal-title">주기 수정</h3>
+                                <button className="modal-close-btn" onClick={() => { setShowCycleModal(false); resetForm(); }}>x</button>
+                            </div>
                             {cycleHistory.length < 2 && (
                                 <p style={{ color: 'red', marginBottom: '15px' }}>
                                     예측을 위해 최소 2번의 주기 기록이 필요합니다.
@@ -258,9 +261,6 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
                                 ) : (
                                     <p>기록이 없습니다.</p>
                                 )}
-                            </div>
-                            <div className="modal-actions">
-                                <button id="close-cycle-modal-btn" onClick={() => { setShowCycleModal(false); resetForm(); }}>닫기</button>
                             </div>
                         </div>
                     </div>
