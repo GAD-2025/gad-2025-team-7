@@ -69,13 +69,13 @@ const Login = ({ onLogin }) => {
     return (
         <div className="main-wrapper">
             <div className="info-panel">
-                <h2>당신의 하루를<br />한 곳에 담다</h2>
-                <p>'One Day'와 함께라면 당신의 모든 순간이<br />더욱 특별해집니다.</p>
+                <h2>OneDay</h2>
+                <p>하루를 하나로 관리하다.</p>
             </div>
             <div className="form-wrapper">
                 {isLogin ? (
                     <div className="form-container" id="login-form">
-                        <h1>One Day</h1>
+                        <h1>LOGIN</h1>
                         <form onSubmit={handleLogin}>
                             <input type="email" placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} required />
                             <input type="password" placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} required />
@@ -89,7 +89,7 @@ const Login = ({ onLogin }) => {
                     </div>
                 ) : (
                     <div className="form-container" id="signup-form">
-                        <h1>One Day</h1>
+                        <h1>LOGIN</h1>
                         <form onSubmit={handleSignup}>
                             <input type="email" placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} required />
                             <input type="password" placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} required />

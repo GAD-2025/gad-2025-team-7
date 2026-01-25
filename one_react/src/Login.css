@@ -30,7 +30,7 @@ body {
 
 .info-panel {
     flex-basis: 50%;
-    background: linear-gradient(135deg, var(--primary-color), #ff9a8b);
+    background: linear-gradient(to right, #F8A6AD, #F7F9FA); /* New linear gradient background */
     color: white;
     display: flex;
     flex-direction: column;
@@ -44,13 +44,22 @@ body {
 .info-panel h2 {
     font-size: 48px;
     font-weight: 700;
-    margin-bottom: 20px;
+    margin-bottom: -20px; /* Changed to negative margin */
     line-height: 1.4;
+    color: var(--primary-color); /* Key color */
+    text-shadow:
+        0.5px 0.5px 0 #AEAEAE, /* Simulate stroke */
+        -0.5px -0.5px 0 #AEAEAE, /* Simulate stroke */
+        0.5px -0.5px 0 #AEAEAE, /* Simulate stroke */
+        -0.5px 0.5px 0 #AEAEAE, /* Simulate stroke */
+        0px 0px 5px rgba(255, 96, 96, 0.25); /* Drop shadow */
 }
 
 .info-panel p {
     font-size: 20px;
     line-height: 1.6;
+    color: #F7F9FA;
+    font-weight: 300; /* Light font weight */
 }
 
 .form-wrapper {
@@ -58,6 +67,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #F7F9FA; /* New background color */
 }
 
 .form-container {
@@ -68,29 +78,54 @@ body {
 }
 
 .form-container h1 {
-    font-size: 36px;
-    color: var(--primary-color);
-    margin-bottom: 30px;
-    font-weight: 700;
+    font-size: 20px; /* Changed font size */
+    color: #8E95A2; /* Changed color */
+    margin-bottom: 17px; /* Changed margin-bottom */
+    font-weight: normal; /* Changed from bold to normal */
 }
 
-input[type="email"],
+input[type="email"]::placeholder,
+input[type="password"]::placeholder,
+#nickname-input::placeholder {
+    color: #8E95A2;
+    font-size: 15px;
+}
+
+input[type="email"] {
+    width: 327px; /* Changed from 100% */
+    height: 43px; /* New height */
+    padding: 0 15px; /* Adjusted padding for new height */
+    margin-bottom: 15px; /* Spacing between email and password */
+    border: 1px solid #CCCCCC; /* Changed border color */
+    border-radius: 15px; /* Changed border-radius */
+    box-sizing: border-box;
+    font-size: 17px; /* Changed font size to 17px (approx 17pt) */
+    color: #8E95A2; /* Changed text color */
+    background-color: #ffffff; /* New background color */
+}
+
 input[type="password"],
 #nickname-input {
-    width: 100%;
-    padding: 15px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    width: 327px; /* Changed from 100% */
+    height: 43px; /* New height */
+    padding: 0 15px; /* Adjusted padding for new height */
+    margin-bottom: 17px; /* Spacing between password and next element */
+    border: 1px solid #CCCCCC; /* Changed border color */
+    border-radius: 15px; /* Changed border-radius */
     box-sizing: border-box;
-    font-size: 16px;
+    font-size: 17px; /* Changed font size to 17px (approx 17pt) */
+    color: #8E95A2; /* Changed text color */
+    background-color: #ffffff; /* New background color */
 }
 
 .options, .terms {
-    text-align: left;
+    text-align: left; /* Align content to the left */
     margin-bottom: 20px;
-    font-size: 14px;
-    color: #555;
+    font-size: 15px;
+    color: #8E95A2;
+    width: 327px; /* Match input/button width */
+    margin-left: auto; /* Center the block */
+    margin-right: auto; /* Center the block */
 }
 
 .options label, .terms label {
@@ -100,14 +135,15 @@ input[type="password"],
 
 button[type="submit"],
 #save-profile {
-    width: 100%;
-    padding: 15px;
+    width: 327px; /* Changed from 100% */
+    height: 43px; /* New height */
+    padding: 0; /* Remove padding as height is fixed */
     background-color: var(--primary-color);
-    border: none;
-    border-radius: 5px;
-    color: #fff;
-    font-size: 18px;
-    font-weight: 700;
+    border: 1px solid #CCCCCC; /* Added stroke */
+    border-radius: 15px; /* Changed border-radius */
+    color: #ffffff; /* Text color is white for buttons */
+    font-size: 17px; /* Changed font size to 17px (approx 17pt) */
+    font-weight: normal; /* Removed bold font-weight */
     cursor: pointer;
     transition: background-color 0.3s;
 }
@@ -140,8 +176,8 @@ button[type="submit"]:hover,
 
 .toggle-form {
     margin-top: 30px;
-    font-size: 14px;
-    color: #555;
+    font-size: 15px; /* Changed font size */
+    color: #8E95A2; /* Changed color */
 }
 
 .toggle-form a {
@@ -298,14 +334,16 @@ button[type="submit"]:hover,
     input[type="email"],
     input[type="password"],
     #nickname-input {
-        padding: 10px; /* Further reduced padding */
-        font-size: 14px; /* Further reduced font size */
+        width: 327px; /* Explicitly set width */
+        height: 43px; /* Explicitly set height */
+        /* Removed conflicting padding and font-size */
     }
 
     button[type="submit"],
     #save-profile {
-        padding: 12px; /* Further reduced padding */
-        font-size: 16px; /* Further reduced font size */
+        width: 327px; /* Explicitly set width */
+        height: 43px; /* Explicitly set height */
+        /* Removed conflicting padding and font-size */
     }
 
     .social-login p, .toggle-form {
