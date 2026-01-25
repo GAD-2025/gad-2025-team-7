@@ -5,8 +5,10 @@ import DaySummaryPopover from './DaySummaryPopover';
 // import ViewToggle from './ViewToggle'; // Removed
 
 const Calendar = ({
-    nav,
-    setNav,
+    monthOffset,
+    setMonthOffset,
+    weekOffset,
+    setWeekOffset,
     events,
     isDragging,
     dragStartDayString,
@@ -141,17 +143,35 @@ const Calendar = ({
         }
     }, []); // Empty array ensures this runs only once on mount
 
-    const dt = new Date();
-    if (nav !== 0) dt.setMonth(new Date().getMonth() + nav);
-    const month = dt.getMonth();
-    const year = dt.getFullYear();
-    const firstDayOfMonth = new Date(year, month, 1);
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const paddingDays = firstDayOfMonth.getDay();
+    const handlePrev = () => {
+        if (isMonthView) {
+            setMonthOffset(monthOffset - 1);
+        } else {
+            setWeekOffset(weekOffset - 1);
+        }
+    };
 
-    const days = [];
+    const handleNext = () => {
+        if (isMonthView) {
+            setMonthOffset(monthOffset + 1);
+        } else {
+            setWeekOffset(weekOffset + 1);
+        }
+    };
+
+    let displayDate = new Date();
+    let days = [];
 
     if (isMonthView) {
+        if (monthOffset !== 0) {
+            displayDate.setMonth(new Date().getMonth() + monthOffset);
+        }
+        const month = displayDate.getMonth();
+        const year = displayDate.getFullYear();
+        const firstDayOfMonth = new Date(year, month, 1);
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const paddingDays = firstDayOfMonth.getDay();
+
         // Previous month's padding days
         const prevMonthLastDay = new Date(year, month, 0).getDate();
         for (let i = paddingDays; i > 0; i--) {
@@ -176,11 +196,12 @@ const Calendar = ({
         for (let i = 1; i <= nextMonthDays; i++) {
             days.push({ day: i, isOtherMonth: true });
         }
-    } else {
-        // Week view logic
-        const currentSelectedDate = new Date(selectedDate);
-        const startOfWeek = new Date(currentSelectedDate);
-        startOfWeek.setDate(currentSelectedDate.getDate() - currentSelectedDate.getDay()); // Go to Sunday
+    } else { // Week view logic
+        let currentWeekStart = new Date();
+        currentWeekStart.setDate(currentWeekStart.getDate() + (weekOffset * 7)); // Adjust by weekOffset
+
+        const startOfWeek = new Date(currentWeekStart);
+        startOfWeek.setDate(currentWeekStart.getDate() - currentWeekStart.getDay()); // Go to Sunday of the current week
 
         for (let i = 0; i < 7; i++) {
             const day = new Date(startOfWeek);
@@ -194,7 +215,13 @@ const Calendar = ({
                 events: events.filter(e => e.date.split('T')[0] === dayString),
             });
         }
+        // For week view, the month and year in the header should reflect the week
+        // I'll use the month/year of the first day of the week for simplicity
+        displayDate = startOfWeek;
     }
+
+    const month = displayDate.getMonth();
+    const year = displayDate.getFullYear();
 
     const isDateInDraggedRange = (currentDayString) => {
         if (!dragStartDayString || !dragEndDayString) return false;
@@ -216,8 +243,8 @@ const Calendar = ({
                     <p className="year-text">{year}</p>
                 </div>
                 <div className="calendar-nav">
-                    <button onClick={() => setNav(nav - 1)} className="nav-btn">&lt;</button>
-                    <button onClick={() => setNav(nav + 1)} className="nav-btn">&gt;</button>
+                    <button onClick={handlePrev} className="nav-btn">&lt;</button>
+                    <button onClick={handleNext} className="nav-btn">&gt;</button>
                 </div>
             </div>
 

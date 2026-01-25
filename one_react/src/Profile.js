@@ -54,6 +54,7 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
 
         const formData = new FormData();
         formData.append('username', username);
+        console.log('Profile.js - profileImage to upload:', profileImage); // Debug log
         if (profileImage) {
             formData.append('profileImage', profileImage);
         }
@@ -63,14 +64,17 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                 method: 'POST', // Changed from PUT to POST
                 body: formData,
             });
+            console.log('Profile.js - Fetch response:', res); // Debug log
 
             if (res.ok) {
                 const updatedProfileData = await res.json();
+                console.log('Profile.js - Updated profile data from backend:', updatedProfileData); // Debug log
                 alert('프로필이 성공적으로 업데이트되었습니다.');
                 updateProfileContext(updatedProfileData); // Update the global context
                 onClose(); // Close modal after save
             } else {
                 const errorData = await res.json();
+                console.error('Profile.js - Error response from backend:', errorData); // Debug log
                 alert(`프로필 업데이트 실패: ${errorData.msg}`);
             }
         } catch (error) {

@@ -89,7 +89,7 @@ const Login = ({ onLogin }) => {
                     </div>
                 ) : (
                     <div className="form-container" id="signup-form">
-                        <h1>LOGIN</h1>
+                        <h1>SIGN UP</h1>
                         <form onSubmit={handleSignup}>
                             <input type="email" placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} required />
                             <input type="password" placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} required />
