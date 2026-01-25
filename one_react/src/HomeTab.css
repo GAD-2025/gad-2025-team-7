@@ -665,3 +665,7 @@
     gap: 10px; /* Space between the chip and the option box */
     margin-bottom: 10px; /* Maintain spacing below */
 }
+
+.mini-calendar-option-box {
+    margin-left: 10px; /* Move calendar to the right */
+}

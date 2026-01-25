@@ -599,7 +599,7 @@ const HomeTab = ({
                     </div>
                 )}
                 {showScheduleIrregularDatesPicker && (
-                    <div className="schedule-option-box">
+                    <div className="schedule-option-box mini-calendar-option-box">
                         <MiniCalendar
                             selectedDates={newScheduleIrregularSelectedDates}
                             onDateChange={handleScheduleIrregularDateChange}

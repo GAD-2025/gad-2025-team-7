@@ -91,7 +91,7 @@
   grid-template-columns: repeat(7, 1fr);
   margin-bottom: 10px;
   background-color: #E1E7EF; /* Light grey background */
-  padding: 8px 23px; /* Add vertical and horizontal padding */
+  padding: 8px 0; /* Removed horizontal padding */
   border-radius: 8px; /* Rounded corners */
 }
 
