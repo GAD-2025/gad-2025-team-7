@@ -30,8 +30,8 @@
 }
 
 .profile-nickname {
-    font-size: 16px; /* Increased font size */
-    font-weight: bold; /* Made font bold */
+    font-size: 17px; /* Changed font size */
+    font-weight: bold; /* Applied bold font-weight */
     color: #212529; /* Darker color */
     white-space: nowrap;
     overflow: hidden;
