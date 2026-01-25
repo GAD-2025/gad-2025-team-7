@@ -87,15 +87,11 @@ function App() {
       >
           <div id="content-frame">
             <Router>
-              {/* collection-trigger and SlideOutNav moved here */}
-              <div id="collection-trigger" onClick={() => setIsSlideOutNavOpen(true)} className="collection-trigger"></div>
-              <SlideOutNav isOpen={isSlideOutNavOpen} onClose={() => setIsSlideOutNavOpen(false)} />
-              <SlideOutNav isOpen={isTemplateNavOpen} onClose={() => setIsTemplateNavOpen(false)} navType="template" />
               <div className="App">
                 <Routes>
                   <Route path="/login" element={isAuthenticated ? <Navigate to="/home" /> : <Login onLogin={handleLogin} />} />
                   
-                  <Route element={isAuthenticated ? <DataProvider><MainLayout setIsSlideOutNavOpen={setIsSlideOutNavOpen} /></DataProvider> : <Navigate to="/login" />} >
+                  <Route element={isAuthenticated ? <DataProvider><MainLayout setIsSlideOutNavOpen={setIsSlideOutNavOpen} isSlideOutNavOpen={isSlideOutNavOpen} setIsTemplateNavOpen={setIsTemplateNavOpen} isTemplateNavOpen={isTemplateNavOpen} /></DataProvider> : <Navigate to="/login" />} >
                     <Route path="/home" element={<Home />} />
                     <Route path="/diary-collection" element={<DiaryCollection />} />
                     <Route path="/diary" element={<DiaryWrapper />} />
