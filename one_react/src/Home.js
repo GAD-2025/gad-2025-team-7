@@ -12,7 +12,8 @@ const Home = () => {
     const { selectedDate, setSelectedDate } = useData();
     const [isMonthView, setIsMonthView] = useState(true); // State for month/week view
     
-    const [nav, setNav] = useState(0);
+    const [monthOffset, setMonthOffset] = useState(0);
+    const [weekOffset, setWeekOffset] = useState(0);
     const [dashboardEvents, setDashboardEvents] = useState([]);
     const [calendarEvents, setCalendarEvents] = useState([]);
     const [todos, setTodos] = useState([]);
@@ -52,8 +53,8 @@ const Home = () => {
         if (!userId) return;
 
         const dt = new Date();
-        if (nav !== 0) {
-            dt.setMonth(new Date().getMonth() + nav);
+        if (monthOffset !== 0) {
+            dt.setMonth(new Date().getMonth() + monthOffset);
         }
         const year = dt.getFullYear();
         const month = dt.getMonth();
@@ -73,7 +74,7 @@ const Home = () => {
                 console.error("Error fetching month events:", error);
             });
 
-    }, [userId, nav, lastUpdated]);
+    }, [userId, monthOffset, lastUpdated]);
 
     const onDataUpdate = () => {
         setLastUpdated(Date.now());
@@ -119,8 +120,10 @@ const Home = () => {
             <div className="calendar-dashboard-wrapper"> {/* New wrapper */}
                 <div className="calendar-area">
                     <Calendar
-                        nav={nav}
-                        setNav={setNav}
+                        monthOffset={monthOffset}
+                        setMonthOffset={setMonthOffset}
+                        weekOffset={weekOffset}
+                        setWeekOffset={setWeekOffset}
                         events={calendarEvents}
                         isDragging={isDragging}
                         dragStartDayString={dragStartDayString}
