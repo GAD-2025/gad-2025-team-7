@@ -108,7 +108,7 @@ const Calendar = ({
             completedTodos: completedTodosCount, // New
             totalTodos: totalTodos, // New
             targetCalories: dailyCalorieGoal, // Use the state for target calories
-            consumedCalories: consumedCalories,
+            consumedCalories: Math.round(consumedCalories),
             calorieGraphProgress: progressPercent, // New
             calorieStrokeDashoffset: strokeDashoffset, // New
             calorieGraphPathLength: graphPathLength, // New

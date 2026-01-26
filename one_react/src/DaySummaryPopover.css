@@ -18,6 +18,7 @@
     z-index: 1000;
     font-family: 'Pretendard', sans-serif; /* Pretendard 폰트 적용 */
     margin: 0; /* Explicitly remove margin */
+    transform: translateY(-100%); /* Add this line */
 }
 
 .day-summary-header {

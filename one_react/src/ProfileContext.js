@@ -27,12 +27,16 @@ export const ProfileProvider = ({ children }) => {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/profile/${userId}`);
             if (response.ok) {
                 const data = await response.json();
+                console.log('fetchProfile - API response data:', data); // Debug log
                 setProfile({
                     userId: data.id,
                     nickname: data.username,
                     profileImage: data.profile_image_url ? `${process.env.REACT_APP_API_URL}${data.profile_image_url}` : null,
                     weight: data.weight || null // Set weight from fetched data
                 });
+                // Note: console.log(profile) here will show the *previous* state due to async nature of setProfile
+                // To see the updated state, you'd need another useEffect or a callback.
+                // For now, checking 'data' is sufficient.
             } else {
                 console.error('Failed to fetch profile, using default.');
                 setProfile({ userId: null, nickname: 'Guest', profileImage: null, weight: null });
@@ -74,9 +78,10 @@ export const ProfileProvider = ({ children }) => {
     
     // New function specifically for updating weight
     const updateWeight = async (newWeight) => {
-        if (!profile.userId) throw new Error("User not logged in");
+        const userId = localStorage.getItem('userId'); // Get userId directly
+        if (!userId) throw new Error("User not logged in");
         
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/profile/${profile.userId}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/profile/${userId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ weight: parseFloat(newWeight) }),
