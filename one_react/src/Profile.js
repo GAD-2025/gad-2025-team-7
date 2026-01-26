@@ -317,7 +317,7 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                 setNewEmail('');
                 setPasswordForEmailChange('');
                 setEmailError('');
-            }}>
+            }} contentClassName="change-email-modal-content">
                 <h3>아이디(이메일) 변경</h3>
                 <div className="profile-form-group">
                     <input
@@ -343,7 +343,7 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
             </Modal>
 
             {/* Change Username Modal */}
-            <Modal show={showChangeUsernameModal} onClose={handleCancelUsernameChange}>
+            <Modal show={showChangeUsernameModal} onClose={handleCancelUsernameChange} contentClassName="change-username-modal-content">
                 <h3>닉네임 변경</h3>
                 <div className="profile-form-group">
                     <input

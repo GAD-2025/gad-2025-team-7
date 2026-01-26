@@ -308,6 +308,41 @@ router.put('/change-email/:userId', jsonParser, async (req, res) => {
     }
 });
 
+// @route   PUT /api/auth/change-username/:userId
+// @desc    Change user username (nickname)
+// @access  Private
+router.put('/change-username/:userId', jsonParser, async (req, res) => {
+    const { userId } = req.params;
+    const { newUsername, password } = req.body;
+
+    if (!newUsername || !password) {
+        return res.status(400).json({ msg: '모든 필드를 입력해주세요.' });
+    }
+
+    try {
+        // Verify current password
+        const [users] = await db.query('SELECT * FROM users WHERE id = ?', [userId]);
+        if (users.length === 0) {
+            return res.status(404).json({ msg: '사용자를 찾을 수 없습니다.' });
+        }
+        const user = users[0];
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ msg: '비밀번호가 일치하지 않습니다.' });
+        }
+
+        // Update username
+        await db.query('UPDATE users SET username = ? WHERE id = ?', [newUsername, userId]);
+
+        res.json({ msg: '닉네임이 성공적으로 변경되었습니다.' });
+
+    } catch (error) {
+        console.error('Change username error:', error);
+        res.status(500).json({ msg: `Database error: ${error.message}` });
+    }
+});
+
 // @route   DELETE /api/auth/withdraw/:userId
 // @desc    Delete user account
 // @access  Private
