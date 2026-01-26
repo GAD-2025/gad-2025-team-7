@@ -117,7 +117,7 @@ input[type="password"],
     border: 1px solid #CCCCCC; /* Changed border color */
     border-radius: 15px; /* Changed border-radius */
     box-sizing: border-box;
-    font-size: 17px; /* Changed font size to 17px (approx 17pt) */
+    font-size: 13px; /* Changed font size to 13px (approx 13pt) */
     color: #8E95A2; /* Changed text color */
     background-color: #ffffff; /* New background color */
 }
