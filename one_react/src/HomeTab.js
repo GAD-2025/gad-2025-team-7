@@ -559,7 +559,7 @@ const HomeTab = ({
                 </div>
             </div> {/* End of combined-content-box */}
 
-            <Modal show={showTodoModal} onClose={resetTodoForm}>
+            <Modal show={showTodoModal} onClose={resetTodoForm} contentClassName="add-todo-modal">
                 <div className="schedule-modal-header">
                     <h3 className="schedule-modal-title">새 투두리스트 추가</h3>
                     <span className="schedule-modal-date">{new Date(selectedDate).getMonth() + 1}월 {new Date(selectedDate).getDate()}일</span>

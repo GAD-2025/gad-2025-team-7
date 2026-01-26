@@ -120,7 +120,7 @@
 }
 
 .add-todo-section .home-add-btn {
-    margin-left: 20px; /* 20px로 변경 */
+    margin-left: auto; /* auto로 변경 */
     margin-right: 3px;
     margin-top: 28px;
 }
@@ -669,4 +669,7 @@
     gap: 10px; /* Space between the chip and the option box */
     margin-bottom: 0px; /* Reduced spacing by 10px */
     flex-wrap: nowrap; /* Ensure children stay on one line */
+}
+.add-todo-modal .home-add-btn {
+    margin-left: 0;
 }
