@@ -167,13 +167,19 @@
 .events-container {
   display: flex;
   flex-direction: column;
-  gap: 0px; /* Reduced gap to 0 */
+  gap: 3px;
   width: 100%;
-  flex-grow: 1; /* Allow events container to take available space */
-  flex-basis: 0; /* Important for flex-grow to work as expected with overflow */
+  flex-grow: 1;
+  flex-basis: 0;
   overflow-y: auto; /* Enable vertical scrolling */
-  /* max-height removed to let flex-grow and overflow handle space */
-  /* Ensure that the day cell itself has a defined height to contain this scrolling */
+  /* Hide scrollbar for Webkit browsers */
+  &::-webkit-scrollbar {
+      display: none;
+  }
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
+  /* Hide scrollbar for Internet Explorer/Edge */
+  -ms-overflow-style: none;
 }
 
 .event {

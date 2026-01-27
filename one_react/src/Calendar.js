@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './Calendar.css';
 import { useData } from './DataContext';
 import DaySummaryPopover from './DaySummaryPopover';
+import { hexToRgba, darkenColor } from './utils/colorUtils';
 // import ViewToggle from './ViewToggle'; // Removed
 
 const Calendar = ({
@@ -279,7 +280,8 @@ const Calendar = ({
                                 {dayInfo.events && dayInfo.events.map(event => {
                                     const style = {};
                                     if (event.color) {
-                                        style.backgroundColor = event.color;
+                                        style.border = `1px solid ${event.color}`; // Add border
+                                        style.backgroundColor = hexToRgba(event.color, 0.5); // Set transparent background
                                         // Basic luminance check to set text color
                                         try {
                                             const hex = event.color.replace('#', '');

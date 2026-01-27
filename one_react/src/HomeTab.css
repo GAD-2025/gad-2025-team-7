@@ -69,6 +69,10 @@
     box-shadow: none !important;
 }
 
+.home-section-grid .dashboard-section:first-child {
+    height: 157px; /* Set height to match add-schedule-section */
+}
+
 .add-schedule-section {
     width: 143px;
     height: 157px;
@@ -147,6 +151,16 @@
     background-color: #ffffff;
     border-radius: 20px;
     border: 1px solid #E1E7EF;
+    max-height: 120px; /* Set a max-height for internal scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
+    /* Hide scrollbar for Webkit browsers */
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    /* Hide scrollbar for Firefox */
+    scrollbar-width: none;
+    /* Hide scrollbar for Internet Explorer/Edge */
+    -ms-overflow-style: none;
 }
 
 .add-schedule-section .home-card-body,
@@ -598,6 +612,25 @@
 }
 .plus-icon::before {
     content: '+';
+}
+
+.delete-template-btn {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #f0f0f0; /* Same as plus-icon */
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    line-height: 12px;
+    color: #888;
+    border: 1px solid #ccc;
+    cursor: pointer; /* Indicate it's clickable */
+    z-index: 1; /* Ensure it's above the template tag content */
 }
 
 /* New styles for schedule option boxes */

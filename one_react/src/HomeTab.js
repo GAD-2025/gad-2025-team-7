@@ -5,6 +5,7 @@ import Modal from './Modal';
 import Template from './Template';
 import ConfirmationModal from './ConfirmationModal';
 import MiniCalendar from './MiniCalendar'; // Import MiniCalendar
+import { hexToRgba, darkenColor } from './utils/colorUtils';
 
 const getUrgencyClass = (eventDate, selectedDate) => {
     const today = new Date(selectedDate);
@@ -74,6 +75,7 @@ const HomeTab = ({
     const [showCreateTodoTemplateModal, setShowCreateTodoTemplateModal] = useState(false); // New state for todo template modal
     const [newTodoTemplateTitle, setNewTodoTemplateTitle] = useState(''); // New state for new todo template title
     const [newTodoTemplateColor, setNewTodoTemplateColor] = useState('#FFE79D'); // New state for new todo template color
+    const [templateToDelete, setTemplateToDelete] = useState(null); // New state for template to delete
 
     // Effect to close todo color picker on outside click
     useEffect(() => {
@@ -258,6 +260,31 @@ const HomeTab = ({
             },
         });
         setShowConfirmationModal(true);
+    };
+
+    const handleTemplateDeleteClick = (template) => {
+        setTemplateToDelete(template);
+        setConfirmationModalProps({
+            message: `'${template.title}' 템플릿을 삭제하시겠습니까?`,
+            onConfirm: () => handleDeleteTemplate(template.id),
+        });
+        setShowConfirmationModal(true);
+    };
+
+    const handleDeleteTemplate = async (templateId) => {
+        try {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/templates/${templateId}`, {
+                method: 'DELETE',
+            });
+            if (!res.ok) throw new Error('Failed to delete template');
+            onDataUpdate(); // Refresh data
+        } catch (error) {
+            console.error('Error deleting template:', error);
+            alert(`템플릿 삭제 중 오류가 발생했습니다: ${error.message}`);
+        } finally {
+            setShowConfirmationModal(false);
+            setTemplateToDelete(null);
+        }
     };
     
     const handleScheduleTemplateClick = async (template) => {
@@ -527,9 +554,10 @@ const HomeTab = ({
                         <div className="home-card-body">
                             <Template
                                 type="schedule"
-                                templates={scheduleTemplates} // Pass scheduleTemplates
+                                templates={scheduleTemplates}
                                 onTemplateClick={handleScheduleTemplateClick}
-                                getTemplateStyle={getTemplateStyle} // Pass getTemplateStyle
+                                getTemplateStyle={getTemplateStyle}
+                                onTemplateDeleteClick={handleTemplateDeleteClick} // New prop
                             />
                             <button className="home-add-btn" onClick={() => setShowScheduleModal(true)}>+</button>
                         </div>
@@ -571,9 +599,10 @@ const HomeTab = ({
                         <div className="home-card-body">
                            <Template
                                type="todo"
-                               templates={todoTemplates} // Pass todoTemplates
+                               templates={todoTemplates}
                                onTemplateClick={handleTodoTemplateClick}
-                               getTemplateStyle={getTemplateStyle} // Pass getTemplateStyle
+                               getTemplateStyle={getTemplateStyle}
+                               onTemplateDeleteClick={handleTemplateDeleteClick} // New prop
                            />
                            <button className="home-add-btn" onClick={() => setShowTodoModal(true)}>+</button>
                         </div>
@@ -617,15 +646,13 @@ const HomeTab = ({
                 </div>
                 <input type="text" className="schedule-title-input" placeholder="새로운 할 일" value={newTodoTitle} onChange={(e) => setNewTodoTitle(e.target.value)} />
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginBottom: '10px', gap: '10px' }}>
-                    {todoTemplates.map(template => (
-                                                                        <button
-                                                                            key={template.id}
-                                                                            className="template-tag"
-                                                                            style={{ borderColor: template.color, backgroundColor: hexToRgba(template.color, 0.5), color: darkenColor(template.color, 0.6) }}
-                                                                            onClick={() => handleTodoTemplateClick(template)}
-                                                                        >                            {template.title}
-                        </button>
-                    ))}
+                    <Template
+                        type="todo"
+                        templates={todoTemplates}
+                        onTemplateClick={handleTodoTemplateClick}
+                        getTemplateStyle={getTemplateStyle}
+                        onTemplateDeleteClick={handleTemplateDeleteClick}
+                    />
                     <button className="home-add-btn" onClick={handleOpenCreateTodoTemplateModal}>+</button>
                 </div>
                 <div className="modal-actions"><button onClick={handleSaveTodo}>저장</button><button onClick={resetTodoForm}>취소</button></div>
@@ -663,12 +690,14 @@ const HomeTab = ({
                 )}
                 <input type="text" className="schedule-title-input" placeholder="일정명을 입력해주세요" value={newScheduleTitle} onChange={(e) => setNewScheduleTitle(e.target.value)} />
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginBottom: '10px' }}>
-                                                <Template
-                                                    type="schedule"
-                                                    templates={scheduleTemplates} // Pass scheduleTemplates
-                                                    onTemplateClick={handleScheduleTemplateClick}
-                                                    getTemplateStyle={getTemplateStyle} // Pass getTemplateStyle
-                                                />                    <button className="home-add-btn" onClick={handleOpenCreateTemplateModal}>+</button>
+                                                                            <Template
+                                                                                type="schedule"
+                                                                                templates={scheduleTemplates} // Pass scheduleTemplates
+                                                                                onTemplateClick={handleScheduleTemplateClick}
+                                                                                getTemplateStyle={getTemplateStyle} // Pass getTemplateStyle
+                                                    onTemplateDeleteClick={handleTemplateDeleteClick} // New prop
+                                                                                onTemplateDeleteClick={handleTemplateDeleteClick} // New prop
+                                                                            />                    <button className="home-add-btn" onClick={handleOpenCreateTemplateModal}>+</button>
                 </div>
                 <div className="modal-actions"><button onClick={handleSaveSchedule}>저장</button><button onClick={resetScheduleForm}>취소</button></div>
             </Modal>
@@ -892,31 +921,5 @@ const HomeTab = ({
                 );
 
             };
-
-// Helper function to convert hex to RGBA
-const hexToRgba = (hex, alpha) => {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-};
-
-const darkenColor = (hex, factor) => {
-    let r = parseInt(hex.slice(1, 3), 16);
-    let g = parseInt(hex.slice(3, 5), 16);
-    let b = parseInt(hex.slice(5, 7), 16);
-
-    r = Math.round(r * factor);
-    g = Math.round(g * factor);
-    b = Math.round(b * factor);
-
-    r = Math.min(255, Math.max(0, r));
-    g = Math.min(255, Math.max(0, g));
-    b = Math.min(255, Math.max(0, b));
-
-    const toHex = (c) => ("0" + c.toString(16)).slice(-2);
-
-    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-};
 
 export default HomeTab;

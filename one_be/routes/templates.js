@@ -50,4 +50,21 @@ router.get('/:userId', async (req, res) => {
     }
 });
 
+// @route   DELETE /api/templates/:templateId
+// @desc    Delete a template
+// @access  Private
+router.delete('/:templateId', async (req, res) => {
+    const { templateId } = req.params;
+    try {
+        const [result] = await db.query('DELETE FROM templates WHERE id = ?', [templateId]);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ msg: 'Template not found.' });
+        }
+        res.json({ msg: 'Template deleted.' });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: `Database error: ${err.message}` });
+    }
+});
+
 module.exports = router;
