@@ -143,6 +143,14 @@ const Calendar = ({
         }
     }, []); // Empty array ensures this runs only once on mount
 
+    // Set selectedDate to today if no date is explicitly selected or persisted
+    useEffect(() => {
+        const today = new Date().toISOString().split('T')[0];
+        if (selectedDate !== today && !sessionStorage.getItem('popoverOpenForDate')) {
+            setSelectedDate(today);
+        }
+    }, []); // Run only once on mount
+
     const handlePrev = () => {
         if (isMonthView) {
             setMonthOffset(monthOffset - 1);

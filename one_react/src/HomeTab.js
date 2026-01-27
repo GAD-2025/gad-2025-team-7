@@ -663,8 +663,12 @@ const HomeTab = ({
                 )}
                 <input type="text" className="schedule-title-input" placeholder="일정명을 입력해주세요" value={newScheduleTitle} onChange={(e) => setNewScheduleTitle(e.target.value)} />
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginBottom: '10px' }}>
-                    <Template type="schedule" onTemplateClick={handleScheduleTemplateClick} />
-                    <button className="home-add-btn" onClick={handleOpenCreateTemplateModal}>+</button>
+                                                <Template
+                                                    type="schedule"
+                                                    templates={scheduleTemplates} // Pass scheduleTemplates
+                                                    onTemplateClick={handleScheduleTemplateClick}
+                                                    getTemplateStyle={getTemplateStyle} // Pass getTemplateStyle
+                                                />                    <button className="home-add-btn" onClick={handleOpenCreateTemplateModal}>+</button>
                 </div>
                 <div className="modal-actions"><button onClick={handleSaveSchedule}>저장</button><button onClick={resetScheduleForm}>취소</button></div>
             </Modal>

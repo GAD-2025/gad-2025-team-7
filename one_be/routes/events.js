@@ -71,9 +71,16 @@ router.post('/', async (req, res) => {
         await connection.beginTransaction();
 
         let newEvents = [];
-        const start = new Date(startDate);
-        // FIX: Use the provided endDate for repeating events, or the startDate for single/range events
-        const end = (endDate && endDate.length > 0) ? new Date(endDate) : new Date(startDate);
+        const [startYear, startMonth, startDay] = startDate.split('-').map(Number);
+        const start = new Date(startYear, startMonth - 1, startDay); // Month is 0-indexed
+
+        let end;
+        if (endDate && endDate.length > 0) {
+            const [endYear, endMonth, endDay] = endDate.split('-').map(Number);
+            end = new Date(endYear, endMonth - 1, endDay);
+        } else {
+            end = new Date(startYear, startMonth - 1, startDay);
+        }
         
         let currentDate = new Date(start);
 
@@ -82,9 +89,13 @@ router.post('/', async (req, res) => {
             // If it's a repeating event, check if the day matches
             if (selectedDays && selectedDays.length > 0) {
                 if (selectedDays.includes(currentDate.getDay())) {
+                    const year = currentDate.getFullYear();
+                    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed
+                    const day = currentDate.getDate().toString().padStart(2, '0');
+                    const localDateString = `${year}-${month}-${day}`;
                     newEvents.push([
                         userId,
-                        currentDate.toISOString().split('T')[0],
+                        localDateString,
                         title,
                         time || null,
                         category || 'personal',
