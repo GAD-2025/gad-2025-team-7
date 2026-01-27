@@ -70,6 +70,7 @@ const HomeTab = ({
     const todoColorPickerBtnRef = useRef(null); // Ref for the todo custom color button
     const todoColorPickerPaletteRef = useRef(null); // Ref for the todo color picker palette
     const [todoTemplates, setTodoTemplates] = useState([]); // New state for todo templates
+    const [scheduleTemplates, setScheduleTemplates] = useState([]); // New state for schedule templates
     const [showCreateTodoTemplateModal, setShowCreateTodoTemplateModal] = useState(false); // New state for todo template modal
     const [newTodoTemplateTitle, setNewTodoTemplateTitle] = useState(''); // New state for new todo template title
     const [newTodoTemplateColor, setNewTodoTemplateColor] = useState('#FFE79D'); // New state for new todo template color
@@ -169,7 +170,22 @@ const HomeTab = ({
                 console.error("Error fetching todo templates:", error);
             }
         };
+
+        const fetchScheduleTemplates = async () => {
+            try {
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/templates/${userId}?type=schedule`);
+                const data = await res.json();
+                if (res.ok) {
+                    setScheduleTemplates(data);
+                } else {
+                    console.error("Failed to fetch schedule templates:", data.msg);
+                }
+            } catch (error) {
+                console.error("Error fetching schedule templates:", error);
+            }
+        };
         fetchTodoTemplates();
+        fetchScheduleTemplates();
     }, [userId, selectedDate, onDataUpdate]);
 
     const handleToggleTodo = async (todoId, currentStatus) => {
@@ -269,7 +285,7 @@ const HomeTab = ({
     };
 
     const handleTodoTemplateClick = async (template) => {
-        const body = { userId, title: template.title, date: selectedDate };
+        const body = { userId, title: template.title, date: selectedDate, color: template.color };
         try {
             const res = await fetch(`${process.env.REACT_APP_API_URL}/api/todos`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
             if (!res.ok) throw new Error('Failed to save todo from template');
@@ -462,6 +478,20 @@ const HomeTab = ({
         setShowCreateScheduleTemplateModal(true);
     };
 
+    const handleOpenCreateTodoTemplateModal = () => {
+        setNewTodoTemplateColor('#FFE79D'); // Reset to default color
+        setNewTodoTemplateTitle(''); // Also reset title
+        setShowCreateTodoTemplateModal(true);
+    };
+
+    const getTemplateStyle = (template) => {
+        return {
+            borderColor: template.color,
+            backgroundColor: hexToRgba(template.color, 0.5),
+            color: darkenColor(template.color, 0.6)
+        };
+    };
+
     return (
         <div className="home-tab-content dash-tab-content active">
             <div className="combined-content-box"> {/* New wrapper */}
@@ -495,7 +525,12 @@ const HomeTab = ({
                             <h3 className="home-card-title">일정 추가</h3>
                         </div>
                         <div className="home-card-body">
-                            <Template type="schedule" onTemplateClick={handleScheduleTemplateClick} />
+                            <Template
+                                type="schedule"
+                                templates={scheduleTemplates} // Pass scheduleTemplates
+                                onTemplateClick={handleScheduleTemplateClick}
+                                getTemplateStyle={getTemplateStyle} // Pass getTemplateStyle
+                            />
                             <button className="home-add-btn" onClick={() => setShowScheduleModal(true)}>+</button>
                         </div>
                     </div>
@@ -534,7 +569,12 @@ const HomeTab = ({
                             <h3 className="home-card-title">투두리스트 추가</h3>
                         </div>
                         <div className="home-card-body">
-                           <Template type="todo" onTemplateClick={handleTodoTemplateClick} />
+                           <Template
+                               type="todo"
+                               templates={todoTemplates} // Pass todoTemplates
+                               onTemplateClick={handleTodoTemplateClick}
+                               getTemplateStyle={getTemplateStyle} // Pass getTemplateStyle
+                           />
                            <button className="home-add-btn" onClick={() => setShowTodoModal(true)}>+</button>
                         </div>
                     </div>
@@ -576,18 +616,17 @@ const HomeTab = ({
                     )}
                 </div>
                 <input type="text" className="schedule-title-input" placeholder="새로운 할 일" value={newTodoTitle} onChange={(e) => setNewTodoTitle(e.target.value)} />
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginBottom: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginBottom: '10px', gap: '10px' }}>
                     {todoTemplates.map(template => (
-                        <button
-                            key={template.id}
-                            className="template-tag"
-                            style={{ borderColor: template.color, color: template.color }}
-                            onClick={() => handleTodoTemplateClick(template)}
-                        >
-                            {template.title}
+                                                                        <button
+                                                                            key={template.id}
+                                                                            className="template-tag"
+                                                                            style={{ borderColor: template.color, backgroundColor: hexToRgba(template.color, 0.5), color: darkenColor(template.color, 0.6) }}
+                                                                            onClick={() => handleTodoTemplateClick(template)}
+                                                                        >                            {template.title}
                         </button>
                     ))}
-                    <button className="home-add-btn" onClick={() => setShowCreateTodoTemplateModal(true)}>+</button>
+                    <button className="home-add-btn" onClick={handleOpenCreateTodoTemplateModal}>+</button>
                 </div>
                 <div className="modal-actions"><button onClick={handleSaveTodo}>저장</button><button onClick={resetTodoForm}>취소</button></div>
             </Modal>
@@ -856,6 +895,24 @@ const hexToRgba = (hex, alpha) => {
     const g = parseInt(hex.slice(3, 5), 16);
     const b = parseInt(hex.slice(5, 7), 16);
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
+
+const darkenColor = (hex, factor) => {
+    let r = parseInt(hex.slice(1, 3), 16);
+    let g = parseInt(hex.slice(3, 5), 16);
+    let b = parseInt(hex.slice(5, 7), 16);
+
+    r = Math.round(r * factor);
+    g = Math.round(g * factor);
+    b = Math.round(b * factor);
+
+    r = Math.min(255, Math.max(0, r));
+    g = Math.min(255, Math.max(0, g));
+    b = Math.min(255, Math.max(0, b));
+
+    const toHex = (c) => ("0" + c.toString(16)).slice(-2);
+
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 };
 
 export default HomeTab;
