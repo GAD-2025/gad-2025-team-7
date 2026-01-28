@@ -165,7 +165,7 @@
 
 .add-schedule-section .home-card-body,
 .add-todo-section .home-card-body {
-    padding-top: 10px;
+    /* padding-top: 10px; */
 }
 
 .add-schedule-section .home-card-body,
@@ -637,10 +637,14 @@
 .empty-template-message {
     text-align: center;
     color: #A0A0A0;
-    font-size: 12px;
-    padding: 10px 0;
+    font-size: 14px;
+    padding: 20px 0;
     margin: auto;
-    width: 100%; /* Ensure it takes full width */
+}
+
+.add-todo-modal .empty-template-message,
+.add-schedule-modal-content .empty-template-message {
+    padding: 0;
 }
 
 /* New styles for schedule option boxes */
