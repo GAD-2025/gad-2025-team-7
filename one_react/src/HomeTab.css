@@ -308,6 +308,7 @@
     border-width: 1px !important;
     border-style: solid !important;
     font-weight: 500 !important;
+    position: relative; /* Add this */
 }
 
 .tag-yellow { border-color: #FFE79D !important; color: #A38B46 !important; background-color: rgba(255, 231, 157, 0.5) !important; }
@@ -631,6 +632,15 @@
     border: 1px solid #ccc;
     cursor: pointer; /* Indicate it's clickable */
     z-index: 1; /* Ensure it's above the template tag content */
+}
+
+.empty-template-message {
+    text-align: center;
+    color: #A0A0A0;
+    font-size: 12px;
+    padding: 10px 0;
+    margin: auto;
+    width: 100%; /* Ensure it takes full width */
 }
 
 /* New styles for schedule option boxes */
