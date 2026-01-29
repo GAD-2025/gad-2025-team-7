@@ -311,6 +311,12 @@ const HomeTab = ({
         }
     };
 
+    const handleScheduleTemplateSelectInModal = (template) => {
+        setNewScheduleTitle(template.title);
+        // Optionally, if template has other properties like time, reminder, etc., set them here too.
+        // For now, just title.
+    };
+
     const handleTodoTemplateClick = async (template) => {
         const body = { userId, title: template.title, date: selectedDate, color: template.color };
         try {
@@ -318,6 +324,12 @@ const HomeTab = ({
             if (!res.ok) throw new Error('Failed to save todo from template');
             onDataUpdate();
         } catch (error) { console.error('Error saving todo from template:', error); }
+    };
+
+    const handleTodoTemplateSelectInModal = (template) => {
+        setNewTodoTitle(template.title);
+        setNewTodoColor(template.color); // Also set the color from the template
+        // Optionally, if template has other properties, set them here too.
     };
 
     const formatTime = (time) => {
@@ -649,7 +661,7 @@ const HomeTab = ({
                     <Template
                         type="todo"
                         templates={todoTemplates}
-                        onTemplateClick={handleTodoTemplateClick}
+                        onTemplateClick={handleTodoTemplateSelectInModal}
                         getTemplateStyle={getTemplateStyle}
                         onTemplateDeleteClick={handleTemplateDeleteClick}
                     />
@@ -693,7 +705,7 @@ const HomeTab = ({
                                                                             <Template
                                                                                 type="schedule"
                                                                                 templates={scheduleTemplates} // Pass scheduleTemplates
-                                                                                onTemplateClick={handleScheduleTemplateClick}
+                                                    onTemplateClick={handleScheduleTemplateSelectInModal} // Changed here
                                                                                 getTemplateStyle={getTemplateStyle} // Pass getTemplateStyle
                                                     onTemplateDeleteClick={handleTemplateDeleteClick} // New prop
                                                                                 onTemplateDeleteClick={handleTemplateDeleteClick} // New prop
