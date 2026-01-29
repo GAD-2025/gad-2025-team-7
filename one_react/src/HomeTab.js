@@ -531,6 +531,20 @@ const HomeTab = ({
         };
     };
 
+    const getToday = () => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    const todayString = getToday();
+    const isToday = selectedDate === todayString;
+
+    const scheduleTitle = isToday ? '오늘의 일정' : `${selectedDate.split('-')[1]}.${selectedDate.split('-')[2]} 일정`;
+    const todoTitle = isToday ? '오늘의 투두리스트' : `${selectedDate.split('-')[1]}.${selectedDate.split('-')[2]} 투두리스트`;
+
     return (
         <div className="home-tab-content dash-tab-content active">
             <div className="combined-content-box"> {/* New wrapper */}
@@ -538,7 +552,7 @@ const HomeTab = ({
                     {/* 오늘의 일정 */}
                     <div className="dashboard-section">
                         <div className="home-card-header">
-                            <h3 className="home-card-title">오늘의 일정</h3>
+                            <h3 className="home-card-title">{scheduleTitle}</h3>
                         </div>
                         <div className="home-card-body">
                             {dayEvents.length > 0 ? (
@@ -580,7 +594,7 @@ const HomeTab = ({
                     {/* 투두리스트 */}
                     <div className="dashboard-section">
                         <div className="home-card-header">
-                            <h3 className="home-card-title">투두리스트</h3>
+                            <h3 className="home-card-title">{todoTitle}</h3>
                         </div>
                         <div className="home-card-body">
                             {todos.length > 0 ? (
@@ -643,7 +657,7 @@ const HomeTab = ({
             <Modal show={showTodoModal} onClose={resetTodoForm} contentClassName="add-todo-modal">
                 <div className="schedule-modal-header">
                     <h3 className="schedule-modal-title">새 투두리스트 추가</h3>
-                    <span className="schedule-modal-date">{new Date(selectedDate).getMonth() + 1}월 {new Date(selectedDate).getDate()}일</span>
+                    <span className="schedule-modal-date">{selectedDate.split('-')[1]}월 {selectedDate.split('-')[2]}일</span>
                     <button className="modal-close-btn" onClick={resetTodoForm}>x</button>
                 </div>
                 <div className="todo-day-picker-wrapper">
@@ -672,7 +686,7 @@ const HomeTab = ({
             <Modal show={showScheduleModal} onClose={resetScheduleForm} contentClassName="add-schedule-modal-content">
                 <div className="schedule-modal-header">
                     <h3 className="schedule-modal-title">새 일정 추가</h3>
-                    <span className="schedule-modal-date">{new Date(selectedDate).getMonth() + 1}월 {new Date(selectedDate).getDate()}일</span>
+                    <span className="schedule-modal-date">{selectedDate.split('-')[1]}월 {selectedDate.split('-')[2]}일</span>
                     <button className="modal-close-btn" onClick={resetScheduleForm}>x</button>
                 </div>
                 <div className="chip-container">

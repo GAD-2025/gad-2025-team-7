@@ -10,6 +10,7 @@ import ViewToggle from './ViewToggle'; // Import ViewToggle
 const Home = () => {
     const { setIsSlideOutNavOpen } = useOutletContext();
     const { selectedDate, setSelectedDate } = useData();
+    console.log("Home.js selectedDate:", selectedDate);
     const [isMonthView, setIsMonthView] = useState(true); // State for month/week view
     
     const [monthOffset, setMonthOffset] = useState(0);
@@ -53,6 +54,7 @@ const Home = () => {
         if (!userId) return;
 
         const dt = new Date();
+        dt.setDate(1); // Prevent month overflow
         if (monthOffset !== 0) {
             dt.setMonth(new Date().getMonth() + monthOffset);
         }

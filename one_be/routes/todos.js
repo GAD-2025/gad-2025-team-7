@@ -43,9 +43,13 @@ router.post('/', async (req, res) => {
                 day.setDate(day.getDate() + i);
 
                 if (selectedDays.includes(day.getDay())) {
+                    const year = day.getFullYear();
+                    const month = (day.getMonth() + 1).toString().padStart(2, '0');
+                    const dayOfMonth = day.getDate().toString().padStart(2, '0');
+                    const dateString = `${year}-${month}-${dayOfMonth}`;
                     newTodos.push([
                         userId,
-                        day.toISOString().split('T')[0],
+                        dateString,
                         title,
                         color || '#fffbe6' // Added color with default
                     ]);

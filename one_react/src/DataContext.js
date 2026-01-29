@@ -39,7 +39,11 @@ const getInitialDate = () => {
     } catch (e) {
         console.error("Failed to load selectedDate from sessionStorage", e);
     }
-    return new Date().toISOString().split('T')[0];
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
 };
 
 export const DataProvider = ({ children }) => {
@@ -111,7 +115,7 @@ export const DataProvider = ({ children }) => {
         }
 
         if (pedometerDataByDate[selectedDate] === undefined) {
-            fetch(`${process.env.REACT_APP_API_URL}/api/healthcare/pedometer/${userId}/${selectedDate}`)
+            fetch(`${process.env.REACT_APP_API_URL}/api/healthcare/steps/${userId}/${selectedDate}`)
                 .then(res => res.json())
                 .then(data => setPedometerDataByDate(prev => ({ ...prev, [selectedDate]: { steps: data.steps || 0, weight: data.weight || 0 } })))
                 .catch(error => {

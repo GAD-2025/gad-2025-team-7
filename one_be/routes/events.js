@@ -104,9 +104,13 @@ router.post('/', async (req, res) => {
                     ]);
                 }
             } else { // If not a repeating event, add every day in the range
+                const year = currentDate.getFullYear();
+                const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+                const day = currentDate.getDate().toString().padStart(2, '0');
+                const dateString = `${year}-${month}-${day}`;
                 newEvents.push([
                     userId,
-                    currentDate.toISOString().split('T')[0],
+                    dateString,
                     title,
                     time || null,
                     category || 'personal',

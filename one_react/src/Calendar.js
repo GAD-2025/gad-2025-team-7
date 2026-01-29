@@ -27,6 +27,7 @@ const Calendar = ({
     const [clickedCellEl, setClickedCellEl] = useState(null);
     const [userProfile, setUserProfile] = useState(null); // New state for user profile
     const [dailyCalorieGoal, setDailyCalorieGoal] = useState(0); // New state for daily calorie goal
+    const [lastClickedDate, setLastClickedDate] = useState(null); // New state to track last clicked date
 
     const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -55,65 +56,88 @@ const Calendar = ({
     }, [userId]);
 
     const handleDateClick = async (event, dayInfo) => {
-        setSelectedDate(dayInfo.dayString);
-        console.log('Calendar.js - selectedDate after click:', dayInfo.dayString); // Debug log
-        sessionStorage.setItem('popoverOpenForDate', dayInfo.dayString); // Save popover state
-
-        setClickedCellEl(event.currentTarget);
-        setPopoverDate(dayInfo.dayString);
-
-        // Fetch consumed calories
-        let consumedCalories = 0;
-        try {
-            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/meals/today_calories/${userId}/${dayInfo.dayString}`);
-            if (res.ok) {
-                const data = await res.json();
-                consumedCalories = data.totalCalories;
-            } else {
-                console.error("Failed to fetch consumed calories:", await res.text());
-            }
-        } catch (error) {
-            console.error("Error fetching consumed calories:", error);
+        // If the popover is currently open for the clicked date, close it (third click)
+        if (popoverDate === dayInfo.dayString) {
+            handleClosePopover();
+            setLastClickedDate(null); // Reset last clicked date
+            return;
         }
 
-        const todaysEvents = events.filter(e => e.date.split('T')[0] === dayInfo.dayString);
-        const completedEventsCount = todaysEvents.filter(e => e.completed).length;
-        const steps = pedometerDataByDate[dayInfo.dayString]?.steps || 0;
+        // If the clicked date is the same as the last clicked date (second click)
+        if (dayInfo.dayString === lastClickedDate) {
+            setSelectedDate(dayInfo.dayString); // Ensure selectedDate is updated
+            sessionStorage.setItem('popoverOpenForDate', dayInfo.dayString); // Persist popover state
+            setClickedCellEl(event.currentTarget);
+            setPopoverDate(dayInfo.dayString);
+            setPopoverAnchorEl(event.currentTarget); // Set anchor directly
 
-        // Calculate graph progress for calories
-        const graphPathLength = 283; // From Pedometer.js
-        let progressPercent = (consumedCalories / dailyCalorieGoal) * 100;
-        progressPercent = Math.min(100, Math.max(0, progressPercent));
-        const strokeDashoffset = graphPathLength - (graphPathLength * progressPercent) / 100;
-
-        // Fetch todos for the day
-        let completedTodosCount = 0;
-        let totalTodos = 0;
-        try {
-            const todosRes = await fetch(`${process.env.REACT_APP_API_URL}/api/todos/${userId}/${dayInfo.dayString}`);
-            if (todosRes.ok) {
-                const todosData = await todosRes.json();
-                totalTodos = todosData.length;
-                completedTodosCount = todosData.filter(todo => todo.completed).length;
-            } else {
-                console.error("Failed to fetch todos:", await todosRes.text());
+            // Fetch consumed calories
+            let consumedCalories = 0;
+            try {
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/meals/today_calories/${userId}/${dayInfo.dayString}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    consumedCalories = data.totalCalories;
+                } else {
+                    console.error("Failed to fetch consumed calories:", await res.text());
+                }
+            } catch (error) {
+                console.error("Error fetching consumed calories:", error);
             }
-        } catch (error) {
-            console.error("Error fetching todos:", error);
-        }
 
-        setSummaryData({
-            steps: steps,
-            completedEvents: completedEventsCount,
-            totalEvents: todaysEvents.length,
-            completedTodos: completedTodosCount, // New
-            totalTodos: totalTodos, // New
-            targetCalories: dailyCalorieGoal, // Use the state for target calories
-            consumedCalories: Math.round(consumedCalories),
-            calorieGraphProgress: progressPercent, // New
-            calorieStrokeDashoffset: strokeDashoffset, // New
-            calorieGraphPathLength: graphPathLength, // New
-        });
+            const todaysEvents = events.filter(e => {
+                if (!e.date) return false;
+                const event_date_utc = new Date(e.date);
+                const year = event_date_utc.getUTCFullYear();
+                const month = String(event_date_utc.getUTCMonth() + 1).padStart(2, '0');
+                const day = String(event_date_utc.getUTCDate()).padStart(2, '0');
+                const eventDateString = `${year}-${month}-${day}`;
+                return eventDateString === dayInfo.dayString;
+            });
+            const completedEventsCount = todaysEvents.filter(e => e.completed).length;
+            const steps = pedometerDataByDate[dayInfo.dayString]?.steps || 0;
+
+            // Calculate graph progress for calories
+            const graphPathLength = 283; // From Pedometer.js
+            let progressPercent = (consumedCalories / dailyCalorieGoal) * 100;
+            progressPercent = Math.min(100, Math.max(0, progressPercent));
+            const strokeDashoffset = graphPathLength - (graphPathLength * progressPercent) / 100;
+
+            // Fetch todos for the day
+            let completedTodosCount = 0;
+            let totalTodos = 0;
+            try {
+                const todosRes = await fetch(`${process.env.REACT_APP_API_URL}/api/todos/${userId}/${dayInfo.dayString}`);
+                if (todosRes.ok) {
+                    const todosData = await todosRes.json();
+                    totalTodos = todosData.length;
+                    completedTodosCount = todosData.filter(todo => todo.completed).length;
+                } else {
+                    console.error("Failed to fetch todos:", await todosRes.text());
+                }
+            } catch (error) {
+                console.error("Error fetching todos:", error);
+            }
+
+            setSummaryData({
+                steps: steps,
+                completedEvents: completedEventsCount,
+                totalEvents: todaysEvents.length,
+                completedTodos: completedTodosCount, // New
+                totalTodos: totalTodos, // New
+                targetCalories: dailyCalorieGoal, // Use the state for target calories
+                consumedCalories: Math.round(consumedCalories),
+                calorieGraphProgress: progressPercent, // New
+                calorieStrokeDashoffset: strokeDashoffset, // New
+                calorieGraphPathLength: graphPathLength, // New
+            });
+
+        } else {
+            // First click on a new date, or first click on this date
+            setSelectedDate(dayInfo.dayString);
+            setLastClickedDate(dayInfo.dayString);
+            handleClosePopover(); // Ensure any existing popover is closed
+        }
     };
 
     const handleClosePopover = () => {
@@ -124,33 +148,87 @@ const Calendar = ({
         setClickedCellEl(null);
     };
 
-    // Effect to set the anchor element after the DOM has been updated
-    useEffect(() => {
-        if (clickedCellEl) {
-            const anchor = clickedCellEl.querySelector('.selected-day-indicator');
-            setPopoverAnchorEl(anchor || clickedCellEl);
-        }
-    }, [popoverDate, clickedCellEl]);
-
     // On initial mount, check if a popover should be reopened
     useEffect(() => {
+        const today = new Date();
+        const todayString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
         const popoverDateToOpen = sessionStorage.getItem('popoverOpenForDate');
-        if (popoverDateToOpen && calendarDaysRef.current) {
-            const dayCell = calendarDaysRef.current.querySelector(`[data-date="${popoverDateToOpen}"]`);
+
+        // If there's a persisted popover date, or if selectedDate is today (and no popover is open)
+        if ((popoverDateToOpen && calendarDaysRef.current) || (selectedDate === todayString && popoverDate === null)) {
+            const targetDateString = popoverDateToOpen || todayString;
+            const dayCell = calendarDaysRef.current.querySelector(`[data-date="${targetDateString}"]`);
             if (dayCell) {
-                // Mock event to open popover for the persisted date
-                handleDateClick({ currentTarget: dayCell }, { dayString: popoverDateToOpen });
+                setClickedCellEl(dayCell);
+                setPopoverDate(targetDateString);
+                setPopoverAnchorEl(dayCell); // Directly set anchor
+
+                const fetchSummaryForTargetDate = async () => {
+                    // Fetch consumed calories
+                    let consumedCalories = 0;
+                    try {
+                        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/meals/today_calories/${userId}/${targetDateString}`);
+                        if (res.ok) {
+                            const data = await res.json();
+                            consumedCalories = data.totalCalories;
+                        } else {
+                            console.error("Failed to fetch consumed calories:", await res.text());
+                        }
+                    } catch (error) {
+                        console.error("Error fetching consumed calories:", error);
+                    }
+
+                    const todaysEvents = events.filter(e => {
+                        if (!e.date) return false;
+                        const event_date_utc = new Date(e.date);
+                        const year = event_date_utc.getUTCFullYear();
+                        const month = String(event_date_utc.getUTCMonth() + 1).padStart(2, '0');
+                        const day = String(event_date_utc.getUTCDate()).padStart(2, '0');
+                        const eventDateString = `${year}-${month}-${day}`;
+                        return eventDateString === targetDateString;
+                    });
+                    const completedEventsCount = todaysEvents.filter(e => e.completed).length;
+                    const steps = pedometerDataByDate[targetDateString]?.steps || 0;
+
+                    const graphPathLength = 283;
+                    let progressPercent = (consumedCalories / dailyCalorieGoal) * 100;
+                    progressPercent = Math.min(100, Math.max(0, progressPercent));
+                    const strokeDashoffset = graphPathLength - (graphPathLength * progressPercent) / 100;
+
+                    let completedTodosCount = 0;
+                    let totalTodos = 0;
+                    try {
+                        const todosRes = await fetch(`${process.env.REACT_APP_API_URL}/api/todos/${userId}/${targetDateString}`);
+                        if (todosRes.ok) {
+                            const todosData = await todosRes.json();
+                            totalTodos = todosData.length;
+                            completedTodosCount = todosData.filter(todo => todo.completed).length;
+                        } else {
+                            console.error("Failed to fetch todos:", await todosRes.text());
+                        }
+                    } catch (error) {
+                        console.error("Error fetching todos:", error);
+                    }
+
+                    setSummaryData({
+                        steps: steps,
+                        completedEvents: completedEventsCount,
+                        totalEvents: todaysEvents.length,
+                        completedTodos: completedTodosCount,
+                        totalTodos: totalTodos,
+                        targetCalories: dailyCalorieGoal,
+                        consumedCalories: Math.round(consumedCalories),
+                        calorieGraphProgress: progressPercent,
+                        calorieStrokeDashoffset: strokeDashoffset,
+                        calorieGraphPathLength: graphPathLength,
+                    });
+                };
+                fetchSummaryForTargetDate();
             }
         }
-    }, []); // Empty array ensures this runs only once on mount
-
-    // Set selectedDate to today if no date is explicitly selected or persisted
-    useEffect(() => {
-        const today = new Date().toISOString().split('T')[0];
-        if (selectedDate !== today && !sessionStorage.getItem('popoverOpenForDate')) {
-            setSelectedDate(today);
-        }
-    }, []); // Run only once on mount
+        sessionStorage.removeItem('popoverOpenForDate'); // Clear any persisted popover state
+    }, [selectedDate, userId, events, pedometerDataByDate, dailyCalorieGoal, popoverDate]); // Added popoverDate to dependencies
 
     const handlePrev = () => {
         if (isMonthView) {
@@ -169,6 +247,7 @@ const Calendar = ({
     };
 
     let displayDate = new Date();
+    displayDate.setDate(1); // Prevent month overflow
     let days = [];
 
     if (isMonthView) {
@@ -196,7 +275,15 @@ const Calendar = ({
                 dayString,
                 isToday: today.getFullYear() === year && today.getMonth() === month && today.getDate() === i,
                 isSelected: dayString === selectedDate,
-                events: events.filter(e => e.date.split('T')[0] === dayString),
+                events: events.filter(e => {
+                    if (!e.date) return false;
+                    const event_date_utc = new Date(e.date);
+                    const year = event_date_utc.getUTCFullYear();
+                    const month = String(event_date_utc.getUTCMonth() + 1).padStart(2, '0');
+                    const day = String(event_date_utc.getUTCDate()).padStart(2, '0');
+                    const eventDateString = `${year}-${month}-${day}`;
+                    return eventDateString === dayString;
+                }),
             });
         }
 
@@ -221,7 +308,15 @@ const Calendar = ({
                 dayString,
                 isToday: new Date().getFullYear() === day.getFullYear() && new Date().getMonth() === day.getMonth() && new Date().getDate() === day.getDate(),
                 isSelected: dayString === selectedDate,
-                events: events.filter(e => e.date.split('T')[0] === dayString),
+                events: events.filter(e => {
+                    if (!e.date) return false;
+                    const event_date_utc = new Date(e.date);
+                    const year = event_date_utc.getUTCFullYear();
+                    const month = String(event_date_utc.getUTCMonth() + 1).padStart(2, '0');
+                    const dayOfMonth = String(event_date_utc.getUTCDate()).padStart(2, '0');
+                    const eventDateString = `${year}-${month}-${dayOfMonth}`;
+                    return eventDateString === dayString;
+                }),
             });
         }
         // For week view, the month and year in the header should reflect the week
