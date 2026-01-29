@@ -47,6 +47,7 @@ const HomeTab = ({
     const [newScheduleTitle, setNewScheduleTitle] = useState('');
     const [newScheduleTemplateTitle, setNewScheduleTemplateTitle] = useState('');
     const [newScheduleTemplateColor, setNewScheduleTemplateColor] = useState('#FFE79D'); // Default color
+    const [newScheduleColor, setNewScheduleColor] = useState('#FFE79D'); // New state for manually created schedule color
     const defaultColors = ['#FFE79D', '#9DDBFF', '#A5A5A5', '#9DFFA7', '#FFA544'];
     const [newScheduleTime, setNewScheduleTime] = useState('');
     const [newScheduleStartDate, setNewScheduleStartDate] = useState(selectedDate);
@@ -296,6 +297,7 @@ const HomeTab = ({
             startDate: selectedDate, // Default to the currently selected date
             endDate: null, // Default to no end date
             selectedDays: [], // Default to no specific days
+            color: template.color, // Add template color
         };
         try {
             const res = await fetch(`${process.env.REACT_APP_API_URL}/api/events`, {
@@ -350,6 +352,7 @@ const HomeTab = ({
         setNewScheduleIrregularSelectedDates([]); // New
         setShowScheduleTimePicker(false); // Reset time picker visibility
         setShowScheduleRepeat(false); // Reset repeat chip visibility
+        setNewScheduleColor('#FFE79D'); // Reset schedule color
         setShowScheduleModal(false);
     };
 
@@ -426,6 +429,7 @@ const HomeTab = ({
             endDate: newScheduleEndDate,
             selectedDays: selectedDaysToSend, // For repeating schedules
             selectedDates: selectedDatesToSend, // For irregular dates
+            color: newScheduleColor, // Add newScheduleColor
         };
 
         try {
@@ -715,6 +719,43 @@ const HomeTab = ({
                     </div>
                 )}
                 <input type="text" className="schedule-title-input" placeholder="일정명을 입력해주세요" value={newScheduleTitle} onChange={(e) => setNewScheduleTitle(e.target.value)} />
+                <div className="template-color-picker">
+                    {defaultColors.map(color => {
+                        const isSelected = newScheduleColor === color;
+                        const style = {
+                            borderColor: color,
+                            backgroundColor: hexToRgba(color, 0.5),
+                            border: isSelected ? '2px solid #d3d3d3' : '1px solid transparent',
+                        };
+                        return (
+                            <div
+                                key={color}
+                                className={`color-circle ${isSelected ? 'selected' : ''}`}
+                                style={style}
+                                onClick={() => setNewScheduleColor(color)}
+                            ></div>
+                        );
+                    })}
+                    <div
+                        ref={colorPickerBtnRef}
+                        className={`color-circle custom-color-circle ${newScheduleColor && !defaultColors.includes(newScheduleColor) ? 'selected' : ''}`}
+                        style={{
+                            backgroundColor: newScheduleColor,
+                            borderColor: newScheduleColor,
+                            borderStyle: 'solid',
+                        }}
+                        onClick={() => setShowColorPicker(!showColorPicker)}
+                    >
+                        {defaultColors.includes(newScheduleColor) && (
+                            <div className="plus-icon"></div>
+                        )}
+                    </div>
+                </div>
+                {showColorPicker && (
+                    <div ref={colorPickerPaletteRef} className="expanded-color-palette">
+                        <HexColorPicker color={newScheduleColor} onChange={setNewScheduleColor} />
+                    </div>
+                )}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginBottom: '10px' }}>
                                                                             <Template
                                                                                 type="schedule"
