@@ -28,6 +28,7 @@ const Calendar = ({
     const [userProfile, setUserProfile] = useState(null); // New state for user profile
     const [dailyCalorieGoal, setDailyCalorieGoal] = useState(0); // New state for daily calorie goal
     const [lastClickedDate, setLastClickedDate] = useState(null); // New state to track last clicked date
+    const hasInitialPopoverOpened = useRef(false); // New ref to track if initial popover has opened
 
     const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -66,7 +67,6 @@ const Calendar = ({
         // If the clicked date is the same as the last clicked date (second click)
         if (dayInfo.dayString === lastClickedDate) {
             setSelectedDate(dayInfo.dayString); // Ensure selectedDate is updated
-            sessionStorage.setItem('popoverOpenForDate', dayInfo.dayString); // Persist popover state
             setClickedCellEl(event.currentTarget);
             setPopoverDate(dayInfo.dayString);
             setPopoverAnchorEl(event.currentTarget); // Set anchor directly
@@ -141,7 +141,6 @@ const Calendar = ({
     };
 
     const handleClosePopover = () => {
-        sessionStorage.removeItem('popoverOpenForDate'); // Clear popover state
         setPopoverAnchorEl(null);
         setPopoverDate(null);
         setSummaryData(null);
@@ -150,25 +149,26 @@ const Calendar = ({
 
     // On initial mount, check if a popover should be reopened
     useEffect(() => {
+        if (hasInitialPopoverOpened.current) {
+            return; // Only run once on initial mount
+        }
+
         const today = new Date();
         const todayString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
-        const popoverDateToOpen = sessionStorage.getItem('popoverOpenForDate');
-
-        // If there's a persisted popover date, or if selectedDate is today (and no popover is open)
-        if ((popoverDateToOpen && calendarDaysRef.current) || (selectedDate === todayString && popoverDate === null)) {
-            const targetDateString = popoverDateToOpen || todayString;
-            const dayCell = calendarDaysRef.current.querySelector(`[data-date="${targetDateString}"]`);
+        // If selectedDate is today (and no popover is open)
+        if (selectedDate === todayString && popoverAnchorEl === null && calendarDaysRef.current) {
+            const dayCell = calendarDaysRef.current.querySelector(`[data-date="${todayString}"]`);
             if (dayCell) {
                 setClickedCellEl(dayCell);
-                setPopoverDate(targetDateString);
+                setPopoverDate(todayString);
                 setPopoverAnchorEl(dayCell); // Directly set anchor
 
                 const fetchSummaryForTargetDate = async () => {
                     // Fetch consumed calories
                     let consumedCalories = 0;
                     try {
-                        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/meals/today_calories/${userId}/${targetDateString}`);
+                        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/meals/today_calories/${userId}/${todayString}`);
                         if (res.ok) {
                             const data = await res.json();
                             consumedCalories = data.totalCalories;
@@ -186,10 +186,10 @@ const Calendar = ({
                         const month = String(event_date_utc.getUTCMonth() + 1).padStart(2, '0');
                         const day = String(event_date_utc.getUTCDate()).padStart(2, '0');
                         const eventDateString = `${year}-${month}-${day}`;
-                        return eventDateString === targetDateString;
+                        return eventDateString === todayString;
                     });
                     const completedEventsCount = todaysEvents.filter(e => e.completed).length;
-                    const steps = pedometerDataByDate[targetDateString]?.steps || 0;
+                    const steps = pedometerDataByDate[todayString]?.steps || 0;
 
                     const graphPathLength = 283;
                     let progressPercent = (consumedCalories / dailyCalorieGoal) * 100;
@@ -199,7 +199,7 @@ const Calendar = ({
                     let completedTodosCount = 0;
                     let totalTodos = 0;
                     try {
-                        const todosRes = await fetch(`${process.env.REACT_APP_API_URL}/api/todos/${userId}/${targetDateString}`);
+                        const todosRes = await fetch(`${process.env.REACT_APP_API_URL}/api/todos/${userId}/${todayString}`);
                         if (todosRes.ok) {
                             const todosData = await todosRes.json();
                             totalTodos = todosData.length;
@@ -225,10 +225,10 @@ const Calendar = ({
                     });
                 };
                 fetchSummaryForTargetDate();
+                hasInitialPopoverOpened.current = true; // Mark as opened
             }
         }
-        sessionStorage.removeItem('popoverOpenForDate'); // Clear any persisted popover state
-    }, [selectedDate, userId, events, pedometerDataByDate, dailyCalorieGoal, popoverDate]); // Added popoverDate to dependencies
+    }, [selectedDate, userId, events, pedometerDataByDate, dailyCalorieGoal, popoverAnchorEl]); // Added popoverAnchorEl to dependencies
 
     const handlePrev = () => {
         if (isMonthView) {
