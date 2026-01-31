@@ -54,6 +54,7 @@
   font-weight: 600;
   font-size: 25px;
   color: #4B4B4B;
+  font-family: 'Pretendard', sans-serif; /* Set font to Pretendard */
 }
 
 .year-text {

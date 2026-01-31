@@ -444,6 +444,7 @@
     background-color: #F1F1F1;
     border-radius: 4px;
     padding: 4px 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Drop shadow with x=0, y=0 */
 }
 
 .reminder-title {

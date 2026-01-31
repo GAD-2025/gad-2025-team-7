@@ -32,6 +32,7 @@
     color: #ff7581; /* From Figma */
     margin: 0;
     margin-bottom: 6px; /* Added for spacing */
+    font-family: 'Pretendard', sans-serif; /* Set font to Pretendard */
 }
 
 .main-header .logo-container p {
