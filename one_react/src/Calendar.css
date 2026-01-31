@@ -141,6 +141,14 @@
   flex-shrink: 0; /* Prevent day number from shrinking */
 }
 
+.day-number-wrapper {
+  height: 18px; /* A fixed height to contain the day number */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0; /* Prevent it from shrinking */
+}
+
 .day-cell.today p {
   color: #ff6f61;
 }

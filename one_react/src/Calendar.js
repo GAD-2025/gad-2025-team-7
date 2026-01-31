@@ -371,7 +371,9 @@ const Calendar = ({
                             onMouseEnter={() => dayInfo.dayString && onDragMove(dayInfo.dayString)}
                             onMouseUp={onDragEnd}
                         >
-                            <p>{dayInfo.day}</p>
+                            <div className="day-number-wrapper">
+                                <p>{dayInfo.day}</p>
+                            </div>
                             {popoverDate === dayInfo.dayString && !dayInfo.isOtherMonth && (
                                 <div className="selected-day-indicator"></div>
                             )}
