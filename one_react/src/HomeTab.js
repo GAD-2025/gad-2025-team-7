@@ -214,9 +214,13 @@ const HomeTab = ({
         setCurrentX(0);
     };
 
+    // Effect to initialize schedule dates when modal opens
     useEffect(() => {
-        setNewScheduleStartDate(selectedDate);
-    }, [selectedDate]);
+        if (showScheduleModal) {
+            setNewScheduleStartDate(initialScheduleStartDate || selectedDate);
+            setNewScheduleEndDate(initialScheduleEndDate || '');
+        }
+    }, [showScheduleModal, initialScheduleStartDate, initialScheduleEndDate, selectedDate]);
 
     useEffect(() => {
         if (!userId) return;
@@ -231,9 +235,6 @@ const HomeTab = ({
                 const data = await res.json();
                 if (res.ok) {
                     setUpcomingEvents(data.filter(event => event.setReminder).slice(0, 3));
-                } else {
-                    setUpcomingEvents([]);
-                    console.error("Failed to fetch upcoming events:", data.msg);
                 }
             } catch (error) {
                 setUpcomingEvents([]);
@@ -427,8 +428,9 @@ const HomeTab = ({
     const resetScheduleForm = () => {
         setNewScheduleTitle('');
         setNewScheduleTime('');
-        setNewScheduleStartDate(selectedDate);
-        setNewScheduleEndDate('');
+        // Initialize from props if available, otherwise use selectedDate
+        setNewScheduleStartDate(initialScheduleStartDate || selectedDate);
+        setNewScheduleEndDate(initialScheduleEndDate || '');
         setNewScheduleSetReminder(false);
         setNewScheduleRepeatSelectedDays([]); // Renamed
         setShowScheduleRepeatDayPicker(false); // Renamed
@@ -627,6 +629,22 @@ const HomeTab = ({
         return `${year}-${month}-${day}`;
     }
 
+    const formatDisplayDate = () => {
+        if (initialScheduleStartDate && initialScheduleEndDate && initialScheduleStartDate !== initialScheduleEndDate) {
+            const startMonth = initialScheduleStartDate.split('-')[1];
+            const startDay = initialScheduleStartDate.split('-')[2];
+            const endMonth = initialScheduleEndDate.split('-')[1];
+            const endDay = initialScheduleEndDate.split('-')[2];
+
+            if (startMonth === endMonth) {
+                return `${startMonth}월 ${startDay}일 - ${endDay}일`;
+            } else {
+                return `${startMonth}월 ${startDay}일 - ${endMonth}월 ${endDay}일`;
+            }
+        }
+        return `${selectedDate.split('-')[1]}월 ${selectedDate.split('-')[2]}일`;
+    };
+
     const todayString = getToday();
     const isToday = selectedDate === todayString;
 
@@ -785,7 +803,7 @@ const HomeTab = ({
             <Modal show={showScheduleModal} onClose={resetScheduleForm} contentClassName="add-schedule-modal-content">
                 <div className="schedule-modal-header">
                     <h3 className="schedule-modal-title">새 일정 추가</h3>
-                    <span className="schedule-modal-date">{selectedDate.split('-')[1]}월 {selectedDate.split('-')[2]}일</span>
+                    <span className="schedule-modal-date">{formatDisplayDate()}</span>
                     <button className="modal-close-btn" onClick={resetScheduleForm}>x</button>
                 </div>
                 <div className="chip-container">
