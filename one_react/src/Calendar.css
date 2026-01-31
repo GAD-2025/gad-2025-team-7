@@ -122,7 +122,7 @@
   cursor: pointer;
   border-radius: 6px;
   position: relative;
-  height: 60px; /* Restored original height */
+  height: 65px; /* Increased height by 5px */
   /* overflow: hidden; Removed */
   -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
 }
@@ -181,6 +181,7 @@
   scrollbar-width: none;
   /* Hide scrollbar for Internet Explorer/Edge */
   -ms-overflow-style: none;
+  margin-top: 2px; /* Gap between day number and first event */
 }
 
 .event {
@@ -194,6 +195,7 @@
   text-overflow: ellipsis;
   flex-shrink: 0; /* Prevent event items from shrinking */
   box-sizing: border-box;
+  /* margin-top: 2px; Removed */
 }
 
 .calendar-grid.week-view .day-cell {

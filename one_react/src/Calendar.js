@@ -287,11 +287,15 @@ const Calendar = ({
             });
         }
 
-        // Next month's padding days
-        const nextMonthDays = 42 - days.length;
+        // Next month's padding days (limit to 5 weeks total)
+        const totalDaysInCalendar = 35; // 5 weeks * 7 days
+        const nextMonthDays = totalDaysInCalendar - days.length;
         for (let i = 1; i <= nextMonthDays; i++) {
             days.push({ day: i, isOtherMonth: true });
         }
+        // If a month naturally extends to 6 weeks, we will truncate it to 5 weeks.
+        // This means some days of the current month might not be visible if they fall into the 6th week.
+        days = days.slice(0, totalDaysInCalendar);
     } else { // Week view logic
         let currentWeekStart = new Date();
         currentWeekStart.setDate(currentWeekStart.getDate() + (weekOffset * 7)); // Adjust by weekOffset
