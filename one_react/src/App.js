@@ -30,7 +30,7 @@ function App() {
       const userId = localStorage.getItem('userId');
       const authStatus = !!userId;
       setIsAuthenticated(authStatus);
-      console.log('App.js - Initial isAuthenticated status:', authStatus); // Debug log
+      // console.log('App.js - Initial isAuthenticated status:', authStatus); // Debug log
     };
 
     checkAuth(); // Check on initial load

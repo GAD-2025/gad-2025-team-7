@@ -27,7 +27,7 @@ export const ProfileProvider = ({ children }) => {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/profile/${userId}`);
             if (response.ok) {
                 const data = await response.json();
-                console.log('fetchProfile - API response data:', data); // Debug log
+                // console.log('fetchProfile - API response data:', data); // Debug log
                 setProfile({
                     userId: data.id,
                     nickname: data.username,

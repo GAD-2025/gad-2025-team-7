@@ -10,7 +10,7 @@ import ViewToggle from './ViewToggle'; // Import ViewToggle
 const Home = () => {
     const { setIsSlideOutNavOpen } = useOutletContext();
     const { selectedDate, setSelectedDate } = useData();
-    console.log("Home.js selectedDate:", selectedDate);
+    // console.log("Home.js selectedDate:", selectedDate); // Removed
     const [isMonthView, setIsMonthView] = useState(true); // State for month/week view
     
     const [monthOffset, setMonthOffset] = useState(0);
@@ -31,15 +31,15 @@ const Home = () => {
 
     useEffect(() => {
         if (!userId || !selectedDate) return;
-        console.log('Home.js - userId for dashboardEvents:', userId); // Debug log
-        console.log('Home.js - selectedDate for dashboardEvents:', selectedDate); // Debug log
-        console.log('Home.js - selectedDate:', selectedDate); // Debug log
+        // console.log('Home.js - userId for dashboardEvents:', userId); // Removed
+        // console.log('Home.js - selectedDate for dashboardEvents:', selectedDate); // Removed
+        // console.log('Home.js - selectedDate:', selectedDate); // Removed
         
         fetch(`${process.env.REACT_APP_API_URL}/api/events/${userId}/${selectedDate}`, { cache: 'no-cache' })
             .then(res => res.ok ? res.json() : Promise.reject(new Error('Failed to fetch day events')))
             .then(data => {
                 setDashboardEvents(data);
-                console.log('Home.js - dashboardEvents:', data); // Debug log
+                // console.log('Home.js - dashboardEvents:', data); // Removed
             })
             .catch(console.error);
 

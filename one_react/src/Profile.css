@@ -416,3 +416,20 @@
     color: #4a4a4a;
     margin-bottom: 10px;
 }
+
+.profile-upload-button {
+    background-color: #FF7581; /* Pink accent */
+    color: white;
+    width: 150px; /* Example width */
+    padding: 8px 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 10px; /* Space from nickname */
+    transition: background-color 0.3s ease;
+}
+
+.profile-upload-button:hover {
+    background-color: #e06b75;
+}

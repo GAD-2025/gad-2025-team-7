@@ -245,10 +245,13 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                         className="profile-picture-container"
                         style={{ border: '1px solid #E1E7EF', backgroundImage: previewImage ? `url(${previewImage.startsWith('data:') ? '' : process.env.REACT_APP_API_URL}${previewImage})` : 'none' }}
                     >
-                        <ImageUploader onImageUpload={handleImageUpload} currentImageUrl={previewImage} />
+                        {/* ImageUploader is no longer directly inside, it wraps the upload button */}
                     </div>
                     <span className="profile-nickname-display-popup">{profile.nickname || 'Guest'}</span>
                 </div>
+                <ImageUploader onImageUpload={handleImageUpload}>
+                    <button className="profile-upload-button">프로필 업로드</button>
+                </ImageUploader>
                 
                 
                 
