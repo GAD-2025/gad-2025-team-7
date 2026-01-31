@@ -399,7 +399,6 @@ const Calendar = ({
                     ))}
                 </div>
             </div>
-
             {popoverAnchorEl && (
                 <DaySummaryPopover
                     date={popoverDate}

@@ -205,4 +205,3 @@
 .calendar-grid.week-view .day-cell .events-container {
   overflow-y: visible; /* Allow events to push the day-cell height */
 }
-
