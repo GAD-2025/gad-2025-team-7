@@ -1,3 +1,4 @@
+import { FaTrash } from 'react-icons/fa';
 import React, { useState, useEffect, useRef } from 'react'; // Import useRef
 import { HexColorPicker } from "react-colorful"; // Import HexColorPicker
 import './HomeTab.css';
@@ -104,6 +105,13 @@ const HomeTab = ({
     const colorPickerBtnRef = useRef(null); // Ref for the custom color button
     const colorPickerPaletteRef = useRef(null); // Ref for the color picker palette
 
+    // Swipe logic states
+    const [startX, setStartX] = useState(0);
+    const [currentX, setCurrentX] = useState(0);
+    const [isSwiping, setIsSwiping] = useState(false);
+    const [swipedItemId, setSwipedItemId] = useState(null);
+    const swipeThreshold = 50; // Pixels to swipe to trigger delete button
+
     // Effect to close color picker on outside click
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -124,11 +132,87 @@ const HomeTab = ({
         };
     }, [showColorPicker]);
 
+    // Effect to close swiped item on outside click
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (swipedItemId) {
+                const swipedItemElement = document.getElementById(`schedule-item-${swipedItemId}`);
+                const deleteButtonElement = swipedItemElement ? swipedItemElement.querySelector('.delete-schedule-btn') : null;
+
+                if (
+                    swipedItemElement &&
+                    !swipedItemElement.contains(event.target) &&
+                    (!deleteButtonElement || !deleteButtonElement.contains(event.target)) // Check if delete button exists and click is outside
+                ) {
+                    setSwipedItemId(null);
+                }
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [swipedItemId]);
+
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const [confirmationModalProps, setConfirmationModalProps] = useState({
         message: '',
         onConfirm: () => {},
     });
+
+    // Swipe logic handlers
+    const handleTouchStart = (e, itemId) => {
+        setStartX(e.touches[0].clientX);
+        setCurrentX(e.touches[0].clientX);
+        setIsSwiping(true);
+        if (swipedItemId && swipedItemId !== itemId) {
+            setSwipedItemId(null);
+        }
+    };
+
+    const handleTouchMove = (e, itemId) => {
+        if (!isSwiping) return;
+        setCurrentX(e.touches[0].clientX);
+        const diffX = startX - currentX; // Right to left swipe
+        if (diffX > swipeThreshold) {
+            setSwipedItemId(itemId);
+        } else if (diffX < -swipeThreshold) { // Left to right swipe to close
+            setSwipedItemId(null);
+        }
+    };
+
+    const handleTouchEnd = () => {
+        setIsSwiping(false);
+        setStartX(0);
+        setCurrentX(0);
+    };
+
+    const handleMouseDown = (e, itemId) => {
+        setStartX(e.clientX);
+        setCurrentX(e.clientX);
+        setIsSwiping(true);
+        if (swipedItemId && swipedItemId !== itemId) {
+            setSwipedItemId(null);
+        }
+    };
+
+    const handleMouseMove = (e, itemId) => {
+        if (!isSwiping) return;
+        setCurrentX(e.clientX);
+        const diffX = startX - currentX;
+        if (diffX > swipeThreshold) {
+            setSwipedItemId(itemId);
+        } else if (diffX < -swipeThreshold) {
+            setSwipedItemId(null);
+        }
+    };
+
+    const handleMouseUp = () => {
+        setIsSwiping(false);
+        setStartX(0);
+        setCurrentX(0);
+    };
 
     useEffect(() => {
         setNewScheduleStartDate(selectedDate);
@@ -561,13 +645,24 @@ const HomeTab = ({
                         <div className="home-card-body">
                             {dayEvents.length > 0 ? (
                                 dayEvents.map(event => (
-                                    <div key={event.id} className={`schedule-item ${event.completed ? 'completed' : ''}`}>
+                                    <div
+                                        key={event.id}
+                                        id={`schedule-item-${event.id}`} // Add ID here
+                                        className={`schedule-item ${event.completed ? 'completed' : ''} ${swipedItemId === event.id ? 'swiped' : ''}`}
+                                        onTouchStart={(e) => handleTouchStart(e, event.id)}
+                                        onTouchMove={(e) => handleTouchMove(e, event.id)}
+                                        onTouchEnd={handleTouchEnd}
+                                        onMouseDown={(e) => handleMouseDown(e, event.id)}
+                                        onMouseMove={(e) => handleMouseMove(e, event.id)}
+                                        onMouseUp={handleMouseUp}
+                                        onMouseLeave={handleMouseUp} // To handle cases where mouse leaves the element while swiping
+                                    >
                                         <div className="item-checkbox-container" onClick={() => handleToggleSchedule(event.id, event.completed)}>
                                             <div className={`item-checkbox circle ${event.completed ? 'completed' : ''}`}></div>
                                         </div>
                                         <span className={`item-title ${event.completed ? 'completed' : ''}`}>{event.title}</span>
                                         <span className="item-time">{formatTime(event.time)}</span>
-                                        <button className="delete-schedule-btn" onClick={(e) => { e.stopPropagation(); handleDeleteSchedule(event.id); }}>x</button>
+                                        <button className="delete-schedule-btn" onClick={(e) => { e.stopPropagation(); handleDeleteSchedule(event.id); }}><FaTrash /></button>
                                     </div>
                                 ))
                             ) : (
