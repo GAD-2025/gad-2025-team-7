@@ -88,9 +88,9 @@ const Calendar = ({
             const todaysEvents = events.filter(e => {
                 if (!e.date) return false;
                 const event_date_utc = new Date(e.date);
-                const year = event_date_utc.getUTCFullYear();
-                const month = String(event_date_utc.getUTCMonth() + 1).padStart(2, '0');
-                const day = String(event_date_utc.getUTCDate()).padStart(2, '0');
+                const year = event_date_utc.getFullYear();
+                const month = String(event_date_utc.getMonth() + 1).padStart(2, '0');
+                const day = String(event_date_utc.getDate()).padStart(2, '0');
                 const eventDateString = `${year}-${month}-${day}`;
                 return eventDateString === dayInfo.dayString;
             });
@@ -182,9 +182,9 @@ const Calendar = ({
                     const todaysEvents = events.filter(e => {
                         if (!e.date) return false;
                         const event_date_utc = new Date(e.date);
-                        const year = event_date_utc.getUTCFullYear();
-                        const month = String(event_date_utc.getUTCMonth() + 1).padStart(2, '0');
-                        const day = String(event_date_utc.getUTCDate()).padStart(2, '0');
+                        const year = event_date_utc.getFullYear();
+                        const month = String(event_date_utc.getMonth() + 1).padStart(2, '0');
+                        const day = String(event_date_utc.getDate()).padStart(2, '0');
                         const eventDateString = `${year}-${month}-${day}`;
                         return eventDateString === todayString;
                     });
@@ -278,9 +278,9 @@ const Calendar = ({
                 events: events.filter(e => {
                     if (!e.date) return false;
                     const event_date_utc = new Date(e.date);
-                    const year = event_date_utc.getUTCFullYear();
-                    const month = String(event_date_utc.getUTCMonth() + 1).padStart(2, '0');
-                    const day = String(event_date_utc.getUTCDate()).padStart(2, '0');
+                    const year = event_date_utc.getFullYear();
+                    const month = String(event_date_utc.getMonth() + 1).padStart(2, '0');
+                    const day = String(event_date_utc.getDate()).padStart(2, '0');
                     const eventDateString = `${year}-${month}-${day}`;
                     return eventDateString === dayString;
                 }),
@@ -315,9 +315,9 @@ const Calendar = ({
                 events: events.filter(e => {
                     if (!e.date) return false;
                     const event_date_utc = new Date(e.date);
-                    const year = event_date_utc.getUTCFullYear();
-                    const month = String(event_date_utc.getUTCMonth() + 1).padStart(2, '0');
-                    const dayOfMonth = String(event_date_utc.getUTCDate()).padStart(2, '0');
+                    const year = event_date_utc.getFullYear();
+                    const month = String(event_date_utc.getMonth() + 1).padStart(2, '0');
+                    const dayOfMonth = String(event_date_utc.getDate()).padStart(2, '0');
                     const eventDateString = `${year}-${month}-${dayOfMonth}`;
                     return eventDateString === dayString;
                 }),

@@ -37,17 +37,20 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
     const userId = localStorage.getItem('userId');
 
     useEffect(() => {
+        console.log('Profile.js - useEffect: profile object:', profile);
         // Populate form with data from context
         if (profile) {
             setUsername(profile.username || ''); // Use profile.username
-            setPreviewImage(profile.profileImage || ''); // Use profile.profileImage
+            setPreviewImage(profile.profile_image_url || ''); // Use profile.profile_image_url
             setEmail(profile.email || ''); // Set email from profile
         }
+        console.log('Profile.js - useEffect: previewImage after setting:', previewImage);
     }, [profile]);
 
     const handleImageUpload = async (file, dataUrl) => {
         setProfileImage(file);
         setPreviewImage(dataUrl);
+        console.log('Profile.js - handleImageUpload: previewImage (dataUrl):', dataUrl);
         // Automatically save after image upload
         await handleSave(file); // Pass the file directly to handleSave
     };
@@ -77,6 +80,7 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                 alert('프로필이 성공적으로 업데이트되었습니다.');
                 updateProfileContext(updatedProfileData); // Update the global context
                 setPreviewImage(updatedProfileData.profile_image_url || ''); // Ensure previewImage reflects the saved URL
+                console.log('Profile.js - handleSave: previewImage after backend update:', updatedProfileData.profile_image_url);
                 // onClose(); // Removed: User will close the modal manually
             } else {
                 const errorData = await res.json();
@@ -239,6 +243,11 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
         }
     };
 
+    const backgroundImageUrl = previewImage ?
+        `url(${previewImage.startsWith('data:') ? '' : process.env.REACT_APP_API_URL}${previewImage})` :
+        'none';
+    console.log('Profile.js - Render: previewImage:', previewImage);
+    console.log('Profile.js - Render: constructed backgroundImageUrl:', backgroundImageUrl);
 
     return (
         <Modal show={show} onClose={onClose} contentClassName="profile-modal-content"> {/* Wrap content in Modal */}
@@ -248,11 +257,11 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                 <div className="profile-image-and-name">
                     <div
                         className="profile-picture-container"
-                        style={{ border: '1px solid #E1E7EF', backgroundImage: previewImage ? `url(${previewImage.startsWith('data:') ? '' : process.env.REACT_APP_API_URL}${previewImage})` : 'none' }}
+                        style={{ border: '1px solid #E1E7EF', backgroundImage: backgroundImageUrl }}
                     >
                         {/* ImageUploader is no longer directly inside, it wraps the upload button */}
                     </div>
-                    <span className="profile-nickname-display-popup">{profile.nickname || 'Guest'}</span>
+                    <span className="profile-nickname-display-popup">{profile.username || 'Guest'}</span>
                 </div>
                 <ImageUploader onImageUpload={handleImageUpload}>
                     <button className="profile-upload-button">프로필 업로드</button>
