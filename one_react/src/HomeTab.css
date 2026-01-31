@@ -54,9 +54,21 @@
     width: 4px;
     height: 4px;
     background-color: #8A8A8A;
+    border-radius: 50%;
     top: 8%;
-    left: calc(100% + 5px); /* 100% of the element width + half the gap */
+    left: calc(100% + 9px); /* 100% of the element width + half the gap */
     transform: translate(-50%, -50%); /* Center the pseudo-element */
+}
+
+.home-section-grid > .dashboard-section:first-child::before {
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 112px;
+    background-image: repeating-linear-gradient(to bottom, #eeeeee 0, #eeeeee 4px, transparent 4px, transparent 11px); /* dash 4, gap 7 */
+    top: calc(28% - 3px); /* Start below the circle */
+    left: calc(100% + 9px);
+    transform: translateX(-50%);
 }
 
 
@@ -202,6 +214,7 @@
     height: 18px;
     border-radius: 50%;
     background-color: transparent;
+    aspect-ratio: 1; /* Ensure a perfect circle */
 }
 
 .item-checkbox.circle.completed {
@@ -719,4 +732,9 @@
 }
 .add-todo-modal .home-add-btn {
     margin-left: 0;
+}
+
+.add-schedule-section .home-card-title,
+.add-todo-section .home-card-title {
+    font-size: 14px;
 }
