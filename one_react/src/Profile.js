@@ -40,23 +40,27 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
         // Populate form with data from context
         if (profile) {
             setUsername(profile.username || ''); // Use profile.username
-            setPreviewImage(profile.profile_image_url || ''); // Use profile.profile_image_url
+            setPreviewImage(profile.profileImage || ''); // Use profile.profileImage
             setEmail(profile.email || ''); // Set email from profile
         }
     }, [profile]);
 
-    const handleImageUpload = (file, dataUrl) => {
+    const handleImageUpload = async (file, dataUrl) => {
         setProfileImage(file);
         setPreviewImage(dataUrl);
+        // Automatically save after image upload
+        await handleSave(file); // Pass the file directly to handleSave
     };
 
-    const handleSave = async () => {
+    const handleSave = async (uploadedFile = null) => { // Accept uploadedFile as an argument
         if (!userId) return;
 
         const formData = new FormData();
         formData.append('username', username);
-        console.log('Profile.js - profileImage to upload:', profileImage); // Debug log
-        if (profileImage) {
+        console.log('Profile.js - profileImage to upload:', uploadedFile || profileImage); // Debug log
+        if (uploadedFile) {
+            formData.append('profileImage', uploadedFile);
+        } else if (profileImage) {
             formData.append('profileImage', profileImage);
         }
 
@@ -72,7 +76,8 @@ const Profile = ({ show, onClose }) => { // Accept show and onClose props
                 console.log('Profile.js - Updated profile data from backend:', updatedProfileData); // Debug log
                 alert('프로필이 성공적으로 업데이트되었습니다.');
                 updateProfileContext(updatedProfileData); // Update the global context
-                onClose(); // Close modal after save
+                setPreviewImage(updatedProfileData.profile_image_url || ''); // Ensure previewImage reflects the saved URL
+                // onClose(); // Removed: User will close the modal manually
             } else {
                 const errorData = await res.json();
                 console.error('Profile.js - Error response from backend:', errorData); // Debug log
