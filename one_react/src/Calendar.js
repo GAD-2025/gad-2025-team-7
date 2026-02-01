@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Calendar.css';
 import { useData } from './DataContext';
-import DaySummaryPopover from './DaySummaryPopover';
 import { hexToRgba, darkenColor } from './utils/colorUtils';
 // import ViewToggle from './ViewToggle'; // Removed
 
@@ -20,20 +19,20 @@ const Calendar = ({
     isMonthView, // Accept isMonthView as prop
 }) => {
     const { selectedDate, setSelectedDate, pedometerDataByDate } = useData();
-    const [popoverAnchorEl, setPopoverAnchorEl] = useState(null);
-    const [popoverDate, setPopoverDate] = useState(null);
-    const [summaryData, setSummaryData] = useState(null);
     const calendarDaysRef = useRef(null);
-    const [clickedCellEl, setClickedCellEl] = useState(null);
     const [userProfile, setUserProfile] = useState(null); // New state for user profile
     const [dailyCalorieGoal, setDailyCalorieGoal] = useState(0); // New state for daily calorie goal
-    const [lastClickedDate, setLastClickedDate] = useState(null); // New state to track last clicked date
-    const hasInitialPopoverOpened = useRef(false); // New ref to track if initial popover has opened
+    const [menstrualCycles, setMenstrualCycles] = useState([]); // New state for menstrual cycles
+    const [predictedMenstrualCycle, setPredictedMenstrualCycle] = useState(null); // New state for predicted menstrual cycle
 
     const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     const userId = localStorage.getItem('userId'); // Get userId
+
+    const handleDateClick = async (event, dayInfo) => {
+        setSelectedDate(dayInfo.dayString);
+    };
 
     // Fetch user profile on component mount
     useEffect(() => {
@@ -56,179 +55,39 @@ const Calendar = ({
         fetchUserProfile();
     }, [userId]);
 
-    const handleDateClick = async (event, dayInfo) => {
-        // If the popover is currently open for the clicked date, close it (third click)
-        if (popoverDate === dayInfo.dayString) {
-            handleClosePopover();
-            setLastClickedDate(null); // Reset last clicked date
-            return;
-        }
-
-        // If the clicked date is the same as the last clicked date (second click)
-        if (dayInfo.dayString === lastClickedDate) {
-            setSelectedDate(dayInfo.dayString); // Ensure selectedDate is updated
-            setClickedCellEl(event.currentTarget);
-            setPopoverDate(dayInfo.dayString);
-            setPopoverAnchorEl(event.currentTarget); // Set anchor directly
-
-            // Fetch consumed calories
-            let consumedCalories = 0;
+    // Fetch menstrual cycles on component mount
+    useEffect(() => {
+        const fetchMenstrualCycles = async () => {
+            if (!userId) return;
             try {
-                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/meals/today_calories/${userId}/${dayInfo.dayString}`);
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/healthcare/cycles/${userId}`);
                 if (res.ok) {
                     const data = await res.json();
-                    consumedCalories = data.totalCalories;
+                    // Process history to YYYY-MM-DD format
+                    const processedCycles = data.history.map(cycle => ({
+                        id: cycle.id,
+                        startDate: new Date(cycle.start_date).toISOString().split('T')[0],
+                        endDate: new Date(cycle.end_date).toISOString().split('T')[0],
+                    }));
+                    setMenstrualCycles(processedCycles);
+
+                    // Store predicted cycle
+                    if (data.prediction) {
+                        setPredictedMenstrualCycle({
+                            id: 'predicted', // A unique ID for the predicted cycle
+                            startDate: data.prediction.startDate,
+                            endDate: data.prediction.endDate,
+                        });
+                    }
                 } else {
-                    console.error("Failed to fetch consumed calories:", await res.text());
+                    console.error("Failed to fetch menstrual cycles:", await res.text());
                 }
             } catch (error) {
-                console.error("Error fetching consumed calories:", error);
+                console.error("Error fetching menstrual cycles:", error);
             }
-
-            const todaysEvents = events.filter(e => {
-                if (!e.date) return false;
-                const event_date_utc = new Date(e.date);
-                const year = event_date_utc.getFullYear();
-                const month = String(event_date_utc.getMonth() + 1).padStart(2, '0');
-                const day = String(event_date_utc.getDate()).padStart(2, '0');
-                const eventDateString = `${year}-${month}-${day}`;
-                return eventDateString === dayInfo.dayString;
-            });
-            const completedEventsCount = todaysEvents.filter(e => e.completed).length;
-            const steps = pedometerDataByDate[dayInfo.dayString]?.steps || 0;
-
-            // Calculate graph progress for calories
-            const graphPathLength = 283; // From Pedometer.js
-            let progressPercent = (consumedCalories / dailyCalorieGoal) * 100;
-            progressPercent = Math.min(100, Math.max(0, progressPercent));
-            const strokeDashoffset = graphPathLength - (graphPathLength * progressPercent) / 100;
-
-            // Fetch todos for the day
-            let completedTodosCount = 0;
-            let totalTodos = 0;
-            try {
-                const todosRes = await fetch(`${process.env.REACT_APP_API_URL}/api/todos/${userId}/${dayInfo.dayString}`);
-                if (todosRes.ok) {
-                    const todosData = await todosRes.json();
-                    totalTodos = todosData.length;
-                    completedTodosCount = todosData.filter(todo => todo.completed).length;
-                } else {
-                    console.error("Failed to fetch todos:", await todosRes.text());
-                }
-            } catch (error) {
-                console.error("Error fetching todos:", error);
-            }
-
-            setSummaryData({
-                steps: steps,
-                completedEvents: completedEventsCount,
-                totalEvents: todaysEvents.length,
-                completedTodos: completedTodosCount, // New
-                totalTodos: totalTodos, // New
-                targetCalories: dailyCalorieGoal, // Use the state for target calories
-                consumedCalories: Math.round(consumedCalories),
-                calorieGraphProgress: progressPercent, // New
-                calorieStrokeDashoffset: strokeDashoffset, // New
-                calorieGraphPathLength: graphPathLength, // New
-            });
-
-        } else {
-            // First click on a new date, or first click on this date
-            setSelectedDate(dayInfo.dayString);
-            setLastClickedDate(dayInfo.dayString);
-            handleClosePopover(); // Ensure any existing popover is closed
-        }
-    };
-
-    const handleClosePopover = () => {
-        setPopoverAnchorEl(null);
-        setPopoverDate(null);
-        setSummaryData(null);
-        setClickedCellEl(null);
-    };
-
-    // On initial mount, check if a popover should be reopened
-    useEffect(() => {
-        if (hasInitialPopoverOpened.current) {
-            return; // Only run once on initial mount
-        }
-
-        const today = new Date();
-        const todayString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-
-        // If selectedDate is today (and no popover is open)
-        if (selectedDate === todayString && popoverAnchorEl === null && calendarDaysRef.current) {
-            const dayCell = calendarDaysRef.current.querySelector(`[data-date="${todayString}"]`);
-            if (dayCell) {
-                setClickedCellEl(dayCell);
-                setPopoverDate(todayString);
-                setPopoverAnchorEl(dayCell); // Directly set anchor
-
-                const fetchSummaryForTargetDate = async () => {
-                    // Fetch consumed calories
-                    let consumedCalories = 0;
-                    try {
-                        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/meals/today_calories/${userId}/${todayString}`);
-                        if (res.ok) {
-                            const data = await res.json();
-                            consumedCalories = data.totalCalories;
-                        } else {
-                            console.error("Failed to fetch consumed calories:", await res.text());
-                        }
-                    } catch (error) {
-                        console.error("Error fetching consumed calories:", error);
-                    }
-
-                    const todaysEvents = events.filter(e => {
-                        if (!e.date) return false;
-                        const event_date_utc = new Date(e.date);
-                        const year = event_date_utc.getFullYear();
-                        const month = String(event_date_utc.getMonth() + 1).padStart(2, '0');
-                        const day = String(event_date_utc.getDate()).padStart(2, '0');
-                        const eventDateString = `${year}-${month}-${day}`;
-                        return eventDateString === todayString;
-                    });
-                    const completedEventsCount = todaysEvents.filter(e => e.completed).length;
-                    const steps = pedometerDataByDate[todayString]?.steps || 0;
-
-                    const graphPathLength = 283;
-                    let progressPercent = (consumedCalories / dailyCalorieGoal) * 100;
-                    progressPercent = Math.min(100, Math.max(0, progressPercent));
-                    const strokeDashoffset = graphPathLength - (graphPathLength * progressPercent) / 100;
-
-                    let completedTodosCount = 0;
-                    let totalTodos = 0;
-                    try {
-                        const todosRes = await fetch(`${process.env.REACT_APP_API_URL}/api/todos/${userId}/${todayString}`);
-                        if (todosRes.ok) {
-                            const todosData = await todosRes.json();
-                            totalTodos = todosData.length;
-                            completedTodosCount = todosData.filter(todo => todo.completed).length;
-                        } else {
-                            console.error("Failed to fetch todos:", await todosRes.text());
-                        }
-                    } catch (error) {
-                        console.error("Error fetching todos:", error);
-                    }
-
-                    setSummaryData({
-                        steps: steps,
-                        completedEvents: completedEventsCount,
-                        totalEvents: todaysEvents.length,
-                        completedTodos: completedTodosCount,
-                        totalTodos: totalTodos,
-                        targetCalories: dailyCalorieGoal,
-                        consumedCalories: Math.round(consumedCalories),
-                        calorieGraphProgress: progressPercent,
-                        calorieStrokeDashoffset: strokeDashoffset,
-                        calorieGraphPathLength: graphPathLength,
-                    });
-                };
-                fetchSummaryForTargetDate();
-                hasInitialPopoverOpened.current = true; // Mark as opened
-            }
-        }
-    }, [selectedDate, userId, events, pedometerDataByDate, dailyCalorieGoal, popoverAnchorEl]); // Added popoverAnchorEl to dependencies
+        };
+        fetchMenstrualCycles();
+    }, [userId]);
 
     const handlePrev = () => {
         if (isMonthView) {
@@ -351,8 +210,16 @@ const Calendar = ({
                     <p className="year-text">{year}</p>
                 </div>
                 <div className="calendar-nav">
-                    <button onClick={handlePrev} className="nav-btn">&lt;</button>
-                    <button onClick={handleNext} className="nav-btn">&gt;</button>
+                    <button onClick={handlePrev} className="nav-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z" />
+                        </svg>
+                    </button>
+                    <button onClick={handleNext} className="nav-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M8.59 16.59L13.17 12l-4.58-4.59L10 6l6 6-6 6z" />
+                        </svg>
+                    </button>
                 </div>
             </div>
 
@@ -371,12 +238,48 @@ const Calendar = ({
                             onMouseEnter={() => dayInfo.dayString && onDragMove(dayInfo.dayString)}
                             onMouseUp={onDragEnd}
                         >
-                            <div className="day-number-wrapper">
-                                <p>{dayInfo.day}</p>
-                            </div>
-                            {popoverDate === dayInfo.dayString && !dayInfo.isOtherMonth && (
-                                <div className="selected-day-indicator"></div>
-                            )}
+                                                        <div className="day-number-wrapper">
+                                                            <p>{dayInfo.day}</p>
+                                                        </div>
+                                                                                    {/* Menstrual Cycle Indicator */}
+                                                                                    {menstrualCycles.filter(cycle => dayInfo.dayString >= cycle.startDate && dayInfo.dayString <= cycle.endDate).map(cycle => (
+                                                                                        <div
+                                                                                            key={cycle.id}
+                                                                                            className="menstrual-cycle-indicator"
+                                                                                            style={{
+                                                                                                backgroundColor: 'rgba(255, 131, 131, 0.1)', // #FF8383 with 10% transparency
+                                                                                                height: '22px', // Increased height by 2px
+                                                                                                position: 'absolute',
+                                                                                                left: 0,
+                                                                                                right: 0,
+                                                                                                top: '4px', // Adjusted top to extend 1px upwards
+                                                                                                zIndex: 0, // Underneath day number
+                                                                                                borderRadius: dayInfo.dayString === cycle.startDate ? '15px 0 0 15px' :
+                                                                                                              dayInfo.dayString === cycle.endDate ? '0 15px 15px 0' : '0',
+                                                                                            }}
+                                                                                        ></div>
+                                                                                    ))}
+                                                        
+                                                                                    {/* Predicted Menstrual Cycle Indicator */}
+                                                                                    {predictedMenstrualCycle &&
+                                                                                     dayInfo.dayString >= predictedMenstrualCycle.startDate &&
+                                                                                     dayInfo.dayString <= predictedMenstrualCycle.endDate && (
+                                                                                        <div
+                                                                                            key={predictedMenstrualCycle.id}
+                                                                                            className="predicted-menstrual-cycle-indicator" // New class for styling
+                                                                                            style={{
+                                                                                                backgroundColor: 'rgba(255, 131, 131, 0.05)', // Lighter shade
+                                                                                                height: '22px',
+                                                                                                position: 'absolute',
+                                                                                                left: 0,
+                                                                                                right: 0,
+                                                                                                top: '4px',
+                                                                                                zIndex: 0,
+                                                                                                borderRadius: dayInfo.dayString === predictedMenstrualCycle.startDate ? '15px 0 0 15px' :
+                                                                                                              dayInfo.dayString === predictedMenstrualCycle.endDate ? '0 15px 15px 0' : '0',
+                                                                                            }}
+                                                                                        ></div>
+                                                                                    )}
                             <div className="events-container">
                                 {dayInfo.events && dayInfo.events.map(event => {
                                     const style = {};
@@ -405,15 +308,6 @@ const Calendar = ({
                     ))}
                 </div>
             </div>
-            {popoverAnchorEl && (
-                <DaySummaryPopover
-                    date={popoverDate}
-                    anchorEl={popoverAnchorEl}
-                    onClose={handleClosePopover}
-                    summaryData={summaryData}
-                    isLoading={!summaryData}
-                />
-            )}
         </div>
     );
 };
