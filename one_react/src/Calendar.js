@@ -245,42 +245,51 @@ const Calendar = ({
                                                                                     {menstrualCycles.filter(cycle => dayInfo.dayString >= cycle.startDate && dayInfo.dayString <= cycle.endDate).map(cycle => (
                                                                                         <div
                                                                                             key={cycle.id}
-                                                                                            className="menstrual-cycle-indicator"
-                                                                                            style={{
-                                                                                                backgroundColor: 'rgba(255, 131, 131, 0.1)', // #FF8383 with 10% transparency
-                                                                                                height: '22px', // Increased height by 2px
-                                                                                                position: 'absolute',
-                                                                                                left: 0,
-                                                                                                right: 0,
-                                                                                                top: '4px', // Adjusted top to extend 1px upwards
-                                                                                                zIndex: 0, // Underneath day number
-                                                                                                borderRadius: dayInfo.dayString === cycle.startDate ? '15px 0 0 15px' :
-                                                                                                              dayInfo.dayString === cycle.endDate ? '0 15px 15px 0' : '0',
-                                                                                            }}
-                                                                                        ></div>
-                                                                                    ))}
-                                                        
-                                                                                    {/* Predicted Menstrual Cycle Indicator */}
-                                                                                    {predictedMenstrualCycle &&
-                                                                                     dayInfo.dayString >= predictedMenstrualCycle.startDate &&
-                                                                                     dayInfo.dayString <= predictedMenstrualCycle.endDate && (
-                                                                                        <div
-                                                                                            key={predictedMenstrualCycle.id}
-                                                                                            className="predicted-menstrual-cycle-indicator" // New class for styling
-                                                                                            style={{
-                                                                                                backgroundColor: 'rgba(255, 131, 131, 0.05)', // Lighter shade
-                                                                                                height: '22px',
-                                                                                                position: 'absolute',
-                                                                                                left: 0,
-                                                                                                right: 0,
-                                                                                                top: '4px',
-                                                                                                zIndex: 0,
-                                                                                                borderRadius: dayInfo.dayString === predictedMenstrualCycle.startDate ? '15px 0 0 15px' :
-                                                                                                              dayInfo.dayString === predictedMenstrualCycle.endDate ? '0 15px 15px 0' : '0',
-                                                                                            }}
-                                                                                        ></div>
-                                                                                    )}
-                            <div className="events-container">
+                                                                                                                                                                    className="menstrual-cycle-indicator"
+                                                                                                                                                                    style={{
+                                                                                                                                                                        backgroundColor: 'rgba(255, 131, 131, 0.1)', // #FF8383 with 10% transparency
+                                                                                                                                                                        height: '22px', // Increased height by 2px
+                                                                                                                                                                        position: 'absolute',
+                                                                                                                                                                        left: 0,
+                                                                                                                                                                        right: 0,
+                                                                                                                                                                        top: '4px', // Adjusted top to extend 1px upwards
+                                                                                                                                                                        zIndex: 0, // Underneath day number
+                                                                                                                                                                        borderRadius: dayInfo.dayString === cycle.startDate ? '15px 0 0 15px' :
+                                                                                                                                                                                      dayInfo.dayString === cycle.endDate ? '0 15px 15px 0' : '0',
+                                                                                                                                                                        borderTop: '1px solid rgba(255, 131, 131, 0.3)',
+                                                                                                                                                                        borderBottom: '1px solid rgba(255, 131, 131, 0.3)',
+                                                                                                                                                                        borderLeft: dayInfo.dayString === cycle.startDate ? '1px solid rgba(255, 131, 131, 0.3)' : 'none',
+                                                                                                                                                                        borderRight: dayInfo.dayString === cycle.endDate ? '1px solid rgba(255, 131, 131, 0.3)' : 'none',
+                                                                                                                                                                        boxSizing: 'border-box', // Ensure border doesn't increase total size
+                                                                                                                                                                    }}
+                                                                                                                                                                ></div>
+                                                                                                                                                            ))}
+                                                                                                                                
+                                                                                                                                                            {/* Predicted Menstrual Cycle Indicator */}
+                                                                                                                                                            {predictedMenstrualCycle &&
+                                                                                                                                                             dayInfo.dayString >= predictedMenstrualCycle.startDate &&
+                                                                                                                                                             dayInfo.dayString <= predictedMenstrualCycle.endDate && (
+                                                                                                                                                                <div
+                                                                                                                                                                    key={predictedMenstrualCycle.id}
+                                                                                                                                                                    className="predicted-menstrual-cycle-indicator" // New class for styling
+                                                                                                                                                                    style={{
+                                                                                                                                                                        backgroundColor: 'rgba(255, 131, 131, 0.05)', // Lighter shade
+                                                                                                                                                                        height: '22px',
+                                                                                                                                                                        position: 'absolute',
+                                                                                                                                                                        left: 0,
+                                                                                                                                                                        right: 0,
+                                                                                                                                                                        top: '4px',
+                                                                                                                                                                        zIndex: 0,
+                                                                                                                                                                        borderRadius: dayInfo.dayString === predictedMenstrualCycle.startDate ? '15px 0 0 15px' :
+                                                                                                                                                                                      dayInfo.dayString === predictedMenstrualCycle.endDate ? '0 15px 15px 0' : '0',
+                                                                                                                                                                        borderTop: '1px solid rgba(255, 131, 131, 0.3)',
+                                                                                                                                                                        borderBottom: '1px solid rgba(255, 131, 131, 0.3)',
+                                                                                                                                                                        borderLeft: dayInfo.dayString === predictedMenstrualCycle.startDate ? '1px solid rgba(255, 131, 131, 0.3)' : 'none',
+                                                                                                                                                                        borderRight: dayInfo.dayString === predictedMenstrualCycle.endDate ? '1px solid rgba(255, 131, 131, 0.3)' : 'none',
+                                                                                                                                                                        boxSizing: 'border-box', // Ensure border doesn't increase total size
+                                                                                                                                                                    }}
+                                                                                                                                                                ></div>
+                                                                                                                                                            )}                            <div className="events-container">
                                 {dayInfo.events && dayInfo.events.map(event => {
                                     const style = {};
                                     if (event.color) {
