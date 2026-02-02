@@ -33,7 +33,7 @@ const Stopwatch = ({ userId, selectedDate }) => {
         e.stopPropagation();
         const updatedCategories = categories.filter(c => c.name !== categoryName);
         setCategories(updatedCategories);
-        saveStopwatchData(tasks, updatedCategories);
+        saveCategories(updatedCategories); // Persist category changes
         setDeletableCategory(null);
         if (selectedCategory === categoryName) {
             setSelectedCategory(null);
@@ -47,72 +47,105 @@ const Stopwatch = ({ userId, selectedDate }) => {
         return () => window.removeEventListener('click', handleClickOutside);
     }, []);
 
+    // Fetch categories once on component mount
     useEffect(() => {
-        if (!userId || !selectedDate) return;
-
-        const fetchData = async () => {
+        if (!userId) return;
+        const fetchCategories = async () => {
             const baseCategories = BASE_CATEGORY_NAMES.map(name => ({
                 name,
                 color: BASE_CATEGORY_COLORS_MAP[name]
             }));
             try {
-                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/stopwatch/${userId}/${selectedDate}`);
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/stopwatch/categories/${userId}`);
                 if (res.ok) {
-                    const data = await res.json();
-                    let fetchedCategories = [];
-                    if (data && data.categories_data && Array.isArray(data.categories_data)) {
-                        // Ensure fetched categories have a color, default if missing
-                        fetchedCategories = data.categories_data
-                            .filter(cat => cat.name !== '???') // Filter out "???" categories
-                            .map(cat => ({ name: cat.name, color: cat.color || '#FFC0CB' }));
+                    const fetchedCategories = await res.json();
+                    if (fetchedCategories && fetchedCategories.length > 0) {
+                        const combinedCategoriesMap = new Map();
+                        baseCategories.forEach(cat => combinedCategoriesMap.set(cat.name, cat));
+                        fetchedCategories.forEach(cat => combinedCategoriesMap.set(cat.name, cat));
+                        setCategories(Array.from(combinedCategoriesMap.values()));
+                    } else {
+                        setCategories(baseCategories);
                     }
-
-                    // Combine base and fetched, ensuring unique names
-                    const combinedCategoriesMap = new Map();
-                    baseCategories.forEach(cat => combinedCategoriesMap.set(cat.name, cat));
-                    fetchedCategories.forEach(cat => combinedCategoriesMap.set(cat.name, cat));
-                    const combinedCategories = Array.from(combinedCategoriesMap.values());
-                    
-                    setTasks(data?.tasks_data || []);
-                    setCategories(combinedCategories);
                 } else {
-                    // If fetch fails or not ok, set to base categories
-                    setTasks([]);
                     setCategories(baseCategories);
                 }
             } catch (error) {
-                console.error("Error fetching stopwatch data:", error);
-                // On error, set to base categories
-                setTasks([]);
+                console.error("Error fetching categories:", error);
                 setCategories(baseCategories);
             }
         };
+        fetchCategories();
+    }, [userId]);
 
-        fetchData();
+
+    // Fetch tasks for the selected date
+    useEffect(() => {
+        if (!userId || !selectedDate) return;
+
+        const fetchTasks = async () => {
+            try {
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/stopwatch/${userId}/${selectedDate}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    setTasks(data?.tasks_data || []);
+                } else {
+                    setTasks([]);
+                }
+            } catch (error) {
+                console.error("Error fetching stopwatch data:", error);
+                setTasks([]);
+            }
+        };
+
+        fetchTasks();
     }, [userId, selectedDate]);
 
-    const saveStopwatchData = async (currentTasks, currentCategories) => {
-        if (!userId || !selectedDate) return;
+    // Refs to store previous date and tasks for reliable saving on navigation
+    const prevDateRef = useRef();
+    const prevTasksRef = useRef();
+
+    useEffect(() => {
+        // When selectedDate changes, save the tasks for the *previous* date
+        if (prevDateRef.current && prevDateRef.current !== selectedDate) {
+            saveTasks(prevTasksRef.current, prevDateRef.current);
+        }
+
+        // Update refs for the next render
+        prevDateRef.current = selectedDate;
+        prevTasksRef.current = tasks;
+    }, [selectedDate, tasks]);
+
+    const saveTasks = async (currentTasks, dateToSave) => {
+        if (!userId || !dateToSave || !currentTasks) return;
         try {
-            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/stopwatch`, {
+            await fetch(`${process.env.REACT_APP_API_URL}/api/stopwatch`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     userId,
-                    date: selectedDate,
+                    date: dateToSave,
                     tasksData: currentTasks,
-                    // Convert category objects back to a simpler format for storage if needed,
-                    // or ensure backend can handle objects directly.
-                    // For now, assume backend can handle objects {name, color}
+                }),
+            });
+        } catch (error) {
+            console.error("Network error saving stopwatch tasks:", error);
+        }
+    };
+    
+    const saveCategories = async (currentCategories) => {
+        if (!userId) return;
+        try {
+            await fetch(`${process.env.REACT_APP_API_URL}/api/stopwatch/categories`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId,
                     categoriesData: currentCategories,
                 }),
             });
-            if (!res.ok) {
-                const errorData = await res.json();
-                console.error("Backend error saving stopwatch data:", errorData);
-            }
         } catch (error) {
-            console.error("Network error saving stopwatch data:", error);
+            console.error("Network error saving categories:", error);
         }
     };
 
@@ -148,33 +181,37 @@ const Stopwatch = ({ userId, selectedDate }) => {
                 isPaused: true,
                 isComplete: false,
             };
-            setTasks(prev => [...prev, newTask]);
+            const updatedTasks = [...tasks, newTask];
+            setTasks(updatedTasks);
+            saveTasks(updatedTasks, selectedDate);
         }
     };
 
     const startTask = (task) => {
         if (!task || !task.isPaused) return;
-        setTasks(tasks.map(t => t.id === task.id ? { ...t, isPaused: false } : t));
+        const updatedTasks = tasks.map(t => t.id === task.id ? { ...t, isPaused: false } : t);
+        setTasks(updatedTasks);
+        saveTasks(updatedTasks, selectedDate);
     };
 
     const pauseTask = (task) => {
         if (!task || task.isPaused) return;
         const updatedTasks = tasks.map(t => t.id === task.id ? { ...t, isPaused: true } : t);
         setTasks(updatedTasks);
-        saveStopwatchData(updatedTasks, categories);
+        saveTasks(updatedTasks, selectedDate);
     };
 
     const resetTask = (task) => {
         if (!task || !task.isPaused) return;
         const updatedTasks = tasks.map(t => t.id === task.id ? { ...t, elapsedTime: 0 } : t);
         setTasks(updatedTasks);
-        saveStopwatchData(updatedTasks, categories);
+        saveTasks(updatedTasks, selectedDate);
     };
 
     const finishTask = (taskId) => {
         const updatedTasks = tasks.map(t => t.id === taskId ? { ...t, isComplete: true, isPaused: true } : t);
         setTasks(updatedTasks);
-        saveStopwatchData(updatedTasks, categories);
+        saveTasks(updatedTasks, selectedDate);
         if (selectedCategory === tasks.find(t => t.id === taskId)?.category) {
             setSelectedCategory(null);
         }
@@ -183,7 +220,7 @@ const Stopwatch = ({ userId, selectedDate }) => {
     const deleteTask = (taskId) => {
         const updatedTasks = tasks.filter(t => t.id !== taskId);
         setTasks(updatedTasks);
-        saveStopwatchData(updatedTasks, categories);
+        saveTasks(updatedTasks, selectedDate);
     };
 
     const addNewCategory = () => {
@@ -192,7 +229,7 @@ const Stopwatch = ({ userId, selectedDate }) => {
             const updatedCategories = [...categories, newCatObject];
             setCategories(updatedCategories);
             setNewCategory('');
-            saveStopwatchData(tasks, updatedCategories);
+            saveCategories(updatedCategories); // Persist category changes
             setIsAddCategoryPopupOpen(false); // Close the popup after adding category
         }
     };

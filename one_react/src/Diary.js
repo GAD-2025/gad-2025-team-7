@@ -205,7 +205,6 @@ const Diary = ({ selectedDate, userId }) => {
             });
             if (res.ok) {
                 alert('다이어리가 저장되었습니다.');
-                navigate('/diary-collection');
             } else {
                 alert('저장에 실패했습니다.');
             }
