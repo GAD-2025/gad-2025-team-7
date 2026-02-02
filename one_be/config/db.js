@@ -10,6 +10,7 @@ const pool = mysql.createPool({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     port: process.env.DB_PORT, // Add this line
+    timezone: 'Asia/Seoul', // Set timezone to KST
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0

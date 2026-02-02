@@ -63,12 +63,12 @@
 
 .weight-display-container {
     cursor: pointer;
-    padding: 8px;
+    padding: 4px;
     border-radius: 5px;
     transition: background-color 0.2s;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
     align-items: center;
 }
 
@@ -137,4 +137,42 @@
     margin: 0;
     font-size: 0.8rem;
     color: #777;
+}
+
+.weight-value-container {
+    display: flex;
+    align-items: center;
+    gap: 2px; /* Reduced gap */
+    width: 85px; /* Fixed width to prevent expansion during editing */
+}
+
+.weight-unit {
+    font-size: 14px;
+    font-weight: 500;
+    color: #5a5a5a;
+    margin: 0;
+}
+
+.weight-input-inplace {
+    border: none;
+    background-color: transparent;
+    font-family: inherit;
+    font-size: 14px;
+    min-width: 30px; /* Adjusted to fit 14px font */
+    max-width: 60px; /* Adjusted to fit 14px font */
+    height: 1.2em;
+    line-height: 1.2em;
+    vertical-align: middle; /* Align with surrounding elements */
+}
+
+/* Hide spinner arrows for number input in WebKit browsers */
+.weight-input-inplace::-webkit-outer-spin-button,
+.weight-input-inplace::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Hide spinner arrows for number input in Firefox */
+.weight-input-inplace[type=number] {
+    -moz-appearance: textfield;
 }

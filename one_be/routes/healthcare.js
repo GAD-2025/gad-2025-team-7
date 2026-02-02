@@ -3,6 +3,15 @@ const router = express.Router();
 router.use(express.json());
 const pool = require('../config/db'); // Corrected to use pool
 
+// Helper function to get the current date string in KST
+const getKSTDateString = () => {
+    const now = new Date();
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const kstOffset = 9 * 60 * 60 * 1000;
+    const kstNow = new Date(utc + kstOffset);
+    return kstNow.toISOString().split('T')[0];
+};
+
 // @route   GET /api/healthcare/cycles/:userId
 // @desc    Get all menstrual cycles for a user and predict the next one
 // @access  Private
@@ -15,52 +24,109 @@ router.get('/cycles/:userId', async (req, res) => {
             [userId]
         );
 
-        if (cycles.length < 2) {
-            return res.json({
-                prediction: null,
-                history: cycles,
-                message: '예측을 위해 최소 2번의 주기 기록이 필요합니다.'
-            });
-        }
+        let prediction = null;
+        let message = '';
+        const todayString = req.query.relativeDate || getKSTDateString();
+        const today = new Date(todayString);
 
-        // --- Prediction Logic ---
-        let cycleLengths = [];
-        for (let i = 0; i < cycles.length - 1; i++) {
-            const startDate1 = new Date(cycles[i].start_date);
-            const startDate2 = new Date(cycles[i+1].start_date);
-            const diffTime = Math.abs(startDate1 - startDate2);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            cycleLengths.push(diffDays);
-        }
-        const avgCycleLength = cycleLengths.reduce((a, b) => a + b, 0) / cycleLengths.length;
 
-        let durations = [];
-        for (let cycle of cycles) {
-            const startDate = new Date(cycle.start_date);
-            const endDate = new Date(cycle.end_date);
-            const diffTime = Math.abs(endDate - startDate);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // Inclusive
-            durations.push(diffDays);
-        }
-        const avgDuration = durations.reduce((a, b) => a + b, 0) / durations.length;
+        // Try to fetch a saved prediction first
+        const [savedPredictions] = await pool.query(
+            'SELECT predicted_start_date, predicted_end_date FROM menstrual_predictions WHERE user_id = ?',
+            [userId]
+        );
 
-        const lastStartDate = new Date(cycles[0].start_date);
-        const predictedStartDate = new Date(new Date(lastStartDate).setDate(lastStartDate.getDate() + Math.round(avgCycleLength)));
-        const predictedEndDate = new Date(new Date(predictedStartDate).setDate(predictedStartDate.getDate() + Math.round(avgDuration - 1)));
-        
-        const today = req.query.relativeDate ? new Date(req.query.relativeDate) : new Date();
-        today.setHours(0, 0, 0, 0);
-        const dDay = Math.ceil((predictedStartDate - today) / (1000 * 60 * 60 * 24));
+        if (savedPredictions.length > 0) {
+            const saved = savedPredictions[0];
+            const today = req.query.relativeDate ? new Date(req.query.relativeDate) : new Date();
+            const predictedStartDate = new Date(saved.predicted_start_date);
 
-        res.json({
-            prediction: {
+            const todayUTC = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
+            const predictedStartUTC = Date.UTC(predictedStartDate.getUTCFullYear(), predictedStartDate.getUTCMonth(), predictedStartDate.getUTCDate());
+
+            const dDay = Math.floor((predictedStartUTC - todayUTC) / (1000 * 60 * 60 * 24));
+
+            prediction = {
+                startDate: saved.predicted_start_date.toISOString().split('T')[0],
+                endDate: saved.predicted_end_date.toISOString().split('T')[0],
+                dDay: dDay
+            };
+            message = '저장된 예측 정보입니다.';
+        } else if (cycles.length >= 2) {
+            // --- Prediction Logic ---
+            let cycleLengths = [];
+            for (let i = 0; i < cycles.length - 1; i++) {
+                const startDate1 = new Date(cycles[i].start_date);
+                const startDate2 = new Date(cycles[i+1].start_date);
+                const diffTime = Math.abs(startDate1 - startDate2);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                cycleLengths.push(diffDays);
+            }
+            const avgCycleLength = cycleLengths.reduce((a, b) => a + b, 0) / cycleLengths.length;
+
+            let durations = [];
+            for (let cycle of cycles) {
+                const startDate = new Date(cycle.start_date);
+                const endDate = new Date(cycle.end_date);
+                const diffTime = Math.abs(endDate - startDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // Inclusive
+                durations.push(diffDays);
+            }
+            const avgDuration = durations.reduce((a, b) => a + b, 0) / durations.length;
+
+            const lastStartDate = new Date(cycles[0].start_date);
+            const predictedStartDate = new Date(new Date(lastStartDate).setDate(lastStartDate.getDate() + Math.round(avgCycleLength)));
+            const predictedEndDate = new Date(new Date(predictedStartDate).setDate(predictedStartDate.getDate() + Math.round(avgDuration - 1)));
+            
+            const today = req.query.relativeDate ? new Date(req.query.relativeDate) : new Date();
+            const todayUTC = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
+            const predictedStartUTC = Date.UTC(predictedStartDate.getFullYear(), predictedStartDate.getMonth(), predictedStartDate.getDate());
+
+            const dDay = Math.floor((predictedStartUTC - todayUTC) / (1000 * 60 * 60 * 24));
+
+            prediction = {
                 startDate: predictedStartDate.toISOString().split('T')[0],
                 endDate: predictedEndDate.toISOString().split('T')[0],
                 dDay: dDay
-            },
-            history: cycles
+            };
+
+        } else {
+            message = '예측을 위해 최소 2번의 주기 기록이 필요합니다.';
+        }
+
+        res.json({
+            prediction: prediction,
+            history: cycles,
+            message: message
         });
 
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route   POST /api/healthcare/predictions
+// @desc    Save or update a menstrual cycle prediction for a user
+// @access  Private
+router.post('/predictions', async (req, res) => {
+    const { userId, predictedStartDate, predictedEndDate } = req.body;
+
+    if (!userId || !predictedStartDate || !predictedEndDate) {
+        return res.status(400).json({ msg: '사용자 ID, 예측 시작일, 예측 종료일은 필수입니다.' });
+    }
+
+    try {
+        const sql = `
+            INSERT INTO menstrual_predictions (user_id, predicted_start_date, predicted_end_date)
+            VALUES (?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+                predicted_start_date = VALUES(predicted_start_date),
+                predicted_end_date = VALUES(predicted_end_date),
+                updated_at = CURRENT_TIMESTAMP;
+        `;
+        await pool.query(sql, [userId, predictedStartDate, predictedEndDate]);
+        res.status(201).json({ msg: '예측 정보가 저장되었습니다.' });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');

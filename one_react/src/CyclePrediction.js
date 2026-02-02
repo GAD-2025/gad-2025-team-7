@@ -34,7 +34,16 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
             if (res.ok && data.history) {
                 setCycleHistory(data.history);
                 if (data.prediction) {
-                    setDDay(`-${Math.abs(data.prediction.dDay)}`);
+                    const rawDDay = data.prediction.dDay;
+                    let formattedDDay;
+                    if (rawDDay > 0) {
+                        formattedDDay = `D-${rawDDay}`;
+                    } else if (rawDDay < 0) {
+                        formattedDDay = `D+${Math.abs(rawDDay)}`;
+                    } else {
+                        formattedDDay = 'D-Day';
+                    }
+                    setDDay(formattedDDay);
                     setPredictedStartDate(data.prediction.startDate);
                     setPredictedEndDate(data.prediction.endDate);
                 } else {
@@ -199,7 +208,7 @@ const CyclePrediction = ({ userId, selectedCycleStartDate }) => {
                                 </div>
                             </div>
                             <div className="d-day-box">
-                                <span className="d-day-text">D{dDay}</span>
+                                <span className="d-day-text">{dDay}</span>
                             </div>
                         </div>
                     </div>
