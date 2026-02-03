@@ -137,13 +137,14 @@ const HomeTab = ({
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (swipedItemId) {
-                const swipedItemElement = document.getElementById(`schedule-item-${swipedItemId}`);
-                const deleteButtonElement = swipedItemElement ? swipedItemElement.querySelector('.delete-schedule-btn') : null;
+                const scheduleItemElement = document.getElementById(`schedule-item-${swipedItemId}`);
+                const todoItemElement = document.getElementById(`todo-item-${swipedItemId}`);
+                const deleteScheduleButtonElement = scheduleItemElement ? scheduleItemElement.querySelector('.delete-schedule-btn') : null;
+                const deleteTodoButtonElement = todoItemElement ? todoItemElement.querySelector('.delete-todo-btn') : null;
 
                 if (
-                    swipedItemElement &&
-                    !swipedItemElement.contains(event.target) &&
-                    (!deleteButtonElement || !deleteButtonElement.contains(event.target)) // Check if delete button exists and click is outside
+                    (scheduleItemElement && !scheduleItemElement.contains(event.target) && (!deleteScheduleButtonElement || !deleteScheduleButtonElement.contains(event.target))) ||
+                    (todoItemElement && !todoItemElement.contains(event.target) && (!deleteTodoButtonElement || !deleteTodoButtonElement.contains(event.target)))
                 ) {
                     setSwipedItemId(null);
                 }
@@ -678,10 +679,10 @@ const HomeTab = ({
                                     >
                                         <div className="item-checkbox-container" onClick={() => handleToggleSchedule(event.id, event.completed)}>
                                             <div className={`item-checkbox circle ${event.completed ? 'completed' : ''}`}>
-                                                {event.completed && <LuCheck className="checkmark-icon" />}
+                                                <LuCheck className="checkmark-icon" />
                                             </div>
                                         </div>
-                                        <span className={`item-title ${event.completed ? 'completed' : ''}`}>{event.title}</span>
+                                        <span className={`item-title ${event.completed ? 'completed' : ''} ${!event.time ? 'no-time' : ''}`}>{event.title}</span>
                                         <span className="item-time">{formatTime(event.time)}</span>
                                         <button className="delete-schedule-btn" onClick={(e) => { e.stopPropagation(); handleDeleteSchedule(event.id); }}><FaTrash /></button>
                                     </div>
@@ -719,15 +720,25 @@ const HomeTab = ({
                         <div className="home-card-body">
                             {todos.length > 0 ? (
                                 todos.map(todo => (
-                                    <div key={todo.id} className="todo-item" >
-                                         <div className="item-checkbox-container" onClick={() => handleToggleTodo(todo.id, todo.completed)}>
-                                            <div className={`item-checkbox square ${todo.completed ? 'completed' : ''}`}>
-                                                                                        {todo.completed && <LuCheck className="checkmark-icon" />}
-                                                                                    </div>                                        </div>
-                                        <span className={`item-title ${todo.completed ? 'completed' : ''}`}>{todo.title}</span>
-                                        <button className="delete-todo-btn" onClick={(e) => { e.stopPropagation(); handleDeleteTodo(todo.id); }}>x</button>
-                                    </div>
-                                ))
+                                                                        <div
+                                                                            key={todo.id}
+                                                                            id={`todo-item-${todo.id}`} // Add ID here
+                                                                            className={`todo-item ${swipedItemId === todo.id ? 'swiped' : ''}`}
+                                                                            onTouchStart={(e) => handleTouchStart(e, todo.id)}
+                                                                            onTouchMove={(e) => handleTouchMove(e, todo.id)}
+                                                                            onTouchEnd={handleTouchEnd}
+                                                                            onMouseDown={(e) => handleMouseDown(e, todo.id)}
+                                                                            onMouseMove={(e) => handleMouseMove(e, todo.id)}
+                                                                            onMouseUp={handleMouseUp}
+                                                                            onMouseLeave={handleMouseUp} // To handle cases where mouse leaves the element while swiping
+                                                                        >
+                                                                             <div className="item-checkbox-container" onClick={() => handleToggleTodo(todo.id, todo.completed)}>
+                                                                                <div className={`item-checkbox square ${todo.completed ? 'completed' : ''}`}>
+                                                                                    <LuCheck className="checkmark-icon" />
+                                                                                </div>                                        </div>
+                                                                            <span className={`item-title ${todo.completed ? 'completed' : ''} no-time`}>{todo.title}</span>
+                                                                            <button className="delete-todo-btn" onClick={(e) => { e.stopPropagation(); handleDeleteTodo(todo.id); }}><FaTrash /></button>
+                                                                        </div>                                ))
                             ) : (
                                 <p className="empty-message">오늘 할 일이 없습니다.</p>
                             )}

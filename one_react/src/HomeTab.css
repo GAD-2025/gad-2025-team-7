@@ -214,7 +214,7 @@
 }
 
 .item-checkbox {
-    border: 1.5px solid #E0E0E0;
+    border: 1px solid #D8D8D8;
     transition: all 0.2s;
     cursor: pointer;
 }
@@ -225,11 +225,14 @@
     border-radius: 50%;
     background-color: transparent;
     aspect-ratio: 1; /* Ensure a perfect circle */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .item-checkbox.circle.completed {
-    background-color: #FF7581;
-    border-color: #FF7581;
+    background-color: white;
+    border: 1px solid #FFC5C5;
     position: relative;
     display: flex;
     align-items: center;
@@ -248,13 +251,13 @@
 }
 
 .item-checkbox.square.completed {
-    background-color: #FF7581;
-    border-color: #FF7581;
+    background-color: white;
+    border: 1px solid #FFC5C5;
     position: relative;
 }
 
 .checkmark-icon {
-    color: white;
+    color: #F1F1F1;
     font-size: 14px;
     font-weight: bold;
     stroke-width: 3.5px;
@@ -337,14 +340,28 @@
 }
 
 .delete-todo-btn {
-    background: none;
+    position: absolute;
+    right: -37px; /* Initially off-screen, adjusted for new width */
+    top: 50%;
+    transform: translateY(-50%);
+    background: #FF5353; /* New red background color */
+    color: white; /* Trash can emoji color */
     border: none;
-    color: #C0C0C0;
-    font-size: 16px;
+    border-radius: 10px; /* New border-radius */
+    width: 32px; /* New width */
+    height: 23px; /* New height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
-    opacity: 1;
-    transition: opacity 0.2s;
-    margin-left: auto;
+    transition: right 0.3s ease-out; /* Smooth transition for button */
+    z-index: -1; /* Behind the item initially */
+    font-size: 12px; /* Adjust font size for emoji */
+}
+
+.todo-item.swiped .delete-todo-btn {
+    right: -30px; /* Bring button into view */
+    z-index: 1; /* Bring button to front */
 }
 
 
@@ -775,4 +792,14 @@
     font-size: 14px;
     margin-top: 3px;
     font-weight: 500;
+}
+.item-title.no-time::after {
+    content: none;
+}
+.item-checkbox.square.completed .checkmark-icon,
+.item-checkbox.circle.completed .checkmark-icon {
+    color: #FF7581;
+}
+.todo-item.swiped {
+    transform: translateX(-32px); /* Adjusted for new button width */
 }
