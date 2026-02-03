@@ -116,6 +116,11 @@ const Home = () => {
         setDragEndDayString(null);
     };
 
+    const clearInitialEventDates = useCallback(() => {
+        setInitialEventStartDate(null);
+        setInitialEventEndDate(null);
+    }, []);
+
     return (
         <div className="home-container" onMouseUp={handleDragEnd} onMouseLeave={handleDragEnd}>
             <ViewToggle isMonthView={isMonthView} setIsMonthView={setIsMonthView} /> {/* Render ViewToggle here */}
@@ -149,6 +154,7 @@ const Home = () => {
                         setShowEventModal={setShowEventModal}
                         initialEventStartDate={initialEventStartDate}
                         initialEventEndDate={initialEventEndDate}
+                        clearInitialEventDates={clearInitialEventDates} // Pass the new function
                     />
                 </div>
             </div>

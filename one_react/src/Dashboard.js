@@ -16,6 +16,7 @@ const Dashboard = ({
     setShowEventModal,
     initialEventStartDate,
     initialEventEndDate,
+    clearInitialEventDates, // New prop
 }) => {
     const [activeTab, setActiveTab] = useState('home-tab');
 
@@ -35,6 +36,7 @@ const Dashboard = ({
                         setShowScheduleModal={setShowEventModal} // Use setShowEventModal from Home.js
                         initialScheduleStartDate={initialEventStartDate}
                         initialScheduleEndDate={initialEventEndDate}
+                        clearInitialEventDates={clearInitialEventDates} // Pass the new function
                     />
                 );
             case 'records-tab':
@@ -55,6 +57,7 @@ const Dashboard = ({
                         setShowScheduleModal={setShowEventModal} // Use setShowEventModal from Home.js
                         initialScheduleStartDate={initialEventStartDate}
                         initialScheduleEndDate={initialEventEndDate}
+                        clearInitialEventDates={clearInitialEventDates} // Pass the new function
                     />
                 );
         }

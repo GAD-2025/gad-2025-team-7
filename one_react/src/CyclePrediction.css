@@ -6,7 +6,6 @@
 
 .healthcare-content-box {
     background-color: #ffffff; /* White box */
-    border: 1px solid #E1E7EF; /* Thin gray border */
     border-radius: 10px; /* Example: slightly rounded corners */
     padding: 15px; /* Example: some internal padding */
     margin-top: 10px; /* Example: space below "월경 예정일" header */
@@ -62,7 +61,6 @@
     padding: 0px; /* Changed from 5px to 0px */
     background-color: #F4F4F4; /* Updated background color */
     border-radius: 11px; /* Updated border radius */
-    border: 1px solid #E1E7EF;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     width: 58px; /* Updated width */
     height: 66px; /* Updated height */
@@ -70,6 +68,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    position: relative; /* Added for pseudo-element positioning */
 }
 
 .date-info-box {
@@ -375,4 +374,15 @@
     font-size: 1.5em;
     font-weight: 700;
     color: #5a5a5a;
+}
+.date-box.start-date::before {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background-color: #FF7581; /* Key color */
+    border-radius: 50%;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
 }

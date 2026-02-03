@@ -43,6 +43,7 @@ const HomeTab = ({
     setShowScheduleModal,
     initialScheduleStartDate,
     initialScheduleEndDate,
+    clearInitialEventDates, // New prop
 }) => {
     const [showTodoModal, setShowTodoModal] = useState(false);
     const [showCreateScheduleTemplateModal, setShowCreateScheduleTemplateModal] = useState(false);
@@ -442,6 +443,7 @@ const HomeTab = ({
         setShowScheduleRepeat(false); // Reset repeat chip visibility
         setNewScheduleColor('#FFE79D'); // Reset schedule color
         setShowScheduleModal(false);
+        clearInitialEventDates(); // Clear initial event dates from Home.js
     };
 
     const resetTodoForm = () => {
