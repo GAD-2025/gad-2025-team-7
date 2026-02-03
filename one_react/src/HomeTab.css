@@ -231,16 +231,9 @@
     background-color: #FF7581;
     border-color: #FF7581;
     position: relative;
-}
-
-.item-checkbox.circle.completed::after {
-    content: '✔';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .item-checkbox.square {
@@ -257,11 +250,15 @@
 .item-checkbox.square.completed {
     background-color: #FF7581;
     border-color: #FF7581;
+    position: relative;
 }
 
-.checkmark {
+.checkmark-icon {
     color: white;
+    font-size: 14px;
     font-weight: bold;
+    stroke-width: 3.5px;
+    transform: scaleX(0.8);
 }
 
 

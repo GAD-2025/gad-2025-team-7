@@ -8,7 +8,7 @@ export const ProfileProvider = ({ children }) => {
     // Add weight to the profile state
     const [profile, setProfile] = useState({ 
         userId: null, 
-        nickname: 'Guest', 
+        username: 'Guest', 
         profileImage: null, 
         weight: null 
     });
@@ -30,7 +30,7 @@ export const ProfileProvider = ({ children }) => {
                 // console.log('fetchProfile - API response data:', data); // Debug log
                 setProfile({
                     userId: data.id,
-                    nickname: data.username,
+                    username: data.username,
                     profileImage: data.profile_image_url ? `${process.env.REACT_APP_API_URL}${data.profile_image_url}` : null,
                     weight: data.weight || null // Set weight from fetched data
                 });
@@ -39,11 +39,11 @@ export const ProfileProvider = ({ children }) => {
                 // For now, checking 'data' is sufficient.
             } else {
                 console.error('Failed to fetch profile, using default.');
-                setProfile({ userId: null, nickname: 'Guest', profileImage: null, weight: null });
+                setProfile({ userId: null, username: 'Guest', profileImage: null, weight: null });
             }
         } catch (error) {
             console.error('Error fetching profile:', error);
-            setProfile({ userId: null, nickname: 'Guest', profileImage: null, weight: null });
+            setProfile({ userId: null, username: 'Guest', profileImage: null, weight: null });
         } finally {
             setLoading(false);
         }
@@ -70,7 +70,7 @@ export const ProfileProvider = ({ children }) => {
         setProfile(prev => ({
             ...prev,
             userId: id || prev.userId,
-            nickname: username || prev.nickname,
+            username: username || prev.username,
             profileImage: finalProfileImageUrl || prev.profileImage,
             weight: weight !== undefined ? weight : prev.weight
         }));

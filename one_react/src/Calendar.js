@@ -238,10 +238,9 @@ const Calendar = ({
                             onMouseEnter={() => dayInfo.dayString && onDragMove(dayInfo.dayString)}
                             onMouseUp={onDragEnd}
                         >
-                                                        <div className="day-number-wrapper">
-                                                            <p>{dayInfo.day}</p>
-                                                        </div>
-                                                                                    {/* Menstrual Cycle Indicator */}
+                                                                                                                <div className="day-number-wrapper">
+                                                                                                                    <p>{dayInfo.day}</p>
+                                                                                                                </div>                                                                                    {/* Menstrual Cycle Indicator */}
                                                                                     {menstrualCycles.filter(cycle => dayInfo.dayString >= cycle.startDate && dayInfo.dayString <= cycle.endDate).map(cycle => (
                                                                                         <div
                                                                                             key={cycle.id}
@@ -265,31 +264,223 @@ const Calendar = ({
                                                                                                                                                                 ></div>
                                                                                                                                                             ))}
                                                                                                                                 
-                                                                                                                                                            {/* Predicted Menstrual Cycle Indicator */}
-                                                                                                                                                            {predictedMenstrualCycle &&
-                                                                                                                                                             dayInfo.dayString >= predictedMenstrualCycle.startDate &&
-                                                                                                                                                             dayInfo.dayString <= predictedMenstrualCycle.endDate && (
-                                                                                                                                                                <div
-                                                                                                                                                                    key={predictedMenstrualCycle.id}
-                                                                                                                                                                    className="predicted-menstrual-cycle-indicator" // New class for styling
-                                                                                                                                                                    style={{
-                                                                                                                                                                        backgroundColor: 'rgba(255, 131, 131, 0.05)', // Lighter shade
-                                                                                                                                                                        height: '22px',
-                                                                                                                                                                        position: 'absolute',
-                                                                                                                                                                        left: 0,
-                                                                                                                                                                        right: 0,
-                                                                                                                                                                        top: '4px',
-                                                                                                                                                                        zIndex: 0,
-                                                                                                                                                                        borderRadius: dayInfo.dayString === predictedMenstrualCycle.startDate ? '15px 0 0 15px' :
-                                                                                                                                                                                      dayInfo.dayString === predictedMenstrualCycle.endDate ? '0 15px 15px 0' : '0',
-                                                                                                                                                                        borderTop: '1px solid rgba(255, 131, 131, 0.3)',
-                                                                                                                                                                        borderBottom: '1px solid rgba(255, 131, 131, 0.3)',
-                                                                                                                                                                        borderLeft: dayInfo.dayString === predictedMenstrualCycle.startDate ? '1px solid rgba(255, 131, 131, 0.3)' : 'none',
-                                                                                                                                                                        borderRight: dayInfo.dayString === predictedMenstrualCycle.endDate ? '1px solid rgba(255, 131, 131, 0.3)' : 'none',
-                                                                                                                                                                        boxSizing: 'border-box', // Ensure border doesn't increase total size
-                                                                                                                                                                    }}
-                                                                                                                                                                ></div>
-                                                                                                                                                            )}                            <div className="events-container">
+                                                                                                                                                                                        {/* Predicted Menstrual Cycle Indicator */}
+                                                                                                                                
+                                                                                                                                                                                        {predictedMenstrualCycle &&
+                                                                                                                                
+                                                                                                                                                                                         dayInfo.dayString >= predictedMenstrualCycle.startDate &&
+                                                                                                                                
+                                                                                                                                                                                         dayInfo.dayString <= predictedMenstrualCycle.endDate && (
+                                                                                                                                
+                                                                                                                                                                                            <div
+                                                                                                                                
+                                                                                                                                                                                                key={predictedMenstrualCycle.id}
+                                                                                                                                
+                                                                                                                                                                                                className="predicted-menstrual-cycle-indicator" // New class for styling
+                                                                                                                                
+                                                                                                                                                                                                style={{
+                                                                                                                                
+                                                                                                                                                                                                    backgroundColor: 'rgba(255, 131, 131, 0.05)', // Lighter shade
+                                                                                                                                
+                                                                                                                                                                                                    height: '22px',
+                                                                                                                                
+                                                                                                                                                                                                    position: 'absolute',
+                                                                                                                                
+                                                                                                                                                                                                    left: 0,
+                                                                                                                                
+                                                                                                                                                                                                    right: 0,
+                                                                                                                                
+                                                                                                                                                                                                    top: '4px',
+                                                                                                                                
+                                                                                                                                                                                                    zIndex: 0,
+                                                                                                                                
+                                                                                                                                                                                                    borderRadius: dayInfo.dayString === predictedMenstrualCycle.startDate ? '15px 0 0 15px' :
+                                                                                                                                
+                                                                                                                                                                                                                  dayInfo.dayString === predictedMenstrualCycle.endDate ? '0 15px 15px 0' : '0',
+                                                                                                                                
+                                                                                                                                                                                                    borderTop: '1px solid rgba(255, 131, 131, 0.3)',
+                                                                                                                                
+                                                                                                                                                                                                    borderBottom: '1px solid rgba(255, 131, 131, 0.3)',
+                                                                                                                                
+                                                                                                                                                                                                    borderLeft: dayInfo.dayString === predictedMenstrualCycle.startDate ? '1px solid rgba(255, 131, 131, 0.3)' : 'none',
+                                                                                                                                
+                                                                                                                                                                                                    borderRight: dayInfo.dayString === predictedMenstrualCycle.endDate ? '1px solid rgba(255, 131, 131, 0.3)' : 'none',
+                                                                                                                                
+                                                                                                                                                                                                    boxSizing: 'border-box', // Ensure border doesn't increase total size
+                                                                                                                                
+                                                                                                                                                                                                }}
+                                                                                                                                
+                                                                                                                                                                                            ></div>
+                                                                                                                                
+                                                                                                                                                                                        )}
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                    {/* Multi-day Event Indicator */}
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                    {(() => {
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                        const multiDayEventsForDay = events.filter(e => {
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                            if (!e.start_date || !e.end_date || e.type === 'menstrualCycle') return false;
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                        
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                            const filterStartDate = new Date(e.start_date).toISOString().split('T')[0];
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                            const filterEndDate = new Date(e.end_date).toISOString().split('T')[0];
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                        
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                            return filterStartDate !== filterEndDate && dayInfo.dayString >= filterStartDate && dayInfo.dayString <= filterEndDate;
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                        });
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                        console.log(`Day: ${dayInfo.dayString}, All Events Prop:`, events);
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                        console.log(`Day: ${dayInfo.dayString}, Filtered Multi-day Events for Day:`, multiDayEventsForDay);
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                        
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                        return multiDayEventsForDay.map(event => {
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                            const eventColor = event.color || '#A0A0A0'; // Default grey if no color
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                            const eventStartDate = new Date(event.start_date).toISOString().split('T')[0];
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                            const eventEndDate = new Date(event.end_date).toISOString().split('T')[0];
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                        
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                            return (
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                <div
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                    key={event.id}
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                    className="multi-day-event-indicator"
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                    style={{
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                        backgroundColor: hexToRgba(eventColor, 0.1), // 10% transparent
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                        height: '22px',
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                        position: 'absolute',
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                        left: 0,
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                        right: 0,
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                        top: '4px',
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                        zIndex: 0,
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                        borderRadius: dayInfo.dayString === eventStartDate ? '15px 0 0 15px' :
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                      dayInfo.dayString === eventEndDate ? '0 15px 15px 0' : '0',
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                        borderTop: `1px solid ${hexToRgba(eventColor, 0.3)}`,
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                        borderBottom: `1px solid ${hexToRgba(eventColor, 0.3)}`,
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                        borderLeft: dayInfo.dayString === eventStartDate ? `1px solid ${hexToRgba(eventColor, 0.3)}` : 'none',
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                        borderRight: dayInfo.dayString === eventEndDate ? `1px solid ${hexToRgba(eventColor, 0.3)}` : 'none',
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                        boxSizing: 'border-box',
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                    }}
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                ></div>
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                            );
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                        });
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                    })()}                            <div className="events-container">
                                 {dayInfo.events && dayInfo.events.map(event => {
                                     const style = {};
                                     if (event.color) {

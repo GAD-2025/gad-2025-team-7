@@ -1,4 +1,5 @@
 import { FaTrash } from 'react-icons/fa';
+import { LuCheck } from 'react-icons/lu';
 import React, { useState, useEffect, useRef } from 'react'; // Import useRef
 import { HexColorPicker } from "react-colorful"; // Import HexColorPicker
 import './HomeTab.css';
@@ -676,7 +677,9 @@ const HomeTab = ({
                                         onMouseLeave={handleMouseUp} // To handle cases where mouse leaves the element while swiping
                                     >
                                         <div className="item-checkbox-container" onClick={() => handleToggleSchedule(event.id, event.completed)}>
-                                            <div className={`item-checkbox circle ${event.completed ? 'completed' : ''}`}></div>
+                                            <div className={`item-checkbox circle ${event.completed ? 'completed' : ''}`}>
+                                                {event.completed && <LuCheck className="checkmark-icon" />}
+                                            </div>
                                         </div>
                                         <span className={`item-title ${event.completed ? 'completed' : ''}`}>{event.title}</span>
                                         <span className="item-time">{formatTime(event.time)}</span>
@@ -719,9 +722,8 @@ const HomeTab = ({
                                     <div key={todo.id} className="todo-item" >
                                          <div className="item-checkbox-container" onClick={() => handleToggleTodo(todo.id, todo.completed)}>
                                             <div className={`item-checkbox square ${todo.completed ? 'completed' : ''}`}>
-                                                {todo.completed && <span className="checkmark">✔</span>}
-                                            </div>
-                                        </div>
+                                                                                        {todo.completed && <LuCheck className="checkmark-icon" />}
+                                                                                    </div>                                        </div>
                                         <span className={`item-title ${todo.completed ? 'completed' : ''}`}>{todo.title}</span>
                                         <button className="delete-todo-btn" onClick={(e) => { e.stopPropagation(); handleDeleteTodo(todo.id); }}>x</button>
                                     </div>

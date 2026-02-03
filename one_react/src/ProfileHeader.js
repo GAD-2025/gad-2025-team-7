@@ -25,7 +25,7 @@ const ProfileHeader = () => {
     return (
         <>
             <div className="profile-header-container" onClick={handleProfileClick}>
-                <span className="profile-nickname">{profile.nickname || 'Guest'}</span> {/* Use profile.username */}
+                <span className="profile-nickname">{profile.username || 'Guest'}</span> {/* Use profile.username */}
                 <div className="profile-image-wrapper">
                     {profile.profile_image_url ? (
                         <img src={profile.profile_image_url} alt="Profile" className="profile-image" />
