@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './Calendar.css';
 import { useData } from './DataContext';
 import { hexToRgba, darkenColor } from './utils/colorUtils';
-// import ViewToggle from './ViewToggle'; // Removed
+import DailySummaryPopup from './DailySummaryPopup'; // Import DailySummaryPopup
 
 const Calendar = ({
     monthOffset,
@@ -17,6 +17,10 @@ const Calendar = ({
     onDragMove,
     onDragEnd,
     isMonthView, // Accept isMonthView as prop
+    showDailySummaryPopup, // New prop
+    onSetShowDailySummaryPopup, // Renamed prop
+    dailySummaryDate, // New prop
+    onSetDailySummaryDate, // Renamed prop
 }) => {
     const { selectedDate, setSelectedDate, pedometerDataByDate } = useData();
     const calendarDaysRef = useRef(null);
@@ -25,13 +29,50 @@ const Calendar = ({
     const [menstrualCycles, setMenstrualCycles] = useState([]); // New state for menstrual cycles
     const [predictedMenstrualCycle, setPredictedMenstrualCycle] = useState(null); // New state for predicted menstrual cycle
 
+    // States for DailySummaryPopup
+
     const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     const userId = localStorage.getItem('userId'); // Get userId
 
+    const [lastClickedDate, setLastClickedDate] = useState(null);
+    const clickTimer = useRef(null);
+
     const handleDateClick = async (event, dayInfo) => {
-        setSelectedDate(dayInfo.dayString);
+        const clickedElement = event.currentTarget; // The div.day-cell that was clicked
+
+        if (lastClickedDate === dayInfo.dayString) {
+            // Double click detected
+            setSelectedDate(dayInfo.dayString); // Still select the date
+            
+            // Calculate position for the popup
+            const rect = clickedElement.getBoundingClientRect();
+            const calendarRect = calendarDaysRef.current.getBoundingClientRect(); // Get calendar grid position
+            
+            console.log('setShowDailySummaryPopup type:', typeof onSetShowDailySummaryPopup);
+            onSetDailySummaryDate(dayInfo.dayString);
+            onSetShowDailySummaryPopup(true);
+
+            // Clear the timer
+            if (clickTimer.current) {
+                clearTimeout(clickTimer.current);
+                clickTimer.current = null;
+            }
+            setLastClickedDate(null); // Reset for next double click
+        } else {
+            // First click
+            setSelectedDate(dayInfo.dayString);
+            onSetShowDailySummaryPopup(false); // Hide popup on single click of a new date
+
+            setLastClickedDate(dayInfo.dayString);
+            if (clickTimer.current) {
+                clearTimeout(clickTimer.current);
+            }
+            clickTimer.current = setTimeout(() => {
+                setLastClickedDate(null); // Reset last clicked date after a delay
+            }, 300); // 300ms to detect double click
+        }
     };
 
     // Fetch user profile on component mount
@@ -444,19 +485,31 @@ const Calendar = ({
                                                                                                                                 
                                                                                                                                                             
                                                                                                                                 
-                                                                                                                                                                                                                                                                                                                                                        borderTop: `1px solid ${hexToRgba(eventColor, 0.3)}`,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     borderTop: 'none',
                                                                                                                                 
                                                                                                                                                             
                                                                                                                                 
-                                                                                                                                                                                                                                                                                                                                                        borderBottom: `1px solid ${hexToRgba(eventColor, 0.3)}`,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
                                                                                                                                 
                                                                                                                                                             
                                                                                                                                 
-                                                                                                                                                                                                                                                                                                                                                        borderLeft: dayInfo.dayString === eventStartDate ? `1px solid ${hexToRgba(eventColor, 0.3)}` : 'none',
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                borderBottom: 'none',
                                                                                                                                 
                                                                                                                                                             
                                                                                                                                 
-                                                                                                                                                                                                                                                                                                                                                        borderRight: dayInfo.dayString === eventEndDate ? `1px solid ${hexToRgba(eventColor, 0.3)}` : 'none',
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                borderLeft: 'none',
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                borderRight: 'none',
                                                                                                                                 
                                                                                                                                                             
                                                                                                                                 
@@ -486,7 +539,7 @@ const Calendar = ({
                                     if (event.color) {
                                         style.borderStyle = 'solid';
                                         style.borderColor = event.color;
-                                        style.borderWidth = '1px';
+                                        style.borderWidth = '0.7px';
                                         style.borderLeftWidth = '4px';
                                         style.backgroundColor = hexToRgba(event.color, 0.5);
                                         style.color = darkenColor(event.color, 0.7);

@@ -197,13 +197,14 @@
   background-color: #f0f0f0; /* Default background */
   color: #333; /* Default text color */
   border-radius: 3px;
-  padding: 2px 4px;
+  padding: 2px 4px; /* Reverted padding-left to 4px */
   font-size: 10px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   flex-shrink: 0; /* Prevent event items from shrinking */
   box-sizing: border-box;
+  width: calc(100% - 4px); /* Adjust width to account for left border */
   /* margin-top: 2px; Removed */
 }
 

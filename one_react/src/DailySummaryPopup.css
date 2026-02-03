@@ -1,0 +1,39 @@
+.daily-summary-popup {
+    position: fixed; /* Fixed position relative to the viewport */
+    top: 20px; /* Adjust as needed */
+    right: 20px; /* Adjust as needed */
+    width: 235px;
+    height: 128px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 100; /* Ensure it's above other elements */
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.popup-header h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #383838;
+}
+
+.popup-header button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #A0A0A0;
+}
+
+.popup-content {
+    font-size: 14px;
+    color: #5a5a5a;
+}

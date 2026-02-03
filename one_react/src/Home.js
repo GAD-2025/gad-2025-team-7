@@ -6,6 +6,7 @@ import Calendar from './Calendar';
 import Dashboard from './Dashboard';
 import { useData } from './DataContext';
 import ViewToggle from './ViewToggle'; // Import ViewToggle
+import DailySummaryPopup from './DailySummaryPopup'; // Import DailySummaryPopup
 
 const Home = () => {
     const { setIsSlideOutNavOpen } = useOutletContext();
@@ -26,6 +27,10 @@ const Home = () => {
     const [showEventModal, setShowEventModal] = useState(false);
     const [initialEventStartDate, setInitialEventStartDate] = useState(null);
     const [initialEventEndDate, setInitialEventEndDate] = useState(null);
+
+    // States for DailySummaryPopup
+    const [showDailySummaryPopup, setShowDailySummaryPopup] = useState(false);
+    const [dailySummaryDate, setDailySummaryDate] = useState('');
 
     const userId = localStorage.getItem('userId');
 
@@ -139,6 +144,10 @@ const Home = () => {
                         onDragMove={handleDragMove}
                         onDragEnd={handleDragEnd}
                         isMonthView={isMonthView} // Pass isMonthView to Calendar
+                        showDailySummaryPopup={showDailySummaryPopup} // Pass new prop
+                        onSetShowDailySummaryPopup={setShowDailySummaryPopup} // Pass new prop
+                        dailySummaryDate={dailySummaryDate} // Pass new prop
+                        onSetDailySummaryDate={setDailySummaryDate} // Pass new prop
                     />
                 </div>
 
@@ -155,9 +164,18 @@ const Home = () => {
                         initialEventStartDate={initialEventStartDate}
                         initialEventEndDate={initialEventEndDate}
                         clearInitialEventDates={clearInitialEventDates} // Pass the new function
+                        showDailySummaryPopup={showDailySummaryPopup} // Pass new prop
+                        setShowDailySummaryPopup={setShowDailySummaryPopup} // Pass new prop
+                        dailySummaryDate={dailySummaryDate} // Pass new prop
+                        setDailySummaryDate={setDailySummaryDate} // Pass new prop
                     />
                 </div>
             </div>
+            <DailySummaryPopup
+                show={showDailySummaryPopup}
+                onClose={() => setShowDailySummaryPopup(false)}
+                date={dailySummaryDate}
+            />
         </div>
     );
 };
