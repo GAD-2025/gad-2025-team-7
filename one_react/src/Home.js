@@ -47,21 +47,23 @@ const Home = () => {
                 const todosRes = await fetch(`${process.env.REACT_APP_API_URL}/api/todos/${userId}/${selectedDate}`, { cache: 'no-cache' });
                 const todosData = todosRes.ok ? await todosRes.json() : Promise.reject(new Error('Failed to fetch todos'));
                 setTodos(todosData);
-                // console.log('Fetched todosData:', JSON.stringify(todosData, null, 2)); // Debug log with JSON.stringify
+                // console.log('Home.js - Fetched todosData after update:', JSON.stringify(todosData, null, 2)); // Debug log
 
                 // Prepare dailySummaryData
-                const completedTodosCount = todosData.filter(todo => todo.completed === true).length;
-                const completedEventsCount = eventsData.filter(event => event.completed === 1).length;
-                const completedSchedulesCount = completedTodosCount + completedEventsCount;
-
+                const completedTodosCount = todosData.filter(todo => todo.completed === 1).length;
                 const totalTodosCount = todosData.length;
-                const totalEventsCount = eventsData.length;
-                const totalSchedulesCount = totalTodosCount + totalEventsCount;
 
-                setDailySummaryData({
-                    completedSchedules: Array(completedSchedulesCount).fill(null), // Use array length for count
-                    addedSchedules: Array(totalSchedulesCount).fill(null) // Use array length for count
-                });
+                const completedEventsCount = eventsData.filter(event => event.completed === 1).length;
+                const totalEventsCount = eventsData.length;
+
+                const newDailySummaryData = {
+                    completedTodosCount: completedTodosCount,
+                    totalTodosCount: totalTodosCount,
+                    completedEventsCount: completedEventsCount,
+                    totalEventsCount: totalEventsCount
+                };
+                setDailySummaryData(newDailySummaryData);
+                // console.log('Home.js - Calculated dailySummaryData after update:', JSON.stringify(newDailySummaryData, null, 2)); // Debug log
 
             } catch (error) {
                 console.error("Error fetching daily summary data:", error);

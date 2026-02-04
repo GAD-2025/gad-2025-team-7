@@ -4,9 +4,11 @@ import './DailySummaryPopup.css';
 const DailySummaryPopup = ({ show, onClose, date, dailyData }) => {
     if (!show) return null;
 
-    // Default empty arrays if dailyData or its properties are undefined
-    const completedSchedules = dailyData?.completedSchedules || [];
-    const addedSchedules = dailyData?.addedSchedules || [];
+    // Extract counts from dailyData
+    const completedTodosCount = dailyData?.completedTodosCount || 0;
+    const totalTodosCount = dailyData?.totalTodosCount || 0;
+    const completedEventsCount = dailyData?.completedEventsCount || 0;
+    const totalEventsCount = dailyData?.totalEventsCount || 0;
 
     return (
         <div className="daily-summary-popup">
@@ -15,8 +17,8 @@ const DailySummaryPopup = ({ show, onClose, date, dailyData }) => {
                 <button onClick={onClose}>X</button>
             </div>
             <div className="popup-content">
-                <h4>일정 완료: {completedSchedules.length}/{addedSchedules.length}</h4>
-                {completedSchedules.length === 0 && addedSchedules.length === 0 && <p>일정이 없습니다.</p>}
+                <h4>일정 완료: {completedEventsCount}/{totalEventsCount}</h4>
+                <h4>투두 완료: {completedTodosCount}/{totalTodosCount}</h4>
             </div>
         </div>
     );
