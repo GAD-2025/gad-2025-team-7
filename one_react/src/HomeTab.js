@@ -280,7 +280,7 @@ const HomeTab = ({
     }, [userId, selectedDate, onDataUpdate]);
 
     const handleToggleTodo = async (todoId, currentStatus) => {
-        const body = { completed: !currentStatus };
+        const body = { completed: !currentStatus }; // Send boolean true/false
         try {
             const res = await fetch(`${process.env.REACT_APP_API_URL}/api/todos/${todoId}/complete`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
             if (!res.ok) throw new Error('Failed to update todo status');

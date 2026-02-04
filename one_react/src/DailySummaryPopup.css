@@ -1,7 +1,8 @@
 .daily-summary-popup {
-    position: fixed; /* Fixed position relative to the viewport */
-    top: 20px; /* Adjust as needed */
-    right: 20px; /* Adjust as needed */
+    position: absolute; /* Changed from fixed to absolute */
+    top: 50%; /* Center vertically */
+    left: 75%; /* Changed to 75% as requested */
+    transform: translate(-50%, -50%); /* Adjust for element's own size */
     width: 235px;
     height: 128px;
     background-color: white;

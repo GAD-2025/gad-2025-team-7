@@ -50,7 +50,7 @@ const Calendar = ({
             const rect = clickedElement.getBoundingClientRect();
             const calendarRect = calendarDaysRef.current.getBoundingClientRect(); // Get calendar grid position
             
-            console.log('setShowDailySummaryPopup type:', typeof onSetShowDailySummaryPopup);
+            // console.log('setShowDailySummaryPopup type:', typeof onSetShowDailySummaryPopup);
             onSetDailySummaryDate(dayInfo.dayString);
             onSetShowDailySummaryPopup(true);
 
@@ -397,11 +397,11 @@ const Calendar = ({
                                                                                                                                 
                                                                                                                                                             
                                                                                                                                 
-                                                                                                                                                                                                                                                                                                                                        console.log(`Day: ${dayInfo.dayString}, All Events Prop:`, events);
+                                                                                                                                                                                                                                                                                                                                        // console.log(`Day: ${dayInfo.dayString}, All Events Prop:`, events);
                                                                                                                                 
                                                                                                                                                             
                                                                                                                                 
-                                                                                                                                                                                                                                                                                                                                        console.log(`Day: ${dayInfo.dayString}, Filtered Multi-day Events for Day:`, multiDayEventsForDay);
+                                                                                                                                                                                                                                                                                                                                        // console.log(`Day: ${dayInfo.dayString}, Filtered Multi-day Events for Day:`, multiDayEventsForDay);
                                                                                                                                 
                                                                                                                                                             
                                                                                                                                 

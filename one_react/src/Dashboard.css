@@ -4,6 +4,7 @@
   background-color: transparent;
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
+  position: relative; /* Added for positioning context */
 }
 
 .right-column::-webkit-scrollbar {

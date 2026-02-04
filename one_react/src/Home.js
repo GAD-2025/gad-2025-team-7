@@ -31,27 +31,44 @@ const Home = () => {
     // States for DailySummaryPopup
     const [showDailySummaryPopup, setShowDailySummaryPopup] = useState(false);
     const [dailySummaryDate, setDailySummaryDate] = useState('');
+    const [dailySummaryData, setDailySummaryData] = useState(null); // New state for daily summary data
 
     const userId = localStorage.getItem('userId');
 
     useEffect(() => {
         if (!userId || !selectedDate) return;
-        // console.log('Home.js - userId for dashboardEvents:', userId); // Removed
-        // console.log('Home.js - selectedDate for dashboardEvents:', selectedDate); // Removed
-        // console.log('Home.js - selectedDate:', selectedDate); // Removed
         
-        fetch(`${process.env.REACT_APP_API_URL}/api/events/${userId}/${selectedDate}`, { cache: 'no-cache' })
-            .then(res => res.ok ? res.json() : Promise.reject(new Error('Failed to fetch day events')))
-            .then(data => {
-                setDashboardEvents(data);
-                // console.log('Home.js - dashboardEvents:', data); // Removed
-            })
-            .catch(console.error);
+        const fetchDashboardData = async () => {
+            try {
+                const eventsRes = await fetch(`${process.env.REACT_APP_API_URL}/api/events/${userId}/${selectedDate}`, { cache: 'no-cache' });
+                const eventsData = eventsRes.ok ? await eventsRes.json() : Promise.reject(new Error('Failed to fetch day events'));
+                setDashboardEvents(eventsData);
 
-        fetch(`${process.env.REACT_APP_API_URL}/api/todos/${userId}/${selectedDate}`, { cache: 'no-cache' })
-            .then(res => res.ok ? res.json() : Promise.reject(new Error('Failed to fetch todos')))
-            .then(setTodos)
-            .catch(console.error);
+                const todosRes = await fetch(`${process.env.REACT_APP_API_URL}/api/todos/${userId}/${selectedDate}`, { cache: 'no-cache' });
+                const todosData = todosRes.ok ? await todosRes.json() : Promise.reject(new Error('Failed to fetch todos'));
+                setTodos(todosData);
+                // console.log('Fetched todosData:', JSON.stringify(todosData, null, 2)); // Debug log with JSON.stringify
+
+                // Prepare dailySummaryData
+                const completedTodosCount = todosData.filter(todo => todo.completed === true).length;
+                const completedEventsCount = eventsData.filter(event => event.completed === 1).length;
+                const completedSchedulesCount = completedTodosCount + completedEventsCount;
+
+                const totalTodosCount = todosData.length;
+                const totalEventsCount = eventsData.length;
+                const totalSchedulesCount = totalTodosCount + totalEventsCount;
+
+                setDailySummaryData({
+                    completedSchedules: Array(completedSchedulesCount).fill(null), // Use array length for count
+                    addedSchedules: Array(totalSchedulesCount).fill(null) // Use array length for count
+                });
+
+            } catch (error) {
+                console.error("Error fetching daily summary data:", error);
+            }
+        };
+
+        fetchDashboardData();
 
     }, [userId, selectedDate, lastUpdated]);
 
@@ -175,6 +192,7 @@ const Home = () => {
                 show={showDailySummaryPopup}
                 onClose={() => setShowDailySummaryPopup(false)}
                 date={dailySummaryDate}
+                dailyData={dailySummaryData} // Pass dailySummaryData here
             />
         </div>
     );
