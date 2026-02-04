@@ -86,34 +86,40 @@
     border-radius: 20px;
     display: flex;
     flex-direction: column; /* Stack children vertically */
-    /* align-items: center; Removed to allow individual alignment */
+    align-items: center; /* Re-add to center children horizontally */
     justify-content: center; /* Center content vertically */
     padding: 5px;
     box-sizing: border-box;
     position: relative;
 }
 
+.graph-and-text-wrapper {
+    display: flex;
+    flex-direction: row; /* Arrange graph and text horizontally */
+    align-items: center; /* Center items vertically within this wrapper */
+    justify-content: center; /* Center items horizontally within this wrapper */
+    width: 100%; /* Take full width of parent */
+    margin-bottom: 5px; /* Space between this wrapper and the label */
+}
+
 .health-card .pedometer-graph-wrapper {
-    width: 60px; /* Slightly smaller size for the graph wrapper */
-    height: 60px;
+    width: 45px; /* Slightly smaller size for the graph wrapper */
+    height: 45px;
     margin-top: 0; /* Reset margin-top */
     position: relative; /* Ensure text is positioned relative to this */
-    margin-bottom: 5px; /* Add space below the graph */
-    margin-right: auto; /* Push to the left */
+    margin-bottom: 0; /* Reset margin-bottom */
+    margin-right: 5px; /* Space between graph and text */
 }
 
 .health-card .pedometer-graph-text {
-    position: relative; /* Change from absolute to relative */
+    position: relative; /* Change to relative positioning */
     top: auto; /* Remove top positioning */
     left: auto; /* Remove left positioning */
     transform: none; /* Remove transform */
     font-size: 11px; /* Set font size to 11px */
     line-height: 1.2; /* Adjust line height for better alignment */
-    margin-top: -10px; /* Adjust spacing below the graph */
-    margin-bottom: 5px; /* Add space below the calorie count text */
-    /* margin-left: auto; Removed */
-    align-self: flex-end; /* Align to the right */
-    margin-right: 10px; /* Move 10px from the right edge */
+    margin: 0; /* Remove all margins */
+    text-align: left; /* Align text to left within its own box */
 }
 
 .health-card .pedometer-graph-text .calorie-value {
@@ -125,6 +131,6 @@
     color: #383838;
     font-weight: 300;
     margin: 0;
-    margin-top: -5px; /* Move slightly up */
+    margin-top: 5px; /* Move slightly down */
     text-align: center; /* Center the text */
 }

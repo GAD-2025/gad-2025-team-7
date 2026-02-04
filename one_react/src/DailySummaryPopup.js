@@ -62,24 +62,25 @@ const DailySummaryPopup = ({ show, onClose, date, dailyData }) => { // Removed u
                     </div>
                 </div>
                 <div className="health-card">
-                    <div className="pedometer-graph-wrapper"> {/* Re-added pedometer-graph-wrapper */}
-                        <svg className="pedometer-graph" viewBox="0 0 100 100">
-                            <circle className="pedometer-graph-background" cx="50" cy="50" r="45"></circle>
-                            <circle
-                                className="pedometer-graph-progress"
-                                cx="50"
-                                cy="50"
-                                r="45"
-                                strokeDasharray={graphPathLength}
-                                strokeDashoffset={strokeDashoffset}
-                            ></circle>
-                        </svg>
+                    <div className="graph-and-text-wrapper"> {/* New wrapper */}
+                        <div className="pedometer-graph-wrapper"> {/* Re-added pedometer-graph-wrapper */}
+                            <svg className="pedometer-graph" viewBox="0 0 100 100">
+                                <circle className="pedometer-graph-background" cx="50" cy="50" r="45"></circle>
+                                <circle
+                                    className="pedometer-graph-progress"
+                                    cx="50"
+                                    cy="50"
+                                    r="45"
+                                    strokeDasharray={graphPathLength}
+                                    strokeDashoffset={strokeDashoffset}
+                                ></circle>
+                            </svg>
+                        </div>
                         <div className="pedometer-graph-text">
                             <p>
                                 <span className="calorie-value">{Math.round(dietTotals.calories)}</span>
                                 <br />
-                                {dailyCalorieGoal}
-                                <br /> kcal
+                                / {dailyCalorieGoal}
                             </p>
                         </div>
                     </div>
