@@ -194,7 +194,7 @@ const Home = () => {
                 show={showDailySummaryPopup}
                 onClose={() => setShowDailySummaryPopup(false)}
                 date={dailySummaryDate}
-                dailyData={dailySummaryData} // Pass dailySummaryData here
+                dailyData={dailySummaryData}
             />
         </div>
     );

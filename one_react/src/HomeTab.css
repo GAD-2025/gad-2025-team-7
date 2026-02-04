@@ -516,17 +516,17 @@
 
 .modal-close-btn {
     position: absolute;
-    top: 0; /* Adjusted */
-    right: 0; /* Adjusted */
+    top: 10px; /* Adjusted to be inside padding */
+    right: 10px; /* Adjusted to be inside padding */
     background-color: white; /* From .close-profile-button */
     border: 1px solid #E1E7EF; /* From .close-profile-button */
     border-radius: 50%; /* From .close-profile-button */
-    width: 28px; /* From .close-profile-button */
-    height: 28px; /* From .close-profile-button */
+    width: 17px; /* Changed to 17px */
+    height: 17px; /* Changed to 17px */
     display: flex; /* From .close-profile-button */
     justify-content: center; /* From .close-profile-button */
     align-items: center; /* From .close-profile-button */
-    font-size: 16px; /* From .close-profile-button */
+    font-size: 10px; /* Adjusted font size for 'x' */
     cursor: pointer; /* Already present */
     color: #383838; /* From .close-profile-button */
     z-index: 10; /* From .close-profile-button */
