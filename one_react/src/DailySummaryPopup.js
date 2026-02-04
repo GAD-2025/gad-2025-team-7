@@ -75,7 +75,12 @@ const DailySummaryPopup = ({ show, onClose, date, dailyData }) => { // Removed u
                             ></circle>
                         </svg>
                         <div className="pedometer-graph-text">
-                            <p><span className="calorie-value">{Math.round(dietTotals.calories)}</span> / {dailyCalorieGoal} <br /> kcal</p>
+                            <p>
+                                <span className="calorie-value">{Math.round(dietTotals.calories)}</span>
+                                <br />
+                                {dailyCalorieGoal}
+                                <br /> kcal
+                            </p>
                         </div>
                     </div>
                     <p className="health-card-label">섭취칼로리</p>

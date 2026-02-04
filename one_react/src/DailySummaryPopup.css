@@ -51,7 +51,7 @@
 }
 
 .summary-chip {
-    width: 115px;
+    width: 94px;
     height: 37px;
     background-color: #fafafa;
     border: 1px solid #E1E7EF;
@@ -79,14 +79,14 @@
 }
 
 .health-card {
-    width: 77px;
+    width: 100px;
     height: 80px;
     background-color: #fafafa;
     border: 1px solid #E1E7EF;
     border-radius: 20px;
     display: flex;
     flex-direction: column; /* Stack children vertically */
-    align-items: center;
+    /* align-items: center; Removed to allow individual alignment */
     justify-content: center; /* Center content vertically */
     padding: 5px;
     box-sizing: border-box;
@@ -94,24 +94,12 @@
 }
 
 .health-card .pedometer-graph-wrapper {
-    width: 60px; /* Smaller size for the graph wrapper */
+    width: 60px; /* Slightly smaller size for the graph wrapper */
     height: 60px;
     margin-top: 0; /* Reset margin-top */
     position: relative; /* Ensure text is positioned relative to this */
-}
-
-.health-card .pedometer-graph {
-    width: 100%; /* Make it fill its wrapper */
-    height: 100%;
-    stroke-width: 8; /* Adjust stroke width for smaller size */
-}
-
-.health-card .pedometer-graph-background {
-    stroke-width: 8;
-}
-
-.health-card .pedometer-graph-progress {
-    stroke-width: 8;
+    margin-bottom: 5px; /* Add space below the graph */
+    margin-right: auto; /* Push to the left */
 }
 
 .health-card .pedometer-graph-text {
@@ -119,19 +107,24 @@
     top: auto; /* Remove top positioning */
     left: auto; /* Remove left positioning */
     transform: none; /* Remove transform */
-    font-size: 0.6rem; /* Smaller font size for text */
-    line-height: 1;
+    font-size: 11px; /* Set font size to 11px */
+    line-height: 1.2; /* Adjust line height for better alignment */
     margin-top: -10px; /* Adjust spacing below the graph */
+    margin-bottom: 5px; /* Add space below the calorie count text */
+    /* margin-left: auto; Removed */
+    align-self: flex-end; /* Align to the right */
+    margin-right: 10px; /* Move 10px from the right edge */
 }
 
 .health-card .pedometer-graph-text .calorie-value {
-    font-size: 14px; /* Smaller font for calorie value */
+    font-size: 11px; /* Set font size to 11px */
 }
 
 .health-card-label {
-    font-size: 10px;
+    font-size: 10px; /* Set font size to 10px */
     color: #383838;
     font-weight: 300;
     margin: 0;
-    margin-top: 0px; /* Reset margin-top */
+    margin-top: -5px; /* Move slightly up */
+    text-align: center; /* Center the text */
 }
