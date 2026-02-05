@@ -136,7 +136,7 @@
   cursor: pointer;
   border-radius: 6px;
   position: relative;
-  height: 72px; /* Increased height by 7px */
+  height: 90px; /* Increased height by 7px */
   overflow: hidden; /* Clip overflowing content */
   -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
 }

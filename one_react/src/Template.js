@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'; // Import useRef
 
+const truncateTitle = (title) => {
+    if (title.length > 5) {
+        return title.substring(0, 5) + '···';
+    }
+    return title;
+};
+
 const Template = ({ type, templates = [], onTemplateClick, getTemplateStyle, onTemplateDeleteClick }) => {
     const [pressTimer, setPressTimer] = useState(null);
     const [activeTemplateId, setActiveTemplateId] = useState(null); // To track which template is long-pressed
@@ -69,7 +76,7 @@ const Template = ({ type, templates = [], onTemplateClick, getTemplateStyle, onT
                         onTouchEnd={handlePressEnd}
                         onTouchCancel={handlePressEnd}
                     >
-                        {template.title}
+                        {truncateTitle(template.title)}
                         {activeTemplateId === template.id && ( // Conditionally render 'x'
                             <span
                                 className="delete-template-btn"
