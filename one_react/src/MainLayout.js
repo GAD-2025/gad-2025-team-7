@@ -1,11 +1,13 @@
 import React from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, Link, useNavigate } from 'react-router-dom';
 import ProfileHeader from './ProfileHeader';
 import MainBackground from './components/MainBackground';
 import SlideOutNav from './SlideOutNav'; // Import SlideOutNav
 import './MainLayout.css';
 
-const MainLayout = ({ setIsSlideOutNavOpen, isSlideOutNavOpen, setIsTemplateNavOpen, isTemplateNavOpen }) => { // Accept all necessary props
+const MainLayout = ({ setIsTemplateNavOpen, isTemplateNavOpen }) => { // Accept all necessary props
+    const navigate = useNavigate();
+
     return (
         <MainBackground>
             <div className="main-layout">
@@ -18,10 +20,9 @@ const MainLayout = ({ setIsSlideOutNavOpen, isSlideOutNavOpen, setIsTemplateNavO
                 </header>
                 <main className="main-content">
                     {/* collection-trigger and SlideOutNav moved here */}
-                    <div id="collection-trigger" onClick={() => setIsSlideOutNavOpen(true)} className="collection-trigger"></div>
-                    <SlideOutNav isOpen={isSlideOutNavOpen} onClose={() => setIsSlideOutNavOpen(false)} />
+                    <div id="collection-trigger" onClick={() => navigate('/healthcare-collection')} className="collection-trigger"></div>
                     <SlideOutNav isOpen={isTemplateNavOpen} onClose={() => setIsTemplateNavOpen(false)} navType="template" />
-                    <Outlet context={{ setIsSlideOutNavOpen }} /> {/* Pass setIsSlideOutNavOpen via context */}
+                    <Outlet /> {/* Pass setIsSlideOutNavOpen via context */}
                 </main>
             </div>
         </MainBackground>

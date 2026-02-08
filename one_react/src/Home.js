@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useOutletContext } from 'react-router-dom';
+// import { useOutletContext } from 'react-router-dom'; // Removed
 import './Home.css';
 import './SlideOutNav.css';
 import Calendar from './Calendar';
@@ -9,7 +9,7 @@ import ViewToggle from './ViewToggle'; // Import ViewToggle
 import DailySummaryPopup from './DailySummaryPopup'; // Import DailySummaryPopup
 
 const Home = () => {
-    const { setIsSlideOutNavOpen } = useOutletContext();
+    // const { setIsSlideOutNavOpen } = useOutletContext(); // Removed
     const { selectedDate, setSelectedDate } = useData();
     // console.log("Home.js selectedDate:", selectedDate); // Removed
     const [isMonthView, setIsMonthView] = useState(true); // State for month/week view

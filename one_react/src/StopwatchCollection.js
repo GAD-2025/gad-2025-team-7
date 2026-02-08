@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+// import { useNavigate } from 'react-router-dom'; // Removed as back button is removed
 import './StopwatchCollection.css'; // Import new CSS
 import DateFilter from './DateFilter'; // Reuse DateFilter component
-import IllustratedCalendarIcon from './IllustratedCalendarIcon';
+// import IllustratedCalendarIcon from './IllustratedCalendarIcon'; // Removed as calendar icon is removed
 import { BASE_CATEGORY_COLORS_MAP, PREDEFINED_COLORS } from './constants/categoryColors';
 
 // Helper to format seconds to HH:MM:SS
@@ -18,13 +18,13 @@ const formatTime = (totalSeconds) => {
         .join(':');
 };
 
-const StopwatchCollection = () => {
+const StopwatchCollection = ({ displayMode = 'summary' }) => {
     const [allRecords, setAllRecords] = useState([]);
     const [sortOrder, setSortOrder] = useState('desc'); // 'desc' for high, 'asc' for low
     const [isFilterVisible, setIsFilterVisible] = useState(false);
     const [filterRange, setFilterRange] = useState({ startDate: '', endDate: '' });
     const userId = localStorage.getItem('userId');
-    const navigate = useNavigate(); // Initialize useNavigate
+    // const navigate = useNavigate(); // Removed
 
     useEffect(() => {
         if (!userId) return;
@@ -42,6 +42,20 @@ const StopwatchCollection = () => {
         };
         fetchRecords();
     }, [userId]);
+
+    // Group records by date for daily view
+    const recordsGroupedByDate = useMemo(() => {
+        const grouped = {};
+        allRecords.forEach(record => {
+            const recordDate = new Date(record.date).toISOString().split('T')[0]; // Get YYYY-MM-DD
+            if (!grouped[recordDate]) {
+                grouped[recordDate] = [];
+            }
+            grouped[recordDate].push(record);
+        });
+        return grouped;
+    }, [allRecords]);
+
 
     const aggregatedData = useMemo(() => {
         const filteredRecords = allRecords.filter(record => {
@@ -92,68 +106,122 @@ const StopwatchCollection = () => {
         setIsFilterVisible(false);
     };
 
-    const handleGoBack = () => {
-        navigate(-1); // Go back to the previous page
-    };
+    // const handleGoBack = () => { // Removed
+    //     navigate(-1); // Go back to the previous page
+    // };
 
-    return (
-        <div className="stopwatch-collection-container">
-            {isFilterVisible && (
-                <DateFilter 
-                    onApply={handleApplyFilter}
-                    onCancel={() => setIsFilterVisible(false)}
-                />
-            )}
-            <header className="sc-header">
-                <div className="sc-header-left">
-                    <span className="sc-back-icon" onClick={handleGoBack}>←</span>
-                    <h1 className="sc-title">스톱워치 모아보기</h1>
-                </div>
-                <div className="sc-header-right">
-                    <div className="sc-filters">
-                        <div className="filter-toggle">
-                            <button className={sortOrder === 'desc' ? 'active' : ''} onClick={() => setSortOrder('desc')}>높은 순</button>
-                            <button className={sortOrder === 'asc' ? 'active' : ''} onClick={() => setSortOrder('asc')}>낮은 순</button>
-                        </div>
+    if (displayMode === 'daily') {
+        const sortedDates = Object.keys(recordsGroupedByDate).sort((a, b) => new Date(b) - new Date(a));
+        return (
+            <div className="stopwatch-daily-cards-container">
+                {sortedDates.length > 0 ? (
+                    sortedDates.map(dateKey => {
+                        const date = new Date(dateKey);
+                        const formattedDate = `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
+
+                        // Aggregate tasks for the current day by category
+                        const dailyAggregatedTasks = {};
+                        recordsGroupedByDate[dateKey].forEach(record => {
+                            record.tasks_data.forEach(task => {
+                                if (task.isComplete && task.category) {
+                                    if (!dailyAggregatedTasks[task.category]) {
+                                        dailyAggregatedTasks[task.category] = 0;
+                                    }
+                                    dailyAggregatedTasks[task.category] += task.elapsedTime;
+                                }
+                            });
+                        });
+
+                        const dailyCategories = Object.entries(dailyAggregatedTasks).map(([category, totalTimeMs], index) => ({
+                            category,
+                            totalTime: Math.floor(totalTimeMs / 1000),
+                            color: BASE_CATEGORY_COLORS_MAP[category] || PREDEFINED_COLORS[index % PREDEFINED_COLORS.length]
+                        }));
+
+                        return (
+                                                        <div key={dateKey} className="stopwatch-daily-card">
+                                                            <span className="card-date-display">{formattedDate}</span>
+                                                            <div className="stopwatch-card-categories-content">
+                                                                {dailyCategories.map((item, index) => {
+                                                                    const categoryDisplayName = item.category.length > 5 ? item.category.substring(0, 5) + '...' : item.category;
+                                                                    const isLongCategory = item.category.length >= 4; // For layout rule
+                            
+                                                                    return (
+                                                                        <div key={index} className={`stopwatch-daily-category-item ${isLongCategory ? 'long-category' : ''}`}>
+                                                                            <div className="stopwatch-daily-category-chip"
+                                                                                 style={{
+                                                                                     backgroundColor: `rgba(${parseInt(item.color.slice(1,3), 16)}, ${parseInt(item.color.slice(3,5), 16)}, ${parseInt(item.color.slice(5,7), 16)}, 0.5)`,
+                                                                                     border: `1px solid ${item.color}`
+                                                                                 }}>
+                                                                                {categoryDisplayName}
+                                                                            </div>
+                                                                            <div className="stopwatch-daily-category-time">{formatTime(item.totalTime)}</div>
+                                                                        </div>
+                                                                    );
+                                                                })}
+                                                            </div>
+                                                        </div>                        );
+                    })
+                ) : (
+                    <div className="sc-empty-state">
+                        <div className="icon">⏱️</div>
+                        <p>기록된 스톱워치 데이터가 없어요.</p>
                     </div>
-                    <IllustratedCalendarIcon onClick={() => setIsFilterVisible(true)} />
+                )}
+            </div>
+        );
+    } else { // displayMode === 'summary'
+        return (
+            <div className="stopwatch-collection-container">
+                {isFilterVisible && (
+                    <DateFilter
+                        onApply={handleApplyFilter}
+                        onCancel={() => setIsFilterVisible(false)}
+                    />
+                )}
+                {/* Removed header and back button and title */}
+                {/* Moved sc-filters outside header */}
+                <div className="sc-filters" style={{display: 'flex', justifyContent: 'flex-end', marginBottom: '10px'}}>
+                    <div className="filter-toggle">
+                        <button className={sortOrder === 'desc' ? 'active' : ''} onClick={() => setSortOrder('desc')}>높은 순</button>
+                        <button className={sortOrder === 'asc' ? 'active' : ''} onClick={() => setSortOrder('asc')}>낮은 순</button>
+                    </div>
                 </div>
-            </header>
 
-            {sortedData.length > 0 ? (
-                <div className="sc-bar-chart-list">
-                    {sortedData.map(({ category, totalTime, color }) => (
-                        <div key={category} className="sc-category-item">
-                            <div className="sc-category-label" 
-                                style={{
-                                    backgroundColor: `rgba(${parseInt(color.slice(1,3), 16)}, ${parseInt(color.slice(3,5), 16)}, ${parseInt(color.slice(5,7), 16)}, 0.5)`,
-                                    border: `1px solid ${color}`
-                                }}>
-                                {category}
+                {sortedData.length > 0 ? (
+                    <div className="sc-bar-chart-list">
+                        {sortedData.map(({ category, totalTime, color }) => (
+                            <div key={category} className="sc-category-item">
+                                <div className="sc-category-label"
+                                    style={{
+                                        backgroundColor: `rgba(${parseInt(color.slice(1,3), 16)}, ${parseInt(color.slice(3,5), 16)}, ${parseInt(color.slice(5,7), 16)}, 0.5)`,
+                                        border: `1px solid ${color}`
+                                    }}>
+                                    {category}
+                                </div>
+                                <div className="sc-bar-wrapper">
+                                    <div className="sc-bar">
+                                        <div
+                                            className="sc-bar-fill"
+                                            style={{
+                                                width: `${maxTime > 0 ? (totalTime / maxTime) * 100 : 0}%`,
+                                                                                                                                backgroundColor: `rgba(${parseInt(color.slice(1,3), 16)}, ${parseInt(color.slice(3,5), 16)}, ${parseInt(color.slice(5,7), 16)}, 0.5)`,                                                border: `1px solid ${color}`
+                                            }}
+                                        ></div>
+                                    </div>
+                                    <div className="sc-time">{formatTime(totalTime)}</div>
+                                </div>
                             </div>
-                            <div className="sc-bar-wrapper">
-                                <div className="sc-bar">
-                                                                        <div
-                                                                            className="sc-bar-fill"
-                                                                            style={{
-                                                                                width: `${maxTime > 0 ? (totalTime / maxTime) * 100 : 0}%`,
-                                                                                backgroundColor: `rgba(${parseInt(color.slice(1,3), 16)}, ${parseInt(color.slice(3,5), 16)}, ${parseInt(color.slice(5,7), 16)}, 0.5)`,
-                                                                                border: `1px solid ${color}`
-                                                                            }}
-                                                                        ></div>                                </div>
-                                <div className="sc-time">{formatTime(totalTime)}</div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            ) : (
-                <div className="sc-empty-state">
-                    <div className="icon">⏱️</div>
-                    <p>기록된 스톱워치 데이터가 없어요.</p>
-                </div>
-            )}
-        </div>
-    );
+                        ))}
+                    </div>
+                ) : (
+                    <div className="sc-empty-state">
+                        <div className="icon">⏱️</div>
+                        <p>기록된 스톱워치 데이터가 없어요.</p>
+                    </div>
+                )}
+            </div>
+        );
+    }
 };
-
 export default StopwatchCollection;

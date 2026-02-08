@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom'; // Removed as back button is removed
 import { useData } from './DataContext';
 import './HealthcareCollection.css';
 import DateFilter from './DateFilter';
-import IllustratedCalendarIcon from './IllustratedCalendarIcon';
+// import IllustratedCalendarIcon from './IllustratedCalendarIcon'; // Removed as calendar icon is removed
 
 const getDatesInRange = (startDate, endDate) => {
     const dates = [];
@@ -26,8 +26,13 @@ const getLastSevenDays = () => {
     return dates.reverse();
 };
 
+const formatDate = (dateString) => {
+    const [year, month, day] = dateString.split('-');
+    return `${month}/${day}`;
+};
+
 const HealthcareCollection = () => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate(); // Removed
     const { mealsByDate, pedometerDataByDate } = useData();
 
     const [sortOrder, setSortOrder] = useState('desc');
@@ -89,21 +94,14 @@ const HealthcareCollection = () => {
                     onCancel={() => setIsFilterVisible(false)}
                 />
             )}
-            <header className="hc-header">
-                <div className="hc-header-left">
-                    <span className="hc-back-icon" onClick={() => navigate('/home')}>&larr;</span>
-                    <h1 className="hc-title">헬스케어 모아보기</h1>
+            {/* Removed header and back button and title */}
+            {/* Removed hc-header-right filters, only keep sort order if needed within the collection content */}
+            <div className="hc-filters" style={{display: 'flex', justifyContent: 'flex-end', marginBottom: '10px'}}>
+                <div className="filter-toggle">
+                    <button className={sortOrder === 'desc' ? 'active' : ''} onClick={() => setSortOrder('desc')}>높은 순</button>
+                    <button className={sortOrder === 'asc' ? 'active' : ''} onClick={() => setSortOrder('asc')}>낮은 순</button>
                 </div>
-                <div className="hc-header-right">
-                    <div className="hc-filters">
-                        <div className="filter-toggle">
-                            <button className={sortOrder === 'desc' ? 'active' : ''} onClick={() => setSortOrder('desc')}>높은 순</button>
-                            <button className={sortOrder === 'asc' ? 'active' : ''} onClick={() => setSortOrder('asc')}>낮은 순</button>
-                        </div>
-                    </div>
-                    <IllustratedCalendarIcon onClick={() => setIsFilterVisible(true)} />
-                </div>
-            </header>
+            </div>
             
             {filterRange.startDate && filterRange.endDate ? (
                 <div className="filter-status">
@@ -120,24 +118,33 @@ const HealthcareCollection = () => {
                 ) : (
                     sortedData.map(day => (
                         <div key={day.date} className="healthcare-daily-card">
-                            <div className="daily-card-header">
-                                <h3>{day.date}</h3>
+                            <span className="card-date-display">{formatDate(day.date)}</span>
+                            <div className="calories-section">
+                                <span className="calories-label">총 섭취 칼로리</span>
+                                <div className="calories-value-unit">
+                                    <span className="calories-value">{day.totalConsumedCalories}</span>
+                                    <span className="calories-unit">kcal</span>
+                                </div>
                             </div>
-                            
-                            <div className="daily-card-metrics">
-                                <div className="metric-item">
-                                    <span className="metric-item-label">체중</span>
-                                    <span className="metric-item-value">{day.weight}</span>
-                                    <span className="metric-item-unit">kg</span>
+                            <div className="weight-section">
+                                <span className="weight-label">체중</span>
+                                <div className="weight-value-unit">
+                                    <span className="weight-value">{day.weight}</span>
+                                    <span className="weight-unit">kg</span>
                                 </div>
-                                <div className="metric-item">
-                                    <span className="metric-item-label">총 섭취 칼로리</span>
-                                    <span className="metric-item-value">{day.totalConsumedCalories}</span>
-                                    <span className="metric-item-unit">kcal</span>
+                            </div>
+                            <div className="macros-section">
+                                <div className="macro-item">
+                                    <span className="macro-label">탄수화물</span>
+                                    <span className="macro-value">{day.carbs}g</span>
                                 </div>
-                                <div className="metric-item metric-item-macros">
-                                    <span className="metric-item-label">탄/단/지</span>
-                                    <span className="metric-item-value-small">{day.carbs}g / {day.protein}g / {day.fat}g</span>
+                                <div className="macro-item">
+                                    <span className="macro-label">단백질</span>
+                                    <span className="macro-value">{day.protein}g</span>
+                                </div>
+                                <div className="macro-item">
+                                    <span className="macro-label">지방</span>
+                                    <span className="macro-value">{day.fat}g</span>
                                 </div>
                             </div>
                         </div>

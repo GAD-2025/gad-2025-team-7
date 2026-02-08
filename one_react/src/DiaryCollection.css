@@ -2,15 +2,17 @@
 
 .diary-collection-container {
     width: 100%;
-    padding: 20px;
-    background-color: #ffffff; /* Light pastel background */
-    border-radius: 20px; /* 곡률 20px */
-    border: 1px solid #E1E7EF; /* 테두리 굵기 1, 색상 E1E7EF */
-    min-height: 100vh; /* Ensure it takes full height */
+    /* background-color: #ffffff; */ /* Light pastel background - This might be handled by CollectionView's boxes */
+    /* border-radius: 20px; */ /* 곡률 20px - This might be handled by CollectionView's boxes */
+    /* border: 1px solid #E1E7EF; */ /* 테두리 굵기 1, 색상 E1E7EF - This might be handled by CollectionView's boxes */
+    padding: 0px; /* Adjust padding as content will be inside CollectionView boxes */
+    /* min-height: 100vh; */ /* Ensure it takes full height - removed as it's within CollectionView */
     box-sizing: border-box;
     font-family: 'Pretendard', sans-serif;
 }
 
+/* Removed dc-header styles */
+/*
 .dc-header {
     display: flex;
     justify-content: space-between;
@@ -36,12 +38,14 @@
     font-weight: 700;
     color: #383838;
 }
+*/
 
 .diary-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Responsive grid for cards */
     gap: 15px;
     padding-bottom: 20px;
+    padding-top: 10px; /* Added padding-top to separate from filter button */
 }
 
 @keyframes fadeIn {
@@ -114,7 +118,7 @@
     color: #9a9a9a; /* Softer grey */
     background-color: #ffffff; /* 하얀박스 */
     border-radius: 16px; /* 동글동글 */
-    margin: 20px; /* Add margin to float it */
+    margin: 20px 0; /* Adjusted margin */
     padding: 40px 20px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
@@ -129,7 +133,7 @@
     background-color: #FFE1E3; /* Pastel pink */
     padding: 8px 15px;
     border-radius: 20px; /* 동글동글 */
-    margin: -10px auto 15px;
+    margin: 10px auto 15px; /* Adjusted margin-top after header removal */
     display: inline-block;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }

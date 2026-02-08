@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './DiaryCollection.css';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom'; // Removed as back button is removed
 import DateFilter from './DateFilter'; // Import the new component
 import { useProfile } from './ProfileContext'; // Import useProfile
-import IllustratedCalendarIcon from './IllustratedCalendarIcon';
+// import IllustratedCalendarIcon from './IllustratedCalendarIcon'; // Removed as calendar icon is removed
 
 const DiaryCollection = () => {
     const [allDiaries, setAllDiaries] = useState([]);
     const [isFilterVisible, setIsFilterVisible] = useState(false);
     const [filterRange, setFilterRange] = useState({ startDate: '', endDate: '' });
-    const navigate = useNavigate();
+    // const navigate = useNavigate(); // Removed
     const { profile } = useProfile(); // Get profile from context
 
     useEffect(() => {
@@ -63,12 +63,12 @@ const DiaryCollection = () => {
 
 
     const handleCardClick = (id) => {
-        navigate(`/diary-view/id/${id}`);
+        // navigate(`/diary-view/id/${id}`); // Navigation will be handled by CollectionView or parent
     };
 
-    const handleGoBack = () => {
-        navigate(-1);
-    };
+    // const handleGoBack = () => { // Removed
+    //     navigate(-1);
+    // };
 
     const handleApplyFilter = (range) => {
         setFilterRange(range);
@@ -108,13 +108,12 @@ const DiaryCollection = () => {
                     onCancel={() => setIsFilterVisible(false)}
                 />
             )}
-            <header className="dc-header">
-                <div className="dc-header-left">
-                    <span className="dc-back-icon" onClick={handleGoBack}>←</span>
-                    <h1 className="dc-title">다이어리 모아보기</h1>
+            {/* Removed header, back button, title, and calendar icon */}
+            <div style={{display: 'flex', justifyContent: 'flex-end', marginBottom: '10px'}}>
+                <div className="filter-toggle"> {/* Assuming filter-toggle still exists and is needed */}
+                    <button onClick={() => setIsFilterVisible(true)}>날짜 필터</button>
                 </div>
-                <IllustratedCalendarIcon onClick={() => setIsFilterVisible(true)} />
-            </header>
+            </div>
 
             {filterRange.startDate && filterRange.endDate && (
                 <div className="filter-status">

@@ -3,45 +3,11 @@
 /* General container and header styling */
 .healthcare-container {
     width: 100%;
-    background-color: #ffffff; /* 흰색 */
-    border-radius: 20px; /* 곡률 20px */
-    border: 1px solid #E1E7EF; /* 테두리 굵기 1, 색상 E1E7EF */
-    padding: 20px;
+    /* background-color: #ffffff; */ /* 흰색 - This might be handled by CollectionView's boxes */
+    /* border-radius: 20px; */ /* 곡률 20px - This might be handled by CollectionView's boxes */
+    /* border: 1px solid #E1E7EF; */ /* 테두리 굵기 1, 색상 E1E7EF - This might be handled by CollectionView's boxes */
+    padding: 0px; /* Adjust padding as content will be inside CollectionView boxes */
     font-family: 'Pretendard', sans-serif;
-}
-
-/* New Header Styles */
-.hc-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px; /* Reduced margin */
-    padding: 10px 0;
-}
-
-.hc-header-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.hc-back-icon {
-    font-size: 30px;
-    cursor: pointer;
-    color: #A5A5A5;
-}
-
-.hc-title {
-    font-size: 22px;
-    font-weight: 700;
-    color: #383838;
-}
-
-/* Grid for weekly summary cards */
-.hc-header-right {
-    display: flex;
-    align-items: center;
-    gap: 15px;
 }
 
 .hc-filters .filter-toggle {
@@ -76,7 +42,7 @@
     background-color: #FFE1E3;
     padding: 8px 15px;
     border-radius: 20px;
-    margin: -10px auto 15px;
+    margin: 10px auto 15px; /* Adjusted margin-top after header removal */
     display: inline-block;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
@@ -103,151 +69,146 @@
 /* Grid for weekly summary cards */
 .weekly-summary-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Responsive grid */
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(261px, 1fr)); /* Adjusted for new card width */
+    gap: 39px 19px; /* Row gap 39px, Column gap 19px */
+    margin-top: 10px; /* Added margin-top */
 }
 
-/* Individual daily info card - "하얀박스", "동글동글" */
+/* Individual daily info card - New Design */
 .healthcare-daily-card {
-    background-color: #ffffff;
-    border-radius: 16px; /* 동글동글 */
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    transition: transform 0.2s;
+    width: 261px;
+    height: 147px;
+    border-radius: 20px;
+    border: 1px solid #E1E7EF;
+    background-color: #FBFCFD;
+    box-sizing: border-box;
+    padding: 15px; /* Adjusted padding */
+    display: grid; /* Use grid for layout */
+    grid-template-columns: repeat(2, 1fr); /* Two columns for layout */
+    grid-template-rows: auto auto 1fr; /* Rows for date, calories/weight, macros */
+    gap: 0px 0px; /* Adjust gap as needed for precise positioning */
+    position: relative; /* For absolute positioning if needed */
 }
 
-.healthcare-daily-card:hover {
-    transform: translateY(-3px);
-}
-
-.daily-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px dashed #E9ECEF;
-    padding-bottom: 10px;
-}
-
-.daily-card-header h3 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 600;
-    color: #383838;
-}
-
-.daily-card-metrics {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Two columns for metrics */
-    gap: 10px;
-}
-
-.metric-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #f8f9fa; /* Pastel background */
-    border-radius: 12px; /* 동글동글 */
-    padding: 10px;
-    gap: 5px;
-    text-align: center;
-}
-
-.metric-item-label {
-    font-size: 13px;
-    color: #6E7279; /* Soft grey */
-    font-weight: 500;
-}
-
-.metric-item-value {
-    font-size: 18px;
-    font-weight: 700;
-    color: #FF7581; /* Accent color, cute pink */
-}
-
-.metric-item-unit {
-    font-size: 12px;
-    color: #6E7279;
-}
-
-.metric-item-macros {
-    grid-column: span 2;
-}
-
-.metric-item-value-small {
-    font-size: 16px;
-    font-weight: 700;
+.card-date-display {
     color: #FF7581;
+    font-size: 15px;
+    font-weight: 500; /* Added font-weight */
+    grid-column: 1 / -1; /* Span across both columns */
+    padding-left: 5px; /* Adjust as needed for positioning */
 }
 
-/* Bar Chart Styling - More cute and pastel */
-.daily-chart-container {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-around;
-    height: 120px;
-    padding-top: 10px;
-    border-top: 1px dashed #E9ECEF;
-    margin-top: 15px;
-}
-
-.chart-bar-wrapper {
+.calories-section {
+    grid-column: 1; /* First column */
+    padding-top: 14px; /* 14px below date, adjusted for grid */
+    padding-left: 5px; /* Align with date */
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    width: 25%;
-    position: relative;
-    height: 100%;
 }
 
-.chart-bar {
-    width: 80%; /* Slimmer bars */
-    border-radius: 8px 8px 0 0; /* 동글동글 top */
+.calories-label {
+    color: #7E7E7E;
+    font-size: 11px;
+    margin-bottom: 2px; /* Small space between label and value */
+}
+
+.calories-value-unit {
     display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    color: #fff;
-    font-size: 0.75em;
-    font-weight: 600;
-    transition: height 0.3s ease-out;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Subtle shadow */
+    align-items: flex-end; /* Align baseline of value and unit */
+    gap: 2px; /* Gap between value and unit */
 }
 
-/* Pastel Tones for Bars */
-.chart-bar-steps {
-    background-color: #B3E0FF; /* Pastel Blue */
+.calories-value {
+    color: #4B4B4B;
+    font-size: 25px;
+    font-weight: bold;
 }
 
-.chart-bar-consumed {
-    background-color: #FFC0CB; /* Pastel Pink */
+.calories-unit {
+    color: #7E7E7E;
+    font-size: 11px;
 }
 
-.chart-bar-burned {
-    background-color: #C1FFD7; /* Pastel Green */
-}
-
-.bar-value {
-    font-size: 0.8em;
-    font-weight: 500;
-    color: #6E7279; /* Soft grey */
-    margin-top: 5px;
-}
-
-.chart-labels {
+.weight-section {
+    grid-column: 2; /* Second column */
+    padding-top: 14px; /* Same Y as calories-section */
+    /* Removed margin-left: auto; */
+    padding-right: 5px; /* Align with other content */
     display: flex;
-    justify-content: space-around;
-    font-size: 0.8em;
-    margin-top: 10px;
-    color: #6E7279;
-    font-weight: 500;
+    flex-direction: column;
+    transform: translateX(-2.5px); /* Move another 4px to the right */
 }
 
+.weight-label {
+    color: #7E7E7E;
+    font-size: 11px;
+    margin-bottom: 2px; /* Small space between label and value */
+}
+
+.weight-value-unit {
+    display: flex;
+    align-items: flex-end; /* Align baseline of value and unit */
+    gap: 2px; /* Gap between value and unit */
+}
+
+.weight-value {
+    color: #4B4B4B;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.weight-unit {
+    color: #7E7E7E;
+    font-size: 11px;
+}
+
+.macros-section {
+    grid-column: 1 / -1; /* Span across both columns */
+    margin-top: 23px; /* 23px below calories value (adjust for grid layout) */
+    display: flex;
+    gap: 20px; /* Distribute items with 20px gap */
+    padding: 0 5px; /* Align with other content */
+    flex-wrap: nowrap; /* Prevent wrapping */
+}
+
+.macro-item {
+    display: flex;
+    align-items: flex-end; /* Align baseline */
+    gap: 3px; /* Gap between label and value, adjusted to 3px */
+}
+
+.macro-label {
+    color: #7D8084;
+    font-size: 10px;
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+.macro-value {
+    color: #6A6A6A;
+    font-size: 14px;
+    font-weight: 500; /* Added font-weight */
+}
+
+
+/* Removed old styles that are no longer needed */
+.daily-card-header,
+.daily-card-metrics,
+.metric-item,
+.metric-item-macros,
+.metric-item-label,
+.metric-item-value,
+.metric-item-value-small,
+.metric-item-unit,
+.daily-chart-container,
+.chart-bar-wrapper,
+.chart-bar,
+.chart-bar-steps,
+.chart-bar-consumed,
+.chart-bar-burned,
+.bar-value,
+.chart-labels,
 .chart-label-item {
-    width: 25%;
-    text-align: center;
+    display: none; /* Hide old elements */
 }
 
 .empty-weekly-data {

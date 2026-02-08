@@ -2,16 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom';
 import Home from './Home';
 import Login from './Login';
-import DiaryCollection from './DiaryCollection';
-import StopwatchCollection from './StopwatchCollection';
-import HealthcareCollection from './HealthcareCollection';
+// Removed direct imports for DiaryCollection, StopwatchCollection, HealthcareCollection
 import MainLayout from './MainLayout';
 import Profile from './Profile';
 import Diary from './Diary'; // Import Diary component
 import DiaryView from './DiaryView'; // Import DiaryView component
 import { useProfile } from './ProfileContext'; // Import useProfile
-import SlideOutNav from './SlideOutNav'; // Import SlideOutNav
 import Template from './Template'; // Import Template component
+import CollectionView from './CollectionView'; // Import new CollectionView component
 
 import { DataProvider } from './DataContext'; // Import DataProvider
 import './App.css'; // Ensure App.css is imported
@@ -22,7 +20,6 @@ const BASE_HEIGHT = 834; // New base height
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [scale, setScale] = useState(1); // Add scale state
-  const [isSlideOutNavOpen, setIsSlideOutNavOpen] = useState(false); // Moved here
   const [isTemplateNavOpen, setIsTemplateNavOpen] = useState(false);
 
   useEffect(() => {
@@ -100,14 +97,15 @@ function App() {
                 <Routes>
                   <Route path="/login" element={isAuthenticated ? <Navigate to="/home" /> : <Login onLogin={handleLogin} />} />
                   
-                  <Route element={isAuthenticated ? <DataProvider><MainLayout setIsSlideOutNavOpen={setIsSlideOutNavOpen} isSlideOutNavOpen={isSlideOutNavOpen} setIsTemplateNavOpen={setIsTemplateNavOpen} isTemplateNavOpen={isTemplateNavOpen} /></DataProvider> : <Navigate to="/login" />} >
+                  <Route element={isAuthenticated ? <DataProvider><MainLayout setIsTemplateNavOpen={setIsTemplateNavOpen} isTemplateNavOpen={isTemplateNavOpen} /></DataProvider> : <Navigate to="/login" />} >
                     <Route path="/home" element={<Home />} />
-                    <Route path="/diary-collection" element={<DiaryCollection />} />
+                    {/* All collection routes now point to CollectionView */}
+                    <Route path="/diary-collection" element={<CollectionView />} />
+                    <Route path="/stopwatch-collection" element={<CollectionView />} />
+                    <Route path="/healthcare-collection" element={<CollectionView />} />
                     <Route path="/diary" element={<DiaryWrapper />} />
                     <Route path="/diary/:date" element={<DiaryWrapper />} />
                     <Route path="/diary-view/id/:id" element={<DiaryViewWrapper />} />
-                    <Route path="/stopwatch-collection" element={<StopwatchCollection />} />
-                    <Route path="/healthcare-collection" element={<HealthcareCollection />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/template" element={<Template />} />
                   </Route>
