@@ -5,6 +5,8 @@ import StopwatchCollection from './StopwatchCollection';
 import DiaryCollection from './DiaryCollection';
 import MiniCalendar from './MiniCalendar'; // Import MiniCalendar
 import SortToggle from './SortToggle'; // Import SortToggle
+import { useData } from './DataContext'; // Import useData
+import MealSummaryDisplay from './MealSummaryDisplay'; // Import MealSummaryDisplay
 import './CollectionView.css'; // New CSS file for CollectionView
 
 const CollectionButton = ({ label, isActive, onClick }) => {
@@ -58,6 +60,13 @@ const formatDateRange = (startDate, endDate) => {
     }
 };
 
+const formatTodayMMDD = () => {
+    const today = new Date();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${month}/${day}`;
+};
+
 const CollectionView = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -67,6 +76,7 @@ const CollectionView = () => {
     const [selectedStartDate, setSelectedStartDate] = useState(getSevenDaysAgo());
     const [selectedEndDate, setSelectedEndDate] = useState(getToday());
     const [tempSelectedDate, setTempSelectedDate] = useState(null); // For handling single date selection in MiniCalendar
+    const { mealsByDate } = useData();
 
 
     useEffect(() => {
@@ -155,10 +165,23 @@ const CollectionView = () => {
                     </div>
                     <div className="collection-right-box-bottom">
                         <div className="collection-date-display">
-                            {formatDateRange(selectedStartDate, selectedEndDate)}
+                            {selectedCollection === 'diary' ? (
+                                formatTodayMMDD()
+                            ) : (
+                                formatDateRange(selectedStartDate, selectedEndDate)
+                            )}
                         </div>
-                        {/* Content for the bottom right box */}
-                        {selectedCollection === 'stopwatch' && <StopwatchCollection displayMode="summary" sortOrder={sortOrder} setSortOrder={setSortOrder} selectedStartDate={selectedStartDate} selectedEndDate={selectedEndDate} />}
+                        {selectedCollection === 'healthcare' && (
+                            <MealSummaryDisplay
+                                mealsByDate={mealsByDate}
+                                selectedStartDate={selectedStartDate}
+                                selectedEndDate={selectedEndDate}
+                                sortOrder={sortOrder}
+                            />
+                        )}
+                        {selectedCollection === 'stopwatch' && (
+                            <StopwatchCollection displayMode="summary" sortOrder={sortOrder} setSortOrder={setSortOrder} selectedStartDate={selectedStartDate} selectedEndDate={selectedEndDate} />
+                        )}
                     </div>
                 </div>
             </div>
