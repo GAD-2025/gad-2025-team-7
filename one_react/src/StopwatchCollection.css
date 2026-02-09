@@ -152,6 +152,7 @@
     width: 100%;
     overflow-y: auto; /* Enable scrolling if content overflows */
     padding-right: 5px; /* Adjust padding for grid scrollbar */
+    margin-top: 39px;
 }
 
 .stopwatch-daily-card {
