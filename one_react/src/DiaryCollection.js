@@ -5,7 +5,7 @@ import './DiaryCollection.css';
 import { useProfile } from './ProfileContext'; // Import useProfile
 // import IllustratedCalendarIcon from './IllustratedCalendarIcon'; // Removed as calendar icon is removed
 
-const DiaryCollection = () => {
+const DiaryCollection = ({ selectedStartDate, selectedEndDate }) => {
     const [allDiaries, setAllDiaries] = useState([]);
     // const navigate = useNavigate(); // Removed
     const { profile } = useProfile(); // Get profile from context
@@ -24,7 +24,7 @@ const DiaryCollection = () => {
                 const formattedData = data.map(diary => ({
                     ...diary,
                     navDate: new Date(diary.date).toISOString().split('T')[0],
-                    displayDate: new Date(diary.date).toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\. /g, '/').replace('.', ''),
+                    displayDate: `${String(new Date(diary.date).getMonth() + 1).padStart(2, '0')}/${String(new Date(diary.date).getDate()).padStart(2, '0')}`,
                     image: diary.canvasImagePath ? `${process.env.REACT_APP_API_URL}${diary.canvasImagePath}` : null,
                 }));
                 setAllDiaries(formattedData);
@@ -47,8 +47,14 @@ const DiaryCollection = () => {
     }, [profile.userId]); // Re-run effect when userId changes
 
     const displayedDiaries = useMemo(() => {
-        return allDiaries;
-    }, [allDiaries]);
+        return allDiaries.filter(diary => {
+            const diaryDate = new Date(diary.navDate);
+            const start = new Date(selectedStartDate);
+            const end = new Date(selectedEndDate);
+
+            return diaryDate >= start && diaryDate <= end;
+        });
+    }, [allDiaries, selectedStartDate, selectedEndDate]);
 
 
     const handleCardClick = (id) => {
@@ -95,9 +101,10 @@ const DiaryCollection = () => {
                     {displayedDiaries.map(renderDiaryCard)}
                 </div>
             ) : (
-                <div className="empty-state">
-                    <div className="empty-illustration">📝</div>
-                    <p>해당 기간에 작성된 다이어리가 없어요.</p>
+                <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                    <div className="empty-data-card">
+                        저장된 다이어리 데이터가 없습니다.
+                    </div>
                 </div>
             )}
         </div>

@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 // import { useNavigate } from 'react-router-dom'; // Removed as back button is removed
 import { useData } from './DataContext';
 import './HealthcareCollection.css';
-import DateFilter from './DateFilter';
+
 // import IllustratedCalendarIcon from './IllustratedCalendarIcon'; // Removed as calendar icon is removed
 
 const getDatesInRange = (startDate, endDate) => {
@@ -31,22 +31,23 @@ const formatDate = (dateString) => {
     return `${month}/${day}`;
 };
 
-const HealthcareCollection = ({ sortOrder, setSortOrder }) => {
+const HealthcareCollection = ({ sortOrder, setSortOrder, selectedStartDate, selectedEndDate }) => {
     // const navigate = useNavigate(); // Removed
     const { mealsByDate, pedometerDataByDate } = useData();
 
-    const [isFilterVisible, setIsFilterVisible] = useState(false);
-    const [filterRange, setFilterRange] = useState({ startDate: '', endDate: '' });
+
 
     const processedData = useMemo(() => {
-        const datesToProcess = filterRange.startDate && filterRange.endDate
-            ? getDatesInRange(filterRange.startDate, filterRange.endDate)
-            : getLastSevenDays();
+        // Ensure dates are correctly formatted as YYYY-MM-DD for comparison
+        const start = selectedStartDate;
+        const end = selectedEndDate;
 
-        return datesToProcess.map(date => {
+        const datesToProcess = getDatesInRange(start, end);
+
+        const dataPerDay = datesToProcess.map(date => {
             const weight = pedometerDataByDate[date]?.weight || 0;
             const mealCards = mealsByDate[date] || [];
-            
+
             const macros = { calories: 0, carbs: 0, protein: 0, fat: 0 };
             mealCards.forEach(card => {
                 card.foods.forEach(food => {
@@ -56,7 +57,7 @@ const HealthcareCollection = ({ sortOrder, setSortOrder }) => {
                     macros.fat += (food.fat || 0) * (food.qty || 1);
                 });
             });
-            
+
             return {
                 date: date,
                 weight: weight,
@@ -66,7 +67,13 @@ const HealthcareCollection = ({ sortOrder, setSortOrder }) => {
                 fat: Math.round(macros.fat)
             };
         });
-    }, [mealsByDate, pedometerDataByDate, filterRange]);
+
+        // Filter out days that have no relevant data
+        return dataPerDay.filter(day => {
+            return day.weight > 0 || day.totalConsumedCalories > 0 || day.carbs > 0 || day.protein > 0 || day.fat > 0;
+        });
+
+    }, [mealsByDate, pedometerDataByDate, selectedStartDate, selectedEndDate]);
 
     const sortedData = useMemo(() => {
         return [...processedData].sort((a, b) => {
@@ -76,41 +83,26 @@ const HealthcareCollection = ({ sortOrder, setSortOrder }) => {
         });
     }, [processedData, sortOrder]);
 
-    const handleApplyFilter = (range) => {
-        setFilterRange(range);
-        setIsFilterVisible(false);
-    };
 
-    const handleClearFilter = () => {
-        setFilterRange({ startDate: '', endDate: '' });
-    };
 
     return (
         <div className="healthcare-container">
-            {isFilterVisible && (
-                <DateFilter 
-                    onApply={handleApplyFilter}
-                    onCancel={() => setIsFilterVisible(false)}
-                />
-            )}
+
             {/* Removed header and back button and title */}
             {/* Removed hc-header-right filters, only keep sort order if needed within the collection content */}
 
             
-            {filterRange.startDate && filterRange.endDate ? (
-                <div className="filter-status">
-                    <p>
-                        {`${filterRange.startDate} ~ ${filterRange.endDate}`}
-                        <button onClick={handleClearFilter}>×</button>
-                    </p>
-                </div>
-            ) : null}
 
-            <div className="weekly-summary-grid">
-                {sortedData.length === 0 ? (
-                    <p className="empty-weekly-data">표시할 주간 기록이 없습니다.</p>
-                ) : (
-                    sortedData.map(day => (
+
+            {sortedData.length === 0 ? (
+                <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                    <div className="empty-data-card">
+                        저장된 헬스케어 데이터가 없습니다.
+                    </div>
+                </div>
+            ) : (
+                <div className="weekly-summary-grid">
+                    {sortedData.map(day => (
                         <div key={day.date} className="healthcare-daily-card">
                             <span className="card-date-display">{formatDate(day.date)}</span>
                             <div className="calories-section">
@@ -142,9 +134,9 @@ const HealthcareCollection = ({ sortOrder, setSortOrder }) => {
                                 </div>
                             </div>
                         </div>
-                    ))
-                )}
-            </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

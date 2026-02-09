@@ -1,9 +1,18 @@
 import React, { useState, useEffect, useMemo } from 'react';
 // import { useNavigate } from 'react-router-dom'; // Removed as back button is removed
 import './StopwatchCollection.css'; // Import new CSS
-import DateFilter from './DateFilter'; // Reuse DateFilter component
-// import IllustratedCalendarIcon from './IllustratedCalendarIcon'; // Removed as calendar icon is removed
 import { BASE_CATEGORY_COLORS_MAP, PREDEFINED_COLORS } from './constants/categoryColors';
+
+const getDatesInRange = (startDate, endDate) => {
+    const dates = [];
+    let currentDate = new Date(startDate);
+    const end = new Date(endDate);
+    while (currentDate <= end) {
+        dates.push(currentDate.toISOString().split('T')[0]);
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return dates;
+};
 
 // Helper to format seconds to HH:MM:SS
 const formatTime = (totalSeconds) => {
@@ -18,10 +27,8 @@ const formatTime = (totalSeconds) => {
         .join(':');
 };
 
-const StopwatchCollection = ({ displayMode = 'summary', sortOrder, setSortOrder }) => {
+const StopwatchCollection = ({ displayMode = 'summary', sortOrder, setSortOrder, selectedStartDate, selectedEndDate }) => {
     const [allRecords, setAllRecords] = useState([]);
-    const [isFilterVisible, setIsFilterVisible] = useState(false);
-    const [filterRange, setFilterRange] = useState({ startDate: '', endDate: '' });
     const userId = localStorage.getItem('userId');
     // const navigate = useNavigate(); // Removed
 
@@ -45,23 +52,27 @@ const StopwatchCollection = ({ displayMode = 'summary', sortOrder, setSortOrder 
     // Group records by date for daily view
     const recordsGroupedByDate = useMemo(() => {
         const grouped = {};
+        const datesInSelectedRange = getDatesInRange(selectedStartDate, selectedEndDate);
+
         allRecords.forEach(record => {
-            const recordDate = new Date(record.date).toISOString().split('T')[0]; // Get YYYY-MM-DD
-            if (!grouped[recordDate]) {
-                grouped[recordDate] = [];
+            const recordDate = new Date(record.date).toISOString().split('T')[0];
+            // Only include records within the selected date range
+            if (datesInSelectedRange.includes(recordDate)) {
+                if (!grouped[recordDate]) {
+                    grouped[recordDate] = [];
+                }
+                grouped[recordDate].push(record);
             }
-            grouped[recordDate].push(record);
         });
         return grouped;
-    }, [allRecords]);
+    }, [allRecords, selectedStartDate, selectedEndDate]);
 
 
     const aggregatedData = useMemo(() => {
+        // Filter records by the selected date range
         const filteredRecords = allRecords.filter(record => {
-            if (!filterRange.startDate || !filterRange.endDate) return true;
-            // Perform string comparison to avoid timezone issues with `new Date()`
             const recordDateStr = record.date.split('T')[0];
-            return recordDateStr >= filterRange.startDate && recordDateStr <= filterRange.endDate;
+            return recordDateStr >= selectedStartDate && recordDateStr <= selectedEndDate;
         });
 
         const dataByCategory = {};
@@ -87,7 +98,7 @@ const StopwatchCollection = ({ displayMode = 'summary', sortOrder, setSortOrder 
             totalTime: Math.floor(totalTimeMs / 1000), // Convert ms to seconds
             color: BASE_CATEGORY_COLORS_MAP[category] || PREDEFINED_COLORS[index % PREDEFINED_COLORS.length]
         }));
-    }, [allRecords, filterRange]);
+    }, [allRecords, selectedStartDate, selectedEndDate]);
 
     const sortedData = useMemo(() => {
         return [...aggregatedData].sort((a, b) => {
@@ -100,10 +111,7 @@ const StopwatchCollection = ({ displayMode = 'summary', sortOrder, setSortOrder 
     }, [sortedData]);
 
 
-    const handleApplyFilter = (range) => {
-        setFilterRange(range);
-        setIsFilterVisible(false);
-    };
+
 
     // const handleGoBack = () => { // Removed
     //     navigate(-1); // Go back to the previous page
@@ -111,73 +119,81 @@ const StopwatchCollection = ({ displayMode = 'summary', sortOrder, setSortOrder 
 
     if (displayMode === 'daily') {
         const sortedDates = Object.keys(recordsGroupedByDate).sort((a, b) => new Date(b) - new Date(a));
-        return (
+        // Filter out dates that have no actual completed tasks
+        const datesWithData = sortedDates.filter(dateKey => {
+            const dailyAggregatedTasks = {};
+            recordsGroupedByDate[dateKey].forEach(record => {
+                record.tasks_data.forEach(task => {
+                    if (task.isComplete && task.category) {
+                        dailyAggregatedTasks[task.category] = (dailyAggregatedTasks[task.category] || 0) + task.elapsedTime;
+                    }
+                });
+            });
+            return Object.keys(dailyAggregatedTasks).length > 0;
+        });
+
+        return datesWithData.length > 0 ? (
             <div className="stopwatch-daily-cards-container">
-                {sortedDates.length > 0 ? (
-                    sortedDates.map(dateKey => {
-                        const date = new Date(dateKey);
-                        const formattedDate = `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
+                {datesWithData.map(dateKey => {
+                    const date = new Date(dateKey);
+                    const formattedDate = `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
 
-                        // Aggregate tasks for the current day by category
-                        const dailyAggregatedTasks = {};
-                        recordsGroupedByDate[dateKey].forEach(record => {
-                            record.tasks_data.forEach(task => {
-                                if (task.isComplete && task.category) {
-                                    if (!dailyAggregatedTasks[task.category]) {
-                                        dailyAggregatedTasks[task.category] = 0;
-                                    }
-                                    dailyAggregatedTasks[task.category] += task.elapsedTime;
+                    // Aggregate tasks for the current day by category
+                    const dailyAggregatedTasks = {};
+                    recordsGroupedByDate[dateKey].forEach(record => {
+                        record.tasks_data.forEach(task => {
+                            if (task.isComplete && task.category) {
+                                if (!dailyAggregatedTasks[task.category]) {
+                                    dailyAggregatedTasks[task.category] = 0;
                                 }
-                            });
+                                dailyAggregatedTasks[task.category] += task.elapsedTime;
+                            }
                         });
+                    });
 
-                        const dailyCategories = Object.entries(dailyAggregatedTasks).map(([category, totalTimeMs], index) => ({
-                            category,
-                            totalTime: Math.floor(totalTimeMs / 1000),
-                            color: BASE_CATEGORY_COLORS_MAP[category] || PREDEFINED_COLORS[index % PREDEFINED_COLORS.length]
-                        }));
+                    const dailyCategories = Object.entries(dailyAggregatedTasks).map(([category, totalTimeMs], index) => ({
+                        category,
+                        totalTime: Math.floor(totalTimeMs / 1000),
+                        color: BASE_CATEGORY_COLORS_MAP[category] || PREDEFINED_COLORS[index % PREDEFINED_COLORS.length]
+                    }));
 
-                        return (
-                                                        <div key={dateKey} className="stopwatch-daily-card">
-                                                            <span className="card-date-display">{formattedDate}</span>
-                                                            <div className="stopwatch-card-categories-content">
-                                                                {dailyCategories.map((item, index) => {
-                                                                    const categoryDisplayName = item.category.length > 5 ? item.category.substring(0, 5) + '...' : item.category;
-                                                                    const isLongCategory = item.category.length >= 4; // For layout rule
-                            
-                                                                    return (
-                                                                        <div key={index} className={`stopwatch-daily-category-item ${isLongCategory ? 'long-category' : ''}`}>
-                                                                            <div className="stopwatch-daily-category-chip"
-                                                                                 style={{
-                                                                                     backgroundColor: `rgba(${parseInt(item.color.slice(1,3), 16)}, ${parseInt(item.color.slice(3,5), 16)}, ${parseInt(item.color.slice(5,7), 16)}, 0.5)`,
-                                                                                     border: `1px solid ${item.color}`
-                                                                                 }}>
-                                                                                {categoryDisplayName}
-                                                                            </div>
-                                                                            <div className="stopwatch-daily-category-time">{formatTime(item.totalTime)}</div>
-                                                                        </div>
-                                                                    );
-                                                                })}
-                                                            </div>
-                                                        </div>                        );
-                    })
-                ) : (
-                    <div className="sc-empty-state">
-                        <div className="icon">⏱️</div>
-                        <p>기록된 스톱워치 데이터가 없어요.</p>
-                    </div>
-                )}
+                    return (
+                        <div key={dateKey} className="stopwatch-daily-card">
+                            <span className="card-date-display">{formattedDate}</span>
+                            <div className="stopwatch-card-categories-content">
+                                {dailyCategories.map((item, index) => {
+                                    const categoryDisplayName = item.category.length > 5 ? item.category.substring(0, 5) + '...' : item.category;
+                                    const isLongCategory = item.category.length >= 4; // For layout rule
+
+                                    return (
+                                        <div key={index} className={`stopwatch-daily-category-item ${isLongCategory ? 'long-category' : ''}`}>
+                                            <div className="stopwatch-daily-category-chip"
+                                                 style={{
+                                                     backgroundColor: `rgba(${parseInt(item.color.slice(1,3), 16)}, ${parseInt(item.color.slice(3,5), 16)}, ${parseInt(item.color.slice(5,7), 16)}, 0.5)`,
+                                                     border: `1px solid ${item.color}`
+                                                 }}>
+                                                {categoryDisplayName}
+                                            </div>
+                                            <div className="stopwatch-daily-category-time">{formatTime(item.totalTime)}</div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        ) : (
+            <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                <div className="empty-data-card">
+                    저장된 스톱워치 데이터가 없습니다.
+                </div>
             </div>
         );
     } else { // displayMode === 'summary'
         return (
             <div className="stopwatch-collection-container">
-                {isFilterVisible && (
-                    <DateFilter
-                        onApply={handleApplyFilter}
-                        onCancel={() => setIsFilterVisible(false)}
-                    />
-                )}
+
 
 
                 {sortedData.length > 0 ? (
@@ -207,9 +223,10 @@ const StopwatchCollection = ({ displayMode = 'summary', sortOrder, setSortOrder 
                         ))}
                     </div>
                 ) : (
-                    <div className="sc-empty-state">
-                        <div className="icon">⏱️</div>
-                        <p>기록된 스톱워치 데이터가 없어요.</p>
+                    <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                        <div className="empty-data-card">
+                            저장된 스톱워치 데이터가 없습니다.
+                        </div>
                     </div>
                 )}
             </div>

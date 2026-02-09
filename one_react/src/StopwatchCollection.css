@@ -6,6 +6,10 @@
     box-sizing: border-box; /* Include padding in the element's total width and height */
     font-family: 'Pretendard', sans-serif;
     overflow-y: auto; /* Enable scrolling for the summary view if content overflows */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Removed header styles */
@@ -153,6 +157,7 @@
     overflow-y: auto; /* Enable scrolling if content overflows */
     padding-right: 5px; /* Adjust padding for grid scrollbar */
     margin-top: 39px;
+    justify-content: center;
 }
 
 .stopwatch-daily-card {
@@ -229,4 +234,20 @@
     color: #575757;
     margin-left: 2px;
     flex-shrink: 0;
+}
+
+/* Empty State Card Design */
+.empty-data-card {
+    width: 492px; /* Fixed width */
+    height: 147px; /* Fixed height */
+    border-radius: 20px; /* Border radius */
+    background-color: #FBFCFD; /* Background color */
+    border: 1px solid #E1E7EF; /* Border */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px; /* Font size for message */
+    color: #A0A0A0; /* Color for message */
+    text-align: center;
+    margin: 39px auto 0; /* Align with card grid, center horizontally */
 }

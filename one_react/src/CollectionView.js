@@ -29,12 +29,26 @@ const CollectionButton = ({ label, isActive, onClick }) => {
     );
 };
 
+// Helper functions for date calculations
+const getToday = () => {
+    return new Date().toISOString().split('T')[0];
+};
+
+const getSevenDaysAgo = () => {
+    const d = new Date();
+    d.setDate(d.getDate() - 7);
+    return d.toISOString().split('T')[0];
+};
+
 const CollectionView = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [selectedCollection, setSelectedCollection] = useState('healthcare'); // Default to healthcare
     const [currentMonthYear, setCurrentMonthYear] = useState(new Date()); // State for MiniCalendar's displayed month/year
     const [sortOrder, setSortOrder] = useState('desc'); // 'desc' for high, 'asc' for low
+    const [selectedStartDate, setSelectedStartDate] = useState(getSevenDaysAgo());
+    const [selectedEndDate, setSelectedEndDate] = useState(getToday());
+    const [tempSelectedDate, setTempSelectedDate] = useState(null); // For handling single date selection in MiniCalendar
 
 
     useEffect(() => {
@@ -52,6 +66,32 @@ const CollectionView = () => {
         setSelectedCollection(collectionType);
         // Also update the URL to reflect the selected collection
         navigate(`/${collectionType}-collection`);
+    };
+
+    const handleDateSelect = (dateString) => {
+        if (tempSelectedDate) { // Second click (or more)
+            const start = new Date(tempSelectedDate);
+            const end = new Date(dateString);
+
+            if (start.toDateString() === end.toDateString()) { // Clicked the same date again
+                setSelectedStartDate(dateString);
+                setSelectedEndDate(dateString);
+                setTempSelectedDate(null); // Finalize single date selection
+            } else { // Different date, form a range
+                if (start > end) {
+                    setSelectedStartDate(dateString);
+                    setSelectedEndDate(tempSelectedDate);
+                } else {
+                    setSelectedStartDate(tempSelectedDate);
+                    setSelectedEndDate(dateString);
+                }
+                setTempSelectedDate(null); // Finalize range selection
+            }
+        } else { // First click
+            setSelectedStartDate(dateString);
+            setSelectedEndDate(dateString); // Default to single day range
+            setTempSelectedDate(dateString); // Store for potential second click
+        }
     };
 
     return (
@@ -81,22 +121,23 @@ const CollectionView = () => {
 
             <div className="collection-content-wrapper">
                 <div className="collection-left-box">
-                    {selectedCollection === 'healthcare' && <HealthcareCollection sortOrder={sortOrder} setSortOrder={setSortOrder} />}
-                    {selectedCollection === 'stopwatch' && <StopwatchCollection displayMode="daily" sortOrder={sortOrder} setSortOrder={setSortOrder} />}
-                    {selectedCollection === 'diary' && <DiaryCollection />}
+                    {selectedCollection === 'healthcare' && <HealthcareCollection sortOrder={sortOrder} setSortOrder={setSortOrder} selectedStartDate={selectedStartDate} selectedEndDate={selectedEndDate} />}
+                    {selectedCollection === 'stopwatch' && <StopwatchCollection displayMode="daily" sortOrder={sortOrder} setSortOrder={setSortOrder} selectedStartDate={selectedStartDate} selectedEndDate={selectedEndDate} />}
+                    {selectedCollection === 'diary' && <DiaryCollection selectedStartDate={selectedStartDate} selectedEndDate={selectedEndDate} />}
                 </div>
                 <div className="collection-right-box">
                     <div className="collection-right-box-top">
                         <MiniCalendar
-                            selectedDates={[]} // No dates selected for this general calendar view
-                            onDateChange={() => {}} // No-op function for date change
+                            selectedStartDate={selectedStartDate}
+                            selectedEndDate={selectedEndDate}
+                            onDateSelect={handleDateSelect}
                             currentMonthYear={currentMonthYear}
                             setCurrentMonthYear={setCurrentMonthYear}
                         />
                     </div>
                     <div className="collection-right-box-bottom">
                         {/* Content for the bottom right box */}
-                        {selectedCollection === 'stopwatch' && <StopwatchCollection displayMode="summary" sortOrder={sortOrder} setSortOrder={setSortOrder} />}
+                        {selectedCollection === 'stopwatch' && <StopwatchCollection displayMode="summary" sortOrder={sortOrder} setSortOrder={setSortOrder} selectedStartDate={selectedStartDate} selectedEndDate={selectedEndDate} />}
                     </div>
                 </div>
             </div>

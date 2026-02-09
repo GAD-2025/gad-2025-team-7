@@ -58,8 +58,28 @@
     color: #ced4da;
 }
 
-.mini-day-cell.selected {
+.mini-day-cell.selected-start {
     background-color: #FF7581;
     color: white;
     font-weight: bold;
+    border-top-left-radius: 1000%;
+    border-bottom-left-radius: 1000%;
+}
+
+.mini-day-cell.selected-end {
+    background-color: #FF7581;
+    color: white;
+    font-weight: bold;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+}
+
+.mini-day-cell.selected-between {
+    background-color: #ffe1e3; /* Light pink for dates within the range */
+    color: #FF7581;
+}
+
+/* If a single day is selected, it's both start and end */
+.mini-day-cell.selected-start.selected-end {
+    border-radius: 50%;
 }

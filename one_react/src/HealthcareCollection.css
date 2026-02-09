@@ -46,6 +46,7 @@
     grid-template-columns: repeat(auto-fill, minmax(261px, 1fr)); /* Adjusted for new card width */
     gap: 39px 19px; /* Row gap 39px, Column gap 19px */
     margin-top: 39px; /* Updated margin-top */
+    justify-items: center; /* Center grid items horizontally */
 }
 
 /* Individual daily info card - New Design */
@@ -193,4 +194,20 @@
     background-color: #ffffff;
     border-radius: 16px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* Empty State Card Design */
+.empty-data-card {
+    width: 492px; /* Fixed width */
+    height: 147px; /* Fixed height */
+    border-radius: 20px; /* Border radius */
+    background-color: #FBFCFD; /* Background color */
+    border: 1px solid #E1E7EF; /* Border */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px; /* Font size for message */
+    color: #A0A0A0; /* Color for message */
+    text-align: center;
+    margin: 39px auto 0; /* Align with card grid, center horizontally */
 }
