@@ -40,6 +40,24 @@ const getSevenDaysAgo = () => {
     return d.toISOString().split('T')[0];
 };
 
+// Helper to format MM/DD or MM/DD-MM/DD
+const formatDateRange = (startDate, endDate) => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    const format = (date) => {
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${month}/${day}`;
+    };
+
+    if (start.toDateString() === end.toDateString()) {
+        return format(start);
+    } else {
+        return `${format(start)}-${format(end)}`;
+    }
+};
+
 const CollectionView = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -136,6 +154,9 @@ const CollectionView = () => {
                         />
                     </div>
                     <div className="collection-right-box-bottom">
+                        <div className="collection-date-display">
+                            {formatDateRange(selectedStartDate, selectedEndDate)}
+                        </div>
                         {/* Content for the bottom right box */}
                         {selectedCollection === 'stopwatch' && <StopwatchCollection displayMode="summary" sortOrder={sortOrder} setSortOrder={setSortOrder} selectedStartDate={selectedStartDate} selectedEndDate={selectedEndDate} />}
                     </div>

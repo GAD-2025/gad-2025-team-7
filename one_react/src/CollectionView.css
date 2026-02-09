@@ -93,6 +93,19 @@
     box-sizing: border-box;
     margin-top: 13px; /* 13px below the top box */
     overflow-y: auto; /* Enable scrolling for the bottom box content */
+    position: relative; /* Added for absolute positioning of children */
+    padding-top: 20px; /* Add some padding to not overlap with absolute positioned date */
+    padding-left: 20px;
+}
+
+.collection-date-display {
+    position: absolute;
+    top: 20px; /* Aligned with padding-top of parent */
+    left: 20px; /* Aligned with padding-left of parent */
+    color: #FF7581;
+    font-size: 20px;
+    font-weight: 600; /* Added for emphasis, similar to other dates */
+    z-index: 10; /* Ensure it's above other content */
 }
 
 /* Individual collection content styling within boxes might be needed */
