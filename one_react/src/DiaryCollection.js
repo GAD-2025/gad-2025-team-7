@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './DiaryCollection.css';
 // import { useNavigate } from 'react-router-dom'; // Removed as back button is removed
-import DateFilter from './DateFilter'; // Import the new component
+
 import { useProfile } from './ProfileContext'; // Import useProfile
 // import IllustratedCalendarIcon from './IllustratedCalendarIcon'; // Removed as calendar icon is removed
 
 const DiaryCollection = () => {
     const [allDiaries, setAllDiaries] = useState([]);
-    const [isFilterVisible, setIsFilterVisible] = useState(false);
-    const [filterRange, setFilterRange] = useState({ startDate: '', endDate: '' });
     // const navigate = useNavigate(); // Removed
     const { profile } = useProfile(); // Get profile from context
 
@@ -49,17 +47,8 @@ const DiaryCollection = () => {
     }, [profile.userId]); // Re-run effect when userId changes
 
     const displayedDiaries = useMemo(() => {
-        if (!filterRange.startDate || !filterRange.endDate) {
-            return allDiaries;
-        }
-        return allDiaries.filter(diary => {
-            const diaryDate = new Date(diary.navDate);
-            const startDate = new Date(filterRange.startDate);
-            const endDateInclusive = new Date(filterRange.endDate);
-            endDateInclusive.setDate(endDateInclusive.getDate() + 1); // Set to the day after the selected end date
-            return diaryDate >= startDate && diaryDate < endDateInclusive;
-        });
-    }, [allDiaries, filterRange]);
+        return allDiaries;
+    }, [allDiaries]);
 
 
     const handleCardClick = (id) => {
@@ -70,59 +59,36 @@ const DiaryCollection = () => {
     //     navigate(-1);
     // };
 
-    const handleApplyFilter = (range) => {
-        setFilterRange(range);
-        setIsFilterVisible(false);
-    };
 
-    const handleClearFilter = () => {
-        setFilterRange({ startDate: '', endDate: '' });
-    };
 
-    const renderDiaryCard = (diary) => {
-        const pastelColors = ['#ffd1dc', '#ffc3a0', '#fffdc4', '#c4eada', '#d7c4ff'];
-        const randomPastel = diary.id ? pastelColors[diary.id % pastelColors.length] : pastelColors[0];
-
-        return (
-            <div key={diary.id} className="diary-card" onClick={() => handleCardClick(diary.id)}>
-                <div 
-                    className="card-thumbnail" 
-                    style={{ 
-                        backgroundImage: diary.image ? `url(${diary.image})` : 'none',
-                        backgroundColor: diary.image ? 'transparent' : randomPastel
-                    }}
-                ></div>
-                <div className="card-content">
-                    <p className="card-title">{diary.title || '제목 없음'}</p>
-                    <p className="card-date">{diary.displayDate}</p>
+        const renderDiaryCard = (diary) => {
+            // Truncate title
+            const displayTitle = diary.title && diary.title.length > 10
+                ? diary.title.substring(0, 10) + '...'
+                : diary.title || '제목 없음';
+    
+            // Truncate content for preview
+            const displayPreview = diary.content && diary.content.length > 50 // Example truncation
+                ? diary.content.substring(0, 50) + '...'
+                : diary.content || '내용 없음';
+    
+    
+            return (
+                <div key={diary.id} className="diary-card" onClick={() => handleCardClick(diary.id)}>
+                    <div className="diary-card-header">
+                        <span className="card-date-display">{diary.displayDate}</span>
+                        <span className="diary-title-display">{displayTitle}</span>
+                    </div>
+                    <div className="diary-preview-content">{displayPreview}</div>
                 </div>
-            </div>
-        );
-    };
-
+            );
+        };
     return (
         <div className="diary-collection-container">
-            {isFilterVisible && (
-                <DateFilter 
-                    onApply={handleApplyFilter}
-                    onCancel={() => setIsFilterVisible(false)}
-                />
-            )}
-            {/* Removed header, back button, title, and calendar icon */}
-            <div style={{display: 'flex', justifyContent: 'flex-end', marginBottom: '10px'}}>
-                <div className="filter-toggle"> {/* Assuming filter-toggle still exists and is needed */}
-                    <button onClick={() => setIsFilterVisible(true)}>날짜 필터</button>
-                </div>
-            </div>
+                        {/* Removed header, back button, title, and calendar icon */}
 
-            {filterRange.startDate && filterRange.endDate && (
-                <div className="filter-status">
-                    <p>
-                        {`${filterRange.startDate} ~ ${filterRange.endDate}`}
-                        <button onClick={handleClearFilter}>×</button>
-                    </p>
-                </div>
-            )}
+
+
 
             {displayedDiaries.length > 0 ? (
                 <div className="diary-grid">

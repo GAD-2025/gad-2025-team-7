@@ -42,10 +42,10 @@
 
 .diary-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Responsive grid for cards */
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(261px, 1fr)); /* Consistent card width */
+    gap: 39px 19px; /* Row gap 39px, Column gap 19px */
     padding-bottom: 20px;
-    padding-top: 10px; /* Added padding-top to separate from filter button */
+    margin-top: 39px; /* Consistent spacing from top */
 }
 
 @keyframes fadeIn {
@@ -60,15 +60,21 @@
 }
 
 .diary-card {
-    background-color: #ffffff; /* 하얀박스 */
-    border-radius: 16px; /* 동글동글, generous rounding */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); /* Softer shadow */
+    width: 261px;
+    height: 147px;
+    border-radius: 20px;
+    border: 1px solid #E1E7EF;
+    background-color: #FBFCFD;
+    box-sizing: border-box;
+    padding: 15px; /* Consistent padding */
+    display: grid;
+    grid-template-rows: auto 1fr; /* First row for header, second for preview */
+    gap: 0px; /* No gap between header and preview */
+    position: relative;
     overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.2s ease-in-out;
-    animation: fadeIn 0.5s ease-in-out;
-    display: flex; /* For flexible content inside card */
-    flex-direction: column;
+    cursor: pointer; /* Keep cursor pointer */
+    transition: transform 0.2s ease-in-out; /* Keep hover effect */
+    animation: fadeIn 0.5s ease-in-out; /* Keep fade-in animation */
 }
 
 .diary-card:hover {
@@ -79,37 +85,15 @@
     transform: scale(0.98);
 }
 
-.card-thumbnail {
-    width: 100%;
-    height: 120px;
-    background-color: #e9ecef; /* Default pastel background */
-    background-size: cover;
-    background-position: center;
-    border-radius: 16px 16px 0 0; /* Match top rounding of card */
-}
 
-.card-content {
-    padding: 15px;
-    flex-grow: 1; /* Allow content to take space */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Push date to bottom */
-}
 
-.card-title {
-    font-weight: 600; /* Slightly bolder for cuteness */
-    font-size: 16px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-bottom: 5px;
-    color: #383838; /* Soft dark color */
-}
 
-.card-date {
-    font-size: 13px; /* Slightly smaller */
-    color: #9a9a9a; /* Softer grey */
-    margin-top: auto; /* Push to bottom */
+
+.card-date-display {
+    color: #FF7581;
+    font-size: 15px;
+    font-weight: 500;
+    flex-shrink: 0; /* Prevent date from shrinking */
 }
 
 .empty-state {
@@ -129,37 +113,34 @@
     color: #C0C0C0; /* Soft icon color */
 }
 
-.filter-status {
-    background-color: #FFE1E3; /* Pastel pink */
-    padding: 8px 15px;
-    border-radius: 20px; /* 동글동글 */
-    margin: 10px auto 15px; /* Adjusted margin-top after header removal */
-    display: inline-block;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.filter-status p {
-    margin: 0;
-    font-size: 14px;
-    color: #FF7581; /* Accent pink */
+.diary-card-header {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 9px; /* 9px gap between date and title */
+    padding-left: 5px; /* Align with healthcare card's padding */
+    padding-bottom: 14px; /* Mimic space below date/title before preview */
 }
 
-.filter-status button {
-    background: none;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-    color: #FF7581; /* Accent pink */
-    padding: 0;
-    line-height: 1;
+.diary-title-display {
+    font-size: 15px;
+    color: #383838;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1; /* Allow title to take available space and truncate */
 }
 
-/* Tablet and Landscape */
-@media (min-width: 768px) {
-    .diary-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
+.diary-preview-content {
+    font-size: 12px; /* Example size */
+    color: #6a6a6a; /* Example color */
+    line-height: 1.4;
+    overflow: hidden; /* Ensure preview fits within its area */
+    text-overflow: ellipsis; /* Truncate if content is too long */
+    display: -webkit-box; /* For multiline ellipsis */
+    -webkit-line-clamp: 3; /* Show up to 3 lines (adjust as needed) */
+    -webkit-box-orient: vertical;
+    padding-left: 5px; /* Align with other content */
+    padding-right: 5px;
 }
+
+
