@@ -4,6 +4,7 @@ import HealthcareCollection from './HealthcareCollection';
 import StopwatchCollection from './StopwatchCollection';
 import DiaryCollection from './DiaryCollection';
 import MiniCalendar from './MiniCalendar'; // Import MiniCalendar
+import SortToggle from './SortToggle'; // Import SortToggle
 import './CollectionView.css'; // New CSS file for CollectionView
 
 const CollectionButton = ({ label, isActive, onClick }) => {
@@ -33,6 +34,7 @@ const CollectionView = () => {
     const location = useLocation();
     const [selectedCollection, setSelectedCollection] = useState('healthcare'); // Default to healthcare
     const [currentMonthYear, setCurrentMonthYear] = useState(new Date()); // State for MiniCalendar's displayed month/year
+    const [sortOrder, setSortOrder] = useState('desc'); // 'desc' for high, 'asc' for low
 
 
     useEffect(() => {
@@ -54,28 +56,33 @@ const CollectionView = () => {
 
     return (
         <div className="collection-view-container">
-            <div className="collection-buttons-wrapper">
-                <CollectionButton
-                    label="헬스케어"
-                    isActive={selectedCollection === 'healthcare'}
-                    onClick={() => handleCollectionChange('healthcare')}
-                />
-                <CollectionButton
-                    label="스톱워치"
-                    isActive={selectedCollection === 'stopwatch'}
-                    onClick={() => handleCollectionChange('stopwatch')}
-                />
-                <CollectionButton
-                    label="다이어리"
-                    isActive={selectedCollection === 'diary'}
-                    onClick={() => handleCollectionChange('diary')}
-                />
+            <div className="collection-header-wrapper">
+                <div className="collection-buttons-wrapper">
+                    <CollectionButton
+                        label="헬스케어"
+                        isActive={selectedCollection === 'healthcare'}
+                        onClick={() => handleCollectionChange('healthcare')}
+                    />
+                    <CollectionButton
+                        label="스톱워치"
+                        isActive={selectedCollection === 'stopwatch'}
+                        onClick={() => handleCollectionChange('stopwatch')}
+                    />
+                    <CollectionButton
+                        label="다이어리"
+                        isActive={selectedCollection === 'diary'}
+                        onClick={() => handleCollectionChange('diary')}
+                    />
+                </div>
+                {(selectedCollection === 'healthcare' || selectedCollection === 'stopwatch') && (
+                    <SortToggle sortOrder={sortOrder} setSortOrder={setSortOrder} />
+                )}
             </div>
 
             <div className="collection-content-wrapper">
                 <div className="collection-left-box">
-                    {selectedCollection === 'healthcare' && <HealthcareCollection />}
-                    {selectedCollection === 'stopwatch' && <StopwatchCollection displayMode="daily" />}
+                    {selectedCollection === 'healthcare' && <HealthcareCollection sortOrder={sortOrder} setSortOrder={setSortOrder} />}
+                    {selectedCollection === 'stopwatch' && <StopwatchCollection displayMode="daily" sortOrder={sortOrder} setSortOrder={setSortOrder} />}
                     {selectedCollection === 'diary' && <DiaryCollection />}
                 </div>
                 <div className="collection-right-box">
@@ -89,7 +96,7 @@ const CollectionView = () => {
                     </div>
                     <div className="collection-right-box-bottom">
                         {/* Content for the bottom right box */}
-                        {selectedCollection === 'stopwatch' && <StopwatchCollection displayMode="summary" />}
+                        {selectedCollection === 'stopwatch' && <StopwatchCollection displayMode="summary" sortOrder={sortOrder} setSortOrder={setSortOrder} />}
                     </div>
                 </div>
             </div>

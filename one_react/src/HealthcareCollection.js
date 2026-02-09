@@ -31,11 +31,10 @@ const formatDate = (dateString) => {
     return `${month}/${day}`;
 };
 
-const HealthcareCollection = () => {
+const HealthcareCollection = ({ sortOrder, setSortOrder }) => {
     // const navigate = useNavigate(); // Removed
     const { mealsByDate, pedometerDataByDate } = useData();
 
-    const [sortOrder, setSortOrder] = useState('desc');
     const [isFilterVisible, setIsFilterVisible] = useState(false);
     const [filterRange, setFilterRange] = useState({ startDate: '', endDate: '' });
 
@@ -96,12 +95,7 @@ const HealthcareCollection = () => {
             )}
             {/* Removed header and back button and title */}
             {/* Removed hc-header-right filters, only keep sort order if needed within the collection content */}
-            <div className="hc-filters" style={{display: 'flex', justifyContent: 'flex-end', marginBottom: '10px'}}>
-                <div className="filter-toggle">
-                    <button className={sortOrder === 'desc' ? 'active' : ''} onClick={() => setSortOrder('desc')}>높은 순</button>
-                    <button className={sortOrder === 'asc' ? 'active' : ''} onClick={() => setSortOrder('asc')}>낮은 순</button>
-                </div>
-            </div>
+
             
             {filterRange.startDate && filterRange.endDate ? (
                 <div className="filter-status">

@@ -43,40 +43,7 @@
 }
 */
 
-.sc-filters {
-    padding: 0 0 10px 0; /* Adjust padding for filters */
-    margin-bottom: 0; /* Reset margin-bottom as padding handles spacing */
-    display: flex;
-    justify-content: flex-end; /* Align filters to the right */
-}
 
-.sc-filters .filter-toggle {
-    background-color: #ffffff; /* White box for filter */
-    border: 1px solid #E9ECEF; /* Soft border */
-    padding: 6px 10px; /* Adjusted padding */
-    border-radius: 20px; /* 동글동글 */
-    cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    display: flex; /* Ensure buttons are aligned */
-    gap: 5px;
-    justify-content: flex-end; /* Align filters to the right */
-}
-.sc-filters .filter-toggle button {
-    background: none;
-    border: none;
-    font-weight: 500;
-    color: #9a9a9a; /* Softer color */
-    padding: 4px 10px; /* Adjusted padding */
-    cursor: pointer;
-    border-radius: 15px; /* 동글동글 */
-    transition: all 0.2s;
-}
-
-.sc-filters .filter-toggle button.active {
-    color: #FF7581; /* Accent color */
-    font-weight: 700;
-    background-color: #FFE1E3; /* Lighter pink background */
-}
 
 /* Removed sc-calendar-icon styles */
 /*

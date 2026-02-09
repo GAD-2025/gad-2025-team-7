@@ -1,13 +1,23 @@
+.collection-header-wrapper {
+    display: flex;
+    justify-content: space-between; /* Distribute space between children */
+    align-items: center; /* Align items vertically */
+    width: 100%; /* Take full width */
+    padding: 0 20px; /* Match horizontal padding of content wrapper */
+    box-sizing: border-box;
+    margin-top: 22px; /* Keep the existing margin-top from collection-buttons-wrapper */
+}
+
 .collection-buttons-wrapper {
     display: flex;
     gap: 16px; /* Spacing between buttons */
     /* Position 64px below "OneDay" text - assuming "OneDay" is part of main-header,
        this needs to be positioned relative to its container. For now,
        I'll use margin-top. Actual positioning might require adjusting parent containers. */
-    margin-top: 22px; /* This will need to be refined based on MainLayout structure */
+    margin-top: 0px; /* Handled by parent collection-header-wrapper */
     align-items: center; /* Align buttons on the same y-value */
-    justify-content: center; /* Center the buttons horizontally, adjust as needed */
-    width: 100%; /* Take full width of its parent to allow centering */
+    /* justify-content: center; */ /* Handled by parent collection-header-wrapper */
+    /* width: 100%; */ /* Handled by parent collection-header-wrapper */
     box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
 

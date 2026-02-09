@@ -18,9 +18,8 @@ const formatTime = (totalSeconds) => {
         .join(':');
 };
 
-const StopwatchCollection = ({ displayMode = 'summary' }) => {
+const StopwatchCollection = ({ displayMode = 'summary', sortOrder, setSortOrder }) => {
     const [allRecords, setAllRecords] = useState([]);
-    const [sortOrder, setSortOrder] = useState('desc'); // 'desc' for high, 'asc' for low
     const [isFilterVisible, setIsFilterVisible] = useState(false);
     const [filterRange, setFilterRange] = useState({ startDate: '', endDate: '' });
     const userId = localStorage.getItem('userId');
@@ -179,14 +178,7 @@ const StopwatchCollection = ({ displayMode = 'summary' }) => {
                         onCancel={() => setIsFilterVisible(false)}
                     />
                 )}
-                {/* Removed header and back button and title */}
-                {/* Moved sc-filters outside header */}
-                <div className="sc-filters" style={{display: 'flex', justifyContent: 'flex-end', marginBottom: '10px'}}>
-                    <div className="filter-toggle">
-                        <button className={sortOrder === 'desc' ? 'active' : ''} onClick={() => setSortOrder('desc')}>높은 순</button>
-                        <button className={sortOrder === 'asc' ? 'active' : ''} onClick={() => setSortOrder('asc')}>낮은 순</button>
-                    </div>
-                </div>
+
 
                 {sortedData.length > 0 ? (
                     <div className="sc-bar-chart-list">
